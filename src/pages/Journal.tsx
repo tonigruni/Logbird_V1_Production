@@ -612,7 +612,7 @@ export default function Journal() {
   /* ---------------------------------------------------------------- */
 
   return (
-    <div className="px-12 pb-24 max-w-[1400px] mx-auto">
+    <div className="px-4 md:px-12 pb-24 max-w-[1400px] mx-auto">
       {/* ── Editor back button ── */}
       {view === 'editor' && (
         <div className="mb-6">
@@ -631,8 +631,8 @@ export default function Journal() {
         <div className="animate-fade-in space-y-8">
           <div>
             <h2 className="text-sm font-semibold text-[#5a6061] uppercase tracking-wider mb-4">Start Writing</h2>
-            <div className="grid grid-cols-12 gap-4">
-              <div className="col-span-8 relative overflow-hidden rounded-xl min-h-[280px] flex flex-col justify-between p-10"
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+              <div className="col-span-1 md:col-span-8 relative overflow-hidden rounded-xl min-h-[220px] md:min-h-[280px] flex flex-col justify-between p-6 md:p-10"
                    style={{background: `linear-gradient(135deg, ${featuredTpl.colorFrom}, ${featuredTpl.colorTo})`}}>
                 <div className="flex items-start justify-between relative z-10">
                   <div>
@@ -650,7 +650,7 @@ export default function Journal() {
                   <button onClick={() => gotoView('templates')} className="text-sm text-white/60 hover:text-white font-medium cursor-pointer transition-colors">See all templates</button>
                 </div>
               </div>
-              <div className="col-span-4 bg-[#f2f4f4] rounded-xl p-8 flex flex-col justify-between min-h-[280px] border-2 border-dashed border-[#adb3b4]/30 hover:border-[#0061aa]/30 transition-colors group">
+              <div className="col-span-1 md:col-span-4 bg-[#f2f4f4] rounded-xl p-6 md:p-8 flex flex-col justify-between min-h-[200px] md:min-h-[280px] border-2 border-dashed border-[#adb3b4]/30 hover:border-[#0061aa]/30 transition-colors group">
                 <div>
                   <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-105 transition-transform"><Plus size={20} className="text-[#586062]"/></div>
                   <h3 className="text-base font-bold text-[#2d3435] mb-1.5">Blank canvas</h3>
@@ -666,7 +666,7 @@ export default function Journal() {
 
           <div>
             <h2 className="text-sm font-semibold text-[#5a6061] uppercase tracking-wider mb-4">Your Journal</h2>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 { label:'All Entries', value:entries.length.toString(), sub:'Browse and edit your writing', icon:FileText, id:'journal' as View },
                 { label:'Calendar',    value:`${consistencyScore}%`,    sub:'Consistency this month',    icon:Calendar, id:'calendar' as View },
@@ -692,7 +692,7 @@ export default function Journal() {
                 <h2 className="text-sm font-semibold text-[#5a6061] uppercase tracking-wider">Recent Entries</h2>
                 <button onClick={() => gotoView('journal')} className="text-xs text-[#0061aa] hover:underline flex items-center gap-1 cursor-pointer">View all <ChevronRight size={12}/></button>
               </div>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {entries.slice(0,3).map(entry => {
                   const cat = entry.category
                   const cc = cat ? getCatColor(cat) : null
@@ -716,9 +716,9 @@ export default function Journal() {
 
       {/* =================== JOURNAL LIBRARY =================== */}
       {view === 'journal' && (
-        <div className="flex gap-6 items-start animate-fade-in">
+        <div className="flex flex-col lg:flex-row gap-6 items-start animate-fade-in">
           {/* Main area */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 w-full">
             {/* Filter bar */}
             <div className="flex items-center gap-3 mb-5 flex-wrap">
               <div className="flex gap-1.5">
@@ -807,7 +807,7 @@ export default function Journal() {
                 })}
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {libraryEntries.map(entry => {
                   const meta = entry.mood_score ? MOOD_META[entry.mood_score] : null
                   const cc = entry.category ? getCatColor(entry.category) : null
@@ -832,7 +832,7 @@ export default function Journal() {
           </div>
 
           {/* Stats Sidebar */}
-          <div className="w-72 shrink-0 space-y-4">
+          <div className="w-full lg:w-72 lg:shrink-0 space-y-4">
             {/* Quick Stats */}
             <div className="bg-white rounded-xl shadow-sm p-5">
               <div className="flex items-center gap-2 mb-4"><BarChart2 size={14} className="text-[#0061aa]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Quick Stats</h3></div>
@@ -965,9 +965,9 @@ export default function Journal() {
               </div>
 
               {/* Info cards */}
-              <div className="grid grid-cols-12 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                 {/* How it works */}
-                <div className="col-span-7 bg-white rounded-xl shadow-sm p-6">
+                <div className="col-span-1 md:col-span-7 bg-white rounded-xl shadow-sm p-6">
                   <h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider mb-3">How it works</h3>
                   <p className="text-sm text-[#5a6061] leading-relaxed mb-4">{activeTemplateDetail.howItWorks}</p>
                   <div className="grid grid-cols-2 gap-3">
@@ -982,7 +982,7 @@ export default function Journal() {
                   </div>
                 </div>
                 {/* Why use this */}
-                <div className="col-span-5 bg-[#f2f4f4] rounded-xl p-6">
+                <div className="col-span-1 md:col-span-5 bg-[#f2f4f4] rounded-xl p-6">
                   <h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider mb-3">Why use this</h3>
                   <ul className="space-y-2 mb-4">
                     {activeTemplateDetail.benefits.map((b, i) => (
@@ -1006,9 +1006,9 @@ export default function Journal() {
           )}
 
           {/* Editor + sidebar */}
-          <div className="flex gap-8 items-start">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
             {/* Writing area */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 w-full">
               {/* Date + title row */}
               <div className="mb-8">
                 <p className="text-xs font-bold uppercase tracking-widest text-[#0061aa]/70 mb-3">
@@ -1018,7 +1018,7 @@ export default function Journal() {
                   value={title}
                   onChange={e => setTitle(e.target.value)}
                   placeholder="Title your reflection..."
-                  className="w-full bg-transparent text-3xl font-extrabold text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none tracking-tight leading-tight"
+                  className="w-full bg-transparent text-2xl md:text-3xl font-extrabold text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none tracking-tight leading-tight"
                 />
                 {/* Category + location quick preview row */}
                 {(entryCategory || entryLocation || entryWeather) && (
@@ -1084,7 +1084,7 @@ export default function Journal() {
             </div>
 
             {/* Context sidebar */}
-            <aside className="w-72 shrink-0 sticky top-6 space-y-0 overflow-y-auto max-h-[calc(100vh-7rem)]">
+            <aside className="w-full lg:w-72 lg:shrink-0 lg:sticky lg:top-6 space-y-0 lg:overflow-y-auto lg:max-h-[calc(100vh-7rem)]">
               <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
 
                 {/* ── Mood ── */}
@@ -1262,9 +1262,9 @@ export default function Journal() {
 
       {/* =================== CALENDAR =================== */}
       {view === 'calendar' && (
-        <div className="flex gap-4 animate-fade-in">
-          <div className="flex-1">
-            <div className="bg-white rounded-xl shadow-sm p-8">
+        <div className="flex flex-col lg:flex-row gap-4 animate-fade-in">
+          <div className="flex-1 min-w-0">
+            <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
               <div className="flex items-center justify-between mb-5">
                 <button onClick={() => setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth()-1))} className="text-[#5a6061] hover:text-[#2d3435] cursor-pointer"><ChevronLeft size={16}/></button>
                 <h3 className="text-base font-semibold text-[#2d3435]">{format(calendarDate,'MMMM yyyy')}</h3>
@@ -1306,7 +1306,7 @@ export default function Journal() {
               </div>
             </div>
           </div>
-          <div className="w-[280px] shrink-0">
+          <div className="w-full lg:w-[280px] lg:shrink-0">
             <div className="bg-white rounded-xl shadow-sm p-5">
               <h3 className="text-sm font-semibold text-[#2d3435] mb-3">{selectedCalDay ? format(selectedCalDay,'EEEE, MMM d') : 'Select a day'}</h3>
               {selectedCalDay && !selectedDayEntries.length && (
@@ -1333,12 +1333,12 @@ export default function Journal() {
         <div className="animate-fade-in">
 
           {/* Header + filter tabs */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
             <div>
               <h2 className="text-xl font-extrabold text-[#2d3435] tracking-tight">Template Library</h2>
               <p className="text-sm text-[#5a6061] mt-0.5">{BUILT_IN_TEMPLATES.length} guided frameworks to deepen your reflection</p>
             </div>
-            <div className="flex gap-1.5 bg-[#f2f4f4] p-1.5 rounded-xl">
+            <div className="flex gap-1.5 bg-[#f2f4f4] p-1.5 rounded-xl self-start">
               {(['All', 'Personal', 'Work', 'Gratitude'] as TemplateFilter[]).map(f => (
                 <button key={f} onClick={() => setTemplateFilter(f)}
                   className={cn('px-4 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer',
@@ -1353,10 +1353,10 @@ export default function Journal() {
           {templateFilter === 'All' && (
             <div className="space-y-4">
               {/* Row 1: large feature + companion */}
-              <div className="grid grid-cols-12 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                 {/* Large feature card */}
                 <button onClick={() => applyBuiltIn(BUILT_IN_TEMPLATES[0])}
-                  className="col-span-7 relative overflow-hidden rounded-2xl p-10 flex flex-col justify-between min-h-[320px] cursor-pointer group text-left"
+                  className="col-span-1 md:col-span-7 relative overflow-hidden rounded-2xl p-7 md:p-10 flex flex-col justify-between min-h-[240px] md:min-h-[320px] cursor-pointer group text-left"
                   style={{background: `linear-gradient(135deg, ${BUILT_IN_TEMPLATES[0].colorFrom}, ${BUILT_IN_TEMPLATES[0].colorTo})`}}>
                   <div className="flex items-start justify-between">
                     <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest">Featured Template</span>
@@ -1374,7 +1374,7 @@ export default function Journal() {
 
                 {/* Companion card */}
                 <button onClick={() => applyBuiltIn(BUILT_IN_TEMPLATES[1])}
-                  className="col-span-5 relative overflow-hidden rounded-2xl p-8 flex flex-col justify-between min-h-[320px] cursor-pointer group text-left"
+                  className="col-span-1 md:col-span-5 relative overflow-hidden rounded-2xl p-7 md:p-8 flex flex-col justify-between min-h-[200px] md:min-h-[320px] cursor-pointer group text-left"
                   style={{background: `linear-gradient(135deg, ${BUILT_IN_TEMPLATES[1].colorFrom}, ${BUILT_IN_TEMPLATES[1].colorTo})`}}>
                   <div className="flex items-start justify-between">
                     <span className="text-4xl opacity-50">{BUILT_IN_TEMPLATES[1].emoji}</span>
@@ -1390,7 +1390,7 @@ export default function Journal() {
               </div>
 
               {/* Row 2: medium cards [2,3,4] */}
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {BUILT_IN_TEMPLATES.slice(2, 5).map(tpl => (
                   <button key={tpl.id} onClick={() => applyBuiltIn(tpl)}
                     className="relative overflow-hidden rounded-2xl p-7 flex flex-col justify-between min-h-[200px] cursor-pointer group text-left"
@@ -1409,7 +1409,7 @@ export default function Journal() {
               </div>
 
               {/* Row 3: medium cards [5,6,7] */}
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {BUILT_IN_TEMPLATES.slice(5, 8).map(tpl => (
                   <button key={tpl.id} onClick={() => applyBuiltIn(tpl)}
                     className="relative overflow-hidden rounded-2xl p-7 flex flex-col justify-between min-h-[200px] cursor-pointer group text-left"
@@ -1428,7 +1428,7 @@ export default function Journal() {
               </div>
 
               {/* Row 4: small cards [8,9,10] + create custom */}
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {BUILT_IN_TEMPLATES.slice(8, 11).map(tpl => (
                   <button key={tpl.id} onClick={() => applyBuiltIn(tpl)}
                     className="relative overflow-hidden rounded-2xl p-5 flex flex-col justify-between min-h-[160px] cursor-pointer group text-left"
@@ -1460,9 +1460,9 @@ export default function Journal() {
 
           {/* Filtered view */}
           {templateFilter !== 'All' && (
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {filteredBuiltIns.length === 0 ? (
-                <div className="col-span-3 text-center py-16">
+                <div className="col-span-full text-center py-16">
                   <p className="text-sm text-[#5a6061]">No templates in this category yet.</p>
                 </div>
               ) : filteredBuiltIns.map(tpl => (

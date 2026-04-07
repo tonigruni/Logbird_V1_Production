@@ -1,9 +1,17 @@
 import { useState, useMemo } from 'react'
-import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { Search, Plus } from 'lucide-react'
+import { Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom'
+import { Search, Plus, LayoutDashboard, BookOpen, Circle, User, Settings } from 'lucide-react'
 import Sidebar from './Sidebar'
 import { useAuthStore } from '../../stores/authStore'
 import { cn } from '../../lib/utils'
+
+const mobileNav = [
+  { to: '/', icon: LayoutDashboard, label: 'Home' },
+  { to: '/journal', icon: BookOpen, label: 'Journal' },
+  { to: '/wheel', icon: Circle, label: 'Wheel' },
+  { to: '/account', icon: User, label: 'Account' },
+  { to: '/settings', icon: Settings, label: 'Settings' },
+]
 
 export default function AppLayout() {
   const navigate = useNavigate()
@@ -39,7 +47,7 @@ export default function AppLayout() {
   // Single nav-item class factory — works for both button tabs and route tabs
   const tabClass = (active: boolean) =>
     cn(
-      'text-sm font-semibold transition-colors cursor-pointer whitespace-nowrap leading-none pb-[3px]',
+      'text-sm font-semibold transition-colors cursor-pointer whitespace-nowrap leading-none pb-[3px] shrink-0',
       active
         ? 'text-[#0061aa] border-b-2 border-[#0061aa]'
         : 'text-[#586062] hover:text-[#0061aa]'
@@ -48,22 +56,22 @@ export default function AppLayout() {
   return (
     <div className="flex h-screen overflow-hidden bg-[#f9f9f9]">
       <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Top App Bar */}
         <header className="w-full bg-[#f9f9f9]/80 backdrop-blur-xl sticky top-0 z-40 shrink-0 border-b border-[#f2f4f4]">
-          <div className="max-w-[1400px] mx-auto px-12 py-5 flex justify-between items-center">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-12 py-4 md:py-5 flex justify-between items-center gap-3">
 
-            <div className="flex items-center gap-10">
+            <div className="flex items-center gap-4 md:gap-10 min-w-0 flex-1">
               {/* Brand / page title */}
               <span className={cn(
-                'text-xl font-black tracking-tight shrink-0',
+                'text-lg md:text-xl font-black tracking-tight shrink-0',
                 isJournalContext ? 'text-[#2d3435]' : 'text-[#586062]'
               )}>
                 {isJournalContext ? 'Journal' : 'Serene'}
               </span>
 
-              {/* Nav links */}
-              <nav className="hidden md:flex items-center gap-7">
+              {/* Nav links — scrollable on mobile */}
+              <nav className="flex items-center gap-5 md:gap-7 overflow-x-auto scrollbar-hide">
                 {isJournalContext ? (
                   <>
                     <button
@@ -110,14 +118,14 @@ export default function AppLayout() {
               </nav>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3 shrink-0">
               {/* New Entry button — only on /journal */}
               {isJournal && (
                 <button
                   onClick={() => navigate('/journal', { state: { openNew: true } })}
-                  className="flex items-center gap-1.5 bg-[#0061aa] hover:bg-[#005596] text-white text-sm font-bold px-4 py-2.5 rounded-full transition-all cursor-pointer shrink-0"
+                  className="flex items-center gap-1.5 bg-[#0061aa] hover:bg-[#005596] text-white text-xs md:text-sm font-bold px-3 md:px-4 py-2 md:py-2.5 rounded-full transition-all cursor-pointer shrink-0"
                 >
-                  <Plus size={14} />New Entry
+                  <Plus size={13} /><span className="hidden sm:inline">New Entry</span>
                 </button>
               )}
 
@@ -137,7 +145,7 @@ export default function AppLayout() {
               {/* Avatar with real initials */}
               <button
                 onClick={() => navigate('/account')}
-                className="w-9 h-9 rounded-full bg-[#dde4e5] cursor-pointer active:scale-95 transition-transform flex items-center justify-center shrink-0"
+                className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-[#dde4e5] cursor-pointer active:scale-95 transition-transform flex items-center justify-center shrink-0"
                 aria-label="Account settings"
               >
                 <span className="text-xs font-bold text-[#586062]">{initials}</span>
@@ -147,11 +155,31 @@ export default function AppLayout() {
           </div>
         </header>
 
-        {/* Main content */}
-        <main className="flex-1 overflow-y-auto">
+        {/* Main content — extra bottom padding on mobile for bottom nav */}
+        <main className="flex-1 overflow-y-auto pb-16 md:pb-0">
           <Outlet />
         </main>
       </div>
+
+      {/* Mobile bottom navigation */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-[#f2f4f4] flex items-center justify-around px-2 py-2">
+        {mobileNav.map(({ to, icon: Icon, label }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={to === '/'}
+            className={({ isActive }) =>
+              cn(
+                'flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all',
+                isActive ? 'text-[#0061aa]' : 'text-[#adb3b4]'
+              )
+            }
+          >
+            <Icon size={20} strokeWidth={1.5} />
+            <span className="text-[10px] font-semibold">{label}</span>
+          </NavLink>
+        ))}
+      </nav>
     </div>
   )
 }

@@ -308,7 +308,7 @@ export default function WheelOfLife() {
     })
 
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto animate-fade-in">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto animate-fade-in">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-6 text-sm">
           <button
@@ -325,10 +325,10 @@ export default function WheelOfLife() {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
           {/* Questions */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="bg-white rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${meta.color}15` }}>
                   <IconComp size={20} style={{ color: meta.color }} />
@@ -410,7 +410,7 @@ export default function WheelOfLife() {
     const meta = getCategoryMeta(cat?.name ?? '')
 
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto animate-fade-in">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto animate-fade-in">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-6 text-sm">
           <button
@@ -574,17 +574,17 @@ export default function WheelOfLife() {
   }
 
   return (
-    <div className="px-12 pb-24 max-w-7xl mx-auto">
+    <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-extrabold tracking-tight text-[#2d3435]">Wheel of Life Assessment</h1>
+        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#2d3435]">Wheel of Life Assessment</h1>
         <p className="text-sm text-[#5a6061] mt-1">
           Rate each area of your life to understand your overall balance and identify areas for growth.
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 bg-[#f2f4f4] p-1.5 rounded-xl w-fit">
+      <div className="flex gap-1 mb-6 bg-[#f2f4f4] p-1.5 rounded-xl w-fit overflow-x-auto scrollbar-hide">
         {([['checkin', 'Check-in'], ['goals', 'Goals & Tasks'], ['history', 'History']] as const).map(([id, label]) => (
           <button
             key={id}
@@ -601,10 +601,10 @@ export default function WheelOfLife() {
 
       {/* CHECK-IN TAB */}
       {tab === 'checkin' && (
-        <div className="space-y-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="space-y-4 md:space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
             {/* Left: Category pills */}
-            <div className="bg-white rounded-xl shadow-sm p-8">
+            <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
               <h3 className="text-sm font-semibold text-[#2d3435] mb-4">Categories</h3>
               <div className="flex flex-wrap gap-2">
                 {allCategoryNames.map((name) => {
@@ -654,7 +654,7 @@ export default function WheelOfLife() {
             </div>
 
             {/* Center: Radar chart */}
-            <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-8">
+            <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-5 md:p-8">
               <h3 className="text-sm font-semibold text-[#2d3435] mb-2">Life Balance Radar</h3>
               <ResponsiveContainer width="100%" height={340}>
                 <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
@@ -688,7 +688,7 @@ export default function WheelOfLife() {
           </div>
 
           {/* Sliders / Rate each area */}
-          <div className="bg-white rounded-xl shadow-sm p-8">
+          <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
             <h3 className="text-sm font-semibold text-[#2d3435] mb-4">Rate Each Area</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
               {allCategoryNames.map((name) => {

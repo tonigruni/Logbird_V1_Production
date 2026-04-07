@@ -167,7 +167,7 @@ export default function Account() {
     'w-full bg-[#f2f4f4] border-none rounded-[1.5rem] py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all outline-none'
 
   return (
-    <div className="px-12 pb-24 max-w-7xl mx-auto">
+    <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto">
       {/* Header */}
       <div className="py-12">
         <h2 className="text-4xl font-extrabold tracking-tight text-[#2d3435] mb-2">
@@ -180,7 +180,7 @@ export default function Account() {
       </div>
 
       {/* Bento Grid */}
-      <div className="grid grid-cols-12 gap-8">
+      <div className="grid grid-cols-12 gap-4 md:gap-8">
         {/* ============================================================ */}
         {/*  PROFILE INFO — 8 cols                                        */}
         {/* ============================================================ */}
@@ -197,7 +197,7 @@ export default function Account() {
           </div>
 
           <form onSubmit={updateProfile}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
               <div className="space-y-2">
                 <label className="block text-sm font-bold text-[#5a6061] ml-1">
                   Full Name
@@ -277,7 +277,7 @@ export default function Account() {
         {/*  SECURITY — 4 cols                                            */}
         {/* ============================================================ */}
         <section className="col-span-12 lg:col-span-4 space-y-8">
-          <div className="bg-white rounded-[3rem] p-8 shadow-sm h-full">
+          <div className="bg-white rounded-2xl md:rounded-[3rem] p-5 md:p-8 shadow-sm h-full">
             <div className="flex items-center gap-3 mb-6 text-[#0061aa]">
               <Lock size={20} />
               <h3 className="text-xl font-bold text-[#2d3435]">Security</h3>
@@ -354,9 +354,9 @@ export default function Account() {
         {/* ============================================================ */}
         {/*  PREFERENCES + DANGER ZONE — full width row                   */}
         {/* ============================================================ */}
-        <section className="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <section className="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
           {/* ---- Preferences ---- */}
-          <div className="bg-white rounded-[3rem] p-8 shadow-sm">
+          <div className="bg-white rounded-2xl md:rounded-[3rem] p-5 md:p-8 shadow-sm">
             <h3 className="text-xl font-bold text-[#2d3435] mb-6">
               Preferences
             </h3>
@@ -395,7 +395,7 @@ export default function Account() {
           </div>
 
           {/* ---- Danger Zone ---- */}
-          <div className="bg-[#fe8983]/10 border-2 border-[#fe8983]/20 rounded-[3rem] p-8 flex flex-col justify-between">
+          <div className="bg-[#fe8983]/10 border-2 border-[#fe8983]/20 rounded-2xl md:rounded-[3rem] p-5 md:p-8 flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-3 mb-4 text-[#9f403d]">
                 <AlertTriangle size={20} />

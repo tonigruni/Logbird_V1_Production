@@ -88,7 +88,7 @@ export default function Insights() {
   // Loading saved data from DB
   if (dbLoading) {
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
         <div className="w-6 h-6 border-2 border-[#0061aa] border-t-transparent rounded-full animate-spin" />
       </div>
     )
@@ -97,7 +97,7 @@ export default function Insights() {
   // Loading state
   if (loading) {
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4">
           <div className="w-10 h-10 border-2 border-[#0061aa] border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-sm text-[#5a6061] font-medium">
@@ -114,7 +114,7 @@ export default function Insights() {
   // Error state
   if (error) {
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4 max-w-md">
           <AlertCircle size={32} className="text-[#9f403d] mx-auto" />
           <p className="text-sm text-[#2d3435] font-medium">{error}</p>
@@ -143,7 +143,7 @@ export default function Insights() {
   // Empty state
   if (entries.length === 0) {
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4">
           <Brain size={32} className="text-[#0061aa] mx-auto opacity-40" />
           <p className="text-sm text-[#2d3435] font-medium">
@@ -163,7 +163,7 @@ export default function Insights() {
   // No insights generated yet
   if (!insights) {
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-5 max-w-sm">
           <div className="w-16 h-16 rounded-full bg-[#0061aa]/10 flex items-center justify-center mx-auto">
             <Brain size={28} className="text-[#0061aa]" />
@@ -191,12 +191,12 @@ export default function Insights() {
   const sortedThemes = [...insights.themes].sort((a, b) => b.weight - a.weight)
 
   return (
-    <div className="px-12 pb-24 max-w-7xl mx-auto space-y-12">
+    <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto space-y-6 md:space-y-12">
       {/* Hero Summary Section */}
       <header className="flex flex-col md:flex-row gap-8 items-end justify-between pt-8">
         <div className="space-y-4 max-w-2xl">
           <div className="flex items-center gap-3">
-            <h1 className="text-5xl font-extrabold tracking-tight text-[#2d3435]">
+            <h1 className="text-2xl md:text-5xl font-extrabold tracking-tight text-[#2d3435]">
               Weekly Synthesis
             </h1>
             <button
@@ -207,7 +207,7 @@ export default function Insights() {
               <RefreshCw size={18} />
             </button>
           </div>
-          <p className="text-[#5a6061] text-lg leading-relaxed">
+          <p className="text-[#5a6061] text-base md:text-lg leading-relaxed">
             {insights.weeklySummary ||
               'Analyzing your journal entries for patterns and insights.'}
             {insights.dominantTheme && (
@@ -222,8 +222,8 @@ export default function Insights() {
             )}
           </p>
         </div>
-        <div className="flex gap-4">
-          <div className="p-6 bg-white rounded-[2rem] shadow-sm text-center">
+        <div className="flex gap-3 flex-wrap">
+          <div className="p-6 bg-white rounded-2xl md:rounded-[2rem] shadow-sm text-center">
             <span className="block text-3xl font-bold text-[#0061aa]">
               {insights.consistency}%
             </span>
@@ -231,7 +231,7 @@ export default function Insights() {
               Consistency
             </span>
           </div>
-          <div className="p-6 bg-white rounded-[2rem] shadow-sm text-center">
+          <div className="p-6 bg-white rounded-2xl md:rounded-[2rem] shadow-sm text-center">
             <span className="block text-3xl font-bold text-[#0061aa]">
               {insights.insightsCount}
             </span>
@@ -243,9 +243,9 @@ export default function Insights() {
       </header>
 
       {/* Bento Grid Insights */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8">
         {/* Mood Description Card */}
-        <section className="md:col-span-8 bg-white rounded-[2rem] p-8 shadow-sm relative overflow-hidden">
+        <section className="md:col-span-8 bg-white rounded-2xl md:rounded-[2rem] p-8 shadow-sm relative overflow-hidden">
           <div className="flex justify-between items-start mb-8">
             <div>
               <h2 className="text-xl font-bold text-[#2d3435] mb-1">
@@ -270,7 +270,7 @@ export default function Insights() {
         </section>
 
         {/* Key Breakthroughs */}
-        <section className="md:col-span-4 bg-[#ebeeef] rounded-[2rem] p-8 flex flex-col justify-between">
+        <section className="md:col-span-4 bg-[#ebeeef] rounded-2xl md:rounded-[2rem] p-8 flex flex-col justify-between">
           <div>
             <div className="w-12 h-12 bg-[#0061aa]/10 rounded-full flex items-center justify-center mb-6">
               <Lightbulb size={24} className="text-[#0061aa]" />
@@ -305,7 +305,7 @@ export default function Insights() {
         </section>
 
         {/* Theme Cloud */}
-        <section className="md:col-span-5 bg-white rounded-[2rem] p-8 shadow-sm">
+        <section className="md:col-span-5 bg-white rounded-2xl md:rounded-[2rem] p-8 shadow-sm">
           <h2 className="text-xl font-bold text-[#2d3435] mb-8">
             Theme Cloud
           </h2>
@@ -327,7 +327,7 @@ export default function Insights() {
         </section>
 
         {/* Quiet Hours Insight */}
-        <section className="md:col-span-7 rounded-[2rem] overflow-hidden relative group h-80">
+        <section className="md:col-span-7 rounded-2xl md:rounded-[2rem] overflow-hidden relative group h-80">
           <div className="absolute inset-0 bg-gradient-to-br from-[#0061aa] to-[#005596]" />
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/3 translate-x-1/3 blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/3 blur-2xl" />
@@ -344,13 +344,13 @@ export default function Insights() {
       </div>
 
       {/* Historical Benchmarks */}
-      <section className="bg-[#f2f4f4] rounded-[2rem] p-10">
-        <h2 className="text-2xl font-bold text-[#2d3435] mb-10">
+      <section className="bg-[#f2f4f4] rounded-2xl md:rounded-[2rem] p-5 md:p-10">
+        <h2 className="text-xl md:text-2xl font-bold text-[#2d3435] mb-6 md:mb-10">
           Historical Benchmarks
         </h2>
-        <div className="space-y-12">
+        <div className="space-y-6 md:space-y-12">
           {/* Average Sentiment */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-6">
               <div className="w-14 h-14 bg-[#dde4e5] rounded-full flex items-center justify-center">
                 <SmilePlus size={24} className="text-[#0061aa]" />
@@ -378,7 +378,7 @@ export default function Insights() {
           </div>
 
           {/* Journal Depth */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-6">
               <div className="w-14 h-14 bg-[#dde4e5] rounded-full flex items-center justify-center">
                 <FileEdit size={24} className="text-[#586062]" />
@@ -404,7 +404,7 @@ export default function Insights() {
           </div>
 
           {/* Burnout Indicator */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-6">
               <div className="w-14 h-14 bg-[#dde4e5] rounded-full flex items-center justify-center">
                 <AlertTriangle size={24} className="text-[#9f403d]" />

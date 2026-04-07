@@ -17,6 +17,10 @@ body {
 ::-webkit-scrollbar-thumb { background: #dde4e5; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #c0c6c8; }
 
+/* Hide scrollbar but keep scrollable */
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
 /* Range input styling */
 input[type='range'] {
   -webkit-appearance: none;

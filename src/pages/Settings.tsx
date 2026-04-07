@@ -67,7 +67,7 @@ export default function Settings() {
     'w-full bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all'
 
   return (
-    <div className="px-12 pb-24 max-w-3xl mx-auto">
+    <div className="px-4 md:px-12 pb-24 max-w-3xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight text-[#2d3435] mb-2">Settings</h1>
@@ -83,7 +83,7 @@ export default function Settings() {
 
       <div className="space-y-6">
         {/* API Key */}
-        <div className="bg-white rounded-xl shadow-sm p-8">
+        <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
           <h2 className="text-xl font-bold text-[#2d3435] flex items-center gap-2 mb-2">
             <Key size={18} className="text-[#0061aa]" />
             Anthropic API Key
@@ -129,7 +129,7 @@ export default function Settings() {
         </div>
 
         {/* Model selector */}
-        <div className="bg-white rounded-xl shadow-sm p-8">
+        <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
           <h2 className="text-xl font-bold text-[#2d3435] flex items-center gap-2 mb-2">
             <Cpu size={18} className="text-[#0061aa]" />
             AI Model

@@ -29,7 +29,7 @@ export default function Sidebar() {
     )
 
   return (
-    <aside className="w-64 shrink-0 flex flex-col h-screen bg-[#f9f9f9] py-8 px-4 sticky top-0 z-50">
+    <aside className="hidden md:flex w-64 shrink-0 flex-col h-screen bg-[#f9f9f9] py-8 px-4 sticky top-0 z-50">
       {/* Logo */}
       <div className="mb-10 px-4">
         <h1 className="text-xl font-bold text-[#586062]">Personal OS</h1>

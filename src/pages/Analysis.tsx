@@ -97,7 +97,7 @@ export default function Analysis() {
   // Loading saved data from DB
   if (dbLoading) {
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
         <div className="w-6 h-6 border-2 border-[#0061aa] border-t-transparent rounded-full animate-spin" />
       </div>
     )
@@ -106,7 +106,7 @@ export default function Analysis() {
   // Loading state
   if (loading) {
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4">
           <div className="w-10 h-10 border-2 border-[#0061aa] border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-sm text-[#5a6061] font-medium">
@@ -123,7 +123,7 @@ export default function Analysis() {
   // Error state
   if (error) {
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4 max-w-md">
           <AlertCircle size={32} className="text-[#9f403d] mx-auto" />
           <p className="text-sm text-[#2d3435] font-medium">{error}</p>
@@ -152,7 +152,7 @@ export default function Analysis() {
   // Empty state
   if (entries.length === 0) {
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4">
           <Brain size={32} className="text-[#0061aa] mx-auto opacity-40" />
           <p className="text-sm text-[#2d3435] font-medium">
@@ -172,7 +172,7 @@ export default function Analysis() {
   // No analysis generated yet
   if (!analysis) {
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-5 max-w-sm">
           <div className="w-16 h-16 rounded-full bg-[#0061aa]/10 flex items-center justify-center mx-auto">
             <Brain size={28} className="text-[#0061aa]" />
@@ -211,14 +211,14 @@ export default function Analysis() {
   }
 
   return (
-    <div className="px-12 pb-24 max-w-7xl mx-auto space-y-8">
+    <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto space-y-8">
       {/* Hero Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 py-8">
         <div>
           <p className="text-[#0061aa] font-bold text-sm tracking-widest uppercase mb-2">
             Deep Intelligence
           </p>
-          <h2 className="text-4xl font-extrabold text-[#2d3435] tracking-tight">
+          <h2 className="text-2xl md:text-4xl font-extrabold text-[#2d3435] tracking-tight">
             Journal Analysis
           </h2>
           <p className="text-[#5a6061] max-w-lg mt-2">
@@ -226,7 +226,7 @@ export default function Analysis() {
             {entries.length === 1 ? 'entry' : 'entries'}.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={runAnalysis}
             className="px-6 py-3 bg-[#e4e9ea] text-[#586062] font-bold rounded-full text-sm hover:bg-[#dde4e5] transition-all flex items-center gap-2 cursor-pointer"
@@ -245,9 +245,9 @@ export default function Analysis() {
       </div>
 
       {/* Bento Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8">
         {/* Sentiment Trends */}
-        <div className="md:col-span-8 bg-white rounded-[2rem] p-8 shadow-sm relative overflow-hidden">
+        <div className="md:col-span-8 bg-white rounded-2xl md:rounded-[2rem] p-5 md:p-8shadow-sm relative overflow-hidden">
           <div className="flex justify-between items-start mb-12">
             <div>
               <h3 className="text-xl font-bold text-[#2d3435] tracking-tight">
@@ -314,7 +314,7 @@ export default function Analysis() {
         </div>
 
         {/* Keyword Frequency */}
-        <div className="md:col-span-4 bg-white rounded-[2rem] p-8 shadow-sm flex flex-col">
+        <div className="md:col-span-4 bg-white rounded-2xl md:rounded-[2rem] p-5 md:p-8shadow-sm flex flex-col">
           <h3 className="text-xl font-bold text-[#2d3435] tracking-tight mb-2">
             Keyword Frequency
           </h3>
@@ -355,7 +355,7 @@ export default function Analysis() {
         </div>
 
         {/* Monthly Breakthroughs */}
-        <div className="md:col-span-5 bg-[#0061aa] rounded-[2rem] p-8 text-white relative overflow-hidden flex flex-col justify-between min-h-[320px]">
+        <div className="md:col-span-5 bg-[#0061aa] rounded-2xl md:rounded-[2rem] p-5 md:p-8text-white relative overflow-hidden flex flex-col justify-between min-h-[320px]">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
           <div className="relative z-10">
             <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-[1rem] flex items-center justify-center mb-6">
@@ -394,7 +394,7 @@ export default function Analysis() {
         </div>
 
         {/* Productivity Correlations */}
-        <div className="md:col-span-7 bg-white rounded-[2rem] p-8 shadow-sm">
+        <div className="md:col-span-7 bg-white rounded-2xl md:rounded-[2rem] p-5 md:p-8shadow-sm">
           <div className="flex justify-between items-start mb-8">
             <div>
               <h3 className="text-xl font-bold text-[#2d3435] tracking-tight">
@@ -449,7 +449,7 @@ export default function Analysis() {
       </div>
 
       {/* Footer Summary Strip */}
-      <div className="bg-[#ebeeef] rounded-[2rem] p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="bg-[#ebeeef] rounded-2xl md:rounded-[2rem] p-5 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
         <div className="flex items-center gap-6">
           <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-inner">
             <Brain size={28} className="text-[#0061aa]" />

@@ -63,7 +63,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-3">
           <div className="w-8 h-8 border-2 border-[#0061aa] border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-sm text-[#5a6061]">Loading your dashboard...</p>
@@ -73,9 +73,9 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="px-12 pb-24 max-w-7xl mx-auto space-y-8">
+    <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto space-y-6 md:space-y-8">
       {/* Hero Banner */}
-      <div className="relative bg-[#586062] rounded-xl overflow-hidden px-10 py-14 shadow-sm">
+      <div className="relative bg-[#586062] rounded-xl overflow-hidden px-6 py-10 md:px-10 md:py-14 shadow-sm">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-[0.07]">
           <div
@@ -95,7 +95,7 @@ export default function Dashboard() {
           </svg>
         </div>
         <div className="relative z-10">
-          <h1 className="text-4xl font-extrabold text-white tracking-tight">
+          <h1 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight">
             Clarity over Complexity
           </h1>
           <p className="text-white/60 mt-2 text-sm max-w-md">
@@ -106,9 +106,9 @@ export default function Dashboard() {
       </div>
 
       {/* Two stat cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
         {/* Wheel of Life Card */}
-        <div className="bg-white rounded-xl p-8 shadow-sm">
+        <div className="bg-white rounded-xl p-5 md:p-8 shadow-sm">
           <h2 className="text-sm font-bold text-[#5a6061] uppercase tracking-wider mb-4">
             Wheel of Life
           </h2>
@@ -181,7 +181,7 @@ export default function Dashboard() {
         </div>
 
         {/* High Priority Tasks Card */}
-        <div className="bg-white rounded-xl p-8 shadow-sm">
+        <div className="bg-white rounded-xl p-5 md:p-8 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold text-[#5a6061] uppercase tracking-wider">
               High Priority Tasks
@@ -239,7 +239,7 @@ export default function Dashboard() {
       {/* Recent Journal Entries */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-[#2d3435]">
+          <h2 className="text-lg md:text-2xl font-bold text-[#2d3435]">
             Recent Journal Entries
           </h2>
           <button
@@ -261,7 +261,7 @@ export default function Dashboard() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {recentEntries.map((entry) => {
               const date = new Date(entry.created_at)
               return (
