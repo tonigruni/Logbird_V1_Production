@@ -4,39 +4,62 @@
 
 /* ------------------------------------------------------------
    Design Tokens (CSS Custom Properties)
+   Change any value here to update the entire UI instantly.
    ------------------------------------------------------------ */
 :root {
-  /* Card */
-  --card-radius:        15px;
-  --card-border-color:  #CCD6DD;
-  --card-border:        1px solid var(--card-border-color);
-  --card-shadow:        0 -4px 10px 0 #EEECEA;
+  /* ── Card ── */
+  --card-radius:       15px;
+  --card-border-color: #ECEFF2;
+  --card-border:       1px solid var(--card-border-color);
+  --card-shadow:       none;
 
-  /* Brand */
-  --color-primary:      #8bbdbb;
-  --color-primary-dark: #213233;
+  /* ── Brand ── */
+  --color-primary:     #1F3649;
+  --color-primary-dark:#213233;
+  --color-accent:      #1F3649;
+  --color-accent-dark: #162838;
 
-  /* Neutral surface */
-  --color-bg:           #f9f9f9;
-  --color-surface:      #ffffff;
-  --color-muted:        #f2f4f4;
+  /* ── Layout ── */
+  --sidebar-width:             288px;
+  --sidebar-border-color:      #ECEFF2;
+  --sidebar-border-width:      1px;
 
-  /* Text */
-  --color-text:         #2d3435;
-  --color-text-muted:   #5a6061;
-  --color-text-faint:   #adb3b4;
-}
+  /* ── Surfaces ── */
+  --color-bg:                  #ffffff;
+  --color-surface:             #ffffff;
+  --color-muted:               #f2f4f4;
+  --color-container-lowest:    #ffffff;
+  --color-container-low:       #f2f4f4;
+  --color-container:           #ebeeef;
+  --color-container-high:      #e4e9ea;
+  --color-container-highest:   #dde4e5;
 
-/* ------------------------------------------------------------
-   .card  — base card treatment
-   Placed in @layer utilities so it takes precedence over
-   Tailwind component/base layers and is never overridden
-   by leftover rounded-* or shadow-* utilities.
-   ------------------------------------------------------------ */
-@layer utilities {
-  .card {
-    border-radius: var(--card-radius) !important;
-    border:        var(--card-border) !important;
-    box-shadow:    var(--card-shadow) !important;
-  }
+  /* ── Text ── */
+  --color-text:        #2d3435;
+  --color-text-muted:  #5a6061;
+  --color-text-faint:  #adb3b4;
+
+  /* ── Status ── */
+  --color-success:     #22c55e;
+  --color-warning:     #f59e0b;
+  --color-error:       #9f403d;
+
+  /* ── Typography ── */
+  --font-heading: "Satoshi", system-ui, sans-serif;
+  --font-sans:    "DM Sans", system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", monospace;
+
+  /* ── Border Radius ── */
+  --radius-default: 1rem;
+  --radius-lg:      2rem;
+  --radius-xl:      3rem;
+  --radius-2xl:     3rem;
+
+  /* ── Shadows ── */
+  --shadow-sm:         0 2px 12px rgba(45,52,53,0.04);
+  --shadow-card:       0 10px 40px rgba(45,52,53,0.06);
+  --shadow-card-hover: 0 15px 50px rgba(45,52,53,0.09);
+  --shadow-dropdown:   0 12px 44px rgba(45,52,53,0.08);
+  --shadow-lg:         0 10px 40px rgba(45,52,53,0.10);
+  --shadow-xl:         0 20px 60px rgba(45,52,53,0.12);
 }

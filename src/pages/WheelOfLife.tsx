@@ -43,7 +43,7 @@ type Tab = 'checkin' | 'goals' | 'history'
 // Category colors and icons
 const CATEGORY_META: Record<string, { color: string; icon: React.ElementType; description: string }> = {
   Health: { color: '#22c55e', icon: Heart, description: 'Physical & mental wellbeing' },
-  Career: { color: '#0061aa', icon: Briefcase, description: 'Professional growth & satisfaction' },
+  Career: { color: '#1F3649', icon: Briefcase, description: 'Professional growth & satisfaction' },
   Finance: { color: '#f59e0b', icon: DollarSign, description: 'Financial security & freedom' },
   Relationships: { color: '#ef4444', icon: Users, description: 'Romantic & social connections' },
   'Personal Growth': { color: '#8b5cf6', icon: TrendingUp, description: 'Learning & self-improvement' },
@@ -127,7 +127,7 @@ const CATEGORY_QUESTIONS: Record<string, { title: string; description: string }[
 }
 
 // Donut chart component for scores
-function ScoreDonut({ score, maxScore = 10, size = 120, color = '#0061aa' }: { score: number; maxScore?: number; size?: number; color?: string }) {
+function ScoreDonut({ score, maxScore = 10, size = 120, color = '#1F3649' }: { score: number; maxScore?: number; size?: number; color?: string }) {
   const percentage = (score / maxScore) * 100
   const data = [
     { value: percentage },
@@ -172,7 +172,7 @@ function PointSelector({ value, onChange }: { value: number; onChange: (v: numbe
           className={cn(
             'w-8 h-8 rounded-lg text-sm font-medium transition-all cursor-pointer',
             point <= value
-              ? 'bg-[#0061aa] text-white shadow-sm'
+              ? 'bg-[#1F3649] text-white shadow-sm'
               : 'bg-[#f2f4f4] text-[#5a6061] hover:bg-[#ebeeef]'
           )}
         >
@@ -308,7 +308,7 @@ export default function WheelOfLife() {
     })
 
     return (
-      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto animate-fade-in">
+      <div className="pb-24 animate-fade-in">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-6 text-sm">
           <button
@@ -369,7 +369,7 @@ export default function WheelOfLife() {
                 onClick={() => {
                   setSelectedCategory(null)
                 }}
-                className="mt-6 w-full bg-[#0061aa] hover:bg-[#005596] text-white text-sm font-bold py-3 rounded-xl transition-all cursor-pointer"
+                className="mt-6 w-full bg-[#1F3649] hover:bg-[#162838] text-white text-sm font-bold py-3 rounded-xl transition-all cursor-pointer"
               >
                 Continue
               </button>
@@ -410,7 +410,7 @@ export default function WheelOfLife() {
     const meta = getCategoryMeta(cat?.name ?? '')
 
     return (
-      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto animate-fade-in">
+      <div className="pb-24 animate-fade-in">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-6 text-sm">
           <button
@@ -435,11 +435,11 @@ export default function WheelOfLife() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs px-2.5 py-0.5 rounded-full font-medium" style={{ backgroundColor: `${meta.color}15`, color: meta.color }}>
+                    <span className="text-xs px-2.5 py-0.5 rounded-[15px] font-medium" style={{ backgroundColor: `${meta.color}15`, color: meta.color }}>
                       {cat?.name ?? 'General'}
                     </span>
                     <span className={cn(
-                      'text-xs px-2.5 py-0.5 rounded-full font-medium',
+                      'text-xs px-2.5 py-0.5 rounded-[15px] font-medium',
                       selectedGoal.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#f59e0b]/10 text-[#f59e0b]'
                     )}>
                       {selectedGoal.status}
@@ -503,12 +503,12 @@ export default function WheelOfLife() {
                   onChange={(e) => setNewTask({ goalId: selectedGoal.id, categoryId: selectedGoal.category_id, title: e.target.value })}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleAddTask(selectedGoal.id, selectedGoal.category_id) }}
                   placeholder="Add a new task..."
-                  className="flex-1 bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all"
+                  className="flex-1 bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"
                 />
                 <button
                   onClick={() => handleAddTask(selectedGoal.id, selectedGoal.category_id)}
                   disabled={!newTask.title || newTask.goalId !== selectedGoal.id}
-                  className="px-4 py-2.5 bg-[#0061aa] hover:bg-[#005596] disabled:opacity-50 text-white text-sm font-bold rounded-xl transition-all cursor-pointer"
+                  className="px-4 py-2.5 bg-[#1F3649] hover:bg-[#162838] disabled:opacity-50 text-white text-sm font-bold rounded-xl transition-all cursor-pointer"
                 >
                   <Plus size={16} />
                 </button>
@@ -522,7 +522,7 @@ export default function WheelOfLife() {
                 value={reflectionText}
                 onChange={(e) => setReflectionText(e.target.value)}
                 placeholder="Add a reflection or note about this goal..."
-                className="w-full bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all resize-none h-24"
+                className="w-full bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all resize-none h-24"
               />
               <div className="flex gap-2 mt-3">
                 <button
@@ -574,7 +574,7 @@ export default function WheelOfLife() {
   }
 
   return (
-    <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto">
+    <div className="pb-24">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#2d3435]">Wheel of Life Assessment</h1>
@@ -614,7 +614,7 @@ export default function WheelOfLife() {
                       key={name}
                       onClick={() => setSelectedCategory(name)}
                       className={cn(
-                        'px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer',
+                        'px-3 py-1.5 rounded-[15px] text-xs font-medium transition-all cursor-pointer',
                         selectedCategory === name
                           ? 'text-white'
                           : 'text-[#5a6061] hover:bg-[#f2f4f4]'
@@ -641,7 +641,7 @@ export default function WheelOfLife() {
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
                   placeholder="Add category..."
-                  className="flex-1 bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-xs text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all"
+                  className="flex-1 bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-xs text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"
                 />
                 <button
                   onClick={handleAddCategory}
@@ -666,8 +666,8 @@ export default function WheelOfLife() {
                   <Radar
                     name="Score"
                     dataKey="value"
-                    stroke="#0061aa"
-                    fill="#0061aa"
+                    stroke="#1F3649"
+                    fill="#1F3649"
                     fillOpacity={0.15}
                     strokeWidth={2}
                   />
@@ -705,7 +705,7 @@ export default function WheelOfLife() {
                       max={10}
                       value={scores[name] ?? 5}
                       onChange={(e) => setScores((prev) => ({ ...prev, [name]: Number(e.target.value) }))}
-                      className="w-full h-1.5 rounded-full accent-[#0061aa] cursor-pointer"
+                      className="w-full h-1.5 rounded-full accent-[#1F3649] cursor-pointer"
                     />
                   </div>
                 )
@@ -716,7 +716,7 @@ export default function WheelOfLife() {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Notes for this check-in (optional)..."
-              className="w-full mt-5 bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all resize-none h-20"
+              className="w-full mt-5 bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all resize-none h-20"
             />
           </div>
 
@@ -747,7 +747,7 @@ export default function WheelOfLife() {
             <button
               onClick={submitCheckin}
               disabled={submitting}
-              className="flex items-center gap-2 px-5 py-2.5 bg-[#0061aa] hover:bg-[#005596] disabled:opacity-50 text-white text-sm font-bold rounded-full transition-all cursor-pointer"
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#1F3649] hover:bg-[#162838] disabled:opacity-50 text-white text-sm font-bold rounded-[15px] transition-all cursor-pointer"
             >
               {submitting ? 'Saving...' : 'Start New Assessment'}
               {!submitting && <ArrowRight size={15} />}
@@ -802,14 +802,14 @@ export default function WheelOfLife() {
           {/* Add goal form */}
           <div className="bg-white card p-8">
             <h3 className="font-semibold text-[#2d3435] mb-4 flex items-center gap-2">
-              <Target size={16} className="text-[#0061aa]" />
+              <Target size={16} className="text-[#1F3649]" />
               Add New Goal
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <select
                 value={newGoal.categoryId}
                 onChange={(e) => setNewGoal((p) => ({ ...p, categoryId: e.target.value }))}
-                className="bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all cursor-pointer"
+                className="bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all cursor-pointer"
               >
                 <option value="">Select category...</option>
                 {categories.filter((c) => c.is_active).map((c) => (
@@ -820,25 +820,25 @@ export default function WheelOfLife() {
                 value={newGoal.title}
                 onChange={(e) => setNewGoal((p) => ({ ...p, title: e.target.value }))}
                 placeholder="Goal title..."
-                className="bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all"
+                className="bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"
               />
               <input
                 value={newGoal.description}
                 onChange={(e) => setNewGoal((p) => ({ ...p, description: e.target.value }))}
                 placeholder="Description (optional)..."
-                className="bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all"
+                className="bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"
               />
               <input
                 type="date"
                 value={newGoal.targetDate}
                 onChange={(e) => setNewGoal((p) => ({ ...p, targetDate: e.target.value }))}
-                className="bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all cursor-pointer"
+                className="bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all cursor-pointer"
               />
             </div>
             <button
               onClick={handleAddGoal}
               disabled={!newGoal.title || !newGoal.categoryId}
-              className="mt-4 px-5 py-2.5 bg-[#0061aa] hover:bg-[#005596] disabled:opacity-50 text-white text-sm font-bold rounded-xl transition-all cursor-pointer"
+              className="mt-4 px-5 py-2.5 bg-[#1F3649] hover:bg-[#162838] disabled:opacity-50 text-white text-sm font-bold rounded-xl transition-all cursor-pointer"
             >
               Add Goal
             </button>
@@ -870,11 +870,11 @@ export default function WheelOfLife() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: `${meta.color}15`, color: meta.color }}>
+                        <span className="text-xs px-2 py-0.5 rounded-[15px] font-medium" style={{ backgroundColor: `${meta.color}15`, color: meta.color }}>
                           {cat?.name ?? 'Unknown'}
                         </span>
                         <span className={cn(
-                          'text-xs px-2 py-0.5 rounded-full font-medium',
+                          'text-xs px-2 py-0.5 rounded-[15px] font-medium',
                           goal.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#f59e0b]/10 text-[#f59e0b]'
                         )}>
                           {goal.status}
@@ -893,7 +893,7 @@ export default function WheelOfLife() {
                       </div>
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedGoal(goal) }}
-                        className="text-xs text-[#0061aa] hover:underline cursor-pointer font-medium"
+                        className="text-xs text-[#1F3649] hover:underline cursor-pointer font-medium"
                       >
                         Details
                       </button>
@@ -950,12 +950,12 @@ export default function WheelOfLife() {
                           onChange={(e) => setNewTask({ goalId: goal.id, categoryId: goal.category_id, title: e.target.value })}
                           onKeyDown={(e) => { if (e.key === 'Enter') handleAddTask(goal.id, goal.category_id) }}
                           placeholder="Add task..."
-                          className="flex-1 bg-white border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 transition-all"
+                          className="flex-1 bg-white border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 transition-all"
                         />
                         <button
                           onClick={() => handleAddTask(goal.id, goal.category_id)}
                           disabled={!newTask.title || newTask.goalId !== goal.id}
-                          className="p-2.5 bg-[#0061aa]/10 hover:bg-[#0061aa]/20 disabled:opacity-50 text-[#0061aa] rounded-xl transition-all cursor-pointer"
+                          className="p-2.5 bg-[#1F3649]/10 hover:bg-[#1F3649]/20 disabled:opacity-50 text-[#1F3649] rounded-xl transition-all cursor-pointer"
                         >
                           <Plus size={14} />
                         </button>
@@ -990,7 +990,7 @@ export default function WheelOfLife() {
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-[#2d3435]">{format(new Date(checkin.date), 'EEEE, MMMM d, yyyy')}</h3>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-[#0061aa]">Avg: {avg}/10</span>
+                    <span className="text-sm font-bold text-[#1F3649]">Avg: {avg}/10</span>
                   </div>
                 </div>
 
@@ -1001,7 +1001,7 @@ export default function WheelOfLife() {
                       <RadarChart data={historyRadarData} cx="50%" cy="50%" outerRadius="65%">
                         <PolarGrid stroke="#ebeeef" />
                         <PolarAngleAxis dataKey="subject" tick={{ fill: '#5a6061', fontSize: 10, fontFamily: 'Manrope' }} />
-                        <Radar dataKey="value" stroke="#0061aa" fill="#0061aa" fillOpacity={0.12} strokeWidth={1.5} />
+                        <Radar dataKey="value" stroke="#1F3649" fill="#1F3649" fillOpacity={0.12} strokeWidth={1.5} />
                       </RadarChart>
                     </ResponsiveContainer>
                   </div>

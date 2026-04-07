@@ -6,6 +6,7 @@ import { useAuthStore } from '../stores/authStore'
 import { useJournalStore } from '../stores/journalStore'
 import { useWheelStore } from '../stores/wheelStore'
 import { format } from 'date-fns'
+import GradientBarsBackground from '../components/ui/GradientBarsBackground'
 
 const CATEGORY_COLORS: Record<string, string> = {
   Health: '#22c55e',
@@ -63,9 +64,9 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="pb-24 flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-3">
-          <div className="w-8 h-8 border-2 border-[#0061aa] border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-8 h-8 border-2 border-[#1F3649] border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-sm text-[#5a6061]">Loading your dashboard...</p>
         </div>
       </div>
@@ -73,9 +74,10 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto space-y-6 md:space-y-8">
+    <div className="pb-24 space-y-6 md:space-y-8">
       {/* Hero Banner */}
-      <div className="relative bg-[#586062] card overflow-hidden px-6 py-10 md:px-10 md:py-14">
+      <div className="relative bg-[#1F3649] card overflow-hidden px-6 py-10 md:px-10 md:py-14">
+        <GradientBarsBackground />
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-[0.07]">
           <div
@@ -194,7 +196,7 @@ export default function Dashboard() {
           {/* Progress bar */}
           <div className="w-full bg-[#f2f4f4] rounded-full h-1.5 mb-5">
             <div
-              className="h-1.5 rounded-full bg-[#0061aa] transition-all"
+              className="h-1.5 rounded-full bg-[#1F3649] transition-all"
               style={{
                 width: `${tasks.length ? (completedTasks / tasks.length) * 100 : 0}%`,
               }}
@@ -208,8 +210,8 @@ export default function Dashboard() {
                 className="flex items-center gap-3 cursor-pointer group"
                 onClick={() => toggleTask(task.id, !task.completed)}
               >
-                <div className="w-5 h-5 rounded-md border-2 border-[#adb3b4] flex items-center justify-center shrink-0 group-hover:border-[#0061aa] transition-colors">
-                  {task.completed && <Check size={12} className="text-[#0061aa]" />}
+                <div className="w-5 h-5 rounded-md border-2 border-[#adb3b4] flex items-center justify-center shrink-0 group-hover:border-[#1F3649] transition-colors">
+                  {task.completed && <Check size={12} className="text-[#1F3649]" />}
                 </div>
                 <span className="text-sm text-[#5a6061] truncate">
                   {task.title}
@@ -226,7 +228,7 @@ export default function Dashboard() {
           {tasks.length > 0 && (
             <div className="mt-4 pt-3 bg-[#f2f4f4] -mx-8 -mb-8 px-8 pb-8 rounded-b-xl">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-[#0061aa]">
+                <span className="text-xs font-semibold text-[#1F3649]">
                   {Math.round((completedTasks / tasks.length) * 100)}%
                 </span>
                 <span className="text-xs text-[#5a6061]">tasks completed</span>
@@ -244,7 +246,7 @@ export default function Dashboard() {
           </h2>
           <button
             onClick={() => navigate('/journal')}
-            className="text-sm text-[#0061aa] font-semibold hover:underline transition-colors cursor-pointer"
+            className="text-sm text-[#1F3649] font-semibold hover:underline transition-colors cursor-pointer"
           >
             View all
           </button>
@@ -255,7 +257,7 @@ export default function Dashboard() {
             <p className="text-sm text-[#5a6061]">No journal entries yet.</p>
             <button
               onClick={() => navigate('/journal')}
-              className="mt-2 text-sm text-[#0061aa] hover:underline cursor-pointer"
+              className="mt-2 text-sm text-[#1F3649] hover:underline cursor-pointer"
             >
               Write your first entry
             </button>
@@ -271,7 +273,7 @@ export default function Dashboard() {
                   className="bg-white card p-6 hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] cursor-pointer transition-all group"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-[#0061aa] uppercase tracking-wider">
+                    <span className="text-xs font-bold text-[#1F3649] uppercase tracking-wider">
                       {format(date, 'MMM d')}
                     </span>
                     {entry.mood_score && (
@@ -280,7 +282,7 @@ export default function Dashboard() {
                       </span>
                     )}
                   </div>
-                  <h3 className="text-sm font-semibold text-[#2d3435] mb-1.5 truncate group-hover:text-[#0061aa] transition-colors">
+                  <h3 className="text-sm font-semibold text-[#2d3435] mb-1.5 truncate group-hover:text-[#1F3649] transition-colors">
                     {entry.title}
                   </h3>
                   <p className="text-xs text-[#5a6061] leading-relaxed line-clamp-3">

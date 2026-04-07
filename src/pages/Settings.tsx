@@ -64,10 +64,10 @@ export default function Settings() {
   }
 
   const inputCls =
-    'w-full bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all'
+    'w-full bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all'
 
   return (
-    <div className="px-4 md:px-12 pb-24 max-w-3xl mx-auto">
+    <div className="pb-24 max-w-3xl">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight text-[#2d3435] mb-2">Settings</h1>
@@ -75,7 +75,7 @@ export default function Settings() {
         </div>
         <Link
           to="/account"
-          className="text-sm text-[#0061aa] font-semibold hover:underline"
+          className="text-sm text-[#1F3649] font-semibold hover:underline"
         >
           Account &amp; Profile
         </Link>
@@ -85,7 +85,7 @@ export default function Settings() {
         {/* API Key */}
         <div className="bg-white card p-5 md:p-8">
           <h2 className="text-xl font-bold text-[#2d3435] flex items-center gap-2 mb-2">
-            <Key size={18} className="text-[#0061aa]" />
+            <Key size={18} className="text-[#1F3649]" />
             Anthropic API Key
           </h2>
           <p className="text-sm text-[#5a6061] mb-8 leading-relaxed">
@@ -95,7 +95,7 @@ export default function Settings() {
               href="https://console.anthropic.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#0061aa] hover:underline"
+              className="text-[#1F3649] hover:underline"
             >
               console.anthropic.com
             </a>
@@ -131,7 +131,7 @@ export default function Settings() {
         {/* Model selector */}
         <div className="bg-white card p-5 md:p-8">
           <h2 className="text-xl font-bold text-[#2d3435] flex items-center gap-2 mb-2">
-            <Cpu size={18} className="text-[#0061aa]" />
+            <Cpu size={18} className="text-[#1F3649]" />
             AI Model
           </h2>
           <p className="text-sm text-[#5a6061] mb-8 leading-relaxed">

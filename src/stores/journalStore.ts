@@ -12,6 +12,7 @@ export interface JournalEntry {
   category: string | null
   location: string | null
   weather: string | null
+  is_favorite?: boolean
   created_at: string
   updated_at: string
 }

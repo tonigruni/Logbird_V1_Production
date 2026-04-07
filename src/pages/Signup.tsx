@@ -25,13 +25,10 @@ export default function Signup() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f9f9f9] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
-        <div className="flex items-center gap-2.5 mb-8 justify-center">
-          <div className="w-10 h-10 rounded-lg bg-[#586062] flex items-center justify-center">
-            <div className="w-3.5 h-3.5 rounded-sm bg-white opacity-90" />
-          </div>
-          <span className="text-xl font-bold text-[#586062]">Personal OS</span>
+        <div className="flex flex-col items-center mb-8">
+          <img src="/Logo complete dark.png" alt="Logbird" className="h-14 w-auto" />
         </div>
 
         <div className="bg-white card p-8">
@@ -45,7 +42,7 @@ export default function Signup() {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all"
+                className="w-full bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"
                 placeholder="Your name"
               />
             </div>
@@ -55,7 +52,7 @@ export default function Signup() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all"
+                className="w-full bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"
                 placeholder="you@example.com"
                 required
               />
@@ -66,7 +63,7 @@ export default function Signup() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all"
+                className="w-full bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"
                 placeholder="Min. 8 characters"
                 required
                 minLength={8}
@@ -87,7 +84,7 @@ export default function Signup() {
 
           <p className="text-center text-sm text-[#5a6061] mt-4">
             Already have an account?{' '}
-            <Link to="/login" className="text-[#0061aa] font-semibold hover:underline">
+            <Link to="/login" className="text-[#1F3649] font-semibold hover:underline">
               Sign in
             </Link>
           </p>

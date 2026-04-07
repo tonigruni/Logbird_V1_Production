@@ -27,12 +27,12 @@ const THEME_SIZES = [
 ]
 
 const THEME_COLORS = [
-  'text-[#0061aa]',
+  'text-[#1F3649]',
   'text-[#2d3435] opacity-90',
-  'text-[#005596]',
+  'text-[#162838]',
   'text-[#586062]',
   'text-[#566165]',
-  'text-[#0061aa] opacity-70',
+  'text-[#1F3649] opacity-70',
   'text-[#4c5456]',
   'text-[#5a6061]',
   'text-[#2d3435]/40',
@@ -88,8 +88,8 @@ export default function Insights() {
   // Loading saved data from DB
   if (dbLoading) {
     return (
-      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
-        <div className="w-6 h-6 border-2 border-[#0061aa] border-t-transparent rounded-full animate-spin" />
+      <div className="pb-24 flex items-center justify-center min-h-[60vh]">
+        <div className="w-6 h-6 border-2 border-[#1F3649] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -97,9 +97,9 @@ export default function Insights() {
   // Loading state
   if (loading) {
     return (
-      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="pb-24 flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4">
-          <div className="w-10 h-10 border-2 border-[#0061aa] border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-10 h-10 border-2 border-[#1F3649] border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-sm text-[#5a6061] font-medium">
             Synthesizing insights from {entries.length} entries...
           </p>
@@ -114,7 +114,7 @@ export default function Insights() {
   // Error state
   if (error) {
     return (
-      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="pb-24 flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4 max-w-md">
           <AlertCircle size={32} className="text-[#9f403d] mx-auto" />
           <p className="text-sm text-[#2d3435] font-medium">{error}</p>
@@ -122,14 +122,14 @@ export default function Insights() {
             {(error.includes('Settings') || error.includes('API key')) && (
               <button
                 onClick={() => navigate('/settings')}
-                className="px-5 py-2.5 bg-[#0061aa] text-white text-sm font-bold rounded-full cursor-pointer hover:opacity-90 transition-all"
+                className="px-5 py-2.5 bg-[#1F3649] text-white text-sm font-bold rounded-[15px] cursor-pointer hover:opacity-90 transition-all"
               >
                 Go to Settings
               </button>
             )}
             <button
               onClick={runInsights}
-              className="px-5 py-2.5 bg-[#e4e9ea] text-[#586062] text-sm font-bold rounded-full cursor-pointer hover:bg-[#dde4e5] transition-all flex items-center gap-2"
+              className="px-5 py-2.5 bg-[#e4e9ea] text-[#586062] text-sm font-bold rounded-[15px] cursor-pointer hover:bg-[#dde4e5] transition-all flex items-center gap-2"
             >
               <RefreshCw size={14} />
               Retry
@@ -143,15 +143,15 @@ export default function Insights() {
   // Empty state
   if (entries.length === 0) {
     return (
-      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="pb-24 flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4">
-          <Brain size={32} className="text-[#0061aa] mx-auto opacity-40" />
+          <Brain size={32} className="text-[#1F3649] mx-auto opacity-40" />
           <p className="text-sm text-[#2d3435] font-medium">
             No journal entries to analyze yet.
           </p>
           <button
             onClick={() => navigate('/journal')}
-            className="text-sm text-[#0061aa] font-semibold hover:underline cursor-pointer"
+            className="text-sm text-[#1F3649] font-semibold hover:underline cursor-pointer"
           >
             Write your first entry
           </button>
@@ -163,10 +163,10 @@ export default function Insights() {
   // No insights generated yet
   if (!insights) {
     return (
-      <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+      <div className="pb-24 flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-5 max-w-sm">
-          <div className="w-16 h-16 rounded-full bg-[#0061aa]/10 flex items-center justify-center mx-auto">
-            <Brain size={28} className="text-[#0061aa]" />
+          <div className="w-16 h-16 rounded-full bg-[#1F3649]/10 flex items-center justify-center mx-auto">
+            <Brain size={28} className="text-[#1F3649]" />
           </div>
           <div>
             <p className="text-base font-bold text-[#2d3435] mb-1">No insights yet</p>
@@ -177,7 +177,7 @@ export default function Insights() {
           </div>
           <button
             onClick={runInsights}
-            className="px-8 py-3 bg-[#0061aa] text-white text-sm font-bold rounded-full cursor-pointer hover:opacity-90 shadow-lg shadow-[#0061aa]/20 transition-all flex items-center gap-2 mx-auto"
+            className="px-8 py-3 bg-[#1F3649] text-white text-sm font-bold rounded-[15px] cursor-pointer hover:opacity-90 shadow-lg shadow-[#1F3649]/20 transition-all flex items-center gap-2 mx-auto"
           >
             <Lightbulb size={15} />
             Generate Insights
@@ -191,7 +191,7 @@ export default function Insights() {
   const sortedThemes = [...insights.themes].sort((a, b) => b.weight - a.weight)
 
   return (
-    <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto space-y-6 md:space-y-12">
+    <div className="pb-24 space-y-6 md:space-y-12">
       {/* Hero Summary Section */}
       <header className="flex flex-col md:flex-row gap-8 items-end justify-between pt-8">
         <div className="space-y-4 max-w-2xl">
@@ -201,7 +201,7 @@ export default function Insights() {
             </h1>
             <button
               onClick={runInsights}
-              className="p-2 text-[#5a6061] hover:text-[#0061aa] hover:bg-[#f2f4f4] rounded-full transition-all cursor-pointer"
+              className="p-2 text-[#5a6061] hover:text-[#1F3649] hover:bg-[#f2f4f4] rounded-full transition-all cursor-pointer"
               title="Refresh insights"
             >
               <RefreshCw size={18} />
@@ -214,7 +214,7 @@ export default function Insights() {
               <>
                 {' '}
                 Your dominant theme is{' '}
-                <span className="text-[#0061aa] font-bold">
+                <span className="text-[#1F3649] font-bold">
                   {insights.dominantTheme}
                 </span>
                 .
@@ -224,7 +224,7 @@ export default function Insights() {
         </div>
         <div className="flex gap-3 flex-wrap">
           <div className="p-6 bg-white card text-center">
-            <span className="block text-3xl font-bold text-[#0061aa]">
+            <span className="block text-3xl font-bold text-[#1F3649]">
               {insights.consistency}%
             </span>
             <span className="text-xs font-bold uppercase tracking-widest text-[#5a6061]">
@@ -232,7 +232,7 @@ export default function Insights() {
             </span>
           </div>
           <div className="p-6 bg-white card text-center">
-            <span className="block text-3xl font-bold text-[#0061aa]">
+            <span className="block text-3xl font-bold text-[#1F3649]">
               {insights.insightsCount}
             </span>
             <span className="text-xs font-bold uppercase tracking-widest text-[#5a6061]">
@@ -272,8 +272,8 @@ export default function Insights() {
         {/* Key Breakthroughs */}
         <section className="md:col-span-4 bg-[#ebeeef] card p-8 flex flex-col justify-between">
           <div>
-            <div className="w-12 h-12 bg-[#0061aa]/10 rounded-full flex items-center justify-center mb-6">
-              <Lightbulb size={24} className="text-[#0061aa]" />
+            <div className="w-12 h-12 bg-[#1F3649]/10 rounded-full flex items-center justify-center mb-6">
+              <Lightbulb size={24} className="text-[#1F3649]" />
             </div>
             <h2 className="text-2xl font-bold text-[#2d3435] mb-4">
               Key Breakthroughs
@@ -281,7 +281,7 @@ export default function Insights() {
             <ul className="space-y-6">
               {insights.breakthroughs.map((text, i) => (
                 <li key={i} className="flex gap-4">
-                  <span className="text-[#0061aa] font-black text-lg">
+                  <span className="text-[#1F3649] font-black text-lg">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <p className="text-sm leading-relaxed text-[#5a6061] font-medium">
@@ -328,7 +328,7 @@ export default function Insights() {
 
         {/* Quiet Hours Insight */}
         <section className="md:col-span-7 card overflow-hidden relative group h-80">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#0061aa] to-[#005596]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1F3649] to-[#162838]" />
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/3 translate-x-1/3 blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/3 blur-2xl" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent p-10 flex flex-col justify-end">
@@ -353,7 +353,7 @@ export default function Insights() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-6">
               <div className="w-14 h-14 bg-[#dde4e5] rounded-full flex items-center justify-center">
-                <SmilePlus size={24} className="text-[#0061aa]" />
+                <SmilePlus size={24} className="text-[#1F3649]" />
               </div>
               <div>
                 <p className="text-[#5a6061] text-xs font-bold uppercase tracking-widest mb-1">
@@ -368,7 +368,7 @@ export default function Insights() {
             </div>
             <div className="text-right">
               <p
-                className={`font-bold text-lg ${insights.benchmarks.sentiment.delta >= 0 ? 'text-[#0061aa]' : 'text-[#9f403d]'}`}
+                className={`font-bold text-lg ${insights.benchmarks.sentiment.delta >= 0 ? 'text-[#1F3649]' : 'text-[#9f403d]'}`}
               >
                 {insights.benchmarks.sentiment.delta >= 0 ? '↑' : '↓'}{' '}
                 {Math.abs(insights.benchmarks.sentiment.delta)}%

@@ -3,8 +3,8 @@ import { useLocation, useSearchParams } from 'react-router-dom'
 import {
   Plus, Calendar, FileText, Sparkles, Trash2, Save,
   Send, Brain, MessageCircle, ChevronRight, ChevronLeft, Layout,
-  BarChart2, Hash, TrendingUp, List, LayoutGrid,
-  MapPin, Cloud, Tag, MoreHorizontal, X,
+  BarChart2, Hash, TrendingUp, Star, Frown, Meh, Smile,
+  MapPin, Cloud, Tag, MoreHorizontal, X, type LucideIcon,
 } from 'lucide-react'
 import Anthropic from '@anthropic-ai/sdk'
 import ReactMarkdown from 'react-markdown'
@@ -13,6 +13,8 @@ import { useAuthStore } from '../stores/authStore'
 import { useJournalStore, type JournalEntry } from '../stores/journalStore'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isSameDay, subDays } from 'date-fns'
 import { cn } from '../lib/utils'
+import GradientBarsBackground from '../components/ui/GradientBarsBackground'
+import JournalFilterBar, { type MoodRange, type SortOrder } from '../components/ui/JournalFilterBar'
 
 /* ------------------------------------------------------------------ */
 /*  Built-in Templates                                                  */
@@ -138,7 +140,7 @@ const BUILT_IN_TEMPLATES: BuiltInTemplate[] = [
     subtitle: 'A practical planning reflection to help you decide what matters most and act on it with clarity.',
     category: 'Work',
     emoji: '🎯',
-    colorFrom: '#0061aa',
+    colorFrom: '#1F3649',
     colorTo: '#2563eb',
     howItWorks: 'This template turns intention into action. Instead of carrying a vague sense of pressure, you define what matters most today, what could get in your way, and where your energy should go first. The goal is not to do more, but to act on what matters most.',
     principle: 'Clarity creates momentum.',
@@ -317,10 +319,10 @@ function buildEntryContent(t: BuiltInTemplate, responses: string[]): string {
 const ENTRY_CATEGORIES = ['Personal', 'Work', 'Dreams', 'Ideas', 'Travel', 'Health', 'Gratitude']
 
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; dot: string }> = {
-  Personal:  { bg: 'bg-[#0061aa]/10',  text: 'text-[#0061aa]',  dot: '#0061aa' },
+  Personal:  { bg: 'bg-[#1F3649]/10',  text: 'text-[#1F3649]',  dot: '#1F3649' },
   Work:      { bg: 'bg-[#586062]/10',  text: 'text-[#586062]',  dot: '#586062' },
   Dreams:    { bg: 'bg-[#9f403d]/10',  text: 'text-[#9f403d]',  dot: '#fe8983' },
-  Ideas:     { bg: 'bg-[#005596]/10',  text: 'text-[#005596]',  dot: '#3f9eff' },
+  Ideas:     { bg: 'bg-[#162838]/10',  text: 'text-[#162838]',  dot: '#3f9eff' },
   Travel:    { bg: 'bg-[#0d9488]/10',  text: 'text-[#0d9488]',  dot: '#0d9488' },
   Health:    { bg: 'bg-[#16a34a]/10',  text: 'text-[#16a34a]',  dot: '#22c55e' },
   Gratitude: { bg: 'bg-[#ca8a04]/10',  text: 'text-[#ca8a04]',  dot: '#eab308' },
@@ -329,12 +331,12 @@ function getCatColor(cat: string) {
   return CATEGORY_COLORS[cat] ?? { bg: 'bg-[#ebeeef]', text: 'text-[#5a6061]', dot: '#adb3b4' }
 }
 
-const MOOD_META: Record<number, { label: string; short: string; chipClass: string; color: string; emoji: string }> = {
-  1: { label: 'Very Low', short: 'Stressed', chipClass: 'bg-[#9f403d]/10 text-[#9f403d]', color: '#fe8983', emoji: '😞' },
-  2: { label: 'Low',      short: 'Low',      chipClass: 'bg-[#adb3b4]/20 text-[#586062]', color: '#adb3b4', emoji: '😕' },
-  3: { label: 'Neutral',  short: 'Neutral',  chipClass: 'bg-[#ebeeef] text-[#5a6061]',    color: '#dde4e5', emoji: '😐' },
-  4: { label: 'Good',     short: 'Focused',  chipClass: 'bg-[#586062]/10 text-[#586062]', color: '#586062', emoji: '🙂' },
-  5: { label: 'Excellent',short: 'Calm',     chipClass: 'bg-[#0061aa]/10 text-[#0061aa]', color: '#0061aa', emoji: '😄' },
+const MOOD_META: Record<number, { label: string; short: string; chipClass: string; color: string; icon: LucideIcon }> = {
+  1: { label: 'Very Low', short: 'Very Low', chipClass: 'bg-[#9f403d]/10 text-[#9f403d]', color: '#fe8983', icon: Frown },
+  2: { label: 'Low',      short: 'Low',      chipClass: 'bg-[#adb3b4]/20 text-[#586062]', color: '#adb3b4', icon: Frown },
+  3: { label: 'Neutral',  short: 'Neutral',  chipClass: 'bg-[#ebeeef] text-[#5a6061]',    color: '#dde4e5', icon: Meh   },
+  4: { label: 'Good',     short: 'Good',     chipClass: 'bg-[#586062]/10 text-[#586062]', color: '#586062', icon: Smile },
+  5: { label: 'Excellent',short: 'Excellent',chipClass: 'bg-[#1F3649]/10 text-[#1F3649]', color: '#1F3649', icon: Smile },
 }
 
 function stripMd(text: string): string {
@@ -382,11 +384,13 @@ export default function Journal() {
   const [newTemplateContent, setNewTemplateContent] = useState('')
 
   // Library state
-  const [libraryViewMode, setLibraryViewMode] = useState<'list' | 'grid'>('list')
+  const [libraryViewMode, setLibraryViewMode] = useState<'list' | 'grid'>('grid')
   const [dateFilter, setDateFilter] = useState<'all' | '7d' | '30d' | '3m'>('all')
-  const [moodFilter, setMoodFilter] = useState<number | null>(null)
+  const [moodFilter, setMoodFilter] = useState<MoodRange | null>(null)
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null)
-  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
+  const [entryTypeFilter, setEntryTypeFilter] = useState<'template' | 'freewriting' | null>(null)
+  const [favoritesOnly, setFavoritesOnly] = useState(false)
+  const [sortOrder, setSortOrder] = useState<SortOrder>('newest')
 
   // Templates view
   const [templateFilter, setTemplateFilter] = useState<TemplateFilter>('All')
@@ -492,15 +496,40 @@ export default function Journal() {
       const cut = subDays(new Date(), days)
       r = r.filter(e => new Date(e.created_at) >= cut)
     }
-    if (moodFilter !== null) r = r.filter(e => e.mood_score === moodFilter)
+    if (moodFilter !== null) r = r.filter(e => e.mood_score !== null && e.mood_score >= moodFilter.min && e.mood_score <= moodFilter.max)
     if (categoryFilter) r = r.filter(e => e.category === categoryFilter)
+    if (entryTypeFilter === 'template') r = r.filter(e => e.content.trimStart().startsWith('#'))
+    if (entryTypeFilter === 'freewriting') r = r.filter(e => !e.content.trimStart().startsWith('#'))
+    if (favoritesOnly) r = r.filter(e => e.is_favorite === true)
     if (searchFilter) {
       const q = searchFilter.toLowerCase()
       r = r.filter(e => e.title.toLowerCase().includes(q) || e.content.toLowerCase().includes(q))
     }
     if (sortOrder === 'oldest') r.sort((a,b) => new Date(a.created_at).getTime()-new Date(b.created_at).getTime())
+    else if (sortOrder === 'best_mood') r.sort((a,b) => (b.mood_score ?? 0) - (a.mood_score ?? 0))
+    else if (sortOrder === 'worst_mood') r.sort((a,b) => (a.mood_score ?? 6) - (b.mood_score ?? 6))
+    else if (sortOrder === 'longest') r.sort((a,b) => b.content.length - a.content.length)
+    else if (sortOrder === 'shortest') r.sort((a,b) => a.content.length - b.content.length)
     return r
-  }, [entries, dateFilter, moodFilter, categoryFilter, searchFilter, sortOrder])
+  }, [entries, dateFilter, moodFilter, categoryFilter, entryTypeFilter, favoritesOnly, searchFilter, sortOrder])
+
+  // Rule-based filter insight
+  const filterInsight = useMemo(() => {
+    const hasFilter = dateFilter !== 'all' || moodFilter || categoryFilter || entryTypeFilter || favoritesOnly || searchFilter
+    if (!hasFilter) return null
+    const n = libraryEntries.length
+    const s = n === 1 ? 'entry' : 'entries'
+    if (favoritesOnly) return `${n} starred ${s}`
+    if (moodFilter && moodFilter.max <= 2 && categoryFilter === 'Work') return `${n} difficult work ${s} — work may be affecting your mood.`
+    if (moodFilter && moodFilter.max <= 2) {
+      const workCount = libraryEntries.filter(e => e.category === 'Work').length
+      if (workCount > n * 0.5) return `${n} difficult ${s} — over half relate to work.`
+      return `${n} difficult ${s} found.`
+    }
+    if (moodFilter && moodFilter.min >= 4) return `${n} of your best ${s}.`
+    if (searchFilter) return `${n} ${s} mention "${searchFilter}"`
+    return `${n} ${s} match your filters`
+  }, [dateFilter, moodFilter, categoryFilter, entryTypeFilter, favoritesOnly, searchFilter, libraryEntries])
 
   /* ---------------------------------------------------------------- */
   /*  Handlers                                                         */
@@ -602,7 +631,20 @@ export default function Journal() {
 
   const suggestedQuestions = ['What are my most common stressors?', 'Summarize my last week.', 'Show me patterns in my mood.']
 
-  const featuredTpl = BUILT_IN_TEMPLATES[0]
+  const [featuredIdx, setFeaturedIdx] = useState(0)
+  const [featuredFading, setFeaturedFading] = useState(false)
+  const featuredTpl = BUILT_IN_TEMPLATES[featuredIdx]
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFeaturedFading(true)
+      setTimeout(() => {
+        setFeaturedIdx(i => (i + 1) % BUILT_IN_TEMPLATES.length)
+        setFeaturedFading(false)
+      }, 300)
+    }, 8000)
+    return () => clearInterval(interval)
+  }, [])
   const filteredBuiltIns = templateFilter === 'All'
     ? BUILT_IN_TEMPLATES
     : BUILT_IN_TEMPLATES.filter(t => t.category === templateFilter)
@@ -612,7 +654,7 @@ export default function Journal() {
   /* ---------------------------------------------------------------- */
 
   return (
-    <div className="px-4 md:px-12 pb-24 max-w-[1400px] mx-auto">
+    <div className="pb-24">
       {/* ── Editor back button ── */}
       {view === 'editor' && (
         <div className="mb-6">
@@ -630,35 +672,45 @@ export default function Journal() {
       {view === 'dashboard' && (
         <div className="animate-fade-in space-y-8">
           <div>
-            <h2 className="text-sm font-semibold text-[#5a6061] uppercase tracking-wider mb-4">Start Writing</h2>
+            <h2 className="text-sm font-semibold text-[#5a6061] uppercase tracking-wider mb-4"></h2>
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-              <div className="col-span-1 md:col-span-8 relative overflow-hidden card min-h-[220px] md:min-h-[280px] flex flex-col justify-between p-6 md:p-10"
-                   style={{background: `linear-gradient(135deg, ${featuredTpl.colorFrom}, ${featuredTpl.colorTo})`}}>
-                <div className="flex items-start justify-between relative z-10">
-                  <div>
+              <div className="col-span-1 md:col-span-8 relative overflow-hidden card min-h-[220px] md:min-h-[280px] flex flex-col justify-between p-6 md:p-10 bg-[#1F3649]">
+                <GradientBarsBackground key={featuredIdx} />
+                <div
+                  className={cn('flex flex-col justify-between flex-1 relative z-10', featuredFading ? 'slide-out-left' : '')}
+                >
+                  <div key={featuredIdx} className="slide-in-right">
                     <span className="text-white/60 text-[10px] font-bold uppercase tracking-widest block mb-4">Featured Template</span>
                     <h3 className="text-2xl font-extrabold text-white mb-2 tracking-tight">{featuredTpl.name}</h3>
                     <p className="text-white/70 text-sm leading-relaxed max-w-md">{featuredTpl.subtitle}</p>
                   </div>
-                  <span className="text-6xl opacity-50 ml-6">{featuredTpl.emoji}</span>
-                </div>
-                <div className="relative z-10 flex items-center gap-5 mt-6">
-                  <button onClick={() => applyBuiltIn(featuredTpl)}
-                    className="bg-white hover:bg-white/90 text-[#2d3435] text-sm font-bold px-6 py-2.5 rounded-full transition-all cursor-pointer">
-                    Apply Template
-                  </button>
-                  <button onClick={() => gotoView('templates')} className="text-sm text-white/60 hover:text-white font-medium cursor-pointer transition-colors">See all templates</button>
+                  <div className="flex items-center gap-5 mt-6">
+                    <button onClick={() => applyBuiltIn(featuredTpl)}
+                      className="bg-white hover:bg-white/90 text-[#2d3435] text-sm font-bold px-6 py-2.5 rounded-[15px] transition-all cursor-pointer">
+                      Apply Template
+                    </button>
+                    <button onClick={() => gotoView('templates')} className="text-sm text-white/60 hover:text-white font-medium cursor-pointer transition-colors">See all templates</button>
+                    <div className="ml-auto flex items-center gap-1.5">
+                      {BUILT_IN_TEMPLATES.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => { setFeaturedFading(true); setTimeout(() => { setFeaturedIdx(i); setFeaturedFading(false) }, 300) }}
+                          className={cn('transition-all duration-300 rounded-full', i === featuredIdx ? 'w-4 h-1.5 bg-white' : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/60')}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="col-span-1 md:col-span-4 bg-[#f2f4f4] card p-6 md:p-8 flex flex-col justify-between min-h-[200px] md:min-h-[280px] border-2 border-dashed border-[#adb3b4]/30 hover:border-[#0061aa]/30 transition-colors group">
+              <div className="col-span-1 md:col-span-4 bg-[#f2f4f4] card p-6 md:p-8 flex flex-col justify-between min-h-[200px] md:min-h-[280px] !border-2 !border-dashed !border-[#adb3b4]/30 hover:!border-[#1F3649]/30 transition-colors group">
                 <div>
                   <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-105 transition-transform"><Plus size={20} className="text-[#586062]"/></div>
                   <h3 className="text-base font-bold text-[#2d3435] mb-1.5">Blank canvas</h3>
                   <p className="text-sm text-[#5a6061] leading-relaxed">No structure, no prompts — just your thoughts.</p>
                 </div>
                 <button onClick={() => { openNew(); setView('editor') }}
-                  className="mt-5 flex items-center justify-center gap-2 bg-[#586062] hover:bg-[#475052] text-white text-sm font-bold px-5 py-2.5 rounded-full transition-all cursor-pointer">
-                  Blank Entry
+                  className="mt-5 flex items-center justify-center gap-1.5 bg-[#1F3649] hover:bg-[#162838] text-white text-sm font-bold px-5 py-2.5 rounded-[15px] transition-all cursor-pointer">
+                  <Plus size={13} /> New Entry
                 </button>
               </div>
             </div>
@@ -675,8 +727,8 @@ export default function Journal() {
                 <button key={id} onClick={() => gotoView(id as Exclude<View, 'editor'>)}
                   className="bg-white card p-6 text-left hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-all cursor-pointer group">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-9 h-9 rounded-xl bg-[#0061aa]/10 flex items-center justify-center"><Icon size={16} className="text-[#0061aa]"/></div>
-                    <ChevronRight size={14} className="text-[#adb3b4] group-hover:text-[#0061aa] transition-colors"/>
+                    <div className="w-9 h-9 rounded-xl bg-[#1F3649]/10 flex items-center justify-center"><Icon size={16} className="text-[#1F3649]"/></div>
+                    <ChevronRight size={14} className="text-[#adb3b4] group-hover:text-[#1F3649] transition-colors"/>
                   </div>
                   <div className="text-2xl font-extrabold text-[#2d3435] mb-1">{value}</div>
                   <div className="text-sm font-semibold text-[#2d3435] mb-0.5">{label}</div>
@@ -690,7 +742,7 @@ export default function Journal() {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-sm font-semibold text-[#5a6061] uppercase tracking-wider">Recent Entries</h2>
-                <button onClick={() => gotoView('journal')} className="text-xs text-[#0061aa] hover:underline flex items-center gap-1 cursor-pointer">View all <ChevronRight size={12}/></button>
+                <button onClick={() => gotoView('journal')} className="text-xs text-[#1F3649] hover:underline flex items-center gap-1 cursor-pointer">View all <ChevronRight size={12}/></button>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {entries.slice(0,3).map(entry => {
@@ -700,8 +752,8 @@ export default function Journal() {
                     <button key={entry.id} onClick={() => { openEntry(entry); setView('editor') }}
                       className="bg-white card p-5 text-left hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-all cursor-pointer">
                       <div className="flex items-center justify-between mb-2">
-                        <div className="text-[10px] font-bold text-[#0061aa] uppercase tracking-wider">{format(new Date(entry.created_at),'MMM dd, yyyy')}</div>
-                        {cc && cat && <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full', cc.bg, cc.text)}>{cat}</span>}
+                        <div className="text-[10px] font-bold text-[#1F3649] uppercase tracking-wider">{format(new Date(entry.created_at),'MMM dd, yyyy')}</div>
+                        {cc && cat && <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>{cat}</span>}
                       </div>
                       <div className="text-sm font-semibold text-[#2d3435] truncate mb-1">{entry.title}</div>
                       <p className="text-xs text-[#5a6061] line-clamp-2 leading-relaxed">{stripMd(entry.content).slice(0,100)}</p>
@@ -720,43 +772,29 @@ export default function Journal() {
           {/* Main area */}
           <div className="flex-1 min-w-0 w-full">
             {/* Filter bar */}
-            <div className="flex items-center gap-3 mb-5 flex-wrap">
-              <div className="flex gap-1.5">
-                {(['all','7d','30d','3m'] as const).map(f => (
-                  <button key={f} onClick={() => setDateFilter(f)}
-                    className={cn('px-3 py-1.5 text-xs font-semibold rounded-full transition-all cursor-pointer',
-                      dateFilter===f ? 'bg-[#0061aa] text-white' : 'bg-white text-[#5a6061] hover:bg-[#f2f4f4] shadow-sm')}>
-                    {f==='all'?'All Time':f==='7d'?'Last 7 Days':f==='30d'?'Last 30 Days':'Last 3 Months'}
-                  </button>
-                ))}
-              </div>
-              <div className="flex-1"/>
-              <select value={sortOrder} onChange={e => setSortOrder(e.target.value as 'newest'|'oldest')}
-                className="text-xs bg-white text-[#5a6061] border-none shadow-sm rounded-xl px-3 py-1.5 focus:outline-none cursor-pointer">
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-              </select>
-              <div className="flex gap-1 bg-white rounded-xl shadow-sm p-1">
-                {([['list', List],['grid', LayoutGrid]] as const).map(([m, Icon]) => (
-                  <button key={m} onClick={() => setLibraryViewMode(m)}
-                    className={cn('p-1.5 rounded-lg transition-all cursor-pointer', libraryViewMode===m ? 'bg-[#0061aa] text-white' : 'text-[#5a6061] hover:text-[#2d3435]')}>
-                    <Icon size={13}/>
-                  </button>
-                ))}
-              </div>
-            </div>
+            <JournalFilterBar
+              dateFilter={dateFilter}
+              setDateFilter={setDateFilter}
+              moodFilter={moodFilter}
+              setMoodFilter={setMoodFilter}
+              categoryFilter={categoryFilter}
+              setCategoryFilter={setCategoryFilter}
+              entryTypeFilter={entryTypeFilter}
+              setEntryTypeFilter={setEntryTypeFilter}
+              favoritesOnly={favoritesOnly}
+              setFavoritesOnly={setFavoritesOnly}
+              searchFilter={searchFilter}
+              setSearchFilter={setSearchFilter}
+              sortOrder={sortOrder}
+              setSortOrder={setSortOrder}
+              libraryViewMode={libraryViewMode}
+              setLibraryViewMode={setLibraryViewMode}
+            />
 
-            {/* Active filters */}
-            {(searchFilter || moodFilter !== null || categoryFilter) && (
-              <div className="flex items-center gap-3 mb-4 px-4 py-2.5 bg-[#0061aa]/5 rounded-xl text-xs text-[#0061aa]">
-                <span>
-                  {searchFilter && <>Search: <strong>"{searchFilter}"</strong> </>}
-                  {moodFilter !== null && <>{searchFilter?'· ':''}Mood: <strong>{MOOD_META[moodFilter].label}</strong> </>}
-                  {categoryFilter && <>{(searchFilter||moodFilter!==null)?'· ':''}Category: <strong>{categoryFilter}</strong> </>}
-                  — {libraryEntries.length} entr{libraryEntries.length!==1?'ies':'y'}
-                </span>
-                <button onClick={() => { setSearchFilter(''); setMoodFilter(null); setCategoryFilter(null) }}
-                  className="ml-auto text-[#9f403d] hover:underline cursor-pointer font-semibold">Clear all</button>
+            {/* Rule-based insight */}
+            {filterInsight && (
+              <div className="mb-4 px-3 py-2 bg-[#1F3649]/5 rounded-[10px] text-xs text-[#1F3649] font-medium">
+                {filterInsight}
               </div>
             )}
 
@@ -766,65 +804,95 @@ export default function Journal() {
             ) : libraryEntries.length === 0 ? (
               <div className="text-center py-20">
                 <FileText size={32} className="text-[#adb3b4] mx-auto mb-3"/>
-                <p className="text-sm text-[#5a6061] mb-4">{searchFilter||moodFilter||categoryFilter ? 'No matching entries' : 'No entries yet'}</p>
-                <button onClick={() => { openNew(); setView('editor') }}
-                  className="bg-[#0061aa] text-white text-sm font-bold px-5 py-2.5 rounded-full cursor-pointer hover:bg-[#005596] transition-all">
-                  Write your first entry
-                </button>
+                <p className="text-sm text-[#5a6061] mb-3">
+                  {(searchFilter || moodFilter || categoryFilter || entryTypeFilter || favoritesOnly) ? 'No entries match these filters.' : 'No entries yet.'}
+                </p>
+                {(searchFilter || moodFilter || categoryFilter || entryTypeFilter || favoritesOnly) ? (
+                  <div className="flex items-center justify-center gap-3">
+                    <button
+                      onClick={() => { setDateFilter('all'); setMoodFilter(null); setCategoryFilter(null); setEntryTypeFilter(null); setFavoritesOnly(false); setSearchFilter('') }}
+                      className="text-sm text-[#1F3649] font-semibold hover:underline cursor-pointer"
+                    >
+                      Remove all filters
+                    </button>
+                    <span className="text-[#adb3b4]">·</span>
+                    <button onClick={() => { openNew(); setView('editor') }} className="text-sm text-[#5a6061] hover:underline cursor-pointer">
+                      Write a new entry
+                    </button>
+                  </div>
+                ) : (
+                  <button onClick={() => { openNew(); setView('editor') }}
+                    className="bg-[#1F3649] text-white text-sm font-bold px-5 py-2.5 rounded-[15px] cursor-pointer hover:bg-[#162838] transition-all">
+                    Write your first entry
+                  </button>
+                )}
               </div>
             ) : libraryViewMode === 'list' ? (
               <div className="space-y-3">
                 {libraryEntries.map(entry => {
                   const meta = entry.mood_score ? MOOD_META[entry.mood_score] : null
                   const cc = entry.category ? getCatColor(entry.category) : null
+                  const MoodIcon = meta?.icon
                   return (
-                    <button key={entry.id} onClick={() => { openEntry(entry); setView('editor') }}
-                      className="w-full text-left bg-white card overflow-hidden hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all cursor-pointer group">
-                      {meta && <div className="h-1" style={{background:`linear-gradient(to right,${meta.color}50,transparent)`}}/>}
-                      <div className="p-5 flex items-start gap-4">
-                        <div className="shrink-0 text-center w-12">
-                          <div className="text-lg font-extrabold text-[#2d3435] leading-none">{format(new Date(entry.created_at),'d')}</div>
-                          <div className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider mt-0.5">{format(new Date(entry.created_at),'MMM')}</div>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-3 mb-1.5">
-                            <h3 className="text-sm font-bold text-[#2d3435] truncate group-hover:text-[#0061aa] transition-colors">{entry.title}</h3>
-                            <div className="flex items-center gap-1.5 shrink-0">
-                              {cc && entry.category && <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full', cc.bg, cc.text)}>{entry.category}</span>}
-                              {meta && <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full', meta.chipClass)}>{meta.short}</span>}
-                            </div>
-                          </div>
-                          <p className="text-xs text-[#5a6061] line-clamp-2 leading-relaxed">{stripMd(entry.content).slice(0,160)}</p>
-                          <div className="flex items-center gap-3 mt-2">
-                            <span className="text-[10px] text-[#adb3b4] font-medium">{countWords(entry.content)}</span>
-                            {entry.location && <><span className="text-[10px] text-[#adb3b4]">·</span><span className="text-[10px] text-[#adb3b4] font-medium flex items-center gap-0.5"><MapPin size={9}/>{entry.location}</span></>}
-                          </div>
-                        </div>
-                        <ChevronRight size={14} className="shrink-0 text-[#adb3b4] group-hover:text-[#0061aa] transition-colors mt-1"/>
+                    <div key={entry.id} className="bg-white card p-5 hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all group flex items-start gap-4">
+                      <div className="shrink-0 text-center w-10 cursor-pointer pt-0.5" onClick={() => { openEntry(entry); setView('editor') }}>
+                        <div className="text-lg font-extrabold text-[#2d3435] leading-none">{format(new Date(entry.created_at),'d')}</div>
+                        <div className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider mt-0.5">{format(new Date(entry.created_at),'MMM')}</div>
                       </div>
-                    </button>
+                      <div className="flex-1 min-w-0 cursor-pointer" onClick={() => { openEntry(entry); setView('editor') }}>
+                        <div className="flex items-start justify-between gap-3 mb-1.5">
+                          <h3 className="text-sm font-bold text-[#2d3435] truncate group-hover:text-[#1F3649] transition-colors">{entry.title}</h3>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {cc && entry.category && <span className={cn('inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>{entry.category}</span>}
+                            {meta && MoodIcon && <span className={cn('inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-[15px]', meta.chipClass)}><MoodIcon size={9}/>{meta.short}</span>}
+                          </div>
+                        </div>
+                        <p className="text-xs text-[#5a6061] line-clamp-2 leading-relaxed">{stripMd(entry.content).slice(0,160)}</p>
+                        <div className="flex items-center gap-3 mt-2">
+                          <span className="text-[10px] font-semibold text-[#adb3b4]">{countWords(entry.content)}</span>
+                          {entry.location && <><span className="text-[10px] text-[#adb3b4]">·</span><span className="text-[10px] text-[#adb3b4] font-medium flex items-center gap-0.5"><MapPin size={9}/>{entry.location}</span></>}
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-center gap-2 shrink-0">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); updateEntry(entry.id, { is_favorite: !entry.is_favorite }) }}
+                          className={cn('p-1.5 rounded-lg transition-all cursor-pointer', entry.is_favorite ? 'text-[#ca8a04]' : 'text-[#dde4e5] hover:text-[#ca8a04]')}
+                        >
+                          <Star size={13} fill={entry.is_favorite ? 'currentColor' : 'none'} />
+                        </button>
+                        <ChevronRight size={14} className="text-[#adb3b4] group-hover:text-[#1F3649] transition-colors cursor-pointer" onClick={() => { openEntry(entry); setView('editor') }}/>
+                      </div>
+                    </div>
                   )
                 })}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {libraryEntries.map(entry => {
                   const meta = entry.mood_score ? MOOD_META[entry.mood_score] : null
                   const cc = entry.category ? getCatColor(entry.category) : null
+                  const MoodIcon = meta?.icon
                   return (
-                    <button key={entry.id} onClick={() => { openEntry(entry); setView('editor') }}
-                      className="text-left bg-white card overflow-hidden hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all cursor-pointer group">
-                      <div className="h-2" style={{background: meta?`linear-gradient(to right,${meta.color}50,transparent)`:'#f2f4f4'}}/>
-                      <div className="p-5">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">{format(new Date(entry.created_at),'MMM d, yyyy')}</span>
-                          {cc && entry.category && <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full', cc.bg, cc.text)}>{entry.category}</span>}
-                        </div>
-                        <h3 className="text-sm font-bold text-[#2d3435] mb-2 line-clamp-1 group-hover:text-[#0061aa] transition-colors">{entry.title}</h3>
-                        <p className="text-xs text-[#5a6061] line-clamp-3 leading-relaxed mb-2">{stripMd(entry.content).slice(0,120)}</p>
-                        <div className="text-[10px] text-[#adb3b4] font-medium">{countWords(entry.content)}</div>
+                    <div key={entry.id} className="bg-white card p-5 hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all group cursor-pointer" onClick={() => { openEntry(entry); setView('editor') }}>
+                      <div className="flex items-start justify-between mb-3">
+                        <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">{format(new Date(entry.created_at),'MMM d, yyyy')}</span>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); updateEntry(entry.id, { is_favorite: !entry.is_favorite }) }}
+                          className={cn('p-1 rounded-lg transition-all cursor-pointer -mt-0.5', entry.is_favorite ? 'text-[#ca8a04]' : 'text-[#dde4e5] hover:text-[#ca8a04]')}
+                        >
+                          <Star size={12} fill={entry.is_favorite ? 'currentColor' : 'none'} />
+                        </button>
                       </div>
-                    </button>
+                      <h3 className="text-sm font-bold text-[#2d3435] mb-2 line-clamp-2 group-hover:text-[#1F3649] transition-colors">{entry.title}</h3>
+                      <p className="text-xs text-[#5a6061] line-clamp-3 leading-relaxed mb-4">{stripMd(entry.content).slice(0,120)}</p>
+                      <div className="flex items-center justify-between pt-3 border-t border-[#f2f4f4]">
+                        <span className="text-[10px] font-semibold text-[#adb3b4]">{countWords(entry.content)}</span>
+                        <div className="flex items-center gap-1.5">
+                          {cc && entry.category && <span className={cn('inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>{entry.category}</span>}
+                          {meta && MoodIcon && <span className={cn('inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-[15px]', meta.chipClass)}><MoodIcon size={9}/>{meta.short}</span>}
+                        </div>
+                      </div>
+                    </div>
                   )
                 })}
               </div>
@@ -835,7 +903,7 @@ export default function Journal() {
           <div className="w-full lg:w-72 lg:shrink-0 space-y-4">
             {/* Quick Stats */}
             <div className="bg-white card p-5">
-              <div className="flex items-center gap-2 mb-4"><BarChart2 size={14} className="text-[#0061aa]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Quick Stats</h3></div>
+              <div className="flex items-center gap-2 mb-4"><BarChart2 size={14} className="text-[#1F3649]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Quick Stats</h3></div>
               <div className="grid grid-cols-2 gap-2.5">
                 {[
                   { label:'Total Entries', value:entries.length.toString() },
@@ -853,7 +921,7 @@ export default function Journal() {
 
             {/* Mood Distribution */}
             <div className="bg-white card p-5">
-              <div className="flex items-center gap-2 mb-4"><TrendingUp size={14} className="text-[#0061aa]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Mood Distribution</h3></div>
+              <div className="flex items-center gap-2 mb-4"><TrendingUp size={14} className="text-[#1F3649]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Mood Distribution</h3></div>
               {(() => {
                 const total = Object.values(moodCounts).reduce((a,b)=>a+b,0)
                 const R=40, CIRC=2*Math.PI*R
@@ -878,9 +946,10 @@ export default function Journal() {
                         {([5,4,3,2,1] as const).map(k => {
                           const cnt=moodCounts[k]||0; if (!cnt) return null
                           const meta=MOOD_META[k], pct=Math.round((cnt/total)*100)
+                          const isActive = moodFilter?.min===k && moodFilter?.max===k
                           return (
-                            <button key={k} onClick={() => setMoodFilter(moodFilter===k?null:k)}
-                              className={cn('w-full flex items-center gap-2 px-2 py-1 rounded-lg text-xs transition-all cursor-pointer', moodFilter===k?'bg-[#f2f4f4]':'hover:bg-[#f2f4f4]/60')}>
+                            <button key={k} onClick={() => setMoodFilter(isActive ? null : {min:k,max:k})}
+                              className={cn('w-full flex items-center gap-2 px-2 py-1 rounded-lg text-xs transition-all cursor-pointer', isActive?'bg-[#f2f4f4]':'hover:bg-[#f2f4f4]/60')}>
                               <span className="w-2 h-2 rounded-full shrink-0" style={{backgroundColor:meta.color}}/>
                               <span className="flex-1 text-left text-[#2d3435] font-medium">{meta.label}</span>
                               <span className="text-[#adb3b4] text-[10px]">{cnt} · {pct}%</span>
@@ -898,7 +967,7 @@ export default function Journal() {
             {/* Category Distribution */}
             {categoryCounts.length > 0 && (
               <div className="bg-white card p-5">
-                <div className="flex items-center gap-2 mb-4"><Tag size={14} className="text-[#0061aa]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Categories</h3></div>
+                <div className="flex items-center gap-2 mb-4"><Tag size={14} className="text-[#1F3649]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Categories</h3></div>
                 <div className="space-y-2">
                   {categoryCounts.map(([cat, cnt]) => {
                     const cc = getCatColor(cat)
@@ -923,14 +992,14 @@ export default function Journal() {
 
             {/* Common Themes */}
             <div className="bg-white card p-5">
-              <div className="flex items-center gap-2 mb-4"><Hash size={14} className="text-[#0061aa]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Common Themes</h3></div>
+              <div className="flex items-center gap-2 mb-4"><Hash size={14} className="text-[#1F3649]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Common Themes</h3></div>
               <div className="flex flex-wrap gap-1.5">
                 {popularWords.length === 0 ? (
                   <p className="text-xs text-[#adb3b4]">Write some entries to see themes</p>
                 ) : popularWords.slice(0,12).map(({ word, count }) => (
                   <button key={word} onClick={() => setSearchFilter(searchFilter===word?'':word)}
-                    className={cn('px-2.5 py-1 text-xs font-medium rounded-full transition-all cursor-pointer',
-                      searchFilter===word ? 'bg-[#0061aa] text-white' : 'bg-[#f2f4f4] text-[#5a6061] hover:bg-[#ebeeef]')}>
+                    className={cn('px-2.5 py-1 text-xs font-medium rounded-[15px] transition-all cursor-pointer',
+                      searchFilter===word ? 'bg-[#1F3649] text-white' : 'bg-[#f2f4f4] text-[#5a6061] hover:bg-[#ebeeef]')}>
                     {word} <span className="opacity-50">{count}</span>
                   </button>
                 ))}
@@ -1011,7 +1080,7 @@ export default function Journal() {
             <div className="flex-1 min-w-0 w-full">
               {/* Date + title row */}
               <div className="mb-8">
-                <p className="text-xs font-bold uppercase tracking-widest text-[#0061aa]/70 mb-3">
+                <p className="text-xs font-bold uppercase tracking-widest text-[#1F3649]/70 mb-3">
                   {format(selected ? new Date(selected.created_at) : new Date(), 'EEEE, MMMM d, yyyy')}
                 </p>
                 <input
@@ -1023,7 +1092,7 @@ export default function Journal() {
                 {/* Category + location quick preview row */}
                 {(entryCategory || entryLocation || entryWeather) && (
                   <div className="flex items-center gap-3 mt-3 flex-wrap">
-                    {entryCategory && (() => { const cc=getCatColor(entryCategory); return <span className={cn('text-xs font-bold px-2.5 py-1 rounded-full', cc.bg, cc.text)}>{entryCategory}</span> })()}
+                    {entryCategory && (() => { const cc=getCatColor(entryCategory); return <span className={cn('text-xs font-bold px-2.5 py-1 rounded-[15px]', cc.bg, cc.text)}>{entryCategory}</span> })()}
                     {entryLocation && <span className="text-xs text-[#adb3b4] flex items-center gap-1"><MapPin size={11}/>{entryLocation}</span>}
                     {entryWeather && <span className="text-xs text-[#adb3b4] flex items-center gap-1"><Cloud size={11}/>{entryWeather}</span>}
                   </div>
@@ -1041,7 +1110,7 @@ export default function Journal() {
                       {/* Label row */}
                       <div className="flex items-center gap-2 mb-3">
                         {p.prefix && (
-                          <span className="text-[11px] font-extrabold text-[#0061aa] uppercase tracking-widest">{p.prefix}</span>
+                          <span className="text-[11px] font-extrabold text-[#1F3649] uppercase tracking-widest">{p.prefix}</span>
                         )}
                         <label className="text-[11px] font-bold text-[#adb3b4] uppercase tracking-widest">
                           {p.label}
@@ -1057,14 +1126,14 @@ export default function Journal() {
                         }}
                         placeholder={p.placeholder}
                         rows={4}
-                        className="w-full bg-white border-none rounded-2xl px-6 py-5 text-sm text-[#2d3435] placeholder:text-[#adb3b4]/60 focus:outline-none focus:ring-2 focus:ring-[#0061aa]/15 shadow-sm focus:shadow-md transition-all resize-none leading-relaxed"
+                        className="w-full bg-white border-none rounded-2xl px-6 py-5 text-sm text-[#2d3435] placeholder:text-[#adb3b4]/60 focus:outline-none focus:ring-2 focus:ring-[#1F3649]/15 shadow-sm focus:shadow-md transition-all resize-none leading-relaxed"
                       />
                     </div>
                   ))}
                   {/* Complete Reflection button */}
                   <div className="flex justify-end pt-2">
                     <button onClick={save} disabled={saving || !title.trim()}
-                      className="flex items-center gap-2 bg-[#0061aa] hover:bg-[#005596] disabled:opacity-40 text-white font-bold px-8 py-3.5 rounded-full shadow-lg shadow-[#0061aa]/20 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer text-sm">
+                      className="flex items-center gap-2 bg-[#1F3649] hover:bg-[#162838] disabled:opacity-40 text-white font-bold px-8 py-3.5 rounded-[15px] shadow-lg shadow-[#1F3649]/20 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer text-sm">
                       <Save size={14}/>
                       {saving ? 'Saving…' : saveStatus === 'saved' ? 'Saved ✓' : 'Save Entry'}
                     </button>
@@ -1100,13 +1169,13 @@ export default function Journal() {
                       return (
                         <button key={score} onClick={() => setMoodScore(active ? null : score)} title={meta.label}
                           className={cn('aspect-square flex items-center justify-center rounded-xl text-xl transition-all cursor-pointer',
-                            active ? 'bg-[#0061aa]/10 scale-110 shadow-sm' : 'hover:bg-[#f2f4f4] opacity-60 hover:opacity-90')}>
+                            active ? 'bg-[#1F3649]/10 scale-110 shadow-sm' : 'hover:bg-[#f2f4f4] opacity-60 hover:opacity-90')}>
                           {meta.emoji}
                         </button>
                       )
                     })}
                   </div>
-                  {moodScore && <p className="text-[10px] text-center text-[#0061aa] font-semibold mt-2 uppercase tracking-wider">{MOOD_META[moodScore].label}</p>}
+                  {moodScore && <p className="text-[10px] text-center text-[#1F3649] font-semibold mt-2 uppercase tracking-wider">{MOOD_META[moodScore].label}</p>}
                 </div>
 
                 {/* ── Category ── */}
@@ -1121,7 +1190,7 @@ export default function Journal() {
                       const active = entryCategory === cat
                       return (
                         <button key={cat} onClick={() => setEntryCategory(active ? null : cat)}
-                          className={cn('px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer',
+                          className={cn('px-3 py-1.5 rounded-[15px] text-xs font-semibold transition-all cursor-pointer',
                             active ? `${cc.bg} ${cc.text} shadow-sm` : 'bg-[#f2f4f4] text-[#5a6061] hover:bg-[#ebeeef]')}>
                           {cat}
                         </button>
@@ -1136,7 +1205,7 @@ export default function Journal() {
                   <div className="space-y-3">
                     <div>
                       <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest block mb-1.5">Location</label>
-                      <div className="flex items-center gap-2.5 bg-[#f2f4f4] rounded-xl px-3 py-2.5 focus-within:bg-white focus-within:ring-2 focus-within:ring-[#0061aa]/20 transition-all">
+                      <div className="flex items-center gap-2.5 bg-[#f2f4f4] rounded-xl px-3 py-2.5 focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1F3649]/20 transition-all">
                         <MapPin size={14} className="text-[#adb3b4] shrink-0"/>
                         <input
                           value={entryLocation}
@@ -1149,7 +1218,7 @@ export default function Journal() {
                     </div>
                     <div>
                       <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest block mb-1.5">Weather</label>
-                      <div className="flex items-center gap-2.5 bg-[#f2f4f4] rounded-xl px-3 py-2.5 focus-within:bg-white focus-within:ring-2 focus-within:ring-[#0061aa]/20 transition-all">
+                      <div className="flex items-center gap-2.5 bg-[#f2f4f4] rounded-xl px-3 py-2.5 focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1F3649]/20 transition-all">
                         <Cloud size={14} className="text-[#adb3b4] shrink-0"/>
                         <input
                           value={entryWeather}
@@ -1216,7 +1285,7 @@ export default function Journal() {
                 <div className="p-4">
                   <button onClick={() => setShowAiChat(!showAiChat)}
                     className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-[#f2f4f4] transition-all cursor-pointer text-xs font-semibold text-[#5a6061]">
-                    <div className="flex items-center gap-2"><Brain size={14} className="text-[#0061aa]"/>Ask AI about my journal</div>
+                    <div className="flex items-center gap-2"><Brain size={14} className="text-[#1F3649]"/>Ask AI about my journal</div>
                     <ChevronRight size={12} className={cn('transition-transform', showAiChat && 'rotate-90')}/>
                   </button>
                   {showAiChat && (
@@ -1224,7 +1293,7 @@ export default function Journal() {
                       <div className="space-y-1.5">
                         {suggestedQuestions.map((q, i) => (
                           <button key={i} onClick={() => setAiQuery(q)}
-                            className="w-full text-left text-xs text-[#0061aa] bg-[#f2f4f4] hover:bg-[#ebeeef] rounded-lg px-3 py-2 transition-all cursor-pointer leading-snug">
+                            className="w-full text-left text-xs text-[#1F3649] bg-[#f2f4f4] hover:bg-[#ebeeef] rounded-lg px-3 py-2 transition-all cursor-pointer leading-snug">
                             {q}
                           </button>
                         ))}
@@ -1232,7 +1301,7 @@ export default function Journal() {
                       {aiResponse && (
                         <div className="bg-[#f2f4f4] rounded-xl p-3 animate-fade-in">
                           <div className="flex items-center gap-1.5 mb-1.5">
-                            <MessageCircle size={11} className="text-[#0061aa]"/>
+                            <MessageCircle size={11} className="text-[#1F3649]"/>
                             <span className="text-[10px] font-semibold text-[#2d3435]">AI Response</span>
                           </div>
                           <div className="text-xs text-[#5a6061] leading-relaxed prose prose-xs prose-stone max-w-none prose-p:my-1 prose-strong:text-[#2d3435] prose-ul:my-1 prose-li:my-0">
@@ -1244,9 +1313,9 @@ export default function Journal() {
                         <input value={aiQuery} onChange={e => setAiQuery(e.target.value)}
                           onKeyDown={e => e.key==='Enter' && askAI()}
                           placeholder="Ask your journal…"
-                          className="flex-1 min-w-0 bg-[#f2f4f4] border-none rounded-xl py-2.5 px-3 text-xs text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all"/>
+                          className="flex-1 min-w-0 bg-[#f2f4f4] border-none rounded-xl py-2.5 px-3 text-xs text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"/>
                         <button onClick={askAI} disabled={aiLoading || !aiQuery.trim()}
-                          className="p-2 bg-[#0061aa] hover:bg-[#005596] disabled:opacity-50 text-white rounded-xl transition-all cursor-pointer shrink-0">
+                          className="p-2 bg-[#1F3649] hover:bg-[#162838] disabled:opacity-50 text-white rounded-xl transition-all cursor-pointer shrink-0">
                           {aiLoading ? <Sparkles size={12} className="animate-pulse"/> : <Send size={12}/>}
                         </button>
                       </div>
@@ -1281,28 +1350,28 @@ export default function Journal() {
                   return (
                     <button key={ds} onClick={() => setSelectedCalDay(day)}
                       className={cn('aspect-square rounded-xl flex flex-col items-center justify-center text-xs transition-all cursor-pointer relative',
-                        isSel?'bg-[#0061aa] text-white font-semibold':isToday?'bg-[#0061aa]/15 text-[#0061aa] font-semibold':'text-[#5a6061] hover:bg-[#f2f4f4]')}>
+                        isSel?'bg-[#1F3649] text-white font-semibold':isToday?'bg-[#1F3649]/15 text-[#1F3649] font-semibold':'text-[#5a6061] hover:bg-[#f2f4f4]')}>
                       {day.getDate()}
-                      {hasEntry && !isSel && <span className="absolute bottom-1.5 w-1 h-1 rounded-full bg-[#0061aa]"/>}
+                      {hasEntry && !isSel && <span className="absolute bottom-1.5 w-1 h-1 rounded-full bg-[#1F3649]"/>}
                     </button>
                   )
                 })}
               </div>
               <div className="flex items-center gap-4 mt-4 text-xs text-[#5a6061] opacity-60">
-                <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#0061aa] inline-block"/>Has entry</span>
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-[#0061aa]/15 inline-block"/>Today</span>
+                <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#1F3649] inline-block"/>Has entry</span>
+                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-[#1F3649]/15 inline-block"/>Today</span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4 mt-4">
               <div className="bg-white card p-5">
                 <div className="text-xs font-semibold text-[#5a6061] uppercase tracking-wider mb-2">Consistency Score</div>
-                <div className="text-3xl font-bold text-[#0061aa]">{consistencyScore}%</div>
+                <div className="text-3xl font-bold text-[#1F3649]">{consistencyScore}%</div>
                 <p className="text-xs text-[#5a6061] opacity-60 mt-1">{daysWithEntries.length} entries in {format(calendarDate,'MMMM')}</p>
               </div>
               <div className="bg-white card p-5">
                 <div className="text-xs font-semibold text-[#5a6061] uppercase tracking-wider mb-2">Daily Prompt</div>
                 <p className="text-sm text-[#2d3435] leading-relaxed italic">"What is one thing you learned about yourself this week?"</p>
-                <button onClick={() => { openNew(); setView('editor'); setTitle('Daily Prompt Reflection') }} className="text-xs text-[#0061aa] hover:underline mt-2 cursor-pointer">Write about this</button>
+                <button onClick={() => { openNew(); setView('editor'); setTitle('Daily Prompt Reflection') }} className="text-xs text-[#1F3649] hover:underline mt-2 cursor-pointer">Write about this</button>
               </div>
             </div>
           </div>
@@ -1312,7 +1381,7 @@ export default function Journal() {
               {selectedCalDay && !selectedDayEntries.length && (
                 <div className="text-center py-8">
                   <p className="text-xs text-[#5a6061] opacity-60 mb-2">No entries on this day</p>
-                  <button onClick={() => { openNew(); setView('editor') }} className="text-xs text-[#0061aa] hover:underline cursor-pointer">Write an entry</button>
+                  <button onClick={() => { openNew(); setView('editor') }} className="text-xs text-[#1F3649] hover:underline cursor-pointer">Write an entry</button>
                 </div>
               )}
               {selectedDayEntries.map(entry => (
@@ -1366,7 +1435,7 @@ export default function Journal() {
                     <h3 className="text-2xl font-extrabold text-white mb-2 tracking-tight">{BUILT_IN_TEMPLATES[0].name}</h3>
                     <p className="text-white/65 text-sm leading-relaxed mb-6 max-w-sm">{BUILT_IN_TEMPLATES[0].subtitle}</p>
                     <div className="flex items-center gap-3">
-                      <span className="bg-white text-[#2d3435] font-bold text-sm px-5 py-2 rounded-full group-hover:bg-white/90 transition-all">Apply Template</span>
+                      <span className="bg-white text-[#2d3435] font-bold text-sm px-5 py-2 rounded-[15px] group-hover:bg-white/90 transition-all">Apply Template</span>
                       <span className="text-white/40 text-[10px] font-semibold uppercase tracking-wider">{BUILT_IN_TEMPLATES[0].category}</span>
                     </div>
                   </div>
@@ -1384,7 +1453,7 @@ export default function Journal() {
                     <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest block mb-2">{BUILT_IN_TEMPLATES[1].category}</span>
                     <h3 className="text-xl font-extrabold text-white mb-2 tracking-tight">{BUILT_IN_TEMPLATES[1].name}</h3>
                     <p className="text-white/60 text-sm leading-relaxed mb-5">{BUILT_IN_TEMPLATES[1].subtitle.slice(0,90)}…</p>
-                    <span className="bg-white/15 hover:bg-white/25 text-white font-semibold text-sm px-4 py-2 rounded-full transition-all inline-block">Apply Template</span>
+                    <span className="bg-white/15 hover:bg-white/25 text-white font-semibold text-sm px-4 py-2 rounded-[15px] transition-all inline-block">Apply Template</span>
                   </div>
                 </button>
               </div>
@@ -1445,9 +1514,9 @@ export default function Journal() {
                 ))}
                 {/* Create custom card */}
                 <button onClick={() => { setNewTemplateName(''); setNewTemplateContent(''); document.getElementById('create-template-form')?.scrollIntoView({ behavior: 'smooth' }) }}
-                  className="card p-5 flex flex-col justify-between min-h-[160px] cursor-pointer group text-left border-2 border-dashed border-[#adb3b4]/30 hover:border-[#0061aa]/40 bg-white transition-all">
-                  <div className="w-8 h-8 rounded-full bg-[#f2f4f4] group-hover:bg-[#0061aa]/10 flex items-center justify-center transition-colors">
-                    <Plus size={15} className="text-[#adb3b4] group-hover:text-[#0061aa] transition-colors"/>
+                  className="card p-5 flex flex-col justify-between min-h-[160px] cursor-pointer group text-left border-2 border-dashed border-[#adb3b4]/30 hover:border-[#1F3649]/40 bg-white transition-all">
+                  <div className="w-8 h-8 rounded-full bg-[#f2f4f4] group-hover:bg-[#1F3649]/10 flex items-center justify-center transition-colors">
+                    <Plus size={15} className="text-[#adb3b4] group-hover:text-[#1F3649] transition-colors"/>
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-[#2d3435] mb-0.5">Custom Template</h3>
@@ -1477,7 +1546,7 @@ export default function Journal() {
                     <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest block mb-2">{tpl.category}</span>
                     <h3 className="text-lg font-extrabold text-white mb-2 tracking-tight">{tpl.name}</h3>
                     <p className="text-white/60 text-xs leading-relaxed mb-4">{tpl.subtitle.slice(0,90)}…</p>
-                    <span className="bg-white/15 hover:bg-white/25 text-white font-semibold text-xs px-4 py-1.5 rounded-full transition-all inline-block">Apply Template</span>
+                    <span className="bg-white/15 hover:bg-white/25 text-white font-semibold text-xs px-4 py-1.5 rounded-[15px] transition-all inline-block">Apply Template</span>
                   </div>
                 </button>
               ))}
@@ -1492,12 +1561,12 @@ export default function Journal() {
                 {templates.map(t => (
                   <div key={t.id} className="bg-white card p-5 hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-all">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-[10px] font-bold text-[#0061aa] uppercase tracking-wider bg-[#0061aa]/10 px-2 py-0.5 rounded-full">Custom</span>
+                      <span className="text-[10px] font-bold text-[#1F3649] uppercase tracking-wider bg-[#1F3649]/10 px-2 py-0.5 rounded-[15px]">Custom</span>
                     </div>
                     <h4 className="font-semibold text-[#2d3435] mb-1">{t.name}</h4>
                     <p className="text-xs text-[#5a6061] opacity-60 mb-4 line-clamp-2 leading-relaxed">{String(t.structure?.content??'').replace(/[#*`]/g,'').slice(0,100)}</p>
                     <button onClick={() => { openNew(String(t.structure?.content??'')); setView('editor') }}
-                      className="text-xs text-[#0061aa] font-medium hover:underline cursor-pointer flex items-center gap-1">
+                      className="text-xs text-[#1F3649] font-medium hover:underline cursor-pointer flex items-center gap-1">
                       Apply Template <ChevronRight size={12}/>
                     </button>
                   </div>
@@ -1512,12 +1581,12 @@ export default function Journal() {
             <p className="text-xs text-[#5a6061] mb-4">Save a reusable structure for your journal entries.</p>
             <div className="space-y-3">
               <input value={newTemplateName} onChange={e => setNewTemplateName(e.target.value)} placeholder="Template name..."
-                className="w-full bg-[#f2f4f4] border-none rounded-xl py-3 px-4 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all"/>
+                className="w-full bg-[#f2f4f4] border-none rounded-xl py-3 px-4 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"/>
               <textarea value={newTemplateContent} onChange={e => setNewTemplateContent(e.target.value)}
                 placeholder="Template content (markdown)..." rows={5}
-                className="w-full bg-[#f2f4f4] border-none rounded-xl py-3 px-4 text-sm text-[#5a6061] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all resize-none font-mono"/>
+                className="w-full bg-[#f2f4f4] border-none rounded-xl py-3 px-4 text-sm text-[#5a6061] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all resize-none font-mono"/>
               <button onClick={saveTemplate} disabled={!newTemplateName.trim()}
-                className="bg-[#0061aa] hover:bg-[#005596] disabled:opacity-50 text-white text-sm font-bold px-4 py-2 rounded-xl transition-all cursor-pointer">
+                className="bg-[#1F3649] hover:bg-[#162838] disabled:opacity-50 text-white text-sm font-bold px-4 py-2 rounded-xl transition-all cursor-pointer">
                 Save Template
               </button>
             </div>

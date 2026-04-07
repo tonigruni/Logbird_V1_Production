@@ -33,7 +33,7 @@ function ToolbarBtn({
       className={cn(
         'flex items-center justify-center w-8 h-8 rounded-lg text-sm font-medium transition-all cursor-pointer',
         active
-          ? 'bg-[#0061aa] text-white'
+          ? 'bg-[#1F3649] text-white'
           : 'text-[#5a6061] hover:bg-[#f2f4f4] hover:text-[#2d3435]',
       )}
     >
@@ -54,7 +54,7 @@ export default function RichEditor({ content, onChange, editable, placeholder }:
       Placeholder.configure({
         placeholder: placeholder ?? 'Start writing from the heart…',
       }),
-      Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-[#0061aa] underline' } }),
+      Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-[#1F3649] underline' } }),
       Markdown.configure({ html: false, transformCopiedText: true }),
     ],
     content,

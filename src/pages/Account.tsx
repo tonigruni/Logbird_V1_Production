@@ -21,8 +21,8 @@ function Toggle({
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full transition-colors duration-200 focus:outline-none ${
-        checked ? 'bg-[#0061aa]' : 'bg-[#dde4e5]'
+      className={`relative inline-flex h-6 w-12 shrink-0 cursor-pointer !rounded-full transition-colors duration-200 focus:outline-none ${
+        checked ? 'bg-[#1F3649]' : 'bg-[#dde4e5]'
       }`}
     >
       <span
@@ -164,10 +164,10 @@ export default function Account() {
 
   /* shared input classes — using explicit hex for reliability */
   const inputCls =
-    'w-full bg-[#f2f4f4] border-none rounded-[1.5rem] py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:ring-2 focus:ring-[#0061aa]/20 focus:bg-white transition-all outline-none'
+    'w-full bg-[#f2f4f4] border-none rounded-[1.5rem] py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all outline-none'
 
   return (
-    <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto">
+    <div className="pb-24">
       {/* Header */}
       <div className="py-12">
         <h2 className="text-4xl font-extrabold tracking-tight text-[#2d3435] mb-2">
@@ -265,7 +265,7 @@ export default function Account() {
               <button
                 type="submit"
                 disabled={profileLoading}
-                className="bg-[#586062] text-white px-8 py-4 rounded-full font-bold shadow-lg hover:shadow-xl transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+                className="bg-[#586062] text-white px-8 py-4 rounded-[15px] font-bold shadow-lg hover:shadow-xl transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
               >
                 {profileLoading ? 'Updating...' : 'Update Profile'}
               </button>
@@ -278,7 +278,7 @@ export default function Account() {
         {/* ============================================================ */}
         <section className="col-span-12 lg:col-span-4 space-y-8">
           <div className="bg-white card p-5 md:p-8 h-full">
-            <div className="flex items-center gap-3 mb-6 text-[#0061aa]">
+            <div className="flex items-center gap-3 mb-6 text-[#1F3649]">
               <Lock size={20} />
               <h3 className="text-xl font-bold text-[#2d3435]">Security</h3>
             </div>
@@ -343,7 +343,7 @@ export default function Account() {
                 <span className="text-sm font-medium text-[#5a6061]">
                   Coming soon
                 </span>
-                <span className="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-tighter bg-[#dde4e5] text-[#586062]">
+                <span className="text-xs font-bold px-3 py-1 rounded-[15px] uppercase tracking-tighter bg-[#dde4e5] text-[#586062]">
                   Unavailable
                 </span>
               </div>

@@ -1,16 +1,34 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
 @import './styles/design-system.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── Card component ──────────────────────────────────────────
+   Unlayered CSS (below @tailwind utilities) always wins over
+   any @layer utilities classes — no !important needed.
+   ─────────────────────────────────────────────────────────── */
+.card {
+  border-radius: var(--card-radius);
+  border:        var(--card-border);
+  box-shadow:    var(--card-shadow);
+}
+
 * { box-sizing: border-box; }
 
+/* Global button radius — overrides Tailwind rounded-full on <button> elements */
+button { border-radius: 15px; }
+
 body {
-  background-color: #f9f9f9;
+  background-color: var(--color-bg);
   color: #2d3435;
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
 }
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -121,7 +139,7 @@ input[type='date'] { color-scheme: light; }
   font-size: 0.85rem;
 }
 .rich-editor .ProseMirror blockquote {
-  border-left: 3px solid #0061aa;
+  border-left: 3px solid #1F3649;
   padding-left: 1rem;
   margin: 0.75rem 0;
   color: #5a6061;
@@ -133,7 +151,7 @@ input[type='date'] { color-scheme: light; }
   margin: 1.5rem 0;
 }
 .rich-editor .ProseMirror a {
-  color: #0061aa;
+  color: #1F3649;
   text-decoration: underline;
 }
 
@@ -149,6 +167,23 @@ input[type='date'] { color-scheme: light; }
 
 /* Read-only (view) mode */
 .rich-editor-readonly .ProseMirror { cursor: default; }
+
+/* Featured template slide transitions */
+@keyframes slideInFromRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideOutToLeft {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-32px); }
+}
+.slide-in-right {
+  animation: slideInFromRight 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.slide-out-left {
+  animation: slideOutToLeft 0.3s cubic-bezier(0.55, 0, 1, 0.45) both;
+  pointer-events: none;
+}
 
 /* Select dark arrow */
 select {
