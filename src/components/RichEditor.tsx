@@ -8,7 +8,7 @@ import { useEffect } from 'react'
 import { cn } from '../lib/utils'
 import {
   Bold, Italic, Underline, List, ListOrdered,
-  Quote, Code, Minus, Heading1, Heading2, Heading3, Strikethrough,
+  Quote, Code, Minus, Strikethrough,
 } from 'lucide-react'
 
 interface Props {
@@ -60,7 +60,8 @@ export default function RichEditor({ content, onChange, editable, placeholder }:
     content,
     editable,
     onUpdate({ editor }) {
-      onChange(editor.storage.markdown.getMarkdown())
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onChange((editor.storage as any).markdown.getMarkdown())
     },
   })
 

@@ -4,7 +4,6 @@ import { useAuthStore } from '../stores/authStore'
 import { useJournalStore } from '../stores/journalStore'
 import {
   Download,
-  CalendarDays,
   Sparkles,
   CheckCircle2,
   BarChart3,
