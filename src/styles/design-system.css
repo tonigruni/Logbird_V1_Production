@@ -13,8 +13,8 @@
   --card-shadow:        0 -4px 10px 0 #EEECEA;
 
   /* Brand */
-  --color-primary:      #0061aa;
-  --color-primary-dark: #005596;
+  --color-primary:      #8bbdbb;
+  --color-primary-dark: #213233;
 
   /* Neutral surface */
   --color-bg:           #f9f9f9;
@@ -29,10 +29,14 @@
 
 /* ------------------------------------------------------------
    .card  — base card treatment
-   Apply to any white / neutral surface card element.
+   Placed in @layer utilities so it takes precedence over
+   Tailwind component/base layers and is never overridden
+   by leftover rounded-* or shadow-* utilities.
    ------------------------------------------------------------ */
-.card {
-  border-radius: var(--card-radius);
-  border:        var(--card-border);
-  box-shadow:    var(--card-shadow);
+@layer utilities {
+  .card {
+    border-radius: var(--card-radius) !important;
+    border:        var(--card-border) !important;
+    box-shadow:    var(--card-shadow) !important;
+  }
 }
