@@ -1,0 +1,64 @@
+import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { supabase } from './lib/supabase'
+import { useAuthStore } from './stores/authStore'
+import { DEMO_MODE, DEMO_USER } from './lib/demo'
+import ProtectedRoute from './components/ProtectedRoute'
+import AppLayout from './components/Layout/AppLayout'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import Dashboard from './pages/Dashboard'
+import Journal from './pages/Journal'
+import WheelOfLife from './pages/WheelOfLife'
+import Account from './pages/Account'
+import Settings from './pages/Settings'
+import Analysis from './pages/Analysis'
+import Insights from './pages/Insights'
+
+export default function App() {
+  const { setSession, setLoading, setUser, loadProfile } = useAuthStore()
+
+  useEffect(() => {
+    if (DEMO_MODE) {
+      setUser(DEMO_USER)
+      setLoading(false)
+      return
+    }
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      if (session?.user) loadProfile(session.user.id)
+      setLoading(false)
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+      if (session?.user) loadProfile(session.user.id)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="journal" element={<Journal />} />
+          <Route path="wheel" element={<WheelOfLife />} />
+          <Route path="analysis" element={<Analysis />} />
+          <Route path="insights" element={<Insights />} />
+          <Route path="account" element={<Account />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  )
+}
