@@ -328,7 +328,7 @@ export default function WheelOfLife() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
           {/* Questions */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
+            <div className="bg-white card p-5 md:p-8">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${meta.color}15` }}>
                   <IconComp size={20} style={{ color: meta.color }} />
@@ -379,13 +379,13 @@ export default function WheelOfLife() {
           {/* Right sidebar */}
           <div className="space-y-4">
             {/* Score donut */}
-            <div className="bg-white rounded-xl shadow-sm p-8 flex flex-col items-center">
+            <div className="bg-white card p-8 flex flex-col items-center">
               <h3 className="text-sm font-medium text-[#5a6061] mb-3">Section Score</h3>
               <ScoreDonut score={categoryScore} color={meta.color} />
             </div>
 
             {/* Pro tip */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="bg-white card p-6">
               <div className="flex items-center gap-2 mb-3">
                 <Lightbulb size={16} className="text-[#f59e0b]" />
                 <h4 className="text-sm font-semibold text-[#2d3435]">Pro Tip</h4>
@@ -428,7 +428,7 @@ export default function WheelOfLife() {
           {/* Main content */}
           <div className="lg:col-span-2 space-y-5">
             {/* Goal header card */}
-            <div className="bg-white rounded-xl shadow-sm p-8">
+            <div className="bg-white card p-8">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${meta.color}15` }}>
                   <Target size={22} style={{ color: meta.color }} />
@@ -457,7 +457,7 @@ export default function WheelOfLife() {
             </div>
 
             {/* Focus Objectives */}
-            <div className="bg-white rounded-xl shadow-sm p-8">
+            <div className="bg-white card p-8">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-[#2d3435]">Focus Objectives</h3>
                 <span className="text-xs text-[#5a6061] opacity-60">{completedCount}/{goalTasks.length} completed</span>
@@ -516,7 +516,7 @@ export default function WheelOfLife() {
             </div>
 
             {/* Reflections */}
-            <div className="bg-white rounded-xl shadow-sm p-8">
+            <div className="bg-white card p-8">
               <h3 className="font-semibold text-[#2d3435] mb-3">Reflections</h3>
               <textarea
                 value={reflectionText}
@@ -542,14 +542,14 @@ export default function WheelOfLife() {
           {/* Right sidebar */}
           <div className="space-y-5">
             {/* Progress donut */}
-            <div className="bg-white rounded-xl shadow-sm p-8 flex flex-col items-center">
+            <div className="bg-white card p-8 flex flex-col items-center">
               <h3 className="text-sm font-medium text-[#5a6061] mb-3">Progress</h3>
               <ScoreDonut score={progressPercent} maxScore={100} color={meta.color} size={140} />
               <p className="text-xs text-[#5a6061] opacity-60 mt-2">{completedCount} of {goalTasks.length} tasks done</p>
             </div>
 
             {/* Key Milestones */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="bg-white card p-6">
               <h4 className="text-sm font-semibold text-[#2d3435] mb-4">Key Milestones</h4>
               <div className="space-y-4">
                 {goalTasks.slice(0, 4).map((task, i) => (
@@ -604,7 +604,7 @@ export default function WheelOfLife() {
         <div className="space-y-4 md:space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
             {/* Left: Category pills */}
-            <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
+            <div className="bg-white card p-5 md:p-8">
               <h3 className="text-sm font-semibold text-[#2d3435] mb-4">Categories</h3>
               <div className="flex flex-wrap gap-2">
                 {allCategoryNames.map((name) => {
@@ -654,7 +654,7 @@ export default function WheelOfLife() {
             </div>
 
             {/* Center: Radar chart */}
-            <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-5 md:p-8">
+            <div className="lg:col-span-2 bg-white card p-5 md:p-8">
               <h3 className="text-sm font-semibold text-[#2d3435] mb-2">Life Balance Radar</h3>
               <ResponsiveContainer width="100%" height={340}>
                 <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
@@ -688,7 +688,7 @@ export default function WheelOfLife() {
           </div>
 
           {/* Sliders / Rate each area */}
-          <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
+          <div className="bg-white card p-5 md:p-8">
             <h3 className="text-sm font-semibold text-[#2d3435] mb-4">Rate Each Area</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
               {allCategoryNames.map((name) => {
@@ -767,7 +767,7 @@ export default function WheelOfLife() {
                   <button
                     key={name}
                     onClick={() => setSelectedCategory(name)}
-                    className="bg-white rounded-xl shadow-sm p-6 text-left hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-all cursor-pointer group"
+                    className="bg-white card p-6 text-left hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-all cursor-pointer group"
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <div
@@ -800,7 +800,7 @@ export default function WheelOfLife() {
       {tab === 'goals' && (
         <div className="space-y-8">
           {/* Add goal form */}
-          <div className="bg-white rounded-xl shadow-sm p-8">
+          <div className="bg-white card p-8">
             <h3 className="font-semibold text-[#2d3435] mb-4 flex items-center gap-2">
               <Target size={16} className="text-[#0061aa]" />
               Add New Goal
@@ -847,7 +847,7 @@ export default function WheelOfLife() {
           {/* Goals list */}
           <div className="space-y-3">
             {goals.length === 0 ? (
-              <div className="bg-white rounded-xl shadow-sm p-12 text-center text-[#5a6061] opacity-60 text-sm">
+              <div className="bg-white card p-12 text-center text-[#5a6061] opacity-60 text-sm">
                 No goals yet. Add one above to get started.
               </div>
             ) : goals.map((goal) => {
@@ -859,7 +859,7 @@ export default function WheelOfLife() {
               const progress = goalTasks.length > 0 ? Math.round((completedCount / goalTasks.length) * 100) : 0
 
               return (
-                <div key={goal.id} className="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div key={goal.id} className="bg-white card overflow-hidden">
                   <div
                     className="flex items-center gap-4 p-5 cursor-pointer hover:bg-[#f2f4f4] transition-all"
                     onClick={() => setExpandedGoal(isExpanded ? null : goal.id)}
@@ -973,7 +973,7 @@ export default function WheelOfLife() {
       {tab === 'history' && (
         <div className="space-y-4">
           {checkins.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm p-12 text-center text-[#5a6061] opacity-60 text-sm">
+            <div className="bg-white card p-12 text-center text-[#5a6061] opacity-60 text-sm">
               No check-ins yet. Do your first check-in!
             </div>
           ) : checkins.map((checkin) => {
@@ -986,7 +986,7 @@ export default function WheelOfLife() {
             }))
 
             return (
-              <div key={checkin.id} className="bg-white rounded-xl shadow-sm p-8">
+              <div key={checkin.id} className="bg-white card p-8">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-[#2d3435]">{format(new Date(checkin.date), 'EEEE, MMMM d, yyyy')}</h3>
                   <div className="flex items-center gap-2">

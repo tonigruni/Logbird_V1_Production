@@ -184,7 +184,7 @@ export default function Account() {
         {/* ============================================================ */}
         {/*  PROFILE INFO — 8 cols                                        */}
         {/* ============================================================ */}
-        <section className="col-span-12 lg:col-span-8 bg-white rounded-[3rem] p-10 shadow-sm">
+        <section className="col-span-12 lg:col-span-8 bg-white card p-10">
           <div className="flex justify-between items-center mb-8">
             <div>
               <h3 className="text-2xl font-bold text-[#2d3435] mb-1">
@@ -277,7 +277,7 @@ export default function Account() {
         {/*  SECURITY — 4 cols                                            */}
         {/* ============================================================ */}
         <section className="col-span-12 lg:col-span-4 space-y-8">
-          <div className="bg-white rounded-2xl md:rounded-[3rem] p-5 md:p-8 shadow-sm h-full">
+          <div className="bg-white card p-5 md:p-8 h-full">
             <div className="flex items-center gap-3 mb-6 text-[#0061aa]">
               <Lock size={20} />
               <h3 className="text-xl font-bold text-[#2d3435]">Security</h3>
@@ -356,7 +356,7 @@ export default function Account() {
         {/* ============================================================ */}
         <section className="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
           {/* ---- Preferences ---- */}
-          <div className="bg-white rounded-2xl md:rounded-[3rem] p-5 md:p-8 shadow-sm">
+          <div className="bg-white card p-5 md:p-8">
             <h3 className="text-xl font-bold text-[#2d3435] mb-6">
               Preferences
             </h3>
@@ -395,7 +395,7 @@ export default function Account() {
           </div>
 
           {/* ---- Danger Zone ---- */}
-          <div className="bg-[#fe8983]/10 border-2 border-[#fe8983]/20 rounded-2xl md:rounded-[3rem] p-5 md:p-8 flex flex-col justify-between">
+          <div className="bg-[#fe8983]/10 border-2 border-[#fe8983]/20 card p-5 md:p-8 flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-3 mb-4 text-[#9f403d]">
                 <AlertTriangle size={20} />

@@ -75,7 +75,7 @@ export default function Dashboard() {
   return (
     <div className="px-4 md:px-12 pb-24 max-w-7xl mx-auto space-y-6 md:space-y-8">
       {/* Hero Banner */}
-      <div className="relative bg-[#586062] rounded-xl overflow-hidden px-6 py-10 md:px-10 md:py-14 shadow-sm">
+      <div className="relative bg-[#586062] card overflow-hidden px-6 py-10 md:px-10 md:py-14">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-[0.07]">
           <div
@@ -108,7 +108,7 @@ export default function Dashboard() {
       {/* Two stat cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
         {/* Wheel of Life Card */}
-        <div className="bg-white rounded-xl p-5 md:p-8 shadow-sm">
+        <div className="bg-white card p-5 md:p-8">
           <h2 className="text-sm font-bold text-[#5a6061] uppercase tracking-wider mb-4">
             Wheel of Life
           </h2>
@@ -181,7 +181,7 @@ export default function Dashboard() {
         </div>
 
         {/* High Priority Tasks Card */}
-        <div className="bg-white rounded-xl p-5 md:p-8 shadow-sm">
+        <div className="bg-white card p-5 md:p-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold text-[#5a6061] uppercase tracking-wider">
               High Priority Tasks
@@ -251,7 +251,7 @@ export default function Dashboard() {
         </div>
 
         {recentEntries.length === 0 ? (
-          <div className="bg-white rounded-xl p-10 shadow-sm text-center">
+          <div className="bg-white card p-10 text-center">
             <p className="text-sm text-[#5a6061]">No journal entries yet.</p>
             <button
               onClick={() => navigate('/journal')}
@@ -268,7 +268,7 @@ export default function Dashboard() {
                 <div
                   key={entry.id}
                   onClick={() => navigate('/journal')}
-                  className="bg-white rounded-xl p-6 shadow-sm hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] cursor-pointer transition-all group"
+                  className="bg-white card p-6 hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] cursor-pointer transition-all group"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-bold text-[#0061aa] uppercase tracking-wider">

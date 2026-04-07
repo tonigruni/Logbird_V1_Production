@@ -223,7 +223,7 @@ export default function Insights() {
           </p>
         </div>
         <div className="flex gap-3 flex-wrap">
-          <div className="p-6 bg-white rounded-2xl md:rounded-[2rem] shadow-sm text-center">
+          <div className="p-6 bg-white card text-center">
             <span className="block text-3xl font-bold text-[#0061aa]">
               {insights.consistency}%
             </span>
@@ -231,7 +231,7 @@ export default function Insights() {
               Consistency
             </span>
           </div>
-          <div className="p-6 bg-white rounded-2xl md:rounded-[2rem] shadow-sm text-center">
+          <div className="p-6 bg-white card text-center">
             <span className="block text-3xl font-bold text-[#0061aa]">
               {insights.insightsCount}
             </span>
@@ -245,7 +245,7 @@ export default function Insights() {
       {/* Bento Grid Insights */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8">
         {/* Mood Description Card */}
-        <section className="md:col-span-8 bg-white rounded-2xl md:rounded-[2rem] p-8 shadow-sm relative overflow-hidden">
+        <section className="md:col-span-8 bg-white card p-8 relative overflow-hidden">
           <div className="flex justify-between items-start mb-8">
             <div>
               <h2 className="text-xl font-bold text-[#2d3435] mb-1">
@@ -270,7 +270,7 @@ export default function Insights() {
         </section>
 
         {/* Key Breakthroughs */}
-        <section className="md:col-span-4 bg-[#ebeeef] rounded-2xl md:rounded-[2rem] p-8 flex flex-col justify-between">
+        <section className="md:col-span-4 bg-[#ebeeef] card p-8 flex flex-col justify-between">
           <div>
             <div className="w-12 h-12 bg-[#0061aa]/10 rounded-full flex items-center justify-center mb-6">
               <Lightbulb size={24} className="text-[#0061aa]" />
@@ -305,7 +305,7 @@ export default function Insights() {
         </section>
 
         {/* Theme Cloud */}
-        <section className="md:col-span-5 bg-white rounded-2xl md:rounded-[2rem] p-8 shadow-sm">
+        <section className="md:col-span-5 bg-white card p-8">
           <h2 className="text-xl font-bold text-[#2d3435] mb-8">
             Theme Cloud
           </h2>
@@ -327,7 +327,7 @@ export default function Insights() {
         </section>
 
         {/* Quiet Hours Insight */}
-        <section className="md:col-span-7 rounded-2xl md:rounded-[2rem] overflow-hidden relative group h-80">
+        <section className="md:col-span-7 card overflow-hidden relative group h-80">
           <div className="absolute inset-0 bg-gradient-to-br from-[#0061aa] to-[#005596]" />
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/3 translate-x-1/3 blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/3 blur-2xl" />
@@ -344,7 +344,7 @@ export default function Insights() {
       </div>
 
       {/* Historical Benchmarks */}
-      <section className="bg-[#f2f4f4] rounded-2xl md:rounded-[2rem] p-5 md:p-10">
+      <section className="bg-[#f2f4f4] card p-5 md:p-10">
         <h2 className="text-xl md:text-2xl font-bold text-[#2d3435] mb-6 md:mb-10">
           Historical Benchmarks
         </h2>

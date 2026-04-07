@@ -34,7 +34,7 @@ export default function Signup() {
           <span className="text-xl font-bold text-[#586062]">Personal OS</span>
         </div>
 
-        <div className="bg-white rounded-xl p-8 shadow-sm">
+        <div className="bg-white card p-8">
           <h1 className="text-2xl font-bold text-[#2d3435] mb-1">Create account</h1>
           <p className="text-sm text-[#5a6061] mb-8">Set up your personal OS</p>
 

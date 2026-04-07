@@ -83,7 +83,7 @@ export default function Settings() {
 
       <div className="space-y-6">
         {/* API Key */}
-        <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
+        <div className="bg-white card p-5 md:p-8">
           <h2 className="text-xl font-bold text-[#2d3435] flex items-center gap-2 mb-2">
             <Key size={18} className="text-[#0061aa]" />
             Anthropic API Key
@@ -129,7 +129,7 @@ export default function Settings() {
         </div>
 
         {/* Model selector */}
-        <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
+        <div className="bg-white card p-5 md:p-8">
           <h2 className="text-xl font-bold text-[#2d3435] flex items-center gap-2 mb-2">
             <Cpu size={18} className="text-[#0061aa]" />
             AI Model

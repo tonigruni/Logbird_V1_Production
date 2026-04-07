@@ -1,0 +1,38 @@
+/* ============================================================
+   Personal OS — Global Design System
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Design Tokens (CSS Custom Properties)
+   ------------------------------------------------------------ */
+:root {
+  /* Card */
+  --card-radius:        15px;
+  --card-border-color:  #CCD6DD;
+  --card-border:        1px solid var(--card-border-color);
+  --card-shadow:        0 -4px 10px 0 #EEECEA;
+
+  /* Brand */
+  --color-primary:      #0061aa;
+  --color-primary-dark: #005596;
+
+  /* Neutral surface */
+  --color-bg:           #f9f9f9;
+  --color-surface:      #ffffff;
+  --color-muted:        #f2f4f4;
+
+  /* Text */
+  --color-text:         #2d3435;
+  --color-text-muted:   #5a6061;
+  --color-text-faint:   #adb3b4;
+}
+
+/* ------------------------------------------------------------
+   .card  — base card treatment
+   Apply to any white / neutral surface card element.
+   ------------------------------------------------------------ */
+.card {
+  border-radius: var(--card-radius);
+  border:        var(--card-border);
+  box-shadow:    var(--card-shadow);
+}

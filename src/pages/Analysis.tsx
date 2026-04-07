@@ -247,7 +247,7 @@ export default function Analysis() {
       {/* Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8">
         {/* Sentiment Trends */}
-        <div className="md:col-span-8 bg-white rounded-2xl md:rounded-[2rem] p-5 md:p-8shadow-sm relative overflow-hidden">
+        <div className="md:col-span-8 bg-white card p-5 md:p-8 relative overflow-hidden">
           <div className="flex justify-between items-start mb-12">
             <div>
               <h3 className="text-xl font-bold text-[#2d3435] tracking-tight">
@@ -314,7 +314,7 @@ export default function Analysis() {
         </div>
 
         {/* Keyword Frequency */}
-        <div className="md:col-span-4 bg-white rounded-2xl md:rounded-[2rem] p-5 md:p-8shadow-sm flex flex-col">
+        <div className="md:col-span-4 bg-white card p-5 md:p-8 flex flex-col">
           <h3 className="text-xl font-bold text-[#2d3435] tracking-tight mb-2">
             Keyword Frequency
           </h3>
@@ -355,7 +355,7 @@ export default function Analysis() {
         </div>
 
         {/* Monthly Breakthroughs */}
-        <div className="md:col-span-5 bg-[#0061aa] rounded-2xl md:rounded-[2rem] p-5 md:p-8text-white relative overflow-hidden flex flex-col justify-between min-h-[320px]">
+        <div className="md:col-span-5 bg-[#0061aa] card p-5 md:p-8 text-white relative overflow-hidden flex flex-col justify-between min-h-[320px]">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
           <div className="relative z-10">
             <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-[1rem] flex items-center justify-center mb-6">
@@ -394,7 +394,7 @@ export default function Analysis() {
         </div>
 
         {/* Productivity Correlations */}
-        <div className="md:col-span-7 bg-white rounded-2xl md:rounded-[2rem] p-5 md:p-8shadow-sm">
+        <div className="md:col-span-7 bg-white card p-5 md:p-8">
           <div className="flex justify-between items-start mb-8">
             <div>
               <h3 className="text-xl font-bold text-[#2d3435] tracking-tight">
@@ -449,7 +449,7 @@ export default function Analysis() {
       </div>
 
       {/* Footer Summary Strip */}
-      <div className="bg-[#ebeeef] rounded-2xl md:rounded-[2rem] p-5 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
+      <div className="bg-[#ebeeef] card p-5 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
         <div className="flex items-center gap-6">
           <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-inner">
             <Brain size={28} className="text-[#0061aa]" />

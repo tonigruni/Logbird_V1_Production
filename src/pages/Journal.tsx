@@ -632,7 +632,7 @@ export default function Journal() {
           <div>
             <h2 className="text-sm font-semibold text-[#5a6061] uppercase tracking-wider mb-4">Start Writing</h2>
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-              <div className="col-span-1 md:col-span-8 relative overflow-hidden rounded-xl min-h-[220px] md:min-h-[280px] flex flex-col justify-between p-6 md:p-10"
+              <div className="col-span-1 md:col-span-8 relative overflow-hidden card min-h-[220px] md:min-h-[280px] flex flex-col justify-between p-6 md:p-10"
                    style={{background: `linear-gradient(135deg, ${featuredTpl.colorFrom}, ${featuredTpl.colorTo})`}}>
                 <div className="flex items-start justify-between relative z-10">
                   <div>
@@ -650,7 +650,7 @@ export default function Journal() {
                   <button onClick={() => gotoView('templates')} className="text-sm text-white/60 hover:text-white font-medium cursor-pointer transition-colors">See all templates</button>
                 </div>
               </div>
-              <div className="col-span-1 md:col-span-4 bg-[#f2f4f4] rounded-xl p-6 md:p-8 flex flex-col justify-between min-h-[200px] md:min-h-[280px] border-2 border-dashed border-[#adb3b4]/30 hover:border-[#0061aa]/30 transition-colors group">
+              <div className="col-span-1 md:col-span-4 bg-[#f2f4f4] card p-6 md:p-8 flex flex-col justify-between min-h-[200px] md:min-h-[280px] border-2 border-dashed border-[#adb3b4]/30 hover:border-[#0061aa]/30 transition-colors group">
                 <div>
                   <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-105 transition-transform"><Plus size={20} className="text-[#586062]"/></div>
                   <h3 className="text-base font-bold text-[#2d3435] mb-1.5">Blank canvas</h3>
@@ -673,7 +673,7 @@ export default function Journal() {
                 { label:'Templates',   value:BUILT_IN_TEMPLATES.length.toString(), sub:'Built-in writing structures',  icon:Layout,   id:'templates' as View },
               ].map(({ label, value, sub, icon: Icon, id }) => (
                 <button key={id} onClick={() => gotoView(id as Exclude<View, 'editor'>)}
-                  className="bg-white rounded-xl shadow-sm p-6 text-left hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-all cursor-pointer group">
+                  className="bg-white card p-6 text-left hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-all cursor-pointer group">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-9 h-9 rounded-xl bg-[#0061aa]/10 flex items-center justify-center"><Icon size={16} className="text-[#0061aa]"/></div>
                     <ChevronRight size={14} className="text-[#adb3b4] group-hover:text-[#0061aa] transition-colors"/>
@@ -698,7 +698,7 @@ export default function Journal() {
                   const cc = cat ? getCatColor(cat) : null
                   return (
                     <button key={entry.id} onClick={() => { openEntry(entry); setView('editor') }}
-                      className="bg-white rounded-xl shadow-sm p-5 text-left hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-all cursor-pointer">
+                      className="bg-white card p-5 text-left hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-all cursor-pointer">
                       <div className="flex items-center justify-between mb-2">
                         <div className="text-[10px] font-bold text-[#0061aa] uppercase tracking-wider">{format(new Date(entry.created_at),'MMM dd, yyyy')}</div>
                         {cc && cat && <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full', cc.bg, cc.text)}>{cat}</span>}
@@ -779,7 +779,7 @@ export default function Journal() {
                   const cc = entry.category ? getCatColor(entry.category) : null
                   return (
                     <button key={entry.id} onClick={() => { openEntry(entry); setView('editor') }}
-                      className="w-full text-left bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all cursor-pointer group">
+                      className="w-full text-left bg-white card overflow-hidden hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all cursor-pointer group">
                       {meta && <div className="h-1" style={{background:`linear-gradient(to right,${meta.color}50,transparent)`}}/>}
                       <div className="p-5 flex items-start gap-4">
                         <div className="shrink-0 text-center w-12">
@@ -813,7 +813,7 @@ export default function Journal() {
                   const cc = entry.category ? getCatColor(entry.category) : null
                   return (
                     <button key={entry.id} onClick={() => { openEntry(entry); setView('editor') }}
-                      className="text-left bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all cursor-pointer group">
+                      className="text-left bg-white card overflow-hidden hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all cursor-pointer group">
                       <div className="h-2" style={{background: meta?`linear-gradient(to right,${meta.color}50,transparent)`:'#f2f4f4'}}/>
                       <div className="p-5">
                         <div className="flex items-center justify-between mb-2">
@@ -834,7 +834,7 @@ export default function Journal() {
           {/* Stats Sidebar */}
           <div className="w-full lg:w-72 lg:shrink-0 space-y-4">
             {/* Quick Stats */}
-            <div className="bg-white rounded-xl shadow-sm p-5">
+            <div className="bg-white card p-5">
               <div className="flex items-center gap-2 mb-4"><BarChart2 size={14} className="text-[#0061aa]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Quick Stats</h3></div>
               <div className="grid grid-cols-2 gap-2.5">
                 {[
@@ -852,7 +852,7 @@ export default function Journal() {
             </div>
 
             {/* Mood Distribution */}
-            <div className="bg-white rounded-xl shadow-sm p-5">
+            <div className="bg-white card p-5">
               <div className="flex items-center gap-2 mb-4"><TrendingUp size={14} className="text-[#0061aa]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Mood Distribution</h3></div>
               {(() => {
                 const total = Object.values(moodCounts).reduce((a,b)=>a+b,0)
@@ -897,7 +897,7 @@ export default function Journal() {
 
             {/* Category Distribution */}
             {categoryCounts.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm p-5">
+              <div className="bg-white card p-5">
                 <div className="flex items-center gap-2 mb-4"><Tag size={14} className="text-[#0061aa]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Categories</h3></div>
                 <div className="space-y-2">
                   {categoryCounts.map(([cat, cnt]) => {
@@ -922,7 +922,7 @@ export default function Journal() {
             )}
 
             {/* Common Themes */}
-            <div className="bg-white rounded-xl shadow-sm p-5">
+            <div className="bg-white card p-5">
               <div className="flex items-center gap-2 mb-4"><Hash size={14} className="text-[#0061aa]"/><h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Common Themes</h3></div>
               <div className="flex flex-wrap gap-1.5">
                 {popularWords.length === 0 ? (
@@ -948,7 +948,7 @@ export default function Journal() {
           {activeTemplateDetail && (
             <div className="mb-8">
               {/* Hero banner */}
-              <div className="relative rounded-2xl overflow-hidden mb-5 p-10 min-h-[200px] flex items-end"
+              <div className="relative card overflow-hidden mb-5 p-10 min-h-[200px] flex items-end"
                    style={{background: `linear-gradient(135deg, ${activeTemplateDetail.colorFrom}, ${activeTemplateDetail.colorTo})`}}>
                 <button onClick={() => setActiveTemplateDetail(null)}
                   className="absolute top-4 right-4 w-7 h-7 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white/70 hover:text-white transition-all cursor-pointer">
@@ -967,7 +967,7 @@ export default function Journal() {
               {/* Info cards */}
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                 {/* How it works */}
-                <div className="col-span-1 md:col-span-7 bg-white rounded-xl shadow-sm p-6">
+                <div className="col-span-1 md:col-span-7 bg-white card p-6">
                   <h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider mb-3">How it works</h3>
                   <p className="text-sm text-[#5a6061] leading-relaxed mb-4">{activeTemplateDetail.howItWorks}</p>
                   <div className="grid grid-cols-2 gap-3">
@@ -982,7 +982,7 @@ export default function Journal() {
                   </div>
                 </div>
                 {/* Why use this */}
-                <div className="col-span-1 md:col-span-5 bg-[#f2f4f4] rounded-xl p-6">
+                <div className="col-span-1 md:col-span-5 bg-[#f2f4f4] card p-6">
                   <h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider mb-3">Why use this</h3>
                   <ul className="space-y-2 mb-4">
                     {activeTemplateDetail.benefits.map((b, i) => (
@@ -1085,7 +1085,7 @@ export default function Journal() {
 
             {/* Context sidebar */}
             <aside className="w-full lg:w-72 lg:shrink-0 lg:sticky lg:top-6 space-y-0 lg:overflow-y-auto lg:max-h-[calc(100vh-7rem)]">
-              <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+              <div className="bg-white card overflow-hidden">
 
                 {/* ── Mood ── */}
                 <div className="p-6 border-b border-[#f2f4f4]">
@@ -1264,7 +1264,7 @@ export default function Journal() {
       {view === 'calendar' && (
         <div className="flex flex-col lg:flex-row gap-4 animate-fade-in">
           <div className="flex-1 min-w-0">
-            <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
+            <div className="bg-white card p-5 md:p-8">
               <div className="flex items-center justify-between mb-5">
                 <button onClick={() => setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth()-1))} className="text-[#5a6061] hover:text-[#2d3435] cursor-pointer"><ChevronLeft size={16}/></button>
                 <h3 className="text-base font-semibold text-[#2d3435]">{format(calendarDate,'MMMM yyyy')}</h3>
@@ -1294,12 +1294,12 @@ export default function Journal() {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4 mt-4">
-              <div className="bg-white rounded-xl shadow-sm p-5">
+              <div className="bg-white card p-5">
                 <div className="text-xs font-semibold text-[#5a6061] uppercase tracking-wider mb-2">Consistency Score</div>
                 <div className="text-3xl font-bold text-[#0061aa]">{consistencyScore}%</div>
                 <p className="text-xs text-[#5a6061] opacity-60 mt-1">{daysWithEntries.length} entries in {format(calendarDate,'MMMM')}</p>
               </div>
-              <div className="bg-white rounded-xl shadow-sm p-5">
+              <div className="bg-white card p-5">
                 <div className="text-xs font-semibold text-[#5a6061] uppercase tracking-wider mb-2">Daily Prompt</div>
                 <p className="text-sm text-[#2d3435] leading-relaxed italic">"What is one thing you learned about yourself this week?"</p>
                 <button onClick={() => { openNew(); setView('editor'); setTitle('Daily Prompt Reflection') }} className="text-xs text-[#0061aa] hover:underline mt-2 cursor-pointer">Write about this</button>
@@ -1307,7 +1307,7 @@ export default function Journal() {
             </div>
           </div>
           <div className="w-full lg:w-[280px] lg:shrink-0">
-            <div className="bg-white rounded-xl shadow-sm p-5">
+            <div className="bg-white card p-5">
               <h3 className="text-sm font-semibold text-[#2d3435] mb-3">{selectedCalDay ? format(selectedCalDay,'EEEE, MMM d') : 'Select a day'}</h3>
               {selectedCalDay && !selectedDayEntries.length && (
                 <div className="text-center py-8">
@@ -1356,7 +1356,7 @@ export default function Journal() {
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                 {/* Large feature card */}
                 <button onClick={() => applyBuiltIn(BUILT_IN_TEMPLATES[0])}
-                  className="col-span-1 md:col-span-7 relative overflow-hidden rounded-2xl p-7 md:p-10 flex flex-col justify-between min-h-[240px] md:min-h-[320px] cursor-pointer group text-left"
+                  className="col-span-1 md:col-span-7 relative overflow-hidden card p-7 md:p-10 flex flex-col justify-between min-h-[240px] md:min-h-[320px] cursor-pointer group text-left"
                   style={{background: `linear-gradient(135deg, ${BUILT_IN_TEMPLATES[0].colorFrom}, ${BUILT_IN_TEMPLATES[0].colorTo})`}}>
                   <div className="flex items-start justify-between">
                     <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest">Featured Template</span>
@@ -1374,7 +1374,7 @@ export default function Journal() {
 
                 {/* Companion card */}
                 <button onClick={() => applyBuiltIn(BUILT_IN_TEMPLATES[1])}
-                  className="col-span-1 md:col-span-5 relative overflow-hidden rounded-2xl p-7 md:p-8 flex flex-col justify-between min-h-[200px] md:min-h-[320px] cursor-pointer group text-left"
+                  className="col-span-1 md:col-span-5 relative overflow-hidden card p-7 md:p-8 flex flex-col justify-between min-h-[200px] md:min-h-[320px] cursor-pointer group text-left"
                   style={{background: `linear-gradient(135deg, ${BUILT_IN_TEMPLATES[1].colorFrom}, ${BUILT_IN_TEMPLATES[1].colorTo})`}}>
                   <div className="flex items-start justify-between">
                     <span className="text-4xl opacity-50">{BUILT_IN_TEMPLATES[1].emoji}</span>
@@ -1393,7 +1393,7 @@ export default function Journal() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {BUILT_IN_TEMPLATES.slice(2, 5).map(tpl => (
                   <button key={tpl.id} onClick={() => applyBuiltIn(tpl)}
-                    className="relative overflow-hidden rounded-2xl p-7 flex flex-col justify-between min-h-[200px] cursor-pointer group text-left"
+                    className="relative overflow-hidden card p-7 flex flex-col justify-between min-h-[200px] cursor-pointer group text-left"
                     style={{background: `linear-gradient(135deg, ${tpl.colorFrom}, ${tpl.colorTo})`}}>
                     <div className="flex items-start justify-between">
                       <span className="text-3xl opacity-60">{tpl.emoji}</span>
@@ -1412,7 +1412,7 @@ export default function Journal() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {BUILT_IN_TEMPLATES.slice(5, 8).map(tpl => (
                   <button key={tpl.id} onClick={() => applyBuiltIn(tpl)}
-                    className="relative overflow-hidden rounded-2xl p-7 flex flex-col justify-between min-h-[200px] cursor-pointer group text-left"
+                    className="relative overflow-hidden card p-7 flex flex-col justify-between min-h-[200px] cursor-pointer group text-left"
                     style={{background: `linear-gradient(135deg, ${tpl.colorFrom}, ${tpl.colorTo})`}}>
                     <div className="flex items-start justify-between">
                       <span className="text-3xl opacity-60">{tpl.emoji}</span>
@@ -1431,7 +1431,7 @@ export default function Journal() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {BUILT_IN_TEMPLATES.slice(8, 11).map(tpl => (
                   <button key={tpl.id} onClick={() => applyBuiltIn(tpl)}
-                    className="relative overflow-hidden rounded-2xl p-5 flex flex-col justify-between min-h-[160px] cursor-pointer group text-left"
+                    className="relative overflow-hidden card p-5 flex flex-col justify-between min-h-[160px] cursor-pointer group text-left"
                     style={{background: `linear-gradient(135deg, ${tpl.colorFrom}, ${tpl.colorTo})`}}>
                     <div className="flex items-start justify-between">
                       <span className="text-2xl opacity-60">{tpl.emoji}</span>
@@ -1445,7 +1445,7 @@ export default function Journal() {
                 ))}
                 {/* Create custom card */}
                 <button onClick={() => { setNewTemplateName(''); setNewTemplateContent(''); document.getElementById('create-template-form')?.scrollIntoView({ behavior: 'smooth' }) }}
-                  className="rounded-2xl p-5 flex flex-col justify-between min-h-[160px] cursor-pointer group text-left border-2 border-dashed border-[#adb3b4]/30 hover:border-[#0061aa]/40 bg-white transition-all">
+                  className="card p-5 flex flex-col justify-between min-h-[160px] cursor-pointer group text-left border-2 border-dashed border-[#adb3b4]/30 hover:border-[#0061aa]/40 bg-white transition-all">
                   <div className="w-8 h-8 rounded-full bg-[#f2f4f4] group-hover:bg-[#0061aa]/10 flex items-center justify-center transition-colors">
                     <Plus size={15} className="text-[#adb3b4] group-hover:text-[#0061aa] transition-colors"/>
                   </div>
@@ -1467,7 +1467,7 @@ export default function Journal() {
                 </div>
               ) : filteredBuiltIns.map(tpl => (
                 <button key={tpl.id} onClick={() => applyBuiltIn(tpl)}
-                  className="relative overflow-hidden rounded-2xl p-8 flex flex-col justify-between min-h-[240px] cursor-pointer group text-left"
+                  className="relative overflow-hidden card p-8 flex flex-col justify-between min-h-[240px] cursor-pointer group text-left"
                   style={{background: `linear-gradient(135deg, ${tpl.colorFrom}, ${tpl.colorTo})`}}>
                   <div className="flex items-start justify-between">
                     <span className="text-4xl opacity-50">{tpl.emoji}</span>
@@ -1490,7 +1490,7 @@ export default function Journal() {
               <h3 className="text-xs font-bold text-[#5a6061] uppercase tracking-wider mb-4">Your Custom Templates</h3>
               <div className="grid grid-cols-3 gap-4">
                 {templates.map(t => (
-                  <div key={t.id} className="bg-white rounded-xl shadow-sm p-5 hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-all">
+                  <div key={t.id} className="bg-white card p-5 hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-all">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-[10px] font-bold text-[#0061aa] uppercase tracking-wider bg-[#0061aa]/10 px-2 py-0.5 rounded-full">Custom</span>
                     </div>
@@ -1507,7 +1507,7 @@ export default function Journal() {
           )}
 
           {/* Create template form */}
-          <div id="create-template-form" className="mt-8 bg-white rounded-xl shadow-sm p-6">
+          <div id="create-template-form" className="mt-8 bg-white card p-6">
             <h3 className="font-semibold text-[#2d3435] mb-1">Create Custom Template</h3>
             <p className="text-xs text-[#5a6061] mb-4">Save a reusable structure for your journal entries.</p>
             <div className="space-y-3">
