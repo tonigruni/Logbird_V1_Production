@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "personal-os",
-      "runtimeExecutable": "/bin/bash",
-      "runtimeArgs": ["/tmp/start-personal-os.sh"],
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
       "port": 5173
     }
   ]

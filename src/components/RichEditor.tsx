@@ -493,7 +493,7 @@ export default function RichEditor({ content, onChange, editable, placeholder, c
         {editable && (
           <div
             ref={gutterRef}
-            className="relative w-8 shrink-0 select-none"
+            className="relative -ml-8 w-8 shrink-0 select-none"
             onMouseEnter={() => { isHoveringGutter.current = true }}
             onMouseLeave={() => { isHoveringGutter.current = false }}
           >

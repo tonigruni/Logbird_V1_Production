@@ -1,12 +1,40 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Check } from 'lucide-react'
+import { Check, Star, Frown, Meh, Smile } from 'lucide-react'
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 import { useAuthStore } from '../stores/authStore'
 import { useJournalStore } from '../stores/journalStore'
 import { useWheelStore } from '../stores/wheelStore'
 import { format } from 'date-fns'
 import GradientBarsBackground from '../components/ui/GradientBarsBackground'
+import { cn } from '../lib/utils'
+
+const JOURNAL_CAT_COLORS: Record<string, { bg: string; text: string }> = {
+  Personal:  { bg: 'bg-[#1F3649]/10',  text: 'text-[#1F3649]' },
+  Work:      { bg: 'bg-[#586062]/10',  text: 'text-[#586062]' },
+  Dreams:    { bg: 'bg-[#9f403d]/10',  text: 'text-[#9f403d]' },
+  Ideas:     { bg: 'bg-[#162838]/10',  text: 'text-[#162838]' },
+  Travel:    { bg: 'bg-[#0d9488]/10',  text: 'text-[#0d9488]' },
+  Health:    { bg: 'bg-[#16a34a]/10',  text: 'text-[#16a34a]' },
+  Gratitude: { bg: 'bg-[#ca8a04]/10',  text: 'text-[#ca8a04]' },
+}
+function getJournalCatColor(cat: string) {
+  return JOURNAL_CAT_COLORS[cat] ?? { bg: 'bg-[#ebeeef]', text: 'text-[#5a6061]' }
+}
+const MOOD_META: Record<number, { short: string; chipClass: string; icon: typeof Frown }> = {
+  1: { short: 'Very Low', chipClass: 'bg-red-100 text-red-700',         icon: Frown },
+  2: { short: 'Low',      chipClass: 'bg-orange-100 text-orange-700',   icon: Frown },
+  3: { short: 'Neutral',  chipClass: 'bg-[#ebeeef] text-[#5a6061]',     icon: Meh   },
+  4: { short: 'Good',     chipClass: 'bg-green-100 text-green-700',     icon: Smile },
+  5: { short: 'Excellent',chipClass: 'bg-emerald-100 text-emerald-800', icon: Smile },
+}
+function stripMd(text: string): string {
+  return text.replace(/#{1,6}\s/g, '').replace(/[*_`~]/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').trim()
+}
+function countWords(content: string): string {
+  const n = content.trim().split(/\s+/).filter(Boolean).length
+  return n >= 1000 ? `${(n / 1000).toFixed(1)}k words` : `${n} words`
+}
 
 const CATEGORY_COLORS: Record<string, string> = {
   Health: '#22c55e',
@@ -21,7 +49,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export default function Dashboard() {
   const { user } = useAuthStore()
-  const { entries, fetchEntries } = useJournalStore()
+  const { entries, fetchEntries, updateEntry } = useJournalStore()
   const { checkins, goals, tasks, fetchAll, toggleTask } = useWheelStore()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
@@ -265,30 +293,47 @@ export default function Dashboard() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {recentEntries.map((entry) => {
-              const date = new Date(entry.created_at)
+              const meta = entry.mood_score ? MOOD_META[entry.mood_score] : null
+              const MoodIcon = meta?.icon
+              const cc = entry.category ? getJournalCatColor(entry.category) : null
               return (
                 <div
                   key={entry.id}
                   onClick={() => navigate('/journal')}
-                  className="bg-white card p-6 hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] cursor-pointer transition-all group"
+                  className="bg-white card p-5 hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all group cursor-pointer"
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-[#1F3649] uppercase tracking-wider">
-                      {format(date, 'MMM d')}
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">
+                      {format(new Date(entry.created_at), 'MMM d, yyyy')}
                     </span>
-                    {entry.mood_score && (
-                      <span className="text-base leading-none">
-                        {['', '😞', '😕', '😐', '🙂', '😄'][entry.mood_score]}
-                      </span>
-                    )}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); updateEntry(entry.id, { is_favorite: !entry.is_favorite }) }}
+                      className={cn('p-1 rounded-lg transition-all cursor-pointer -mt-0.5', entry.is_favorite ? 'text-[#ca8a04]' : 'text-[#dde4e5] hover:text-[#ca8a04]')}
+                    >
+                      <Star size={12} fill={entry.is_favorite ? 'currentColor' : 'none'} />
+                    </button>
                   </div>
-                  <h3 className="text-sm font-semibold text-[#2d3435] mb-1.5 truncate group-hover:text-[#1F3649] transition-colors">
+                  <h3 className="text-sm font-bold text-[#2d3435] mb-2 line-clamp-2 group-hover:text-[#1F3649] transition-colors">
                     {entry.title}
                   </h3>
-                  <p className="text-xs text-[#5a6061] leading-relaxed line-clamp-3">
-                    {entry.content.slice(0, 120)}
-                    {entry.content.length > 120 ? '...' : ''}
+                  <p className="text-xs text-[#5a6061] line-clamp-3 leading-relaxed mb-4">
+                    {stripMd(entry.content).slice(0, 120)}…
                   </p>
+                  <div className="flex items-center justify-between pt-3 border-t border-[#f2f4f4]">
+                    <span className="text-[10px] font-semibold text-[#adb3b4]">{countWords(entry.content)}</span>
+                    <div className="flex items-center gap-1.5">
+                      {cc && entry.category && (
+                        <span className={cn('inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>
+                          {entry.category}
+                        </span>
+                      )}
+                      {meta && MoodIcon && (
+                        <span className={cn('inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-[15px]', meta.chipClass)}>
+                          <MoodIcon size={9}/>{meta.short}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )
             })}

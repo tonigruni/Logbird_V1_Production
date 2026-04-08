@@ -13,6 +13,10 @@ export interface JournalEntry {
   location: string | null
   weather: string | null
   is_favorite?: boolean
+  sleep_quality?: number | null
+  had_alcohol?: boolean | null
+  exercised?: boolean | null
+  energy_level?: 'low' | 'medium' | 'high' | null
   created_at: string
   updated_at: string
 }
@@ -87,9 +91,9 @@ export const useJournalStore = create<JournalState>((set) => ({
     }))
     if (DEMO_MODE) return
 
-    // Strip is_favorite from the DB payload — needs an ALTER TABLE migration first
+    // Strip client-side-only fields from the DB payload — needs ALTER TABLE migrations first
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { is_favorite, ...dbUpdates } = updates as JournalEntry
+    const { is_favorite, sleep_quality, had_alcohol, exercised, energy_level, ...dbUpdates } = updates as JournalEntry
     if (Object.keys(dbUpdates).length === 0) return   // nothing left to persist
 
     const { data } = await supabase

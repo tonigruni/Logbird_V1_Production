@@ -338,6 +338,9 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; dot: string }>
 function getCatColor(cat: string) {
   return CATEGORY_COLORS[cat] ?? { bg: 'bg-[#ebeeef]', text: 'text-[#5a6061]', dot: '#adb3b4' }
 }
+function parseCategories(category: string | null | undefined): string[] {
+  return category ? category.split(',').filter(Boolean) : []
+}
 
 const MOOD_META: Record<number, { label: string; short: string; chipClass: string; color: string; bg: string; icon: LucideIcon }> = {
   1: { label: 'Very Low', short: 'Very Low', chipClass: 'bg-red-100 text-red-700',         color: '#dc2626', bg: '#fef2f2', icon: Frown },
@@ -377,7 +380,7 @@ export default function Journal() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [moodScore, setMoodScore] = useState<number | null>(null)
-  const [entryCategory, setEntryCategory] = useState<string | null>(null)
+  const [entryCategory, setEntryCategory] = useState<string[]>([])
   const [entryLocation, setEntryLocation] = useState('')
   const [entryWeather, setEntryWeather] = useState('')
   const [sleepQuality, setSleepQuality] = useState<number | null>(null)
@@ -504,7 +507,7 @@ export default function Journal() {
 
   const categoryCounts = useMemo(() => {
     const c: Record<string, number> = {}
-    entries.forEach(e => { if (e.category) c[e.category] = (c[e.category] || 0) + 1 })
+    entries.forEach(e => { parseCategories(e.category).forEach(cat => { c[cat] = (c[cat] || 0) + 1 }) })
     return Object.entries(c).sort((a, b) => b[1] - a[1])
   }, [entries])
 
@@ -527,7 +530,7 @@ export default function Journal() {
       r = r.filter(e => new Date(e.created_at) >= cut)
     }
     if (moodFilter !== null) r = r.filter(e => e.mood_score !== null && e.mood_score >= moodFilter.min && e.mood_score <= moodFilter.max)
-    if (categoryFilter) r = r.filter(e => e.category === categoryFilter)
+    if (categoryFilter) r = r.filter(e => parseCategories(e.category).includes(categoryFilter))
     if (entryTypeFilter === 'template') r = r.filter(e => e.content.trimStart().startsWith('#'))
     if (entryTypeFilter === 'freewriting') r = r.filter(e => !e.content.trimStart().startsWith('#'))
     if (favoritesOnly) r = r.filter(e => e.is_favorite === true)
@@ -558,7 +561,7 @@ export default function Journal() {
     if (favoritesOnly) return `${n} starred ${s}`
     if (moodFilter && moodFilter.max <= 2 && categoryFilter === 'Work') return `${n} difficult work ${s} — work may be affecting your mood.`
     if (moodFilter && moodFilter.max <= 2) {
-      const workCount = libraryEntries.filter(e => e.category === 'Work').length
+      const workCount = libraryEntries.filter(e => parseCategories(e.category).includes('Work')).length
       if (workCount > n * 0.5) return `${n} difficult ${s} — over half relate to work.`
       return `${n} difficult ${s} found.`
     }
@@ -573,15 +576,19 @@ export default function Journal() {
 
   const openNew = (templateContent = '') => {
     setSelected(null); setTitle(''); setContent(templateContent)
-    setMoodScore(null); setEntryCategory(null); setEntryLocation(''); setEntryWeather('')
+    setMoodScore(null); setEntryCategory([]); setEntryLocation(''); setEntryWeather('')
     setSleepQuality(null); setHadAlcohol(null); setExercised(null); setEnergyLevel(null)
     setSaveStatus('idle'); setActiveTemplateDetail(null); setPromptResponses([]); setExtraThoughts('')
   }
 
   const openEntry = (entry: JournalEntry) => {
     setSelected(entry); setTitle(entry.title); setContent(entry.content)
-    setMoodScore(entry.mood_score); setEntryCategory(entry.category)
+    setMoodScore(entry.mood_score); setEntryCategory(parseCategories(entry.category))
     setEntryLocation(entry.location ?? ''); setEntryWeather(entry.weather ?? '')
+    setSleepQuality(entry.sleep_quality ?? null)
+    setHadAlcohol(entry.had_alcohol ?? null)
+    setExercised(entry.exercised ?? null)
+    setEnergyLevel(entry.energy_level ?? null)
     setSaveStatus('idle'); setActiveTemplateDetail(null); setPromptResponses([])
   }
 
@@ -590,7 +597,7 @@ export default function Journal() {
     setTitle(tpl.name)
     setContent('')
     setMoodScore(null)
-    setEntryCategory(tpl.category)
+    setEntryCategory(tpl.category ? [tpl.category] : [])
     setEntryLocation('')
     setEntryWeather('')
     setSleepQuality(null); setHadAlcohol(null); setExercised(null); setEnergyLevel(null)
@@ -608,7 +615,7 @@ export default function Journal() {
     const finalContent = activeTemplateDetail && promptResponses.length > 0
       ? buildEntryContent(activeTemplateDetail, promptResponses) + (extraThoughts.trim() ? `\n\n### Additional Thoughts\n\n${extraThoughts.trim()}` : '')
       : content
-    const payload = { title, content: finalContent, mood_score: moodScore, category: entryCategory, location: entryLocation || null, weather: entryWeather || null }
+    const payload = { title, content: finalContent, mood_score: moodScore, category: entryCategory.length ? entryCategory.join(',') : null, location: entryLocation || null, weather: entryWeather || null, sleep_quality: sleepQuality, had_alcohol: hadAlcohol, exercised, energy_level: energyLevel }
     if (selected) {
       await updateEntry(selected.id, payload)
     } else {
@@ -621,7 +628,7 @@ export default function Journal() {
 
   const remove = async (id: string) => {
     await deleteEntry(id)
-    setSelected(null); setTitle(''); setContent(''); setEntryCategory(null); setEntryLocation(''); setEntryWeather('')
+    setSelected(null); setTitle(''); setContent(''); setEntryCategory([]); setEntryLocation(''); setEntryWeather('')
     setActiveTemplateDetail(null); setPromptResponses([])
     gotoView('journal')
   }
@@ -752,18 +759,31 @@ export default function Journal() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {entries.slice(0,3).map(entry => {
-                  const cat = entry.category
-                  const cc = cat ? getCatColor(cat) : null
+                  const meta = entry.mood_score ? MOOD_META[entry.mood_score] : null
+                  const MoodIcon = meta?.icon
+                  const cats = parseCategories(entry.category)
                   return (
-                    <button key={entry.id} onClick={() => { openEntry(entry); setView('editor') }}
-                      className="bg-white card p-5 text-left hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-all cursor-pointer">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="text-[10px] font-bold text-[#1F3649] uppercase tracking-wider">{format(new Date(entry.created_at),'MMM dd, yyyy')}</div>
-                        {cc && cat && <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>{cat}</span>}
+                    <div key={entry.id} onClick={() => { openEntry(entry); setView('editor') }}
+                      className="bg-white card p-5 text-left hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all group cursor-pointer">
+                      <div className="flex items-start justify-between mb-3">
+                        <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">{format(new Date(entry.created_at),'MMM d, yyyy')}</span>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); updateEntry(entry.id, { is_favorite: !entry.is_favorite }) }}
+                          className={cn('p-1 rounded-lg transition-all cursor-pointer -mt-0.5', entry.is_favorite ? 'text-[#ca8a04]' : 'text-[#dde4e5] hover:text-[#ca8a04]')}
+                        >
+                          <Star size={12} fill={entry.is_favorite ? 'currentColor' : 'none'} />
+                        </button>
                       </div>
-                      <div className="text-sm font-semibold text-[#2d3435] truncate mb-1">{entry.title}</div>
-                      <p className="text-xs text-[#5a6061] line-clamp-2 leading-relaxed">{stripMd(entry.content).slice(0,100)}…</p>
-                    </button>
+                      <h3 className="text-sm font-bold text-[#2d3435] mb-2 line-clamp-2 group-hover:text-[#1F3649] transition-colors">{entry.title}</h3>
+                      <p className="text-xs text-[#5a6061] line-clamp-3 leading-relaxed mb-4">{stripMd(entry.content).slice(0,120)}…</p>
+                      <div className="flex items-center justify-between pt-3 border-t border-[#f2f4f4]">
+                        <span className="text-[10px] font-semibold text-[#adb3b4]">{countWords(entry.content)}</span>
+                        <div className="flex items-center gap-1.5">
+                          {cats.map(cat => { const cc = getCatColor(cat); return <span key={cat} className={cn('inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>{cat}</span> })}
+                          {meta && MoodIcon && <span className={cn('inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-[15px]', meta.chipClass)}><MoodIcon size={9}/>{meta.short}</span>}
+                        </div>
+                      </div>
+                    </div>
                   )
                 })}
               </div>
@@ -837,7 +857,7 @@ export default function Journal() {
               <div className={cn('space-y-3 transition-opacity duration-150', pageFading ? 'opacity-0' : 'opacity-100')}>
                 {pagedEntries.map(entry => {
                   const meta = entry.mood_score ? MOOD_META[entry.mood_score] : null
-                  const cc = entry.category ? getCatColor(entry.category) : null
+                  const cats = parseCategories(entry.category)
                   const MoodIcon = meta?.icon
                   return (
                     <div key={entry.id} className="bg-white card p-5 hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all group flex items-start gap-4">
@@ -849,7 +869,7 @@ export default function Journal() {
                         <div className="flex items-start justify-between gap-3 mb-1.5">
                           <h3 className="text-sm font-bold text-[#2d3435] truncate group-hover:text-[#1F3649] transition-colors">{entry.title}</h3>
                           <div className="flex items-center gap-1.5 shrink-0">
-                            {cc && entry.category && <span className={cn('inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>{entry.category}</span>}
+                            {cats.map(cat => { const cc = getCatColor(cat); return <span key={cat} className={cn('inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>{cat}</span> })}
                             {meta && MoodIcon && <span className={cn('inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-[15px]', meta.chipClass)}><MoodIcon size={9}/>{meta.short}</span>}
                           </div>
                         </div>
@@ -876,7 +896,7 @@ export default function Journal() {
               <div className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 transition-opacity duration-150', pageFading ? 'opacity-0' : 'opacity-100')}>
                 {pagedEntries.map(entry => {
                   const meta = entry.mood_score ? MOOD_META[entry.mood_score] : null
-                  const cc = entry.category ? getCatColor(entry.category) : null
+                  const cats = parseCategories(entry.category)
                   const MoodIcon = meta?.icon
                   return (
                     <div key={entry.id} className="bg-white card p-5 hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all group cursor-pointer" onClick={() => { openEntry(entry); setView('editor') }}>
@@ -894,7 +914,7 @@ export default function Journal() {
                       <div className="flex items-center justify-between pt-3 border-t border-[#f2f4f4]">
                         <span className="text-[10px] font-semibold text-[#adb3b4]">{countWords(entry.content)}</span>
                         <div className="flex items-center gap-1.5">
-                          {cc && entry.category && <span className={cn('inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>{entry.category}</span>}
+                          {cats.map(cat => { const cc = getCatColor(cat); return <span key={cat} className={cn('inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>{cat}</span> })}
                           {meta && MoodIcon && <span className={cn('inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-[15px]', meta.chipClass)}><MoodIcon size={9}/>{meta.short}</span>}
                         </div>
                       </div>
@@ -1189,9 +1209,9 @@ export default function Journal() {
                   </DropdownMenu.Root>
                 </div>
                 {/* Category + location quick preview row */}
-                {(entryCategory || entryLocation || entryWeather) && (
-                  <div className="flex items-center gap-3 mt-3 flex-wrap">
-                    {entryCategory && (() => { const cc=getCatColor(entryCategory); return <span className={cn('text-xs font-bold px-2.5 py-1 rounded-[15px]', cc.bg, cc.text)}>{entryCategory}</span> })()}
+                {(entryCategory.length > 0 || entryLocation || entryWeather) && (
+                  <div className="flex items-center gap-2 mt-3 flex-wrap">
+                    {entryCategory.map(cat => { const cc = getCatColor(cat); return <span key={cat} className={cn('text-xs font-bold px-2.5 py-1 rounded-[15px]', cc.bg, cc.text)}>{cat}</span> })}
                     {entryLocation && <span className="text-xs text-[#adb3b4] flex items-center gap-1"><MapPin size={11}/>{entryLocation}</span>}
                     {entryWeather && <span className="text-xs text-[#adb3b4] flex items-center gap-1"><Cloud size={11}/>{entryWeather}</span>}
                   </div>
@@ -1303,9 +1323,9 @@ export default function Journal() {
                   <div className="flex flex-wrap gap-2">
                     {ENTRY_CATEGORIES.map(cat => {
                       const cc = getCatColor(cat)
-                      const active = entryCategory === cat
+                      const active = entryCategory.includes(cat)
                       return (
-                        <button key={cat} onClick={() => setEntryCategory(active ? null : cat)}
+                        <button key={cat} onClick={() => setEntryCategory(active ? entryCategory.filter(c => c !== cat) : [...entryCategory, cat])}
                           className={cn('px-3 py-1.5 rounded-[15px] text-xs font-semibold transition-all cursor-pointer',
                             active ? `${cc.bg} ${cc.text} shadow-sm` : 'bg-[#f2f4f4] text-[#5a6061] hover:bg-[#ebeeef]')}>
                           {cat}
