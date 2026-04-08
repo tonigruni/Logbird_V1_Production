@@ -1,3 +1,4 @@
 {
-  "name": "personal-os"
+  "name": "personal-os",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
