@@ -49,6 +49,10 @@ export interface InsightsData {
     journalDepth: { avgWords: number; delta: number }
     burnout: { label: string; probability: number; delta: number }
   }
+  emotionalPatterns?: string[]
+  growthObservations?: string[]
+  wellnessIndicators?: { area: string; status: string; suggestion: string }[]
+  keyTakeaways?: string[]
 }
 
 /* ------------------------------------------------------------------ */
@@ -77,9 +81,11 @@ export async function loadSavedAnalysis(userId: string): Promise<AnalysisData | 
   }
 }
 
-export async function loadSavedInsights(userId: string): Promise<InsightsData | null> {
+export async function loadSavedInsights(userId: string, period = 'all'): Promise<InsightsData | null> {
+  const typeKey = `insights_${period}`
   // Same-session fast path — return in-memory cache immediately
-  if (insightsCache) return insightsCache.data
+  const cached = insightsCacheMap[typeKey]
+  if (cached) return cached.data
 
   // Cross-session: query Supabase
   try {
@@ -87,12 +93,12 @@ export async function loadSavedInsights(userId: string): Promise<InsightsData | 
       .from('ai_insights')
       .select('data')
       .eq('user_id', userId)
-      .eq('type', 'insights')
+      .eq('type', typeKey)
       .single()
     if (error || !data) return null
     const result = data.data as unknown as InsightsData
     // Warm the cache so future navigations are instant
-    insightsCache = { data: result, timestamp: Date.now(), entryCount: -1 }
+    insightsCacheMap[typeKey] = { data: result, timestamp: Date.now(), entryCount: -1 }
     return result
   } catch {
     return null
@@ -106,12 +112,15 @@ async function persistAnalysis(userId: string, data: AnalysisData) {
   )
 }
 
-async function persistInsights(userId: string, data: InsightsData) {
+async function persistInsights(userId: string, data: InsightsData, period = 'all') {
+  const typeKey = `insights_${period}`
   await supabase.from('ai_insights').upsert(
-    { user_id: userId, type: 'insights', data: data as unknown as Record<string, unknown>, updated_at: new Date().toISOString() },
+    { user_id: userId, type: typeKey, data: data as unknown as Record<string, unknown>, updated_at: new Date().toISOString() },
     { onConflict: 'user_id,type' }
   )
 }
+
+export { persistInsights }
 
 /* ------------------------------------------------------------------ */
 /*  In-memory cache (dedup rapid repeat calls within a session)        */
@@ -125,7 +134,7 @@ interface CacheEntry<T> {
 
 const CACHE_TTL = 10 * 60 * 1000 // 10 minutes
 let analysisCache: CacheEntry<AnalysisData> | null = null
-let insightsCache: CacheEntry<InsightsData> | null = null
+let insightsCacheMap: Record<string, CacheEntry<InsightsData>> = {}
 
 function isCacheValid<T>(cache: CacheEntry<T> | null, currentEntryCount: number): cache is CacheEntry<T> {
   if (!cache) return false
@@ -258,9 +267,11 @@ Base everything on ACTUAL content from the entries. Do not invent data that cont
 /*  Insights (for Insights page)                                       */
 /* ------------------------------------------------------------------ */
 
-export async function fetchInsights(entries: JournalEntry[], userId: string): Promise<InsightsData> {
-  if (isCacheValid(insightsCache, entries.length)) {
-    return insightsCache.data
+export async function fetchInsights(entries: JournalEntry[], userId: string, period = 'all'): Promise<InsightsData> {
+  const typeKey = `insights_${period}`
+  const cached = insightsCacheMap[typeKey]
+  if (isCacheValid(cached ?? null, entries.length)) {
+    return cached!.data
   }
 
   if (entries.length === 0) {
@@ -286,7 +297,26 @@ export async function fetchInsights(entries: JournalEntry[], userId: string): Pr
     "sentiment": {"label": "Highly Positive", "value": 0.82, "delta": 12},
     "journalDepth": {"avgWords": ${avgWords}, "delta": 5},
     "burnout": {"label": "Low Probability", "probability": 14, "delta": -30}
-  }
+  },
+  "emotionalPatterns": [
+    "Pattern 1: A specific emotional pattern observed across entries",
+    "Pattern 2: Another pattern with evidence from the entries",
+    "Pattern 3: A third observation about emotional trends"
+  ],
+  "growthObservations": [
+    "Growth observation 1: Evidence of personal development",
+    "Growth observation 2: Another area of growth or learning"
+  ],
+  "wellnessIndicators": [
+    {"area": "Mental Clarity", "status": "Strong", "suggestion": "Continue reflective journaling"},
+    {"area": "Stress Management", "status": "Moderate", "suggestion": "Consider adding breathing exercises"},
+    {"area": "Work-Life Balance", "status": "Needs Attention", "suggestion": "Schedule dedicated downtime"}
+  ],
+  "keyTakeaways": [
+    "Actionable takeaway 1",
+    "Actionable takeaway 2",
+    "Actionable takeaway 3"
+  ]
 }
 
 Rules:
@@ -298,6 +328,10 @@ Rules:
 - themes: 7-10 theme words with weight 1-10 based on prominence in entries
 - benchmarks.journalDepth.avgWords must be ${avgWords} (the actual average)
 - benchmarks.sentiment.delta and burnout.delta are estimated % changes
+- emotionalPatterns: 3-4 specific emotional patterns with evidence from entries
+- growthObservations: 2-3 observations about personal growth or learning
+- wellnessIndicators: exactly 3 wellness areas with status (Strong/Moderate/Needs Attention) and actionable suggestion
+- keyTakeaways: 3 concise, actionable takeaways the user can act on
 
 Base everything on ACTUAL content from the entries. Do not invent data that contradicts what was written.`
 
@@ -306,8 +340,8 @@ Base everything on ACTUAL content from the entries. Do not invent data that cont
   const raw = await callAnthropic(systemPrompt, userPrompt)
   const data = parseJSON<InsightsData>(raw)
 
-  insightsCache = { data, timestamp: Date.now(), entryCount: entries.length }
-  await persistInsights(userId, data)
+  insightsCacheMap[typeKey] = { data, timestamp: Date.now(), entryCount: entries.length }
+  await persistInsights(userId, data, period)
   return data
 }
 
@@ -352,5 +386,5 @@ function getEmptyInsights(): InsightsData {
 
 export function clearAnalysisCache() {
   analysisCache = null
-  insightsCache = null
+  insightsCacheMap = {}
 }

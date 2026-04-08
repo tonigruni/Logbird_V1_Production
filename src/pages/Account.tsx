@@ -1,9 +1,99 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuthStore } from '../stores/authStore'
 import { useNavigate } from 'react-router-dom'
 import { DEMO_MODE } from '../lib/demo'
-import { Lock, AlertTriangle, Trash2 } from 'lucide-react'
+import { Lock, AlertTriangle, Trash2, User, ChevronsUpDown, Check, Search, PenLine } from 'lucide-react'
+import { cn } from '../lib/utils'
+
+const COUNTRIES = [
+  'Afghanistan','Albania','Algeria','Andorra','Angola','Argentina','Armenia','Australia','Austria','Azerbaijan',
+  'Bahamas','Bahrain','Bangladesh','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina',
+  'Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi','Cambodia','Cameroon','Canada','Cape Verde',
+  'Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo','Costa Rica','Croatia','Cuba',
+  'Cyprus','Czech Republic','Denmark','Djibouti','Dominican Republic','Ecuador','Egypt','El Salvador','Estonia',
+  'Ethiopia','Fiji','Finland','France','Gabon','Gambia','Georgia','Germany','Ghana','Greece','Guatemala','Guinea',
+  'Haiti','Honduras','Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Jamaica',
+  'Japan','Jordan','Kazakhstan','Kenya','Kosovo','Kuwait','Kyrgyzstan','Laos','Latvia','Lebanon','Lesotho','Liberia',
+  'Libya','Liechtenstein','Lithuania','Luxembourg','Madagascar','Malawi','Malaysia','Maldives','Mali','Malta',
+  'Mauritania','Mauritius','Mexico','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar',
+  'Namibia','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Korea','North Macedonia',
+  'Norway','Oman','Pakistan','Palestine','Panama','Paraguay','Peru','Philippines','Poland','Portugal','Qatar',
+  'Romania','Russia','Rwanda','Saudi Arabia','Senegal','Serbia','Sierra Leone','Singapore','Slovakia','Slovenia',
+  'Somalia','South Africa','South Korea','South Sudan','Spain','Sri Lanka','Sudan','Sweden','Switzerland','Syria',
+  'Taiwan','Tajikistan','Tanzania','Thailand','Togo','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan',
+  'Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan','Venezuela',
+  'Vietnam','Yemen','Zambia','Zimbabwe',
+]
+
+function CountryPicker({ value, onChange, className }: { value: string; onChange: (v: string) => void; className?: string }) {
+  const [open, setOpen] = useState(false)
+  const [search, setSearch] = useState('')
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const filtered = COUNTRIES.filter(c => c.toLowerCase().includes(search.toLowerCase()))
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className={cn(
+          'w-full flex items-center justify-between gap-2 text-left',
+          value ? 'text-[#2d3435]' : 'text-[#586062]/50',
+          className,
+        )}
+        style={{ borderRadius: 15 }}
+      >
+        <span className="truncate">{value || 'Select country…'}</span>
+        <ChevronsUpDown size={14} className="shrink-0 text-[#adb3b4]" />
+      </button>
+
+      {open && (
+        <div
+          className="absolute z-50 mt-1 w-full bg-white border border-[#e8eaeb] shadow-[0_8px_24px_rgba(45,52,53,0.10)] overflow-hidden"
+          style={{ borderRadius: 15 }}
+        >
+          {/* Search */}
+          <div className="flex items-center gap-2 px-3 py-2.5 border-b border-[#f2f4f4]">
+            <Search size={13} className="text-[#adb3b4] shrink-0" />
+            <input
+              autoFocus
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search country…"
+              className="flex-1 text-sm text-[#2d3435] placeholder:text-[#adb3b4] outline-none bg-transparent"
+            />
+          </div>
+          {/* List */}
+          <div className="max-h-52 overflow-y-auto [scrollbar-width:none]">
+            {filtered.length === 0 ? (
+              <p className="px-4 py-3 text-xs text-[#adb3b4]">No results</p>
+            ) : filtered.map(c => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => { onChange(c); setOpen(false); setSearch('') }}
+                className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#2d3435] hover:bg-[#f2f4f4] transition-colors cursor-pointer text-left"
+              >
+                {c}
+                {value === c && <Check size={13} className="text-[#1F3649] shrink-0" />}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
 
 /* ------------------------------------------------------------------ */
 /*  Toggle switch component                                           */
@@ -49,6 +139,10 @@ export default function Account() {
   const [bio, setBio] = useState('')
   const [profileLoading, setProfileLoading] = useState(false)
   const [profileMsg, setProfileMsg] = useState('')
+
+  // Bio state
+  const [bioLoading, setBioLoading] = useState(false)
+  const [bioMsg, setBioMsg] = useState('')
 
   // Preferences state
   const [emailNotifications, setEmailNotifications] = useState(true)
@@ -104,6 +198,21 @@ export default function Account() {
     setProfileLoading(false)
     setProfileMsg(error ? error.message : 'Profile updated successfully.')
     setTimeout(() => setProfileMsg(''), 2500)
+  }
+
+  /* ---- Save bio ---- */
+  const saveBio = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (DEMO_MODE) {
+      setBioMsg('Bio saved (demo mode)')
+      setTimeout(() => setBioMsg(''), 2500)
+      return
+    }
+    setBioLoading(true)
+    const { error } = await supabase.auth.updateUser({ data: { bio } })
+    setBioLoading(false)
+    setBioMsg(error ? error.message : 'Bio saved.')
+    setTimeout(() => setBioMsg(''), 2500)
   }
 
   /* ---- Change password ---- */
@@ -164,12 +273,12 @@ export default function Account() {
 
   /* shared input classes — using explicit hex for reliability */
   const inputCls =
-    'w-full bg-[#f2f4f4] border-none rounded-[1.5rem] py-4 px-6 text-[#2d3435] placeholder:text-[#adb3b4] focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all outline-none'
+    'w-full rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10'
 
   return (
     <div className="pb-24">
       {/* Header */}
-      <div className="py-12">
+      <div className="pb-8">
         <h2 className="text-4xl font-extrabold tracking-tight text-[#2d3435] mb-2">
           Account &amp; Settings
         </h2>
@@ -184,74 +293,30 @@ export default function Account() {
         {/* ============================================================ */}
         {/*  PROFILE INFO — 8 cols                                        */}
         {/* ============================================================ */}
-        <section className="col-span-12 lg:col-span-8 bg-white card p-10">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h3 className="text-2xl font-bold text-[#2d3435] mb-1">
-                Profile Info
-              </h3>
-              <p className="text-sm text-[#5a6061]">
-                Your personal identity across the platform.
-              </p>
-            </div>
+        <section className="col-span-12 lg:col-span-8 bg-white card p-10 flex flex-col">
+          <div className="flex items-center gap-2.5 mb-2">
+            <User size={18} className="text-[#1F3649]" />
+            <h3 className="text-2xl font-bold text-[#2d3435]">Profile Info</h3>
           </div>
+          <p className="text-sm text-[#5a6061]">Your personal identity across the platform.</p>
 
           <form onSubmit={updateProfile}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-[#5a6061] ml-1">
-                  Full Name
-                </label>
-                <input
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Your full name"
-                  className={inputCls}
-                />
+                <label className="block text-sm font-bold text-[#5a6061] ml-1">Full Name</label>
+                <input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Your full name" className={inputCls} />
               </div>
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-[#5a6061] ml-1">
-                  Email Address
-                </label>
-                <input
-                  value={email}
-                  disabled
-                  className={`${inputCls} cursor-not-allowed opacity-60`}
-                />
+                <label className="block text-sm font-bold text-[#5a6061] ml-1">Email Address</label>
+                <input value={email} disabled className={`${inputCls} cursor-not-allowed opacity-60`} />
               </div>
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-[#5a6061] ml-1">
-                  Location
-                </label>
-                <input
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="e.g. New York, NY"
-                  className={inputCls}
-                />
+                <label className="block text-sm font-bold text-[#5a6061] ml-1">Country</label>
+                <CountryPicker value={location} onChange={setLocation} className={inputCls} />
               </div>
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-[#5a6061] ml-1">
-                  Timezone
-                </label>
-                <input
-                  value={timezone}
-                  onChange={(e) => setTimezone(e.target.value)}
-                  placeholder="e.g. America/New_York"
-                  className={inputCls}
-                />
-              </div>
-              <div className="col-span-full space-y-2">
-                <label className="block text-sm font-bold text-[#5a6061] ml-1">
-                  Personal Bio
-                </label>
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell us a bit about yourself..."
-                  rows={3}
-                  className={`${inputCls} resize-none`}
-                />
+                <label className="block text-sm font-bold text-[#5a6061] ml-1">City</label>
+                <input value={timezone} onChange={(e) => setTimezone(e.target.value)} placeholder="e.g. New York" className={inputCls} />
               </div>
             </div>
 
@@ -261,11 +326,11 @@ export default function Account() {
               </p>
             )}
 
-            <div className="mt-10 flex justify-end">
+            <div className="mt-6 flex justify-end">
               <button
                 type="submit"
                 disabled={profileLoading}
-                className="bg-[#586062] text-white px-8 py-4 rounded-[15px] font-bold shadow-lg hover:shadow-xl transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+                className="bg-[#e4e9ea] hover:bg-[#dde4e5] text-[#2d3435] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer"
               >
                 {profileLoading ? 'Updating...' : 'Update Profile'}
               </button>
@@ -274,24 +339,52 @@ export default function Account() {
         </section>
 
         {/* ============================================================ */}
-        {/*  SECURITY — 4 cols                                            */}
+        {/*  TELL US ABOUT YOURSELF — 4 cols                             */}
         {/* ============================================================ */}
-        <section className="col-span-12 lg:col-span-4 space-y-8">
-          <div className="bg-white card p-5 md:p-8 h-full">
-            <div className="flex items-center gap-3 mb-6 text-[#1F3649]">
-              <Lock size={20} />
-              <h3 className="text-xl font-bold text-[#2d3435]">Security</h3>
+        <section className="col-span-12 lg:col-span-4 bg-white card p-10 flex flex-col">
+          <div className="flex items-center gap-2.5 mb-2">
+            <PenLine size={18} className="text-[#1F3649]" />
+            <h3 className="text-2xl font-bold text-[#2d3435]">Tell us about yourself</h3>
+          </div>
+          <p className="text-sm text-[#5a6061]">A short bio visible on your profile.</p>
+          <form onSubmit={saveBio} className="mt-8 flex flex-col flex-1">
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="Write a few sentences about yourself…"
+              className={`${inputCls} resize-none flex-1 min-h-0`}
+            />
+            {bioMsg && (
+              <p className="text-sm text-[#22c55e] bg-[#22c55e]/10 rounded-[1rem] px-4 py-3 mt-4">
+                {bioMsg}
+              </p>
+            )}
+            <div className="flex justify-end mt-6">
+              <button
+                type="submit"
+                disabled={bioLoading}
+                className="bg-[#e4e9ea] hover:bg-[#dde4e5] text-[#2d3435] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                {bioLoading ? 'Saving...' : 'Save Bio'}
+              </button>
             </div>
-            <p className="text-sm text-[#5a6061] mb-8 leading-relaxed">
-              Ensure your account remains protected with a strong, rotating
-              password.
-            </p>
+          </form>
+        </section>
 
-            <form onSubmit={changePassword} className="space-y-6">
+        {/* ============================================================ */}
+        {/*  SECURITY — 8 cols                                            */}
+        {/* ============================================================ */}
+        <section className="col-span-12 lg:col-span-8 bg-white card p-10 flex flex-col">
+          <div className="flex items-center gap-2.5 mb-2">
+            <Lock size={18} className="text-[#1F3649]" />
+            <h3 className="text-2xl font-bold text-[#2d3435]">Security</h3>
+          </div>
+          <p className="text-sm text-[#5a6061]">Update your password to keep your account secure.</p>
+
+          <form onSubmit={changePassword} className="mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#5a6061] opacity-60">
-                  Current Password
-                </label>
+                <label className="block text-sm font-bold text-[#5a6061] ml-1">Current Password</label>
                 <input
                   type="password"
                   value={currentPassword}
@@ -301,9 +394,7 @@ export default function Account() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#5a6061] opacity-60">
-                  New Password
-                </label>
+                <label className="block text-sm font-bold text-[#5a6061] ml-1">New Password</label>
                 <input
                   type="password"
                   value={newPassword}
@@ -312,110 +403,58 @@ export default function Account() {
                   className={inputCls}
                 />
               </div>
+            </div>
 
-              {passwordError && (
-                <p className="text-sm text-[#9f403d] bg-[#9f403d]/10 rounded-[1rem] px-4 py-3">
-                  {passwordError}
-                </p>
-              )}
-              {passwordMsg && (
-                <p className="text-sm text-[#22c55e] bg-[#22c55e]/10 rounded-[1rem] px-4 py-3">
-                  {passwordMsg}
-                </p>
-              )}
+            {passwordError && (
+              <p className="text-sm text-[#9f403d] bg-[#9f403d]/10 rounded-[1rem] px-4 py-3 mt-6">
+                {passwordError}
+              </p>
+            )}
+            {passwordMsg && (
+              <p className="text-sm text-[#22c55e] bg-[#22c55e]/10 rounded-[1rem] px-4 py-3 mt-6">
+                {passwordMsg}
+              </p>
+            )}
 
+            <div className="flex justify-end mt-6">
               <button
                 type="submit"
                 disabled={passwordLoading}
-                className="w-full bg-[#e4e9ea] text-[#586062] py-4 rounded-[1.5rem] font-bold hover:bg-[#dde4e5] transition-colors disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+                className="bg-[#e4e9ea] hover:bg-[#dde4e5] text-[#2d3435] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-2"
               >
-                <Lock size={16} />
+                <Lock size={13} />
                 {passwordLoading ? 'Saving...' : 'Save Changes'}
               </button>
-            </form>
-
-            {/* Two-Factor Auth */}
-            <div className="mt-8 pt-8 border-t border-dashed border-[#ebeeef]">
-              <h4 className="text-sm font-bold text-[#2d3435] mb-4">
-                Two-Factor Auth
-              </h4>
-              <div className="flex items-center justify-between p-4 bg-[#f2f4f4] rounded-[1.5rem]">
-                <span className="text-sm font-medium text-[#5a6061]">
-                  Coming soon
-                </span>
-                <span className="text-xs font-bold px-3 py-1 rounded-[15px] uppercase tracking-tighter bg-[#dde4e5] text-[#586062]">
-                  Unavailable
-                </span>
-              </div>
             </div>
-          </div>
+          </form>
         </section>
 
         {/* ============================================================ */}
-        {/*  PREFERENCES + DANGER ZONE — full width row                   */}
+        {/*  DANGER ZONE — 4 cols                                        */}
         {/* ============================================================ */}
-        <section className="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-          {/* ---- Preferences ---- */}
-          <div className="bg-white card p-5 md:p-8">
-            <h3 className="text-xl font-bold text-[#2d3435] mb-6">
-              Preferences
-            </h3>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-2">
-                <div>
-                  <p className="font-semibold text-[#2d3435]">
-                    Email Notifications
-                  </p>
-                  <p className="text-sm text-[#5a6061]">
-                    Weekly summaries and insights
-                  </p>
-                </div>
-                <Toggle
-                  checked={emailNotifications}
-                  onChange={(v) => updatePreference('email_notifications', v)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between p-2">
-                <div>
-                  <p className="font-semibold text-[#2d3435]">
-                    Public Profile
-                  </p>
-                  <p className="text-sm text-[#5a6061]">
-                    Allow others to find your public journal
-                  </p>
-                </div>
-                <Toggle
-                  checked={publicProfile}
-                  onChange={(v) => updatePreference('public_profile', v)}
-                />
-              </div>
+        <section className="col-span-12 lg:col-span-4">
+          <div className="bg-[#fff3f3] border-2 border-[#fe8983]/20 card p-10 h-full flex flex-col">
+            <div className="flex items-center gap-2.5 mb-2">
+              <AlertTriangle size={18} className="text-[#9f403d]" />
+              <h3 className="text-2xl font-bold text-[#2d3435]">Danger Zone</h3>
             </div>
-          </div>
-
-          {/* ---- Danger Zone ---- */}
-          <div className="bg-[#fe8983]/10 border-2 border-[#fe8983]/20 card p-5 md:p-8 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-4 text-[#9f403d]">
-                <AlertTriangle size={20} />
-                <h3 className="text-xl font-bold">Danger Zone</h3>
-              </div>
-              <p className="text-[#752121] text-sm leading-relaxed mb-6">
-                Deleting your account is a permanent action. All your journal
-                entries, calendar events, and growth metrics will be wiped from
-                our servers. This cannot be undone.
-              </p>
-            </div>
+            <p className="text-sm text-[#5a6061] mb-8">
+              Deleting your account is a permanent action. All your journal
+              entries, calendar events, and growth metrics will be wiped from
+              our servers. This cannot be undone. You will be asked to confirm
+              before deletion.
+            </p>
 
             {!showDelete ? (
-              <button
-                onClick={() => setShowDelete(true)}
-                className="w-full bg-[#9f403d] text-white py-4 rounded-[1.5rem] font-bold hover:brightness-90 transition-all cursor-pointer flex items-center justify-center gap-2"
-              >
-                <Trash2 size={16} />
-                Delete Account
-              </button>
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setShowDelete(true)}
+                  className="bg-[#9f403d] hover:brightness-90 text-white px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-all cursor-pointer flex items-center gap-2"
+                >
+                  <Trash2 size={13} />
+                  Delete Account
+                </button>
+              </div>
             ) : (
               <div className="space-y-3">
                 <p className="text-sm text-[#752121]">
@@ -434,29 +473,30 @@ export default function Account() {
                     {deleteError}
                   </p>
                 )}
-                <div className="flex gap-2">
-                  <button
-                    onClick={deleteAccount}
-                    disabled={deleteLoading || deleteConfirm !== user?.email}
-                    className="flex-1 bg-[#9f403d] text-white py-4 rounded-[1.5rem] font-bold hover:brightness-90 transition-all disabled:opacity-50 cursor-pointer"
-                  >
-                    {deleteLoading ? 'Deleting...' : 'Confirm Delete'}
-                  </button>
+                <div className="flex justify-end gap-2">
                   <button
                     onClick={() => {
                       setShowDelete(false)
                       setDeleteConfirm('')
                       setDeleteError('')
                     }}
-                    className="bg-[#e4e9ea] hover:bg-[#dde4e5] text-[#5a6061] font-medium px-6 py-4 rounded-[1.5rem] transition-all cursor-pointer"
+                    className="bg-[#e4e9ea] hover:bg-[#dde4e5] text-[#2d3435] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer"
                   >
                     Cancel
+                  </button>
+                  <button
+                    onClick={deleteAccount}
+                    disabled={deleteLoading || deleteConfirm !== user?.email}
+                    className="bg-[#9f403d] hover:brightness-90 text-white px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-all disabled:opacity-50 cursor-pointer"
+                  >
+                    {deleteLoading ? 'Deleting...' : 'Confirm Delete'}
                   </button>
                 </div>
               </div>
             )}
           </div>
         </section>
+
       </div>
     </div>
   )

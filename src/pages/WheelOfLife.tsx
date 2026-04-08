@@ -369,7 +369,7 @@ export default function WheelOfLife() {
                 onClick={() => {
                   setSelectedCategory(null)
                 }}
-                className="mt-6 w-full bg-[#1F3649] hover:bg-[#162838] text-white text-sm font-bold py-3 rounded-xl transition-all cursor-pointer"
+                className="mt-6 w-full bg-[#1F3649] hover:opacity-90 text-white text-sm font-semibold py-2.5 rounded-[10px] transition-all cursor-pointer"
               >
                 Continue
               </button>
@@ -503,12 +503,12 @@ export default function WheelOfLife() {
                   onChange={(e) => setNewTask({ goalId: selectedGoal.id, categoryId: selectedGoal.category_id, title: e.target.value })}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleAddTask(selectedGoal.id, selectedGoal.category_id) }}
                   placeholder="Add a new task..."
-                  className="flex-1 bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"
+                  className="flex-1 rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10"
                 />
                 <button
                   onClick={() => handleAddTask(selectedGoal.id, selectedGoal.category_id)}
                   disabled={!newTask.title || newTask.goalId !== selectedGoal.id}
-                  className="px-4 py-2.5 bg-[#1F3649] hover:bg-[#162838] disabled:opacity-50 text-white text-sm font-bold rounded-xl transition-all cursor-pointer"
+                  className="bg-[#1F3649] hover:opacity-90 disabled:opacity-50 text-white px-4 py-2.5 text-sm font-semibold rounded-[10px] transition-all cursor-pointer"
                 >
                   <Plus size={16} />
                 </button>
@@ -522,7 +522,7 @@ export default function WheelOfLife() {
                 value={reflectionText}
                 onChange={(e) => setReflectionText(e.target.value)}
                 placeholder="Add a reflection or note about this goal..."
-                className="w-full bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all resize-none h-24"
+                className="w-full rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10 resize-none h-24"
               />
               <div className="flex gap-2 mt-3">
                 <button
@@ -531,7 +531,7 @@ export default function WheelOfLife() {
                     navigate('/journal', { state: { prefill } })
                   }}
                   disabled={!reflectionText.trim()}
-                  className="px-4 py-2 bg-[#e4e9ea] text-[#586062] hover:bg-[#dde4e5] disabled:opacity-50 text-sm font-bold rounded-xl transition-all cursor-pointer"
+                  className="bg-[#e4e9ea] hover:bg-[#dde4e5] text-[#2d3435] disabled:opacity-50 px-4 py-2 text-sm font-semibold rounded-[10px] transition-colors cursor-pointer"
                 >
                   Add Entry
                 </button>
@@ -641,7 +641,7 @@ export default function WheelOfLife() {
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
                   placeholder="Add category..."
-                  className="flex-1 bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-xs text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"
+                  className="flex-1 rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10"
                 />
                 <button
                   onClick={handleAddCategory}
@@ -716,7 +716,7 @@ export default function WheelOfLife() {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Notes for this check-in (optional)..."
-              className="w-full mt-5 bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all resize-none h-20"
+              className="w-full mt-5 rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10 resize-none h-20"
             />
           </div>
 
@@ -739,7 +739,7 @@ export default function WheelOfLife() {
                 document.body.removeChild(link)
                 URL.revokeObjectURL(url)
               }}
-              className="flex items-center gap-2 px-5 py-2.5 bg-[#e4e9ea] rounded-xl text-sm font-bold text-[#586062] hover:bg-[#dde4e5] transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-2 bg-[#e4e9ea] hover:bg-[#dde4e5] text-[#2d3435] px-5 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer"
             >
               <Download size={15} />
               Download Results
@@ -809,7 +809,7 @@ export default function WheelOfLife() {
               <select
                 value={newGoal.categoryId}
                 onChange={(e) => setNewGoal((p) => ({ ...p, categoryId: e.target.value }))}
-                className="bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all cursor-pointer"
+                className="rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10 cursor-pointer"
               >
                 <option value="">Select category...</option>
                 {categories.filter((c) => c.is_active).map((c) => (
@@ -820,25 +820,25 @@ export default function WheelOfLife() {
                 value={newGoal.title}
                 onChange={(e) => setNewGoal((p) => ({ ...p, title: e.target.value }))}
                 placeholder="Goal title..."
-                className="bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"
+                className="rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10"
               />
               <input
                 value={newGoal.description}
                 onChange={(e) => setNewGoal((p) => ({ ...p, description: e.target.value }))}
                 placeholder="Description (optional)..."
-                className="bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"
+                className="rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10"
               />
               <input
                 type="date"
                 value={newGoal.targetDate}
                 onChange={(e) => setNewGoal((p) => ({ ...p, targetDate: e.target.value }))}
-                className="bg-[#f2f4f4] border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all cursor-pointer"
+                className="rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10 cursor-pointer"
               />
             </div>
             <button
               onClick={handleAddGoal}
               disabled={!newGoal.title || !newGoal.categoryId}
-              className="mt-4 px-5 py-2.5 bg-[#1F3649] hover:bg-[#162838] disabled:opacity-50 text-white text-sm font-bold rounded-xl transition-all cursor-pointer"
+              className="mt-4 bg-[#1F3649] hover:opacity-90 disabled:opacity-50 text-white px-5 py-2.5 text-sm font-semibold rounded-[10px] transition-all cursor-pointer"
             >
               Add Goal
             </button>
@@ -950,7 +950,7 @@ export default function WheelOfLife() {
                           onChange={(e) => setNewTask({ goalId: goal.id, categoryId: goal.category_id, title: e.target.value })}
                           onKeyDown={(e) => { if (e.key === 'Enter') handleAddTask(goal.id, goal.category_id) }}
                           placeholder="Add task..."
-                          className="flex-1 bg-white border-none rounded-xl py-4 px-6 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 transition-all"
+                          className="flex-1 rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10"
                         />
                         <button
                           onClick={() => handleAddTask(goal.id, goal.category_id)}

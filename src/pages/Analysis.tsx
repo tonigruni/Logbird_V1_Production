@@ -131,14 +131,14 @@ export default function Analysis() {
             {(error.includes('Settings') || error.includes('API key')) && (
               <button
                 onClick={() => navigate('/settings')}
-                className="px-5 py-2.5 bg-[#1F3649] text-white text-sm font-bold rounded-[15px] cursor-pointer hover:opacity-90 transition-all"
+                className="bg-[#1F3649] hover:opacity-90 text-white px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-all cursor-pointer"
               >
                 Go to Settings
               </button>
             )}
             <button
               onClick={runAnalysis}
-              className="px-5 py-2.5 bg-[#e4e9ea] text-[#586062] text-sm font-bold rounded-[15px] cursor-pointer hover:bg-[#dde4e5] transition-all flex items-center gap-2"
+              className="bg-[#e4e9ea] hover:bg-[#dde4e5] text-[#2d3435] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer flex items-center gap-2"
             >
               <RefreshCw size={14} />
               Retry
@@ -186,7 +186,7 @@ export default function Analysis() {
           </div>
           <button
             onClick={runAnalysis}
-            className="px-8 py-3 bg-[#1F3649] text-white text-sm font-bold rounded-[15px] cursor-pointer hover:opacity-90 shadow-lg shadow-[#1F3649]/20 transition-all flex items-center gap-2 mx-auto"
+            className="bg-[#1F3649] hover:opacity-90 text-white px-8 py-2.5 rounded-[10px] text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 mx-auto shadow-lg shadow-[#1F3649]/20"
           >
             <Sparkles size={15} />
             Generate Analysis
@@ -229,16 +229,16 @@ export default function Analysis() {
         <div className="flex flex-wrap gap-3">
           <button
             onClick={runAnalysis}
-            className="px-6 py-3 bg-[#e4e9ea] text-[#586062] font-bold rounded-[15px] text-sm hover:bg-[#dde4e5] transition-all flex items-center gap-2 cursor-pointer"
+            className="bg-[#e4e9ea] hover:bg-[#dde4e5] text-[#2d3435] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer flex items-center gap-2"
           >
-            <RefreshCw size={16} />
+            <RefreshCw size={14} />
             <span>Refresh</span>
           </button>
           <button
             onClick={exportCSV}
-            className="px-6 py-3 bg-[#1F3649] text-white font-bold rounded-[15px] text-sm hover:opacity-90 shadow-lg shadow-[#1F3649]/20 transition-all flex items-center gap-2 cursor-pointer"
+            className="bg-[#1F3649] hover:opacity-90 text-white px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 shadow-lg shadow-[#1F3649]/20"
           >
-            <Download size={16} />
+            <Download size={14} />
             <span>Export Data</span>
           </button>
         </div>
