@@ -56,23 +56,47 @@ export interface InsightsData {
 /* ------------------------------------------------------------------ */
 
 export async function loadSavedAnalysis(userId: string): Promise<AnalysisData | null> {
-  const { data } = await supabase
-    .from('ai_insights')
-    .select('data')
-    .eq('user_id', userId)
-    .eq('type', 'analysis')
-    .single()
-  return data ? (data.data as unknown as AnalysisData) : null
+  // Same-session fast path — return in-memory cache immediately
+  if (analysisCache) return analysisCache.data
+
+  // Cross-session: query Supabase
+  try {
+    const { data, error } = await supabase
+      .from('ai_insights')
+      .select('data')
+      .eq('user_id', userId)
+      .eq('type', 'analysis')
+      .single()
+    if (error || !data) return null
+    const result = data.data as unknown as AnalysisData
+    // Warm the cache so future navigations are instant
+    analysisCache = { data: result, timestamp: Date.now(), entryCount: -1 }
+    return result
+  } catch {
+    return null
+  }
 }
 
 export async function loadSavedInsights(userId: string): Promise<InsightsData | null> {
-  const { data } = await supabase
-    .from('ai_insights')
-    .select('data')
-    .eq('user_id', userId)
-    .eq('type', 'insights')
-    .single()
-  return data ? (data.data as unknown as InsightsData) : null
+  // Same-session fast path — return in-memory cache immediately
+  if (insightsCache) return insightsCache.data
+
+  // Cross-session: query Supabase
+  try {
+    const { data, error } = await supabase
+      .from('ai_insights')
+      .select('data')
+      .eq('user_id', userId)
+      .eq('type', 'insights')
+      .single()
+    if (error || !data) return null
+    const result = data.data as unknown as InsightsData
+    // Warm the cache so future navigations are instant
+    insightsCache = { data: result, timestamp: Date.now(), entryCount: -1 }
+    return result
+  } catch {
+    return null
+  }
 }
 
 async function persistAnalysis(userId: string, data: AnalysisData) {
