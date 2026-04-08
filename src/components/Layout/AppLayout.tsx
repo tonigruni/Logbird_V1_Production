@@ -33,7 +33,7 @@ function useSectionConfig(pathname: string, search: string, navigate: ReturnType
   if (pathname === '/account')  return { title: 'Account', tabs: null }
   if (pathname === '/settings') return { title: 'Settings', tabs: null }
 
-  if (['/journal', '/analysis', '/insights'].includes(pathname)) {
+  if (['/journal', '/insights'].includes(pathname)) {
     return {
       title: 'Journal',
       tabs: [
@@ -41,7 +41,6 @@ function useSectionConfig(pathname: string, search: string, navigate: ReturnType
         { label: 'All Entries', active: isJournal && journalTab === 'journal',   path: '/journal?tab=journal' },
         { label: 'Calendar',    active: isJournal && journalTab === 'calendar',  path: '/journal?tab=calendar' },
         { label: 'Templates',   active: isJournal && journalTab === 'templates', path: '/journal?tab=templates' },
-        { label: 'Analysis',    active: pathname === '/analysis',                path: '/analysis' },
         { label: 'Insights',    active: pathname === '/insights',                path: '/insights' },
         {
           label: 'Add Entry',
@@ -63,7 +62,7 @@ export default function AppLayout() {
   const [searchQuery, setSearchQuery] = useState('')
 
   const { title, tabs } = useSectionConfig(location.pathname, location.search, navigate)
-  const isJournalContext = ['/journal', '/analysis', '/insights'].includes(location.pathname)
+  const isJournalContext = ['/journal', '/insights'].includes(location.pathname)
   const { avatarUrl } = useAuthStore()
 
   const initials = useMemo(() => {

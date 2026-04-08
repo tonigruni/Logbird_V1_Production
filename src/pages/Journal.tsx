@@ -1070,19 +1070,19 @@ export default function Journal() {
           {activeTemplateDetail && (
             <div className="mb-8">
               {/* Hero banner */}
-              <div className="relative card overflow-hidden mb-5 p-10 min-h-[200px] flex items-end bg-white">
-                <GradientBarsBackground barCount={16} barColor="rgba(31,54,73,0.055)" />
+              <div className="relative card overflow-hidden mb-5 p-10 min-h-[200px] flex items-end bg-[#1F3649]">
+                <GradientBarsBackground />
                 <button onClick={() => setActiveTemplateDetail(null)}
-                  className="absolute top-4 right-4 w-7 h-7 bg-[#f2f4f4] hover:bg-[#e8eaeb] rounded-full flex items-center justify-center text-[#adb3b4] hover:text-[#2d3435] transition-all cursor-pointer">
+                  className="absolute top-4 right-4 w-7 h-7 bg-white/15 hover:bg-white/25 rounded-full flex items-center justify-center text-white/60 hover:text-white transition-all cursor-pointer z-20">
                   <X size={13}/>
                 </button>
                 <div className="flex items-end justify-between w-full relative z-10">
                   <div>
-                    <span className="text-[#adb3b4] text-[10px] font-bold uppercase tracking-widest mb-3 block">Journal Template</span>
-                    <h2 className="text-3xl font-extrabold text-[#2d3435] tracking-tight mb-2">{activeTemplateDetail.name}</h2>
-                    <p className="text-[#5a6061] text-sm max-w-xl leading-relaxed">{activeTemplateDetail.subtitle}</p>
+                    <span className="text-white/60 text-[10px] font-bold uppercase tracking-widest mb-3 block">Journal Template</span>
+                    <h2 className="text-3xl font-extrabold text-white tracking-tight mb-2">{activeTemplateDetail.name}</h2>
+                    <p className="text-white/70 text-sm max-w-xl leading-relaxed">{activeTemplateDetail.subtitle}</p>
                   </div>
-                  {(() => { const TplIcon = activeTemplateDetail.icon; return <div className="opacity-[0.10] ml-8 shrink-0 text-[#1F3649]"><TplIcon size={72} strokeWidth={1}/></div> })()}
+                  {(() => { const TplIcon = activeTemplateDetail.icon; return <div className="opacity-[0.15] ml-8 shrink-0 text-white"><TplIcon size={72} strokeWidth={1}/></div> })()}
                 </div>
               </div>
 

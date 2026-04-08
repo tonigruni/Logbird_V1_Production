@@ -5,7 +5,7 @@ import { useAuthStore } from '../../stores/authStore'
 
 const nav = [
   { to: '/', icon: SquaresFour, label: 'Dashboard' },
-  { to: '/journal', icon: BookOpen, label: 'Journal', activeFor: ['/journal', '/analysis', '/insights'] },
+  { to: '/journal', icon: BookOpen, label: 'Journal', activeFor: ['/journal', '/insights'] },
   { to: '/wheel', icon: ChartDonut, label: 'Wheel of Life' },
   { to: '/account', icon: UserCircle, label: 'Account' },
   { to: '/settings', icon: Gear, label: 'Settings' },
@@ -39,12 +39,12 @@ export default function Sidebar() {
       {/* All nav items in one list */}
       <nav className="flex-1 space-y-2">
         {nav.map(({ to, icon: Icon, label, activeFor }) => {
-          const isActive = activeFor
+          const active = activeFor
             ? activeFor.some(p => location.pathname.startsWith(p))
             : to === '/' ? location.pathname === '/' : location.pathname.startsWith(to)
           return (
-            <NavLink key={to} to={to} end={to === '/'} className={linkClass}>
-              <Icon size={20} weight={isActive ? 'bold' : 'regular'} className="shrink-0" />
+            <NavLink key={to} to={to} end={to === '/'} className={() => linkClass({ isActive: active })}>
+              <Icon size={20} weight={active ? 'bold' : 'regular'} className="shrink-0" />
               {label}
             </NavLink>
           )
