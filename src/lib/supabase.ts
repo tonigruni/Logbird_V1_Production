@@ -9,9 +9,9 @@ export type Database = {
   public: {
     Tables: {
       journal_entries: {
-        Row: { id: string; user_id: string; title: string; content: string; mood_score: number | null; template_id: string | null; category: string | null; location: string | null; weather: string | null; created_at: string; updated_at: string }
-        Insert: { id?: string; user_id: string; title: string; content: string; mood_score?: number | null; template_id?: string | null; category?: string | null; location?: string | null; weather?: string | null; created_at?: string; updated_at?: string }
-        Update: { title?: string; content?: string; mood_score?: number | null; template_id?: string | null; category?: string | null; location?: string | null; weather?: string | null; updated_at?: string }
+        Row: { id: string; user_id: string; title: string; content: string; mood_score: number | null; template_id: string | null; category: string | null; location: string | null; weather: string | null; is_favorite: boolean; created_at: string; updated_at: string }
+        Insert: { id?: string; user_id: string; title: string; content: string; mood_score?: number | null; template_id?: string | null; category?: string | null; location?: string | null; weather?: string | null; is_favorite?: boolean; created_at?: string; updated_at?: string }
+        Update: { title?: string; content?: string; mood_score?: number | null; template_id?: string | null; category?: string | null; location?: string | null; weather?: string | null; is_favorite?: boolean; updated_at?: string }
       }
       journal_templates: {
         Row: { id: string; user_id: string; name: string; structure: Record<string, unknown>; created_at: string }

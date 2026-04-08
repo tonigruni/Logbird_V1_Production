@@ -79,19 +79,29 @@ export const useJournalStore = create<JournalState>((set) => ({
     return null
   },
   updateEntry: async (id, updates) => {
-    if (DEMO_MODE) {
-      set((state) => ({ entries: state.entries.map((e) => e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e) }))
-      return
-    }
+    // Always apply optimistic update immediately (handles client-side-only fields like is_favorite)
+    set((state) => ({
+      entries: state.entries.map((e) =>
+        e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e
+      ),
+    }))
+    if (DEMO_MODE) return
+
+    // Strip is_favorite from the DB payload — needs an ALTER TABLE migration first
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { is_favorite, ...dbUpdates } = updates as JournalEntry
+    if (Object.keys(dbUpdates).length === 0) return   // nothing left to persist
+
     const { data } = await supabase
       .from('journal_entries')
-      .update({ ...updates, updated_at: new Date().toISOString() })
+      .update({ ...dbUpdates, updated_at: new Date().toISOString() })
       .eq('id', id)
       .select()
       .single()
     if (data) {
+      // Merge DB row back but preserve any client-side fields (is_favorite)
       set((state) => ({
-        entries: state.entries.map((e) => (e.id === id ? data : e)),
+        entries: state.entries.map((e) => (e.id === id ? { ...e, ...data } : e)),
       }))
     }
   },

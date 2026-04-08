@@ -1,20 +1,28 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useLocation, useSearchParams } from 'react-router-dom'
 import {
-  Plus, Calendar, FileText, Sparkles, Trash2, Save,
-  Send, Brain, MessageCircle, ChevronRight, ChevronLeft, Layout,
+  Plus, Calendar, FileText, Trash2, Save,
+  ChevronRight, ChevronLeft, ChevronDown, Layout,
   BarChart2, Hash, TrendingUp, Star, Frown, Meh, Smile,
-  MapPin, Cloud, Tag, MoreHorizontal, X, type LucideIcon,
+  MapPin, Cloud, Tag, MoreHorizontal, X,
+  Moon, Heart, RefreshCw, Sun, Target, BookOpen, Wind, Zap, Leaf, Sparkles, Search, Wine, Dumbbell,
+  type LucideIcon,
 } from 'lucide-react'
-import Anthropic from '@anthropic-ai/sdk'
-import ReactMarkdown from 'react-markdown'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import * as Dialog from '@radix-ui/react-dialog'
 import RichEditor from '../components/RichEditor'
 import { useAuthStore } from '../stores/authStore'
 import { useJournalStore, type JournalEntry } from '../stores/journalStore'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isSameDay, subDays } from 'date-fns'
 import { cn } from '../lib/utils'
 import GradientBarsBackground from '../components/ui/GradientBarsBackground'
+import { GridPattern } from '../components/ui/grid-pattern'
 import JournalFilterBar, { type MoodRange, type SortOrder } from '../components/ui/JournalFilterBar'
+import { FloatingAiAssistant } from '../components/ui/GlowingAiChatAssistant'
+import { FullScreenCalendar, type CalendarDay } from '../components/ui/fullscreen-calendar'
+import { ExpandableCard } from '../components/ui/expandable-card'
+
+import { Pagination, PaginationContent, PaginationItem, PaginationButton, PaginationPrev, PaginationNext, PaginationEllipsis } from '../components/ui/pagination'
 
 /* ------------------------------------------------------------------ */
 /*  Built-in Templates                                                  */
@@ -25,7 +33,7 @@ interface BuiltInTemplate {
   name: string
   subtitle: string
   category: string
-  emoji: string
+  icon: LucideIcon
   colorFrom: string
   colorTo: string
   howItWorks: string
@@ -43,7 +51,7 @@ const BUILT_IN_TEMPLATES: BuiltInTemplate[] = [
     name: 'The Stoic Evening Review',
     subtitle: 'A structured end-of-day reflection to help you review your actions, learn from your reactions, and focus on what was within your control.',
     category: 'Personal',
-    emoji: '🏛️',
+    icon: Moon,
     colorFrom: '#1a2540',
     colorTo: '#003d6b',
     howItWorks: 'The Stoic Evening Review helps you step back and look at your day with clarity. Instead of judging yourself, you reflect like an observer: what you handled well, where you could have responded better, and what was never yours to control. The goal is not perfection, but greater awareness, steadiness, and alignment with your values.',
@@ -67,7 +75,7 @@ const BUILT_IN_TEMPLATES: BuiltInTemplate[] = [
     name: 'Emotional Clarity',
     subtitle: 'A guided reflection to help you understand what you feel, what triggered it, and what you need next.',
     category: 'Personal',
-    emoji: '💙',
+    icon: Heart,
     colorFrom: '#7c2d12',
     colorTo: '#c2410c',
     howItWorks: 'This template helps you slow down and put emotions into words. Instead of staying stuck in vague stress or mental overload, you identify what happened, what you feel, and what may be underneath it. The goal is not to fix everything immediately, but to move from confusion to clarity.',
@@ -91,7 +99,7 @@ const BUILT_IN_TEMPLATES: BuiltInTemplate[] = [
     name: 'Thought Reframing',
     subtitle: 'A structured exercise to challenge unhelpful thoughts and replace them with a more balanced perspective.',
     category: 'Personal',
-    emoji: '🔄',
+    icon: RefreshCw,
     colorFrom: '#064e3b',
     colorTo: '#059669',
     howItWorks: 'This template is based on cognitive reframing. It helps you notice the story your mind is telling, test whether it is accurate, and create a more realistic interpretation. The aim is not forced positivity, but clearer thinking and more grounded action.',
@@ -115,7 +123,7 @@ const BUILT_IN_TEMPLATES: BuiltInTemplate[] = [
     name: 'Gratitude Practice',
     subtitle: 'A simple reflection to help you notice what is already good, meaningful, or supportive in your life.',
     category: 'Gratitude',
-    emoji: '🙏',
+    icon: Sun,
     colorFrom: '#78350f',
     colorTo: '#d97706',
     howItWorks: 'Gratitude journaling trains your attention to notice what is working, not just what is missing. This does not mean ignoring problems. It means balancing your focus by recognizing moments, people, and experiences that support your life in ways you may normally overlook.',
@@ -139,7 +147,7 @@ const BUILT_IN_TEMPLATES: BuiltInTemplate[] = [
     name: 'Daily Focus',
     subtitle: 'A practical planning reflection to help you decide what matters most and act on it with clarity.',
     category: 'Work',
-    emoji: '🎯',
+    icon: Target,
     colorFrom: '#1F3649',
     colorTo: '#2563eb',
     howItWorks: 'This template turns intention into action. Instead of carrying a vague sense of pressure, you define what matters most today, what could get in your way, and where your energy should go first. The goal is not to do more, but to act on what matters most.',
@@ -163,7 +171,7 @@ const BUILT_IN_TEMPLATES: BuiltInTemplate[] = [
     name: 'Reflective Learning',
     subtitle: 'A thoughtful review to help you make sense of experiences, extract lessons, and grow from them.',
     category: 'Personal',
-    emoji: '📚',
+    icon: BookOpen,
     colorFrom: '#14532d',
     colorTo: '#15803d',
     howItWorks: 'Reflective journaling helps you pause after an experience and ask what it meant, what it revealed, and what it taught you. Rather than simply replaying the event, you turn it into insight. The purpose is learning through reflection, not just remembering what happened.',
@@ -187,7 +195,7 @@ const BUILT_IN_TEMPLATES: BuiltInTemplate[] = [
     name: 'Stream of Consciousness',
     subtitle: 'A free-flow writing practice to clear mental noise, uncover patterns, and let your thoughts move without restriction.',
     category: 'Personal',
-    emoji: '🌊',
+    icon: Wind,
     colorFrom: '#1f2937',
     colorTo: '#4b5563',
     howItWorks: 'This template is for writing without editing, filtering, or trying to be coherent. The goal is to let your mind empty itself onto the page. Often, what feels scattered at first reveals concerns, tensions, desires, or ideas that were hidden under the surface.',
@@ -211,7 +219,7 @@ const BUILT_IN_TEMPLATES: BuiltInTemplate[] = [
     name: 'Affirmation & Identity',
     subtitle: 'A guided reflection to strengthen the identity you want to grow into through believable, grounded self-alignment.',
     category: 'Personal',
-    emoji: '⚡',
+    icon: Zap,
     colorFrom: '#3b0764',
     colorTo: '#7e22ce',
     howItWorks: 'This template helps you connect words with identity and action. Instead of repeating empty affirmations, you reflect on the qualities you want to embody, where they are already present, and how to reinforce them through behavior. The goal is to build self-trust, not fantasy.',
@@ -235,7 +243,7 @@ const BUILT_IN_TEMPLATES: BuiltInTemplate[] = [
     name: 'Mindfulness Check-In',
     subtitle: 'A present-moment reflection to help you notice your thoughts, body, and emotions without judgment.',
     category: 'Personal',
-    emoji: '🧘',
+    icon: Leaf,
     colorFrom: '#0c4a6e',
     colorTo: '#0369a1',
     howItWorks: 'This template helps you pause and observe what is happening right now. Rather than analyzing or solving, you practice noticing. By paying attention to your breath, body, thoughts, and emotions as they are, you create more space between what you experience and how you respond.',
@@ -259,7 +267,7 @@ const BUILT_IN_TEMPLATES: BuiltInTemplate[] = [
     name: 'Positive Reflection',
     subtitle: 'A guided reflection to help you notice what felt good, what gave you energy, and what strengthened you today.',
     category: 'Gratitude',
-    emoji: '✨',
+    icon: Sparkles,
     colorFrom: '#7c2d12',
     colorTo: '#ea580c',
     howItWorks: 'Positive reflection is not about pretending life is perfect. It is about giving attention to moments of strength, joy, progress, connection, or meaning that deserve to be remembered. This helps you build a more balanced internal narrative and recognize what supports your well-being.',
@@ -283,7 +291,7 @@ const BUILT_IN_TEMPLATES: BuiltInTemplate[] = [
     name: 'Self-Inquiry',
     subtitle: 'A deeper reflection to help you understand your patterns, triggers, defenses, and hidden inner conflicts.',
     category: 'Personal',
-    emoji: '🔍',
+    icon: Search,
     colorFrom: '#1e1b4b',
     colorTo: '#3730a3',
     howItWorks: 'This template is designed for deeper inner work. It helps you examine the moments that trigger you, the reactions that feel outsized, and the patterns that may be shaping your behavior beneath the surface. The goal is not self-judgment, but honest understanding and greater freedom.',
@@ -331,12 +339,12 @@ function getCatColor(cat: string) {
   return CATEGORY_COLORS[cat] ?? { bg: 'bg-[#ebeeef]', text: 'text-[#5a6061]', dot: '#adb3b4' }
 }
 
-const MOOD_META: Record<number, { label: string; short: string; chipClass: string; color: string; icon: LucideIcon }> = {
-  1: { label: 'Very Low', short: 'Very Low', chipClass: 'bg-[#9f403d]/10 text-[#9f403d]', color: '#fe8983', icon: Frown },
-  2: { label: 'Low',      short: 'Low',      chipClass: 'bg-[#adb3b4]/20 text-[#586062]', color: '#adb3b4', icon: Frown },
-  3: { label: 'Neutral',  short: 'Neutral',  chipClass: 'bg-[#ebeeef] text-[#5a6061]',    color: '#dde4e5', icon: Meh   },
-  4: { label: 'Good',     short: 'Good',     chipClass: 'bg-[#586062]/10 text-[#586062]', color: '#586062', icon: Smile },
-  5: { label: 'Excellent',short: 'Excellent',chipClass: 'bg-[#1F3649]/10 text-[#1F3649]', color: '#1F3649', icon: Smile },
+const MOOD_META: Record<number, { label: string; short: string; chipClass: string; color: string; bg: string; icon: LucideIcon }> = {
+  1: { label: 'Very Low', short: 'Very Low', chipClass: 'bg-red-100 text-red-700',         color: '#dc2626', bg: '#fef2f2', icon: Frown },
+  2: { label: 'Low',      short: 'Low',      chipClass: 'bg-orange-100 text-orange-700',   color: '#ea580c', bg: '#fff7ed', icon: Frown },
+  3: { label: 'Neutral',  short: 'Neutral',  chipClass: 'bg-[#ebeeef] text-[#5a6061]',     color: '#9ca3af', bg: '#f9fafb', icon: Meh   },
+  4: { label: 'Good',     short: 'Good',     chipClass: 'bg-green-100 text-green-700',     color: '#16a34a', bg: '#f0fdf4', icon: Smile },
+  5: { label: 'Excellent',short: 'Excellent',chipClass: 'bg-emerald-100 text-emerald-800', color: '#065f46', bg: '#ecfdf5', icon: Smile },
 }
 
 function stripMd(text: string): string {
@@ -372,19 +380,35 @@ export default function Journal() {
   const [entryCategory, setEntryCategory] = useState<string | null>(null)
   const [entryLocation, setEntryLocation] = useState('')
   const [entryWeather, setEntryWeather] = useState('')
+  const [sleepQuality, setSleepQuality] = useState<number | null>(null)
+  const [hadAlcohol, setHadAlcohol] = useState<boolean | null>(null)
+  const [exercised, setExercised] = useState<boolean | null>(null)
+  const [energyLevel, setEnergyLevel] = useState<'low' | 'medium' | 'high' | null>(null)
 
   const [saving, setSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saved'>('idle')
   const [calendarDate, setCalendarDate] = useState(new Date())
   const [selectedCalDay, setSelectedCalDay] = useState<Date | null>(null)
-  const [showTemplatePicker, setShowTemplatePicker] = useState(false)
-  const [showEditorOptions, setShowEditorOptions] = useState(false)
+  const [calRatePeriod, setCalRatePeriod] = useState<'week' | 'month' | 'year'>('month')
+
   const [searchFilter, setSearchFilter] = useState('')
   const [newTemplateName, setNewTemplateName] = useState('')
   const [newTemplateContent, setNewTemplateContent] = useState('')
+  const [showTemplateModal, setShowTemplateModal] = useState(false)
 
   // Library state
   const [libraryViewMode, setLibraryViewMode] = useState<'list' | 'grid'>('grid')
+  const [entriesPage, setEntriesPage] = useState(1)
+  const [pageFading, setPageFading] = useState(false)
+  const ENTRIES_PER_PAGE = libraryViewMode === 'list' ? 5 : 9
+
+  const changePage = (page: number) => {
+    setPageFading(true)
+    setTimeout(() => {
+      setEntriesPage(page)
+      setPageFading(false)
+    }, 120)
+  }
   const [dateFilter, setDateFilter] = useState<'all' | '7d' | '30d' | '3m'>('all')
   const [moodFilter, setMoodFilter] = useState<MoodRange | null>(null)
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null)
@@ -396,12 +420,9 @@ export default function Journal() {
   const [templateFilter, setTemplateFilter] = useState<TemplateFilter>('All')
   const [activeTemplateDetail, setActiveTemplateDetail] = useState<BuiltInTemplate | null>(null)
   const [promptResponses, setPromptResponses] = useState<string[]>([])
+  const [extraThoughts, setExtraThoughts] = useState('')
 
   // AI chat
-  const [aiQuery, setAiQuery] = useState('')
-  const [aiResponse, setAiResponse] = useState('')
-  const [aiLoading, setAiLoading] = useState(false)
-  const [showAiChat, setShowAiChat] = useState(false)
 
   useEffect(() => {
     if (user) { fetchEntries(user.id); fetchTemplates(user.id) }
@@ -419,8 +440,8 @@ export default function Journal() {
       setSearchParams(next, { replace: true })
       return
     }
-    if (view === 'editor') return // don't override editor mode from URL
-    const mapped: Record<string, View> = { journal: 'journal', calendar: 'calendar', templates: 'templates' }
+    if (view === 'editor' && tab === 'editor') return // already in editor, no-op
+    const mapped: Record<string, View> = { journal: 'journal', calendar: 'calendar', templates: 'templates', editor: 'editor' }
     setView(mapped[tab ?? ''] ?? 'dashboard')
   }, [searchParams])
 
@@ -430,6 +451,15 @@ export default function Journal() {
     if (state?.openNew) { openNew(); setView('editor'); window.history.replaceState({}, '') }
     else if (state?.prefill) { openNew(state.prefill); setView('editor'); window.history.replaceState({}, '') }
   }, [location.state])
+
+  // Sync URL tab param when entering/leaving editor view
+  useEffect(() => {
+    if (view === 'editor') {
+      setSearchParams({ tab: 'editor' }, { replace: true })
+    } else if (new URLSearchParams(window.location.search).get('tab') === 'editor') {
+      setSearchParams(view === 'dashboard' ? {} : { tab: view }, { replace: true })
+    }
+  }, [view])
 
   // Navigate to a non-editor view and sync the URL tab param
   const gotoView = (v: Exclude<View, 'editor'>) => {
@@ -513,6 +543,12 @@ export default function Journal() {
     return r
   }, [entries, dateFilter, moodFilter, categoryFilter, entryTypeFilter, favoritesOnly, searchFilter, sortOrder])
 
+  const totalPages = Math.max(1, Math.ceil(libraryEntries.length / ENTRIES_PER_PAGE))
+  const pagedEntries = libraryEntries.slice((entriesPage - 1) * ENTRIES_PER_PAGE, entriesPage * ENTRIES_PER_PAGE)
+
+  // Reset to page 1 when filters change
+  useEffect(() => { setEntriesPage(1) }, [dateFilter, moodFilter, categoryFilter, entryTypeFilter, favoritesOnly, searchFilter, sortOrder])
+
   // Rule-based filter insight
   const filterInsight = useMemo(() => {
     const hasFilter = dateFilter !== 'all' || moodFilter || categoryFilter || entryTypeFilter || favoritesOnly || searchFilter
@@ -538,7 +574,8 @@ export default function Journal() {
   const openNew = (templateContent = '') => {
     setSelected(null); setTitle(''); setContent(templateContent)
     setMoodScore(null); setEntryCategory(null); setEntryLocation(''); setEntryWeather('')
-    setSaveStatus('idle'); setActiveTemplateDetail(null); setPromptResponses([])
+    setSleepQuality(null); setHadAlcohol(null); setExercised(null); setEnergyLevel(null)
+    setSaveStatus('idle'); setActiveTemplateDetail(null); setPromptResponses([]); setExtraThoughts('')
   }
 
   const openEntry = (entry: JournalEntry) => {
@@ -556,17 +593,20 @@ export default function Journal() {
     setEntryCategory(tpl.category)
     setEntryLocation('')
     setEntryWeather('')
+    setSleepQuality(null); setHadAlcohol(null); setExercised(null); setEnergyLevel(null)
     setSaveStatus('idle')
     setActiveTemplateDetail(tpl)
     setPromptResponses(tpl.prompts.map(() => ''))
+    setExtraThoughts('')
     setView('editor')
+    window.scrollTo({ top: 0, behavior: 'instant' })
   }
 
   const save = async () => {
     if (!user || !title.trim()) return
     setSaving(true)
     const finalContent = activeTemplateDetail && promptResponses.length > 0
-      ? buildEntryContent(activeTemplateDetail, promptResponses)
+      ? buildEntryContent(activeTemplateDetail, promptResponses) + (extraThoughts.trim() ? `\n\n### Additional Thoughts\n\n${extraThoughts.trim()}` : '')
       : content
     const payload = { title, content: finalContent, mood_score: moodScore, category: entryCategory, location: entryLocation || null, weather: entryWeather || null }
     if (selected) {
@@ -586,27 +626,6 @@ export default function Journal() {
     gotoView('journal')
   }
 
-  const askAI = async () => {
-    if (!aiQuery.trim() || !user) return
-    const apiKey = localStorage.getItem('anthropic_api_key')
-    if (!apiKey) { setAiResponse('Please add your Anthropic API key in Settings first.'); return }
-    setAiLoading(true); setAiResponse('')
-    try {
-      const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true })
-      const context = entries.slice(0,20).map(e => `[${format(new Date(e.created_at),'MMM d, yyyy')}] ${e.title}:\n${e.content}`).join('\n\n---\n\n')
-      const response = await client.messages.create({
-        model: localStorage.getItem('anthropic_model') || 'claude-sonnet-4-5',
-        max_tokens: 1024,
-        system: 'You are a thoughtful journal analysis assistant. Analyze the provided journal entries and answer questions about patterns, emotions, progress, and insights. Be warm, insightful, and specific.',
-        messages: [{ role: 'user', content: `Here are my recent journal entries:\n\n${context}\n\n---\n\nQuestion: ${aiQuery}` }],
-      })
-      const block = response.content?.[0]
-      setAiResponse(block?.type==='text' ? block.text : 'No response received.')
-    } catch (err) {
-      setAiResponse(err instanceof Anthropic.APIError ? `AI Error: ${err.message}` : 'Error contacting AI. Please check your API key in Settings.')
-    }
-    setAiLoading(false)
-  }
 
   const saveTemplate = async () => {
     if (!user || !newTemplateName.trim()) return
@@ -629,7 +648,6 @@ export default function Journal() {
     : 0
   const selectedDayEntries = selectedCalDay ? entries.filter(e => isSameDay(new Date(e.created_at), selectedCalDay)) : []
 
-  const suggestedQuestions = ['What are my most common stressors?', 'Summarize my last week.', 'Show me patterns in my mood.']
 
   const [featuredIdx, setFeaturedIdx] = useState(0)
   const [featuredFading, setFeaturedFading] = useState(false)
@@ -655,18 +673,6 @@ export default function Journal() {
 
   return (
     <div className="pb-24">
-      {/* ── Editor back button ── */}
-      {view === 'editor' && (
-        <div className="mb-6">
-          <button
-            onClick={() => gotoView('journal')}
-            className="flex items-center gap-1.5 text-sm text-[#5a6061] hover:text-[#2d3435] transition-colors cursor-pointer"
-          >
-            <ChevronLeft size={16} />
-            All Entries
-          </button>
-        </div>
-      )}
 
       {/* =================== DASHBOARD =================== */}
       {view === 'dashboard' && (
@@ -686,7 +692,7 @@ export default function Journal() {
                   </div>
                   <div className="flex items-center gap-5 mt-6">
                     <button onClick={() => applyBuiltIn(featuredTpl)}
-                      className="bg-white hover:bg-white/90 text-[#2d3435] text-sm font-bold px-6 py-2.5 rounded-[15px] transition-all cursor-pointer">
+                      className="bg-white hover:bg-white/90 text-[#2d3435] text-sm font-semibold px-6 py-2.5 rounded-[10px] transition-all cursor-pointer">
                       Apply Template
                     </button>
                     <button onClick={() => gotoView('templates')} className="text-sm text-white/60 hover:text-white font-medium cursor-pointer transition-colors">See all templates</button>
@@ -709,7 +715,7 @@ export default function Journal() {
                   <p className="text-sm text-[#5a6061] leading-relaxed">No structure, no prompts — just your thoughts.</p>
                 </div>
                 <button onClick={() => { openNew(); setView('editor') }}
-                  className="mt-5 flex items-center justify-center gap-1.5 bg-[#1F3649] hover:bg-[#162838] text-white text-sm font-bold px-5 py-2.5 rounded-[15px] transition-all cursor-pointer">
+                  className="mt-5 flex items-center justify-center gap-1.5 bg-[#1F3649] hover:opacity-90 text-white text-sm font-semibold px-5 py-2.5 rounded-[10px] transition-all cursor-pointer">
                   <Plus size={13} /> New Entry
                 </button>
               </div>
@@ -756,7 +762,7 @@ export default function Journal() {
                         {cc && cat && <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>{cat}</span>}
                       </div>
                       <div className="text-sm font-semibold text-[#2d3435] truncate mb-1">{entry.title}</div>
-                      <p className="text-xs text-[#5a6061] line-clamp-2 leading-relaxed">{stripMd(entry.content).slice(0,100)}</p>
+                      <p className="text-xs text-[#5a6061] line-clamp-2 leading-relaxed">{stripMd(entry.content).slice(0,100)}…</p>
                     </button>
                   )
                 })}
@@ -822,14 +828,14 @@ export default function Journal() {
                   </div>
                 ) : (
                   <button onClick={() => { openNew(); setView('editor') }}
-                    className="bg-[#1F3649] text-white text-sm font-bold px-5 py-2.5 rounded-[15px] cursor-pointer hover:bg-[#162838] transition-all">
+                    className="bg-[#1F3649] hover:opacity-90 text-white text-sm font-semibold px-5 py-2.5 rounded-[10px] cursor-pointer transition-all">
                     Write your first entry
                   </button>
                 )}
               </div>
             ) : libraryViewMode === 'list' ? (
-              <div className="space-y-3">
-                {libraryEntries.map(entry => {
+              <div className={cn('space-y-3 transition-opacity duration-150', pageFading ? 'opacity-0' : 'opacity-100')}>
+                {pagedEntries.map(entry => {
                   const meta = entry.mood_score ? MOOD_META[entry.mood_score] : null
                   const cc = entry.category ? getCatColor(entry.category) : null
                   const MoodIcon = meta?.icon
@@ -847,7 +853,7 @@ export default function Journal() {
                             {meta && MoodIcon && <span className={cn('inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-[15px]', meta.chipClass)}><MoodIcon size={9}/>{meta.short}</span>}
                           </div>
                         </div>
-                        <p className="text-xs text-[#5a6061] line-clamp-2 leading-relaxed">{stripMd(entry.content).slice(0,160)}</p>
+                        <p className="text-xs text-[#5a6061] line-clamp-2 leading-relaxed">{stripMd(entry.content).slice(0,160)}…</p>
                         <div className="flex items-center gap-3 mt-2">
                           <span className="text-[10px] font-semibold text-[#adb3b4]">{countWords(entry.content)}</span>
                           {entry.location && <><span className="text-[10px] text-[#adb3b4]">·</span><span className="text-[10px] text-[#adb3b4] font-medium flex items-center gap-0.5"><MapPin size={9}/>{entry.location}</span></>}
@@ -867,8 +873,8 @@ export default function Journal() {
                 })}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {libraryEntries.map(entry => {
+              <div className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 transition-opacity duration-150', pageFading ? 'opacity-0' : 'opacity-100')}>
+                {pagedEntries.map(entry => {
                   const meta = entry.mood_score ? MOOD_META[entry.mood_score] : null
                   const cc = entry.category ? getCatColor(entry.category) : null
                   const MoodIcon = meta?.icon
@@ -884,7 +890,7 @@ export default function Journal() {
                         </button>
                       </div>
                       <h3 className="text-sm font-bold text-[#2d3435] mb-2 line-clamp-2 group-hover:text-[#1F3649] transition-colors">{entry.title}</h3>
-                      <p className="text-xs text-[#5a6061] line-clamp-3 leading-relaxed mb-4">{stripMd(entry.content).slice(0,120)}</p>
+                      <p className="text-xs text-[#5a6061] line-clamp-3 leading-relaxed mb-4">{stripMd(entry.content).slice(0,120)}…</p>
                       <div className="flex items-center justify-between pt-3 border-t border-[#f2f4f4]">
                         <span className="text-[10px] font-semibold text-[#adb3b4]">{countWords(entry.content)}</span>
                         <div className="flex items-center gap-1.5">
@@ -897,6 +903,53 @@ export default function Journal() {
                 })}
               </div>
             )}
+
+            {/* Pagination — fixed 7-slot layout so no positions ever shift */}
+            {totalPages > 1 && (() => {
+              // Build exactly 7 slots: [1] [e1] [L] [C] [R] [e2] [last]
+              // Slots that aren't needed render as invisible placeholders to hold space
+              const p = entriesPage
+              const last = totalPages
+              type Slot = { key: string; page?: number; ellipsis?: boolean; empty?: boolean }
+              let slots: Slot[]
+
+              if (last <= 7) {
+                slots = Array.from({ length: last }, (_, i) => ({ key: String(i + 1), page: i + 1 }))
+              } else {
+                const L = Math.max(2, Math.min(p - 1, last - 3))
+                const C = Math.max(2, Math.min(p,     last - 2))
+                const R = Math.max(3, Math.min(p + 1, last - 1))
+                slots = [
+                  { key: 'first', page: 1 },
+                  L > 2         ? { key: 'e1', ellipsis: true } : { key: 'e1', empty: true },
+                  L !== 1 && L !== last ? { key: 'L', page: L } : { key: 'L', empty: true },
+                  { key: 'C', page: C },
+                  R !== 1 && R !== last && R !== C ? { key: 'R', page: R } : { key: 'R', empty: true },
+                  R < last - 1  ? { key: 'e2', ellipsis: true } : { key: 'e2', empty: true },
+                  { key: 'last', page: last },
+                ]
+              }
+
+              return (
+                <Pagination className="mt-6">
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrev onClick={() => changePage(Math.max(1, entriesPage - 1))} disabled={entriesPage === 1} />
+                    </PaginationItem>
+                    {slots.map(slot => (
+                      <PaginationItem key={slot.key}>
+                        {slot.ellipsis  ? <PaginationEllipsis /> :
+                         slot.empty     ? <span className="w-10 h-10 inline-block" /> :
+                         <PaginationButton isActive={entriesPage === slot.page} onClick={() => changePage(slot.page!)}>{slot.page}</PaginationButton>}
+                      </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                      <PaginationNext onClick={() => changePage(Math.min(totalPages, entriesPage + 1))} disabled={entriesPage === totalPages} />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              )
+            })()}
           </div>
 
           {/* Stats Sidebar */}
@@ -911,7 +964,7 @@ export default function Journal() {
                   { label:'Total Words',   value:totalWords>=1000?`${(totalWords/1000).toFixed(1)}k`:totalWords.toString() },
                   { label:'Avg Mood',      value:avgMood>0?avgMood.toFixed(1):'—' },
                 ].map(({ label, value }) => (
-                  <div key={label} className="bg-[#f2f4f4] rounded-xl p-3 text-center">
+                  <div key={label} className="bg-[#f2f4f4] rounded-[10px] p-3 text-center">
                     <div className="text-lg font-extrabold text-[#2d3435]">{value}</div>
                     <div className="text-[10px] font-semibold text-[#5a6061] mt-0.5">{label}</div>
                   </div>
@@ -1017,19 +1070,19 @@ export default function Journal() {
           {activeTemplateDetail && (
             <div className="mb-8">
               {/* Hero banner */}
-              <div className="relative card overflow-hidden mb-5 p-10 min-h-[200px] flex items-end"
-                   style={{background: `linear-gradient(135deg, ${activeTemplateDetail.colorFrom}, ${activeTemplateDetail.colorTo})`}}>
+              <div className="relative card overflow-hidden mb-5 p-10 min-h-[200px] flex items-end bg-white">
+                <GradientBarsBackground barCount={16} barColor="rgba(31,54,73,0.055)" />
                 <button onClick={() => setActiveTemplateDetail(null)}
-                  className="absolute top-4 right-4 w-7 h-7 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white/70 hover:text-white transition-all cursor-pointer">
+                  className="absolute top-4 right-4 w-7 h-7 bg-[#f2f4f4] hover:bg-[#e8eaeb] rounded-full flex items-center justify-center text-[#adb3b4] hover:text-[#2d3435] transition-all cursor-pointer">
                   <X size={13}/>
                 </button>
-                <div className="flex items-end justify-between w-full">
+                <div className="flex items-end justify-between w-full relative z-10">
                   <div>
-                    <span className="text-white/55 text-[10px] font-bold uppercase tracking-widest mb-3 block">Journal Template</span>
-                    <h2 className="text-3xl font-extrabold text-white tracking-tight mb-2">{activeTemplateDetail.name}</h2>
-                    <p className="text-white/70 text-sm max-w-xl leading-relaxed">{activeTemplateDetail.subtitle}</p>
+                    <span className="text-[#adb3b4] text-[10px] font-bold uppercase tracking-widest mb-3 block">Journal Template</span>
+                    <h2 className="text-3xl font-extrabold text-[#2d3435] tracking-tight mb-2">{activeTemplateDetail.name}</h2>
+                    <p className="text-[#5a6061] text-sm max-w-xl leading-relaxed">{activeTemplateDetail.subtitle}</p>
                   </div>
-                  <div className="text-7xl opacity-50 ml-8 shrink-0">{activeTemplateDetail.emoji}</div>
+                  {(() => { const TplIcon = activeTemplateDetail.icon; return <div className="opacity-[0.10] ml-8 shrink-0 text-[#1F3649]"><TplIcon size={72} strokeWidth={1}/></div> })()}
                 </div>
               </div>
 
@@ -1038,38 +1091,38 @@ export default function Journal() {
                 {/* How it works */}
                 <div className="col-span-1 md:col-span-7 bg-white card p-6">
                   <h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider mb-3">How it works</h3>
-                  <p className="text-sm text-[#5a6061] leading-relaxed mb-4">{activeTemplateDetail.howItWorks}</p>
+                  <p className="text-sm text-[#2d3435] leading-relaxed mb-4">{activeTemplateDetail.howItWorks}</p>
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-[#f2f4f4] rounded-xl p-3">
+                    <div className="bg-[#f2f4f4] rounded-[10px] p-3">
                       <div className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest mb-1">Principle</div>
                       <div className="text-xs font-semibold text-[#2d3435] leading-snug">{activeTemplateDetail.principle}</div>
                     </div>
-                    <div className="bg-[#f2f4f4] rounded-xl p-3">
+                    <div className="bg-[#f2f4f4] rounded-[10px] p-3">
                       <div className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest mb-1">Focus</div>
                       <div className="text-xs font-semibold text-[#2d3435] leading-snug">{activeTemplateDetail.focus}</div>
                     </div>
                   </div>
                 </div>
                 {/* Why use this */}
-                <div className="col-span-1 md:col-span-5 bg-[#f2f4f4] card p-6">
+                <div className="col-span-1 md:col-span-5 bg-[#f2f4f4] card p-6 !border-2 !border-dashed !border-[#adb3b4]/30">
                   <h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider mb-3">Why use this</h3>
                   <ul className="space-y-2 mb-4">
                     {activeTemplateDetail.benefits.map((b, i) => (
-                      <li key={i} className="flex items-start gap-2 text-xs text-[#5a6061] leading-snug">
+                      <li key={i} className="flex items-start gap-2 text-sm text-[#2d3435] leading-snug">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#adb3b4] mt-1.5 shrink-0"/>
                         {b}
                       </li>
                     ))}
                   </ul>
-                  <p className="text-xs text-[#5a6061] italic leading-relaxed border-t border-[#e5e7e8] pt-3">{activeTemplateDetail.quote}</p>
+                  <p className="text-sm text-[#5a6061] italic leading-relaxed border-t border-[#e5e7e8] pt-3">{activeTemplateDetail.quote}</p>
                 </div>
               </div>
 
               {/* Your Entry divider */}
               <div className="flex items-center gap-4 mt-7">
-                <div className="flex-1 h-px bg-[#f2f4f4]"/>
-                <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest">Your Entry</span>
-                <div className="flex-1 h-px bg-[#f2f4f4]"/>
+                <div className="flex-1 h-px bg-[#e8eaeb]"/>
+                <span className="text-[11px] font-bold text-[#586062] uppercase tracking-widest">Your Entry</span>
+                <div className="flex-1 h-px bg-[#e8eaeb]"/>
               </div>
             </div>
           )}
@@ -1083,12 +1136,58 @@ export default function Journal() {
                 <p className="text-xs font-bold uppercase tracking-widest text-[#1F3649]/70 mb-3">
                   {format(selected ? new Date(selected.created_at) : new Date(), 'EEEE, MMMM d, yyyy')}
                 </p>
-                <input
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                  placeholder="Title your reflection..."
-                  className="w-full bg-transparent text-2xl md:text-3xl font-extrabold text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none tracking-tight leading-tight"
-                />
+                <div className="flex items-start gap-3">
+                  <input
+                    value={title}
+                    onChange={e => setTitle(e.target.value)}
+                    placeholder="Title your reflection..."
+                    className="flex-1 min-w-0 bg-transparent text-2xl md:text-3xl font-extrabold text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none tracking-tight leading-tight"
+                  />
+                  {/* Templates dropdown */}
+                  <DropdownMenu.Root>
+                    <DropdownMenu.Trigger asChild>
+                      <button className="flex items-center gap-2 px-3 py-2 mt-1 rounded-[12px] hover:bg-[#f2f4f4] transition-all cursor-pointer text-sm font-semibold text-[#5a6061] shrink-0 border border-[#e8eaeb]">
+                        <MoreHorizontal size={15}/>
+                        <span>Templates</span>
+                        <ChevronDown size={13} className="text-[#adb3b4]"/>
+                      </button>
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Portal>
+                      <DropdownMenu.Content
+                        align="end"
+                        side="bottom"
+                        sideOffset={6}
+                        className="z-50 min-w-[260px] rounded-[15px] border border-[#ECEFF2] bg-white shadow-[0_12px_44px_rgba(45,52,53,0.10)] p-1.5 outline-none"
+                        style={{ scrollbarWidth: 'none' }}
+                      >
+                        {BUILT_IN_TEMPLATES.map(tpl => (
+                          <DropdownMenu.Item
+                            key={tpl.id}
+                            onClick={() => applyBuiltIn(tpl)}
+                            className="flex items-center gap-2.5 px-3 py-2 text-sm rounded-[10px] cursor-pointer outline-none transition-colors text-[#5a6061] hover:bg-[#f2f4f4]"
+                          >
+                            {(() => { const I = tpl.icon; return <I size={15} strokeWidth={1.5} className="shrink-0"/> })()}
+                            {tpl.name}
+                          </DropdownMenu.Item>
+                        ))}
+                        {templates.length > 0 && (
+                          <>
+                            <div className="my-1 border-t border-[#f2f4f4]"/>
+                            {templates.map(t => (
+                              <DropdownMenu.Item
+                                key={t.id}
+                                onClick={() => { setContent(String(t.structure?.content??'')); if (!title.trim()) setTitle(t.name) }}
+                                className="flex items-center px-3 py-2 text-sm rounded-[10px] cursor-pointer outline-none transition-colors text-[#5a6061] hover:bg-[#f2f4f4]"
+                              >
+                                {t.name}
+                              </DropdownMenu.Item>
+                            ))}
+                          </>
+                        )}
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Portal>
+                  </DropdownMenu.Root>
+                </div>
                 {/* Category + location quick preview row */}
                 {(entryCategory || entryLocation || entryWeather) && (
                   <div className="flex items-center gap-3 mt-3 flex-wrap">
@@ -1112,7 +1211,7 @@ export default function Journal() {
                         {p.prefix && (
                           <span className="text-[11px] font-extrabold text-[#1F3649] uppercase tracking-widest">{p.prefix}</span>
                         )}
-                        <label className="text-[11px] font-bold text-[#adb3b4] uppercase tracking-widest">
+                        <label className="text-[11px] font-bold text-[#586062] uppercase tracking-widest">
                           {p.label}
                         </label>
                       </div>
@@ -1126,14 +1225,30 @@ export default function Journal() {
                         }}
                         placeholder={p.placeholder}
                         rows={4}
-                        className="w-full bg-white border-none rounded-2xl px-6 py-5 text-sm text-[#2d3435] placeholder:text-[#adb3b4]/60 focus:outline-none focus:ring-2 focus:ring-[#1F3649]/15 shadow-sm focus:shadow-md transition-all resize-none leading-relaxed"
+                        className="w-full rounded-[15px] border border-[#e8eaeb] bg-white px-5 py-4 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10 resize-none leading-relaxed"
                       />
                     </div>
                   ))}
-                  {/* Complete Reflection button */}
+                  {/* Extra thoughts */}
+                  <div className="group">
+                    <div className="flex items-center gap-2 mb-3">
+                      <label className="text-[11px] font-bold text-[#586062] uppercase tracking-widest">
+                        Additional Thoughts, Feelings &amp; Ideas
+                      </label>
+                    </div>
+                    <textarea
+                      value={extraThoughts}
+                      onChange={e => setExtraThoughts(e.target.value)}
+                      placeholder="Anything else on your mind — feelings, ideas, observations, or loose thoughts you want to capture…"
+                      rows={4}
+                      className="w-full rounded-[15px] border border-[#e8eaeb] bg-white px-5 py-4 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10 resize-none leading-relaxed"
+                    />
+                  </div>
+
+                  {/* Save button */}
                   <div className="flex justify-end pt-2">
                     <button onClick={save} disabled={saving || !title.trim()}
-                      className="flex items-center gap-2 bg-[#1F3649] hover:bg-[#162838] disabled:opacity-40 text-white font-bold px-8 py-3.5 rounded-[15px] shadow-lg shadow-[#1F3649]/20 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer text-sm">
+                      className="flex items-center gap-2 bg-[#1F3649] hover:opacity-90 disabled:opacity-40 text-white font-semibold px-8 py-2.5 rounded-[10px] shadow-lg shadow-[#1F3649]/20 transition-all cursor-pointer text-sm">
                       <Save size={14}/>
                       {saving ? 'Saving…' : saveStatus === 'saved' ? 'Saved ✓' : 'Save Entry'}
                     </button>
@@ -1153,29 +1268,30 @@ export default function Journal() {
             </div>
 
             {/* Context sidebar */}
-            <aside className="w-full lg:w-72 lg:shrink-0 lg:sticky lg:top-6 space-y-0 lg:overflow-y-auto lg:max-h-[calc(100vh-7rem)]">
+            <aside className="w-full lg:w-72 lg:shrink-0 lg:sticky lg:top-6 space-y-0 lg:overflow-y-auto lg:max-h-[calc(100vh-6rem)]" style={{ scrollbarWidth: 'none' }}>
               <div className="bg-white card overflow-hidden">
 
                 {/* ── Mood ── */}
                 <div className="p-6 border-b border-[#f2f4f4]">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Current Mood</h3>
-                    <span className="text-base">{moodScore ? MOOD_META[moodScore].emoji : '—'}</span>
                   </div>
                   <div className="grid grid-cols-5 gap-2">
                     {([1,2,3,4,5] as const).map(score => {
                       const meta = MOOD_META[score]
                       const active = moodScore === score
+                      const Icon = meta.icon
                       return (
                         <button key={score} onClick={() => setMoodScore(active ? null : score)} title={meta.label}
-                          className={cn('aspect-square flex items-center justify-center rounded-xl text-xl transition-all cursor-pointer',
-                            active ? 'bg-[#1F3649]/10 scale-110 shadow-sm' : 'hover:bg-[#f2f4f4] opacity-60 hover:opacity-90')}>
-                          {meta.emoji}
+                          style={active ? { backgroundColor: meta.bg, borderColor: meta.color + '60' } : {}}
+                          className={cn('aspect-square flex items-center justify-center rounded-xl transition-all cursor-pointer border',
+                            active ? 'scale-110 shadow-sm border' : 'border-transparent hover:bg-[#f2f4f4]')}>
+                          <Icon size={22} color={meta.color} strokeWidth={2.2}/>
                         </button>
                       )
                     })}
                   </div>
-                  {moodScore && <p className="text-[10px] text-center text-[#1F3649] font-semibold mt-2 uppercase tracking-wider">{MOOD_META[moodScore].label}</p>}
+                  {moodScore && <p className="text-[10px] text-center font-semibold mt-2 uppercase tracking-wider" style={{ color: MOOD_META[moodScore].color }}>{MOOD_META[moodScore].label}</p>}
                 </div>
 
                 {/* ── Category ── */}
@@ -1205,7 +1321,7 @@ export default function Journal() {
                   <div className="space-y-3">
                     <div>
                       <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest block mb-1.5">Location</label>
-                      <div className="flex items-center gap-2.5 bg-[#f2f4f4] rounded-xl px-3 py-2.5 focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1F3649]/20 transition-all">
+                      <div className="flex items-center gap-2.5 rounded-[15px] border border-[#e8eaeb] bg-white px-3 py-2.5 shadow-sm shadow-black/5 transition-shadow focus-within:border-[#1F3649]/30 focus-within:ring-[3px] focus-within:ring-[#1F3649]/10">
                         <MapPin size={14} className="text-[#adb3b4] shrink-0"/>
                         <input
                           value={entryLocation}
@@ -1218,7 +1334,7 @@ export default function Journal() {
                     </div>
                     <div>
                       <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest block mb-1.5">Weather</label>
-                      <div className="flex items-center gap-2.5 bg-[#f2f4f4] rounded-xl px-3 py-2.5 focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1F3649]/20 transition-all">
+                      <div className="flex items-center gap-2.5 rounded-[15px] border border-[#e8eaeb] bg-white px-3 py-2.5 shadow-sm shadow-black/5 transition-shadow focus-within:border-[#1F3649]/30 focus-within:ring-[3px] focus-within:ring-[#1F3649]/10">
                         <Cloud size={14} className="text-[#adb3b4] shrink-0"/>
                         <input
                           value={entryWeather}
@@ -1232,10 +1348,77 @@ export default function Journal() {
                   </div>
                 </div>
 
+                {/* ── Wellness ── */}
+                <div className="p-6 border-b border-[#f2f4f4]">
+                  <div className="space-y-4">
+
+                    {/* Sleep quality */}
+                    <div>
+                      <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest flex items-center gap-1.5 mb-2">
+                        <Moon size={11}/> Sleep Quality
+                      </label>
+                      <div className="flex gap-1.5">
+                        {[1,2,3,4,5].map(v => (
+                          <button key={v} onClick={() => setSleepQuality(sleepQuality === v ? null : v)}
+                            className={cn('flex-1 h-7 rounded-lg text-xs font-bold transition-all cursor-pointer border',
+                              sleepQuality === v
+                                ? 'bg-[#1F3649] text-white border-[#1F3649]'
+                                : 'bg-[#f2f4f4] text-[#5a6061] border-transparent hover:bg-[#ebeeef]')}>
+                            {v}
+                          </button>
+                        ))}
+                      </div>
+                      {sleepQuality && (
+                        <p className="text-[10px] text-[#adb3b4] mt-1">{['','Very poor','Poor','Okay','Good','Great'][sleepQuality]}</p>
+                      )}
+                    </div>
+
+                    {/* Energy level */}
+                    <div>
+                      <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest flex items-center gap-1.5 mb-2">
+                        <Zap size={11}/> Energy Level
+                      </label>
+                      <div className="flex gap-1.5">
+                        {(['low','medium','high'] as const).map(lvl => (
+                          <button key={lvl} onClick={() => setEnergyLevel(energyLevel === lvl ? null : lvl)}
+                            className={cn('flex-1 h-7 rounded-lg text-xs font-semibold capitalize transition-all cursor-pointer border',
+                              energyLevel === lvl
+                                ? 'bg-[#1F3649] text-white border-[#1F3649]'
+                                : 'bg-[#f2f4f4] text-[#5a6061] border-transparent hover:bg-[#ebeeef]')}>
+                            {lvl}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Alcohol & Exercise toggles */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <button onClick={() => setHadAlcohol(hadAlcohol === true ? null : true)}
+                        className={cn('flex flex-col items-center gap-1 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border',
+                          hadAlcohol === true
+                            ? 'bg-orange-50 text-orange-700 border-orange-200'
+                            : 'bg-[#f2f4f4] text-[#5a6061] border-transparent hover:bg-[#ebeeef]')}>
+                        <Wine size={15} className={hadAlcohol === true ? 'text-orange-500' : 'text-[#adb3b4]'}/>
+                        <span>Drank last night</span>
+                      </button>
+                      <button onClick={() => setExercised(exercised === true ? null : true)}
+                        className={cn('flex flex-col items-center gap-1 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border',
+                          exercised === true
+                            ? 'bg-green-50 text-green-700 border-green-200'
+                            : 'bg-[#f2f4f4] text-[#5a6061] border-transparent hover:bg-[#ebeeef]')}>
+                        <Dumbbell size={15} className={exercised === true ? 'text-green-500' : 'text-[#adb3b4]'}/>
+                        <span>Exercised</span>
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+
                 {/* ── Save ── */}
                 <div className="p-6 border-b border-[#f2f4f4]">
                   <button onClick={save} disabled={saving || !title.trim()}
-                    className="w-full py-3.5 bg-[#2d3435] hover:bg-[#1a1f1f] disabled:opacity-40 text-white rounded-xl font-bold text-sm transition-all cursor-pointer flex items-center justify-center gap-2">
+                    title={!title.trim() ? 'Add a title to save your entry' : undefined}
+                    className="w-full py-2.5 bg-[#1F3649] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[10px] font-semibold text-sm transition-all cursor-pointer flex items-center justify-center gap-2">
                     <Save size={14}/>
                     {saving ? 'Saving…' : saveStatus==='saved' ? 'Saved ✓' : 'Save Entry'}
                   </button>
@@ -1246,82 +1429,14 @@ export default function Journal() {
                   )}
                   {selected && (
                     <button onClick={() => remove(selected.id)}
-                      className="w-full mt-2 py-2 text-xs text-[#9f403d] hover:bg-[#9f403d]/5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                      className="w-full mt-2 py-2 text-xs text-[#9f403d] hover:bg-[#9f403d]/5 rounded-[10px] transition-all cursor-pointer flex items-center justify-center gap-1.5">
                       <Trash2 size={12}/> Delete entry
                     </button>
                   )}
+                  {/* Spacer so Save Entry scrolls above the floating toolbar */}
+                  <div className="h-20" />
                 </div>
 
-                {/* ── Options / Templates ── */}
-                <div className="p-4 border-b border-[#f2f4f4] relative">
-                  <button onClick={() => setShowEditorOptions(!showEditorOptions)}
-                    className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-[#f2f4f4] transition-all cursor-pointer text-xs font-semibold text-[#5a6061]">
-                    <div className="flex items-center gap-2"><MoreHorizontal size={14}/>Templates & Prompts</div>
-                    <ChevronRight size={12} className={cn('transition-transform', showEditorOptions && 'rotate-90')}/>
-                  </button>
-                  {showEditorOptions && (
-                    <div className="mt-2 space-y-1">
-                      <button onClick={() => { setShowTemplatePicker(!showTemplatePicker); setShowEditorOptions(false) }}
-                        className="w-full text-left px-3 py-2 text-xs text-[#2d3435] hover:bg-[#f2f4f4] rounded-lg cursor-pointer">Use Template</button>
-                      <button onClick={() => { setContent(c => c + '## Events\n\n## Reflections\n\n## Gratitudes\n\n## Plans\n'); if (!title.trim()) setTitle('Prompted Entry'); setShowEditorOptions(false) }}
-                        className="w-full text-left px-3 py-2 text-xs text-[#2d3435] hover:bg-[#f2f4f4] rounded-lg cursor-pointer">Prompted Entry</button>
-                    </div>
-                  )}
-                  {showTemplatePicker && (
-                    <div className="mt-2 border border-[#f2f4f4] rounded-xl overflow-hidden">
-                      {templates.length === 0 ? (
-                        <div className="px-3 py-2 text-xs text-[#5a6061] opacity-60">No custom templates yet</div>
-                      ) : templates.map(t => (
-                        <button key={t.id} onClick={() => { setContent(String(t.structure?.content??'')); if (!title.trim()) setTitle(t.name); setShowTemplatePicker(false) }}
-                          className="w-full text-left px-3 py-2 text-xs text-[#2d3435] hover:bg-[#f2f4f4] transition-all cursor-pointer">
-                          {t.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* ── AI Chat ── */}
-                <div className="p-4">
-                  <button onClick={() => setShowAiChat(!showAiChat)}
-                    className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-[#f2f4f4] transition-all cursor-pointer text-xs font-semibold text-[#5a6061]">
-                    <div className="flex items-center gap-2"><Brain size={14} className="text-[#1F3649]"/>Ask AI about my journal</div>
-                    <ChevronRight size={12} className={cn('transition-transform', showAiChat && 'rotate-90')}/>
-                  </button>
-                  {showAiChat && (
-                    <div className="mt-3 space-y-3">
-                      <div className="space-y-1.5">
-                        {suggestedQuestions.map((q, i) => (
-                          <button key={i} onClick={() => setAiQuery(q)}
-                            className="w-full text-left text-xs text-[#1F3649] bg-[#f2f4f4] hover:bg-[#ebeeef] rounded-lg px-3 py-2 transition-all cursor-pointer leading-snug">
-                            {q}
-                          </button>
-                        ))}
-                      </div>
-                      {aiResponse && (
-                        <div className="bg-[#f2f4f4] rounded-xl p-3 animate-fade-in">
-                          <div className="flex items-center gap-1.5 mb-1.5">
-                            <MessageCircle size={11} className="text-[#1F3649]"/>
-                            <span className="text-[10px] font-semibold text-[#2d3435]">AI Response</span>
-                          </div>
-                          <div className="text-xs text-[#5a6061] leading-relaxed prose prose-xs prose-stone max-w-none prose-p:my-1 prose-strong:text-[#2d3435] prose-ul:my-1 prose-li:my-0">
-                            <ReactMarkdown>{aiResponse}</ReactMarkdown>
-                          </div>
-                        </div>
-                      )}
-                      <div className="flex gap-1.5">
-                        <input value={aiQuery} onChange={e => setAiQuery(e.target.value)}
-                          onKeyDown={e => e.key==='Enter' && askAI()}
-                          placeholder="Ask your journal…"
-                          className="flex-1 min-w-0 bg-[#f2f4f4] border-none rounded-xl py-2.5 px-3 text-xs text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"/>
-                        <button onClick={askAI} disabled={aiLoading || !aiQuery.trim()}
-                          className="p-2 bg-[#1F3649] hover:bg-[#162838] disabled:opacity-50 text-white rounded-xl transition-all cursor-pointer shrink-0">
-                          {aiLoading ? <Sparkles size={12} className="animate-pulse"/> : <Send size={12}/>}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
 
               </div>
             </aside>
@@ -1330,72 +1445,143 @@ export default function Journal() {
       )}
 
       {/* =================== CALENDAR =================== */}
-      {view === 'calendar' && (
-        <div className="flex flex-col lg:flex-row gap-4 animate-fade-in">
-          <div className="flex-1 min-w-0">
-            <div className="bg-white card p-5 md:p-8">
-              <div className="flex items-center justify-between mb-5">
-                <button onClick={() => setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth()-1))} className="text-[#5a6061] hover:text-[#2d3435] cursor-pointer"><ChevronLeft size={16}/></button>
-                <h3 className="text-base font-semibold text-[#2d3435]">{format(calendarDate,'MMMM yyyy')}</h3>
-                <button onClick={() => setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth()+1))} className="text-[#5a6061] hover:text-[#2d3435] cursor-pointer"><ChevronRight size={16}/></button>
-              </div>
-              <div className="grid grid-cols-7 gap-1 text-center mb-2">
-                {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => <div key={d} className="text-xs font-medium text-[#5a6061] py-1">{d}</div>)}
-              </div>
-              <div className="grid grid-cols-7 gap-1">
-                {Array.from({length:startDayOfWeek},(_,i) => <div key={`e-${i}`} className="aspect-square"/>)}
-                {daysInMonth.map(day => {
-                  const ds=format(day,'yyyy-MM-dd'), hasEntry=entryDates.includes(ds)
-                  const isToday=isSameDay(day,new Date()), isSel=selectedCalDay?isSameDay(day,selectedCalDay):false
+      {view === 'calendar' && (() => {
+        const calData: CalendarDay[] = Object.values(
+          entries.reduce<Record<string, CalendarDay>>((acc, entry) => {
+            const d = new Date(entry.created_at)
+            const key = format(d, 'yyyy-MM-dd')
+            if (!acc[key]) acc[key] = { day: d, events: [] }
+            acc[key].events.push({ id: entry.id, name: entry.title, time: format(d, 'h:mm a') })
+            return acc
+          }, {})
+        )
+
+        // ── Calendar stats ─────────────────────────────────────────────
+        const sortedEntries = [...entries].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+
+        // Avg time between entries
+        const avgGapLabel = (() => {
+          if (sortedEntries.length < 2) return '—'
+          const gaps = sortedEntries.slice(1).map((e, i) =>
+            new Date(e.created_at).getTime() - new Date(sortedEntries[i].created_at).getTime()
+          )
+          const avgMs = gaps.reduce((s, g) => s + g, 0) / gaps.length
+          const days = avgMs / (1000 * 60 * 60 * 24)
+          if (days < 1) return `${Math.round(days * 24)}h`
+          if (days < 7) return `${days.toFixed(1)}d`
+          return `${(days / 7).toFixed(1)} wks`
+        })()
+
+        // Entries per period
+        const entryRatePeriods = ['week', 'month', 'year'] as const
+        type RatePeriod = typeof entryRatePeriods[number]
+
+        const calcRate = (period: RatePeriod) => {
+          if (sortedEntries.length === 0) return '—'
+          const first = new Date(sortedEntries[0].created_at).getTime()
+          const now = Date.now()
+          const ms = now - first
+          const dividers = { week: 7, month: 30.44, year: 365.25 }
+          const periods = ms / (1000 * 60 * 60 * 24 * dividers[period])
+          if (periods < 1) return String(sortedEntries.length)
+          const rate = sortedEntries.length / periods
+          return rate >= 10 ? Math.round(rate).toString() : rate.toFixed(1)
+        }
+
+        return (
+          <div className="flex flex-col lg:flex-row gap-4 animate-fade-in relative">
+            {/* Calendar */}
+            <div className="flex-1 min-w-0 bg-white border border-[#f2f4f4] overflow-hidden" style={{ borderRadius: 15 }}>
+              <FullScreenCalendar
+                data={calData}
+                onDayClick={day => setSelectedCalDay(day)}
+              />
+            </div>
+
+            {/* Sidebar */}
+            <div className="w-full lg:w-[280px] lg:shrink-0 flex flex-col gap-3">
+
+              {/* Day entries */}
+              <div className="space-y-3">
+                {!selectedCalDay && (
+                  <div className="bg-white card p-5 text-center">
+                    <p className="text-xs text-[#5a6061] opacity-60">Click a day to see entries</p>
+                  </div>
+                )}
+                {selectedCalDay && !selectedDayEntries.length && (
+                  <div className="bg-white card p-5 text-center">
+                    <p className="text-xs text-[#5a6061] opacity-60 mb-2">No entries on this day</p>
+                    <button onClick={() => { openNew(); setView('editor') }} className="text-xs text-[#1F3649] hover:underline cursor-pointer">Write an entry</button>
+                  </div>
+                )}
+                {selectedDayEntries.map(entry => {
+                  const meta = entry.mood_score ? MOOD_META[entry.mood_score] : null
+                  const cc = entry.category ? getCatColor(entry.category) : null
+                  const MoodIcon = meta?.icon
                   return (
-                    <button key={ds} onClick={() => setSelectedCalDay(day)}
-                      className={cn('aspect-square rounded-xl flex flex-col items-center justify-center text-xs transition-all cursor-pointer relative',
-                        isSel?'bg-[#1F3649] text-white font-semibold':isToday?'bg-[#1F3649]/15 text-[#1F3649] font-semibold':'text-[#5a6061] hover:bg-[#f2f4f4]')}>
-                      {day.getDate()}
-                      {hasEntry && !isSel && <span className="absolute bottom-1.5 w-1 h-1 rounded-full bg-[#1F3649]"/>}
-                    </button>
+                    <div key={entry.id} className="bg-white card p-4 hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all group cursor-pointer"
+                      onClick={() => { openEntry(entry); setView('editor') }}>
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <h3 className="text-sm font-bold text-[#2d3435] leading-snug group-hover:text-[#1F3649] transition-colors line-clamp-2">{entry.title}</h3>
+                        <button onClick={e => { e.stopPropagation(); updateEntry(entry.id, { is_favorite: !entry.is_favorite }) }}
+                          className={cn('p-1 rounded-lg shrink-0 transition-all cursor-pointer', entry.is_favorite ? 'text-[#ca8a04]' : 'text-[#dde4e5] hover:text-[#ca8a04]')}>
+                          <Star size={12} fill={entry.is_favorite ? 'currentColor' : 'none'}/>
+                        </button>
+                      </div>
+                      <p className="text-xs text-[#5a6061] line-clamp-2 leading-relaxed mb-2">{stripMd(entry.content).slice(0, 120)}…</p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[10px] text-[#adb3b4] font-medium">{format(new Date(entry.created_at), 'h:mm a')}</span>
+                        <span className="text-[10px] text-[#adb3b4]">·</span>
+                        <span className="text-[10px] font-semibold text-[#adb3b4]">{countWords(entry.content)}</span>
+                        {cc && entry.category && <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>{entry.category}</span>}
+                        {meta && MoodIcon && <span className={cn('inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-[15px]', meta.chipClass)}><MoodIcon size={9}/>{meta.short}</span>}
+                      </div>
+                    </div>
                   )
                 })}
               </div>
-              <div className="flex items-center gap-4 mt-4 text-xs text-[#5a6061] opacity-60">
-                <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#1F3649] inline-block"/>Has entry</span>
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-[#1F3649]/15 inline-block"/>Today</span>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 mt-4">
+
+              {/* Stat: Entries per period */}
               <div className="bg-white card p-5">
-                <div className="text-xs font-semibold text-[#5a6061] uppercase tracking-wider mb-2">Consistency Score</div>
-                <div className="text-3xl font-bold text-[#1F3649]">{consistencyScore}%</div>
-                <p className="text-xs text-[#5a6061] opacity-60 mt-1">{daysWithEntries.length} entries in {format(calendarDate,'MMMM')}</p>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp size={13} className="text-[#1F3649]"/>
+                    <h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Entry Rate</h3>
+                  </div>
+                  <select
+                    value={calRatePeriod}
+                    onChange={e => setCalRatePeriod(e.target.value as RatePeriod)}
+                    className="text-xs font-semibold text-[#5a6061] bg-[#f2f4f4] border-none rounded-lg px-2 py-1 cursor-pointer focus:outline-none"
+                  >
+                    <option value="week">/ week</option>
+                    <option value="month">/ month</option>
+                    <option value="year">/ year</option>
+                  </select>
+                </div>
+                <div className="flex items-end gap-1.5">
+                  <span className="text-3xl font-extrabold text-[#2d3435] leading-none">{calcRate(calRatePeriod)}</span>
+                  <span className="text-sm text-[#adb3b4] font-medium mb-0.5">entries / {calRatePeriod}</span>
+                </div>
+                <p className="text-[10px] text-[#adb3b4] mt-1.5">avg since your first entry</p>
               </div>
+
+              {/* Stat: Avg gap between entries */}
               <div className="bg-white card p-5">
-                <div className="text-xs font-semibold text-[#5a6061] uppercase tracking-wider mb-2">Daily Prompt</div>
-                <p className="text-sm text-[#2d3435] leading-relaxed italic">"What is one thing you learned about yourself this week?"</p>
-                <button onClick={() => { openNew(); setView('editor'); setTitle('Daily Prompt Reflection') }} className="text-xs text-[#1F3649] hover:underline mt-2 cursor-pointer">Write about this</button>
+                <div className="flex items-center gap-2 mb-3">
+                  <Hash size={13} className="text-[#1F3649]"/>
+                  <h3 className="text-xs font-bold text-[#2d3435] uppercase tracking-wider">Avg Gap</h3>
+                </div>
+                <div className="flex items-end gap-1.5">
+                  <span className="text-3xl font-extrabold text-[#2d3435] leading-none">{avgGapLabel}</span>
+                  <span className="text-sm text-[#adb3b4] font-medium mb-0.5">between entries</span>
+                </div>
+                <p className="text-[10px] text-[#adb3b4] mt-1.5">across {sortedEntries.length} total entries</p>
               </div>
+
             </div>
           </div>
-          <div className="w-full lg:w-[280px] lg:shrink-0">
-            <div className="bg-white card p-5">
-              <h3 className="text-sm font-semibold text-[#2d3435] mb-3">{selectedCalDay ? format(selectedCalDay,'EEEE, MMM d') : 'Select a day'}</h3>
-              {selectedCalDay && !selectedDayEntries.length && (
-                <div className="text-center py-8">
-                  <p className="text-xs text-[#5a6061] opacity-60 mb-2">No entries on this day</p>
-                  <button onClick={() => { openNew(); setView('editor') }} className="text-xs text-[#1F3649] hover:underline cursor-pointer">Write an entry</button>
-                </div>
-              )}
-              {selectedDayEntries.map(entry => (
-                <div key={entry.id} onClick={() => { openEntry(entry); setView('editor') }}
-                  className="p-3 bg-[#f2f4f4] rounded-xl mb-2 cursor-pointer hover:bg-[#ebeeef] transition-all">
-                  <div className="text-sm font-medium text-[#2d3435] truncate">{entry.title}</div>
-                  <p className="text-xs text-[#5a6061] opacity-60 mt-1 line-clamp-3 leading-relaxed">{entry.content.replace(/[#*`]/g,'').slice(0,120)}</p>
-                </div>
-              ))}
-              {!selectedCalDay && <p className="text-xs text-[#5a6061] opacity-60 py-6 text-center">Click a day on the calendar to preview entries</p>}
-            </div>
-          </div>
-        </div>
-      )}
+        )
+      })()}
 
       {/* =================== TEMPLATES =================== */}
       {view === 'templates' && (
@@ -1407,10 +1593,10 @@ export default function Journal() {
               <h2 className="text-xl font-extrabold text-[#2d3435] tracking-tight">Template Library</h2>
               <p className="text-sm text-[#5a6061] mt-0.5">{BUILT_IN_TEMPLATES.length} guided frameworks to deepen your reflection</p>
             </div>
-            <div className="flex gap-1.5 bg-[#f2f4f4] p-1.5 rounded-xl self-start">
+            <div className="flex gap-1 bg-[#f2f4f4] p-1 rounded-[10px] self-start">
               {(['All', 'Personal', 'Work', 'Gratitude'] as TemplateFilter[]).map(f => (
                 <button key={f} onClick={() => setTemplateFilter(f)}
-                  className={cn('px-4 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer',
+                  className={cn('px-4 py-1.5 text-xs font-semibold rounded-[7px] transition-all cursor-pointer',
                     templateFilter===f ? 'bg-white text-[#2d3435] shadow-sm' : 'text-[#5a6061] hover:text-[#2d3435]')}>
                   {f}
                 </button>
@@ -1418,140 +1604,137 @@ export default function Journal() {
             </div>
           </div>
 
-          {/* All — bento grid */}
-          {templateFilter === 'All' && (
-            <div className="space-y-4">
-              {/* Row 1: large feature + companion */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                {/* Large feature card */}
-                <button onClick={() => applyBuiltIn(BUILT_IN_TEMPLATES[0])}
-                  className="col-span-1 md:col-span-7 relative overflow-hidden card p-7 md:p-10 flex flex-col justify-between min-h-[240px] md:min-h-[320px] cursor-pointer group text-left"
-                  style={{background: `linear-gradient(135deg, ${BUILT_IN_TEMPLATES[0].colorFrom}, ${BUILT_IN_TEMPLATES[0].colorTo})`}}>
-                  <div className="flex items-start justify-between">
-                    <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest">Featured Template</span>
-                    <span className="text-5xl opacity-40">{BUILT_IN_TEMPLATES[0].emoji}</span>
+          {/* Grid pattern configs cycling through 3 styles */}
+          {(() => {
+            type PatternCfg = { width: number; height: number; strokeDasharray?: string; squares?: Array<[number, number]>; cls: string }
+            const PATTERN_CFG: PatternCfg[] = [
+              // 0 – radial fade + accent squares + skew
+              { width: 40, height: 40, squares: [[5,3],[8,6],[3,8],[11,4]] as Array<[number,number]>, cls: 'fill-[#1F3649]/[0.03] stroke-[#1F3649]/[0.06] inset-x-0 inset-y-[-30%] h-[200%] skew-y-12 [mask-image:radial-gradient(400px_circle_at_center,white,transparent)]' },
+              // 1 – linear gradient small grid
+              { width: 20, height: 20, cls: 'fill-[#1F3649]/[0.03] stroke-[#1F3649]/[0.05] [mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)]' },
+              // 2 – dashed radial
+              { width: 30, height: 30, strokeDasharray: '4 2', cls: 'fill-[#1F3649]/[0.03] stroke-[#1F3649]/[0.06] [mask-image:radial-gradient(300px_circle_at_center,white,transparent)]' },
+              // 3 – radial + squares, medium
+              { width: 35, height: 35, squares: [[4,2],[7,5],[2,7]] as Array<[number,number]>, cls: 'fill-[#1F3649]/[0.04] stroke-[#1F3649]/[0.06] inset-x-0 inset-y-[-30%] h-[200%] skew-y-12 [mask-image:radial-gradient(350px_circle_at_center,white,transparent)]' },
+              // 4 – linear top-right, small grid
+              { width: 20, height: 20, cls: 'fill-[#1F3649]/[0.03] stroke-[#1F3649]/[0.05] [mask-image:linear-gradient(to_top_right,white,transparent,transparent)]' },
+              // 5 – dashed, tight grid
+              { width: 25, height: 25, strokeDasharray: '3 3', cls: 'fill-[#1F3649]/[0.03] stroke-[#1F3649]/[0.05] [mask-image:radial-gradient(280px_circle_at_center,white,transparent)]' },
+              // 6 – radial + squares, large cells + skew
+              { width: 45, height: 45, squares: [[3,2],[6,4],[2,6],[8,2]] as Array<[number,number]>, cls: 'fill-[#1F3649]/[0.03] stroke-[#1F3649]/[0.06] inset-x-0 inset-y-[-30%] h-[200%] skew-y-12 [mask-image:radial-gradient(400px_circle_at_center,white,transparent)]' },
+              // 7 – linear bottom-left
+              { width: 16, height: 16, cls: 'fill-[#1F3649]/[0.03] stroke-[#1F3649]/[0.05] [mask-image:linear-gradient(to_bottom_left,white,transparent,transparent)]' },
+              // 8 – dashed radial with squares
+              { width: 30, height: 30, strokeDasharray: '4 2', squares: [[3,3],[6,2],[5,5]] as Array<[number,number]>, cls: 'fill-[#1F3649]/[0.04] stroke-[#1F3649]/[0.06] [mask-image:radial-gradient(260px_circle_at_center,white,transparent)]' },
+              // 9 – radial + small squares + skew
+              { width: 32, height: 32, squares: [[2,4],[5,1],[8,5]] as Array<[number,number]>, cls: 'fill-[#1F3649]/[0.03] stroke-[#1F3649]/[0.06] inset-x-0 inset-y-[-30%] h-[200%] skew-y-12 [mask-image:radial-gradient(320px_circle_at_center,white,transparent)]' },
+              // 10 – linear top-left, medium grid
+              { width: 24, height: 24, cls: 'fill-[#1F3649]/[0.03] stroke-[#1F3649]/[0.05] [mask-image:linear-gradient(to_top_left,white,transparent,transparent)]' },
+            ]
+
+            const TplCard = ({ tpl, idx, className, iconSize = 32, showSubtitle = true, showApply = false }: {
+              tpl: typeof BUILT_IN_TEMPLATES[0]; idx: number; className: string; iconSize?: number; showSubtitle?: boolean; showApply?: boolean
+            }) => {
+              const pc = PATTERN_CFG[idx % PATTERN_CFG.length]
+              const Icon = tpl.icon
+              return (
+                <button onClick={() => applyBuiltIn(tpl)}
+                  className={cn('relative overflow-hidden bg-white card flex flex-col justify-between cursor-pointer group text-left hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all', className)}>
+                  <GridPattern width={pc.width} height={pc.height} strokeDasharray={pc.strokeDasharray} squares={pc.squares} className={pc.cls} />
+                  <div className="relative z-10 flex items-start justify-between">
+                    <div className="opacity-[0.12] text-[#1F3649]"><Icon size={iconSize} strokeWidth={1}/></div>
+                    <ChevronRight size={14} className="text-[#dde4e5] group-hover:text-[#1F3649] transition-colors shrink-0"/>
                   </div>
-                  <div>
-                    <h3 className="text-2xl font-extrabold text-white mb-2 tracking-tight">{BUILT_IN_TEMPLATES[0].name}</h3>
-                    <p className="text-white/65 text-sm leading-relaxed mb-6 max-w-sm">{BUILT_IN_TEMPLATES[0].subtitle}</p>
-                    <div className="flex items-center gap-3">
-                      <span className="bg-white text-[#2d3435] font-bold text-sm px-5 py-2 rounded-[15px] group-hover:bg-white/90 transition-all">Apply Template</span>
-                      <span className="text-white/40 text-[10px] font-semibold uppercase tracking-wider">{BUILT_IN_TEMPLATES[0].category}</span>
-                    </div>
+                  <div className="relative z-10">
+                    <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest block mb-1">{tpl.category}</span>
+                    <h3 className="font-extrabold text-[#2d3435] tracking-tight leading-snug mb-1.5">{tpl.name}</h3>
+                    {showSubtitle && <p className="text-[#5a6061] text-xs leading-relaxed">{tpl.subtitle.slice(0, 80)}…</p>}
+                    {showApply && (
+                      <span className="mt-4 inline-block bg-[#1F3649] group-hover:opacity-90 text-white font-semibold text-xs px-4 py-1.5 rounded-[10px] transition-all">Apply Template</span>
+                    )}
                   </div>
                 </button>
+              )
+            }
 
-                {/* Companion card */}
-                <button onClick={() => applyBuiltIn(BUILT_IN_TEMPLATES[1])}
-                  className="col-span-1 md:col-span-5 relative overflow-hidden card p-7 md:p-8 flex flex-col justify-between min-h-[200px] md:min-h-[320px] cursor-pointer group text-left"
-                  style={{background: `linear-gradient(135deg, ${BUILT_IN_TEMPLATES[1].colorFrom}, ${BUILT_IN_TEMPLATES[1].colorTo})`}}>
-                  <div className="flex items-start justify-between">
-                    <span className="text-4xl opacity-50">{BUILT_IN_TEMPLATES[1].emoji}</span>
-                    <ChevronRight size={16} className="text-white/30 group-hover:text-white/60 transition-colors"/>
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest block mb-2">{BUILT_IN_TEMPLATES[1].category}</span>
-                    <h3 className="text-xl font-extrabold text-white mb-2 tracking-tight">{BUILT_IN_TEMPLATES[1].name}</h3>
-                    <p className="text-white/60 text-sm leading-relaxed mb-5">{BUILT_IN_TEMPLATES[1].subtitle.slice(0,90)}…</p>
-                    <span className="bg-white/15 hover:bg-white/25 text-white font-semibold text-sm px-4 py-2 rounded-[15px] transition-all inline-block">Apply Template</span>
-                  </div>
-                </button>
-              </div>
+            return (
+              <>
+                {/* All — bento grid */}
+                {templateFilter === 'All' && (
+                  <div className="space-y-4">
+                    {/* Row 1 */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                      {/* Large feature */}
+                      <button onClick={() => applyBuiltIn(BUILT_IN_TEMPLATES[0])}
+                        className="col-span-1 md:col-span-7 relative overflow-hidden bg-white card p-7 md:p-10 flex flex-col justify-between min-h-[240px] md:min-h-[320px] cursor-pointer group text-left hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all">
+                        <GridPattern width={PATTERN_CFG[0].width} height={PATTERN_CFG[0].height} squares={PATTERN_CFG[0].squares} className={PATTERN_CFG[0].cls} />
+                        <div className="relative z-10 flex items-start justify-between">
+                          <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest">Featured Template</span>
+                          {(() => { const I = BUILT_IN_TEMPLATES[0].icon; return <div className="opacity-[0.10] text-[#1F3649]"><I size={56} strokeWidth={1}/></div> })()}
+                        </div>
+                        <div className="relative z-10">
+                          <h3 className="text-2xl font-extrabold text-[#2d3435] mb-2 tracking-tight">{BUILT_IN_TEMPLATES[0].name}</h3>
+                          <p className="text-[#5a6061] text-sm leading-relaxed mb-6 max-w-sm">{BUILT_IN_TEMPLATES[0].subtitle}</p>
+                          <div className="flex items-center gap-3">
+                            <span className="bg-[#1F3649] group-hover:opacity-90 text-white font-bold text-sm px-5 py-2 rounded-[10px] transition-all">Apply Template</span>
+                            <span className="text-[#adb3b4] text-[10px] font-semibold uppercase tracking-wider">{BUILT_IN_TEMPLATES[0].category}</span>
+                          </div>
+                        </div>
+                      </button>
+                      {/* Companion */}
+                      <TplCard tpl={BUILT_IN_TEMPLATES[1]} idx={1} iconSize={44} showApply
+                        className="col-span-1 md:col-span-5 p-7 md:p-8 min-h-[200px] md:min-h-[320px]" />
+                    </div>
 
-              {/* Row 2: medium cards [2,3,4] */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {BUILT_IN_TEMPLATES.slice(2, 5).map(tpl => (
-                  <button key={tpl.id} onClick={() => applyBuiltIn(tpl)}
-                    className="relative overflow-hidden card p-7 flex flex-col justify-between min-h-[200px] cursor-pointer group text-left"
-                    style={{background: `linear-gradient(135deg, ${tpl.colorFrom}, ${tpl.colorTo})`}}>
-                    <div className="flex items-start justify-between">
-                      <span className="text-3xl opacity-60">{tpl.emoji}</span>
-                      <ChevronRight size={14} className="text-white/30 group-hover:text-white/60 transition-colors"/>
+                    {/* Row 2 */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      {BUILT_IN_TEMPLATES.slice(2, 5).map((tpl, i) => (
+                        <TplCard key={tpl.id} tpl={tpl} idx={2 + i} className="p-7 min-h-[200px]" />
+                      ))}
                     </div>
-                    <div>
-                      <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest block mb-1">{tpl.category}</span>
-                      <h3 className="text-base font-extrabold text-white mb-1.5 tracking-tight">{tpl.name}</h3>
-                      <p className="text-white/55 text-xs leading-relaxed">{tpl.subtitle.slice(0,70)}…</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
 
-              {/* Row 3: medium cards [5,6,7] */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {BUILT_IN_TEMPLATES.slice(5, 8).map(tpl => (
-                  <button key={tpl.id} onClick={() => applyBuiltIn(tpl)}
-                    className="relative overflow-hidden card p-7 flex flex-col justify-between min-h-[200px] cursor-pointer group text-left"
-                    style={{background: `linear-gradient(135deg, ${tpl.colorFrom}, ${tpl.colorTo})`}}>
-                    <div className="flex items-start justify-between">
-                      <span className="text-3xl opacity-60">{tpl.emoji}</span>
-                      <ChevronRight size={14} className="text-white/30 group-hover:text-white/60 transition-colors"/>
+                    {/* Row 3 */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      {BUILT_IN_TEMPLATES.slice(5, 8).map((tpl, i) => (
+                        <TplCard key={tpl.id} tpl={tpl} idx={5 + i} className="p-7 min-h-[200px]" />
+                      ))}
                     </div>
-                    <div>
-                      <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest block mb-1">{tpl.category}</span>
-                      <h3 className="text-base font-extrabold text-white mb-1.5 tracking-tight">{tpl.name}</h3>
-                      <p className="text-white/55 text-xs leading-relaxed">{tpl.subtitle.slice(0,70)}…</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
 
-              {/* Row 4: small cards [8,9,10] + create custom */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {BUILT_IN_TEMPLATES.slice(8, 11).map(tpl => (
-                  <button key={tpl.id} onClick={() => applyBuiltIn(tpl)}
-                    className="relative overflow-hidden card p-5 flex flex-col justify-between min-h-[160px] cursor-pointer group text-left"
-                    style={{background: `linear-gradient(135deg, ${tpl.colorFrom}, ${tpl.colorTo})`}}>
-                    <div className="flex items-start justify-between">
-                      <span className="text-2xl opacity-60">{tpl.emoji}</span>
-                      <ChevronRight size={13} className="text-white/30 group-hover:text-white/60 transition-colors"/>
+                    {/* Row 4 */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                      {BUILT_IN_TEMPLATES.slice(8, 11).map((tpl, i) => (
+                        <TplCard key={tpl.id} tpl={tpl} idx={8 + i} iconSize={22} showSubtitle={false} className="p-5 min-h-[160px]" />
+                      ))}
+                      <button onClick={() => { setNewTemplateName(''); setNewTemplateContent(''); setShowTemplateModal(true) }}
+                        className="card p-5 flex flex-col justify-between min-h-[160px] cursor-pointer group text-left border-2 border-dashed border-[#adb3b4]/30 hover:border-[#1F3649]/40 bg-white transition-all">
+                        <div className="w-8 h-8 rounded-full bg-[#f2f4f4] group-hover:bg-[#1F3649]/10 flex items-center justify-center transition-colors">
+                          <Plus size={15} className="text-[#adb3b4] group-hover:text-[#1F3649] transition-colors"/>
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-bold text-[#2d3435] mb-0.5">Custom Template</h3>
+                          <span className="text-[10px] font-semibold text-[#adb3b4] uppercase tracking-wider">Create your own</span>
+                        </div>
+                      </button>
                     </div>
-                    <div>
-                      <h3 className="text-sm font-extrabold text-white mb-0.5 leading-tight">{tpl.name}</h3>
-                      <span className="text-[10px] font-semibold text-white/40 uppercase tracking-wider">{tpl.category}</span>
-                    </div>
-                  </button>
-                ))}
-                {/* Create custom card */}
-                <button onClick={() => { setNewTemplateName(''); setNewTemplateContent(''); document.getElementById('create-template-form')?.scrollIntoView({ behavior: 'smooth' }) }}
-                  className="card p-5 flex flex-col justify-between min-h-[160px] cursor-pointer group text-left border-2 border-dashed border-[#adb3b4]/30 hover:border-[#1F3649]/40 bg-white transition-all">
-                  <div className="w-8 h-8 rounded-full bg-[#f2f4f4] group-hover:bg-[#1F3649]/10 flex items-center justify-center transition-colors">
-                    <Plus size={15} className="text-[#adb3b4] group-hover:text-[#1F3649] transition-colors"/>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-[#2d3435] mb-0.5">Custom Template</h3>
-                    <span className="text-[10px] font-semibold text-[#adb3b4] uppercase tracking-wider">Create your own</span>
-                  </div>
-                </button>
-              </div>
-            </div>
-          )}
+                )}
 
-          {/* Filtered view */}
-          {templateFilter !== 'All' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {filteredBuiltIns.length === 0 ? (
-                <div className="col-span-full text-center py-16">
-                  <p className="text-sm text-[#5a6061]">No templates in this category yet.</p>
-                </div>
-              ) : filteredBuiltIns.map(tpl => (
-                <button key={tpl.id} onClick={() => applyBuiltIn(tpl)}
-                  className="relative overflow-hidden card p-8 flex flex-col justify-between min-h-[240px] cursor-pointer group text-left"
-                  style={{background: `linear-gradient(135deg, ${tpl.colorFrom}, ${tpl.colorTo})`}}>
-                  <div className="flex items-start justify-between">
-                    <span className="text-4xl opacity-50">{tpl.emoji}</span>
-                    <ChevronRight size={15} className="text-white/30 group-hover:text-white/60 transition-colors"/>
+                {/* Filtered view */}
+                {templateFilter !== 'All' && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {filteredBuiltIns.length === 0 ? (
+                      <div className="col-span-full text-center py-16">
+                        <p className="text-sm text-[#5a6061]">No templates in this category yet.</p>
+                      </div>
+                    ) : filteredBuiltIns.map((tpl, i) => (
+                      <TplCard key={tpl.id} tpl={tpl} idx={i % PATTERN_CFG.length} iconSize={40} showApply
+                        className="p-8 min-h-[240px]" />
+                    ))}
                   </div>
-                  <div>
-                    <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest block mb-2">{tpl.category}</span>
-                    <h3 className="text-lg font-extrabold text-white mb-2 tracking-tight">{tpl.name}</h3>
-                    <p className="text-white/60 text-xs leading-relaxed mb-4">{tpl.subtitle.slice(0,90)}…</p>
-                    <span className="bg-white/15 hover:bg-white/25 text-white font-semibold text-xs px-4 py-1.5 rounded-[15px] transition-all inline-block">Apply Template</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+                )}
+              </>
+            )
+          })()}
 
           {/* User templates */}
           {templates.length > 0 && (
@@ -1575,25 +1758,70 @@ export default function Journal() {
             </div>
           )}
 
-          {/* Create template form */}
-          <div id="create-template-form" className="mt-8 bg-white card p-6">
-            <h3 className="font-semibold text-[#2d3435] mb-1">Create Custom Template</h3>
-            <p className="text-xs text-[#5a6061] mb-4">Save a reusable structure for your journal entries.</p>
-            <div className="space-y-3">
-              <input value={newTemplateName} onChange={e => setNewTemplateName(e.target.value)} placeholder="Template name..."
-                className="w-full bg-[#f2f4f4] border-none rounded-xl py-3 px-4 text-sm text-[#2d3435] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all"/>
-              <textarea value={newTemplateContent} onChange={e => setNewTemplateContent(e.target.value)}
-                placeholder="Template content (markdown)..." rows={5}
-                className="w-full bg-[#f2f4f4] border-none rounded-xl py-3 px-4 text-sm text-[#5a6061] placeholder:text-[#adb3b4] focus:outline-none focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all resize-none font-mono"/>
-              <button onClick={saveTemplate} disabled={!newTemplateName.trim()}
-                className="bg-[#1F3649] hover:bg-[#162838] disabled:opacity-50 text-white text-sm font-bold px-4 py-2 rounded-xl transition-all cursor-pointer">
+        </div>
+      )}
+
+      {/* Create Custom Template Modal */}
+      <Dialog.Root open={showTemplateModal} onOpenChange={setShowTemplateModal}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 data-[state=open]:animate-fade-in" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-2xl max-h-[90vh] bg-white rounded-[20px] shadow-[0_24px_80px_rgba(45,52,53,0.18)] outline-none data-[state=open]:animate-fade-in flex flex-col">
+            {/* Modal header */}
+            <div className="flex items-center justify-between px-7 pt-6 pb-4 border-b border-[#f2f4f4] shrink-0">
+              <div>
+                <Dialog.Title className="text-base font-bold text-[#2d3435]">Create Custom Template</Dialog.Title>
+                <Dialog.Description className="text-xs text-[#5a6061] mt-0.5">Design your own reusable writing structure.</Dialog.Description>
+              </div>
+              <Dialog.Close asChild>
+                <button className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#f2f4f4] text-[#adb3b4] hover:text-[#2d3435] transition-colors cursor-pointer">
+                  <X size={15} />
+                </button>
+              </Dialog.Close>
+            </div>
+
+            {/* Scrollable body */}
+            <div className="flex-1 overflow-y-auto px-7 py-5 space-y-5" style={{ scrollbarWidth: 'none' }}>
+              {/* Template name */}
+              <input
+                value={newTemplateName}
+                onChange={e => setNewTemplateName(e.target.value)}
+                placeholder="Template name…"
+                className="w-full text-xl font-bold text-[#2d3435] bg-transparent border-none outline-none placeholder:text-[#adb3b4] placeholder:font-bold"
+              />
+              <div className="h-px bg-[#f2f4f4]" />
+              {/* Rich editor */}
+              <div className="min-h-[320px]">
+                <RichEditor
+                  key={showTemplateModal ? 'tpl-modal' : 'tpl-modal-closed'}
+                  content={newTemplateContent}
+                  onChange={setNewTemplateContent}
+                  editable={true}
+                  compact={true}
+                  placeholder="Write your template structure here… use headings, lists, checkboxes and more."
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-end gap-2 px-7 py-4 border-t border-[#f2f4f4] shrink-0">
+              <Dialog.Close asChild>
+                <button className="text-sm font-semibold text-[#5a6061] hover:text-[#2d3435] px-4 py-2 rounded-[10px] hover:bg-[#f2f4f4] transition-all cursor-pointer">
+                  Cancel
+                </button>
+              </Dialog.Close>
+              <button
+                onClick={async () => { await saveTemplate(); setShowTemplateModal(false) }}
+                disabled={!newTemplateName.trim()}
+                className="bg-[#1F3649] hover:opacity-90 disabled:opacity-50 text-white text-sm font-semibold px-5 py-2 rounded-[10px] transition-all cursor-pointer"
+              >
                 Save Template
               </button>
             </div>
-          </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
-        </div>
-      )}
+      <FloatingAiAssistant />
     </div>
   )
 }

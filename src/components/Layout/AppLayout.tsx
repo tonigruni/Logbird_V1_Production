@@ -1,9 +1,11 @@
 import { useState, useMemo } from 'react'
 import { Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom'
-import { Search, LayoutDashboard, BookOpen, Circle, User, Settings, Plus } from 'lucide-react'
+import { Search, LayoutDashboard, BookOpen, Circle, User, Settings, LogOut, Plus } from 'lucide-react'
 import Sidebar from './Sidebar'
 import { useAuthStore } from '../../stores/authStore'
 import { cn } from '../../lib/utils'
+import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverTitle, PopoverDescription, PopoverBody, PopoverFooter } from '../ui/popover'
+import { Avatar, AvatarFallback } from '../ui/avatar'
 
 const mobileNav = [
   { to: '/', icon: LayoutDashboard, label: 'Home' },
@@ -43,7 +45,7 @@ function useSectionConfig(pathname: string, search: string, navigate: ReturnType
         { label: 'Insights',    active: pathname === '/insights',                path: '/insights' },
         {
           label: 'Add Entry',
-          active: false,
+          active: isJournal && journalTab === 'editor',
           isAction: true,
           onClick: () => navigate('/journal', { state: { openNew: true } }),
         },
@@ -62,6 +64,7 @@ export default function AppLayout() {
 
   const { title, tabs } = useSectionConfig(location.pathname, location.search, navigate)
   const isJournalContext = ['/journal', '/analysis', '/insights'].includes(location.pathname)
+  const { avatarUrl } = useAuthStore()
 
   const initials = useMemo(() => {
     const name = (user?.user_metadata?.full_name as string) || ''
@@ -84,7 +87,7 @@ export default function AppLayout() {
 
   const tabClass = (active: boolean) =>
     cn(
-      'text-sm font-semibold transition-colors cursor-pointer whitespace-nowrap leading-none pb-[3px] shrink-0 !rounded-none bg-transparent',
+      'inline-flex items-center gap-1.5 text-sm font-semibold transition-colors cursor-pointer whitespace-nowrap leading-none pb-[3px] shrink-0 !rounded-none bg-transparent',
       active
         ? 'text-[#1F3649] border-b-2 border-[#1F3649]'
         : 'text-[#586062] hover:text-[#1F3649]'
@@ -112,9 +115,9 @@ export default function AppLayout() {
                       <button
                         key={label}
                         onClick={onClick}
-                        className="flex items-center gap-1.5 text-sm font-semibold whitespace-nowrap shrink-0 px-3 py-1 rounded-full bg-[#1F3649] text-white hover:bg-[#2a4a63] transition-colors cursor-pointer leading-none"
+                        className="inline-flex items-center gap-1.5 bg-[#1F3649] hover:opacity-90 text-white text-sm font-semibold px-4 py-2 rounded-[10px] transition-all cursor-pointer whitespace-nowrap shrink-0"
                       >
-                        <Plus size={13} strokeWidth={2.5} />
+                        <Plus size={14} className="shrink-0" />
                         {label}
                       </button>
                     ) : (
@@ -135,7 +138,7 @@ export default function AppLayout() {
               {/* Search */}
               <div className="relative hidden lg:block">
                 <input
-                  className="bg-[#f2f4f4] border-none rounded-[15px] py-2.5 pl-5 pr-10 w-52 focus:ring-2 focus:ring-[#1F3649]/20 focus:bg-white transition-all outline-none text-sm text-[#2d3435] placeholder:text-[#586062] placeholder:opacity-40"
+                  className="h-9 w-52 rounded-[15px] border border-[#e8eaeb] bg-white px-4 pr-10 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10"
                   placeholder={isJournalContext ? 'Search entries…' : 'Search…'}
                   type="text"
                   value={searchQuery}
@@ -145,14 +148,59 @@ export default function AppLayout() {
                 <Search size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#586062] opacity-40 pointer-events-none" />
               </div>
 
-              {/* Avatar */}
-              <button
-                onClick={() => navigate('/account')}
-                className="w-8 h-8 md:w-9 md:h-9 !rounded-full bg-[#dde4e5] cursor-pointer active:scale-95 transition-transform flex items-center justify-center shrink-0"
-                aria-label="Account settings"
-              >
-                <span className="text-xs font-bold text-[#586062]">{initials}</span>
-              </button>
+              {/* Avatar + profile popover */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    className="w-8 h-8 md:w-9 md:h-9 !rounded-full bg-[#dde4e5] cursor-pointer active:scale-95 transition-transform flex items-center justify-center shrink-0 hover:bg-[#c8d1d2] overflow-hidden border border-[#f2f4f4]"
+                    aria-label="Account"
+                  >
+                    <User size={15} className="text-[#586062]" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-60">
+                  <PopoverHeader>
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-9 w-9 shrink-0">
+                        <AvatarFallback className="bg-[#dde4e5]">
+                          <User size={16} className="text-[#586062]" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0">
+                        <PopoverTitle className="truncate">
+                          {(user?.user_metadata?.full_name as string) || 'My Account'}
+                        </PopoverTitle>
+                        <PopoverDescription className="truncate">{user?.email}</PopoverDescription>
+                      </div>
+                    </div>
+                  </PopoverHeader>
+                  <PopoverBody className="space-y-0.5">
+                    <button
+                      onClick={() => navigate('/account')}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#2d3435] hover:bg-[#f2f4f4] transition-colors cursor-pointer"
+                      style={{ borderRadius: 10 }}
+                    >
+                      <User size={14} className="text-[#586062]" /> View Profile
+                    </button>
+                    <button
+                      onClick={() => navigate('/settings')}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#2d3435] hover:bg-[#f2f4f4] transition-colors cursor-pointer"
+                      style={{ borderRadius: 10 }}
+                    >
+                      <Settings size={14} className="text-[#586062]" /> Settings
+                    </button>
+                  </PopoverBody>
+                  <PopoverFooter>
+                    <button
+                      onClick={() => useAuthStore.getState().signOut()}
+                      className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-[#586062] hover:text-[#2d3435] hover:bg-[#f2f4f4] border border-[#f2f4f4] transition-colors cursor-pointer"
+                      style={{ borderRadius: 10 }}
+                    >
+                      <LogOut size={13} /> Sign Out
+                    </button>
+                  </PopoverFooter>
+                </PopoverContent>
+              </Popover>
             </div>
 
           </div>
