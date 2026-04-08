@@ -473,7 +473,7 @@ export default function RichEditor({ content, onChange, editable, placeholder, c
             <Strikethrough size={14} />
           </BubbleBtn>
           <BubbleDivider />
-          <BubbleBtn onClick={() => editor.chain().focus().toggleHighlight().run()} active={editor.isActive('highlight')} title="Highlight">
+          <BubbleBtn onClick={() => (editor.chain().focus() as any).toggleHighlight().run()} active={editor.isActive('highlight')} title="Highlight">
             <Highlighter size={14} />
           </BubbleBtn>
           <BubbleBtn onClick={() => editor.chain().focus().toggleCode().run()} active={editor.isActive('code')} title="Inline code">
