@@ -807,30 +807,30 @@ export default function Tasks() {
         <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">
-              Master Backlog
+              Task Backlog
             </h1>
-            <p className="text-white/60 mt-1 text-xs max-w-md">
+            <p className="text-white mt-1 text-sm max-w-md">
               {activeTasks.length} tasks active • {highEnergyToday} high energy required today
             </p>
           </div>
-          <div className="flex items-center bg-white/10 rounded-[10px] p-0.5">
+          <div className="flex items-center bg-white/10 rounded-[10px] p-1">
             <button
               onClick={() => setView('list')}
               className={cn(
-                'p-1.5 rounded-[8px] transition-all',
+                'p-2 rounded-[8px] transition-all',
                 view === 'list' ? 'bg-white/20 text-white' : 'text-white/50'
               )}
             >
-              <ListBullets size={14} weight="bold" />
+              <ListBullets size={18} weight="bold" />
             </button>
             <button
               onClick={() => setView('board')}
               className={cn(
-                'p-1.5 rounded-[8px] transition-all',
+                'p-2 rounded-[8px] transition-all',
                 view === 'board' ? 'bg-white/20 text-white' : 'text-white/50'
               )}
             >
-              <SquaresFour size={14} weight="bold" />
+              <SquaresFour size={18} weight="bold" />
             </button>
           </div>
         </div>
