@@ -4,7 +4,6 @@
  * Results are persisted to Supabase (ai_insights table) per user.
  */
 
-import Anthropic from '@anthropic-ai/sdk'
 import { supabase } from './supabase'
 import type { JournalEntry } from '../stores/journalStore'
 
@@ -147,14 +146,7 @@ function isCacheValid<T>(cache: CacheEntry<T> | null, currentEntryCount: number)
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
 
-function getApiKey(): string | null {
-  const key = localStorage.getItem('anthropic_api_key')
-  return key ? key.trim() : null
-}
-
-function getModel(): string {
-  return localStorage.getItem('anthropic_model') || 'claude-sonnet-4-5'
-}
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || ''
 
 const MOOD_LABELS: Record<number, string> = {
   1: 'Very Low',
@@ -180,33 +172,38 @@ function formatEntries(entries: JournalEntry[], limit = 30): string {
 }
 
 async function callAnthropic(systemPrompt: string, userPrompt: string): Promise<string> {
-  const apiKey = getApiKey()
-  if (!apiKey) throw new Error('NO_API_KEY')
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session?.access_token) throw new Error('NO_API_KEY')
 
-  try {
-    const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true })
+  const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/anthropic-proxy`
 
-    const response = await client.messages.create({
-      model: getModel(),
+  const res = await fetch(edgeFunctionUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.access_token}`,
+    },
+    body: JSON.stringify({
       max_tokens: 2048,
       system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],
-    })
+    }),
+  })
 
-    const block = response.content?.[0]
-    const text = block?.type === 'text' ? block.text : ''
-    if (!text) {
-      console.error('[AI Analysis] Empty response from API:', response)
-      throw new Error('API returned an empty response')
-    }
-    return text
-  } catch (err) {
-    if (err instanceof Anthropic.APIError) {
-      console.error('[AI Analysis] API error:', err.status, err.message)
-      throw new Error(`API_ERROR: ${err.status} ${err.message}`)
-    }
-    throw err
+  const data = await res.json()
+
+  if (!res.ok) {
+    console.error('[AI Analysis] AI analysis failed:', res.ok ? '' : 'proxy returned an error')
+    throw new Error('AI analysis request failed. Please try again.')
   }
+
+  const block = data.content?.[0]
+  const text = block?.type === 'text' ? block.text : ''
+  if (!text) {
+    console.error('[AI Analysis] Empty response from API')
+    throw new Error('API returned an empty response')
+  }
+  return text
 }
 
 function parseJSON<T>(text: string): T {

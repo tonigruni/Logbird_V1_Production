@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
 import { Send, Bot, X, Sparkles } from 'lucide-react'
-import Anthropic from '@anthropic-ai/sdk'
+import { supabase } from '../../lib/supabase'
 import { useJournalStore } from '../../stores/journalStore'
 import { format } from 'date-fns'
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || ''
 
 interface Message {
   role: 'user' | 'assistant'
@@ -37,9 +39,11 @@ export function FloatingAiAssistant() {
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return
-    const apiKey = localStorage.getItem('anthropic_api_key')
-    if (!apiKey) {
-      setMessages(m => [...m, { role: 'user', content: input }, { role: 'assistant', content: 'Please add your Anthropic API key in Settings first.' }])
+    if (input.length > maxChars) return
+
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) {
+      setMessages(m => [...m, { role: 'user', content: input }, { role: 'assistant', content: 'Please sign in to use the AI assistant.' }])
       setInput('')
       return
     }
@@ -50,7 +54,6 @@ export function FloatingAiAssistant() {
     setIsLoading(true)
 
     try {
-      const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true })
       const context = entries.slice(0, 20).map(e =>
         `[${format(new Date(e.created_at), 'MMM d, yyyy')}] ${e.title}:\n${e.content}`
       ).join('\n\n---\n\n')
@@ -58,19 +61,31 @@ export function FloatingAiAssistant() {
       const history: { role: 'user' | 'assistant'; content: string }[] = messages.map(m => ({ role: m.role, content: m.content }))
       history.push({ role: 'user', content: input })
 
-      const response = await client.messages.create({
-        model: localStorage.getItem('anthropic_model') || 'claude-sonnet-4-6',
-        max_tokens: 1024,
-        system: `You are a thoughtful journal analysis assistant. The user's recent journal entries are provided below for context. Answer warmly, concisely, and specifically.\n\n${context ? `Recent entries:\n\n${context}` : 'No entries yet.'}`,
-        messages: history,
+      const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/anthropic-proxy`
+      const res = await fetch(edgeFunctionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          max_tokens: 1024,
+          system: `You are a thoughtful journal analysis assistant. The user's recent journal entries are provided below for context. Answer warmly, concisely, and specifically.\n\n${context ? `Recent entries:\n\n${context}` : 'No entries yet.'}`,
+          messages: history,
+        }),
       })
 
-      const block = response.content?.[0]
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error('AI request failed')
+      }
+
+      const block = data.content?.[0]
       const text = block?.type === 'text' ? block.text : 'No response received.'
       setMessages(m => [...m, { role: 'assistant', content: text }])
-    } catch (err) {
-      const msg = err instanceof Anthropic.APIError ? `Error: ${err.message}` : 'Something went wrong. Check your API key in Settings.'
-      setMessages(m => [...m, { role: 'assistant', content: msg }])
+    } catch {
+      setMessages(m => [...m, { role: 'assistant', content: 'Something went wrong. Please try again.' }])
     }
     setIsLoading(false)
   }

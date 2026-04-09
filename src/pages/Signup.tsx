@@ -3,23 +3,8 @@ import { useNavigate, Link } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { DEMO_MODE } from '../lib/demo'
+import GradientBarsBackground from '../components/ui/GradientBarsBackground'
 
-const HERO_IMAGE = '/signup_picture.jpg'
-
-const testimonials = [
-  {
-    avatar: 'https://randomuser.me/api/portraits/women/57.jpg',
-    name: 'Mia R.',
-    handle: '@miadoes',
-    text: 'Finally a space where my habits, goals, and reflections actually connect. I love it.',
-  },
-  {
-    avatar: 'https://randomuser.me/api/portraits/men/64.jpg',
-    name: 'Daniel T.',
-    handle: '@dantracks',
-    text: 'I\'ve tried every productivity app. This one feels personal — like it was built for how I actually think.',
-  },
-]
 
 export default function Signup() {
   const [fullName, setFullName] = useState('')
@@ -30,12 +15,9 @@ export default function Signup() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (DEMO_MODE) navigate('/', { replace: true })
-  }, [])
-
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (DEMO_MODE) { navigate('/'); return }
     setError('')
     setLoading(true)
     const { error } = await supabase.auth.signUp({
@@ -64,7 +46,14 @@ export default function Signup() {
     <div className="h-[100dvh] flex flex-col md:flex-row overflow-hidden">
 
       {/* ── Left column: sign-up form ── */}
-      <section className="flex-1 relative flex items-center justify-center p-8 bg-background">
+      <section
+        className="flex-1 relative flex items-center justify-center p-8 bg-background"
+        style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,0,0,0.088) 1px, transparent 0)',
+          backgroundSize: '20px 20px',
+          backgroundPosition: '10px 10px',
+        }}
+      >
 
         {/* Logo — top left */}
         <div className="absolute top-8 left-8 auth-fade auth-delay-1">
@@ -185,32 +174,22 @@ export default function Signup() {
         </div>
       </section>
 
-      {/* ── Right column: hero image + testimonials ── */}
+      {/* ── Right column: gradient bars card + testimonials ── */}
       <section className="hidden md:block flex-1 relative p-4">
-        <div
-          className="auth-slide-right auth-delay-3 absolute inset-4 rounded-3xl bg-cover bg-center"
-          style={{ backgroundImage: `url(${HERO_IMAGE})` }}
-        />
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 px-8 w-full justify-center pointer-events-none z-10">
-          {testimonials.map((t, i) => (
-            <div
-              key={t.handle}
-              className={`auth-testimonial ${i === 0 ? 'auth-delay-6' : 'auth-delay-8'} flex items-start gap-3 rounded-3xl p-5 w-64 pointer-events-auto`}
-              style={{
-                background: 'rgba(255,255,255,0.72)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                border: '1px solid rgba(31,54,73,0.12)',
-              }}
-            >
-              <img src={t.avatar} className="h-10 w-10 object-cover rounded-2xl flex-shrink-0" alt="avatar" />
-              <div className="text-sm leading-snug">
-                <p className="font-semibold text-on-surface">{t.name}</p>
-                <p className="text-on-surface-variant">{t.handle}</p>
-                <p className="mt-1 text-on-surface-variant">{t.text}</p>
-              </div>
+        <div className="auth-slide-right auth-delay-3 absolute top-8 right-8 bottom-8 left-4 rounded-3xl overflow-hidden bg-[#1F3649]">
+          <GradientBarsBackground barCount={8} animate />
+          {/* Intro text — pinned to bottom */}
+          <div className="relative z-10 p-10 flex flex-col justify-end h-full">
+            <div>
+              <p className="text-white/50 text-xs font-semibold tracking-widest mb-4">Your Personal OS</p>
+              <h2 className="text-white text-5xl font-bold leading-tight tracking-tight w-3/4">
+                The system built<br />around your life.
+              </h2>
+              <p className="text-white/60 mt-5 text-base leading-relaxed w-3/4">
+                Journal your days, track your goals, and align every action with what matters most — all in one place.
+              </p>
             </div>
-          ))}
+          </div>
         </div>
       </section>
 

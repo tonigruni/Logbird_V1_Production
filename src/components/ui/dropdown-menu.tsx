@@ -202,6 +202,23 @@ const DropdownMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTML
 );
 DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
 
+// Styled trigger button — matches the journal template dropdown trigger style.
+// Use inside <DropdownMenuTrigger asChild>.
+const DropdownMenuTriggerButton = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>(({ className, ...props }, ref) => (
+  <button
+    ref={ref}
+    className={cn(
+      "flex items-center gap-2 px-3 py-2 rounded-[12px] hover:bg-[#f2f4f4] transition-all cursor-pointer text-sm font-semibold text-[#5a6061] shrink-0 border border-[#e8eaeb]",
+      className,
+    )}
+    {...props}
+  />
+));
+DropdownMenuTriggerButton.displayName = "DropdownMenuTriggerButton";
+
 export {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -218,4 +235,5 @@ export {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
+  DropdownMenuTriggerButton,
 };

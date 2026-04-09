@@ -237,6 +237,12 @@ input[type='date'] { color-scheme: light; }
 /* Read-only (view) mode */
 .rich-editor-readonly .ProseMirror { cursor: default; }
 
+/* ── Gradient bar pulse (auth page hero) ────────────────────── */
+@keyframes gradientBarPulse {
+  0%, 100% { transform: scaleY(1); }
+  50%       { transform: scaleY(1.4); }
+}
+
 /* Featured template slide transitions */
 @keyframes slideInFromRight {
   from { opacity: 0; transform: translateX(32px); }

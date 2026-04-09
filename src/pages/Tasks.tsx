@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import * as RadixDropdown from '@radix-ui/react-dropdown-menu'
 import {
   Lightning,
   CheckCircle,
@@ -26,6 +26,14 @@ import BoardView from '../components/BoardView'
 import type { BoardColumn } from '../components/BoardView'
 import TaskCreateModal from '../components/TaskCreateModal'
 import GradientBarsBackground from '../components/ui/GradientBarsBackground'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuTriggerButton,
+} from '../components/ui/dropdown-menu'
+import { SidebarFieldLabel, SidebarInput, SidebarTextarea } from '../components/ui/sidebar-field'
 import { useWheelStore } from '../stores/wheelStore'
 import { useAuthStore } from '../stores/authStore'
 import type { Task, TaskPriority } from '../stores/wheelStore'
@@ -347,8 +355,9 @@ const DEFAULT_COLUMN_CONFIGS: ColumnConfig[] = [
 
 const DEFAULT_COLUMN_IDS = new Set(['todo', 'in-progress', 'done'])
 
-function TaskSidePanel({ taskId, onClose, goals, categories, updateTask, toggleTask, deleteTask }: {
-  taskId: string
+function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, toggleTask, deleteTask }: {
+  taskId: string | null
+  open: boolean
   onClose: () => void
   goals: Array<{ id: string; title: string }>
   categories: Array<{ id: string; name: string }>
@@ -360,6 +369,7 @@ function TaskSidePanel({ taskId, onClose, goals, categories, updateTask, toggleT
   const task = useMemo(() => tasks.find(t => t.id === taskId), [tasks, taskId])
 
   const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
   const [projectId, setProjectId] = useState('')
   const [goalId, setGoalId] = useState('')
   const [categoryId, setCategoryId] = useState('')
@@ -372,6 +382,7 @@ function TaskSidePanel({ taskId, onClose, goals, categories, updateTask, toggleT
   useEffect(() => {
     if (!task) return
     setTitle(task.title)
+    setDescription(task.description || '')
     setProjectId(task.project_id || '')
     setGoalId(task.goal_id || '')
     setCategoryId(task.category_id || '')
@@ -382,12 +393,11 @@ function TaskSidePanel({ taskId, onClose, goals, categories, updateTask, toggleT
     setSaved(false)
   }, [task])
 
-  if (!task) return null
-
   async function handleSave() {
-    if (!title.trim()) return
-    await updateTask(taskId, {
+    if (!task || !title.trim()) return
+    await updateTask(task.id, {
       title: title.trim(),
+      description: description.trim() || null,
       project_id: projectId || null,
       goal_id: goalId || null,
       category_id: categoryId || null,
@@ -401,170 +411,239 @@ function TaskSidePanel({ taskId, onClose, goals, categories, updateTask, toggleT
   }
 
   async function handleDelete() {
-    await deleteTask(taskId)
+    if (!task) return
+    await deleteTask(task.id)
     onClose()
   }
 
+  const selectedCategory = categories.find(c => c.id === categoryId)
+  const selectedProject = PROJECT_OPTIONS.find(p => p.id === projectId)
+  const selectedGoal = goals.find(g => g.id === goalId)
+
   return (
-    <div className="bg-white card p-5 space-y-5 animate-in slide-in-from-right-4 duration-200">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-xs font-bold text-[#adb3b4] uppercase tracking-wider">Task Details</h3>
-        <button onClick={onClose} className="p-1 hover:bg-[#f2f4f4] rounded-[8px] transition-colors cursor-pointer">
-          <X size={14} className="text-[#adb3b4]" />
-        </button>
-      </div>
-
-      {/* Complete toggle */}
-      <button
-        onClick={() => toggleTask(task.id, !task.completed)}
-        className="flex items-center gap-2 cursor-pointer group w-full"
-      >
-        {task.completed
-          ? <CheckCircle size={22} weight="fill" className="text-[#22c55e]" />
-          : <Circle size={22} weight="regular" className="text-[#c3c7cd] group-hover:text-[#1F3649] transition-colors" />
-        }
-        <span className={cn(
-          'text-sm font-bold',
-          task.completed ? 'line-through text-[#adb3b4]' : 'text-[#2d3435]'
-        )}>
-          {task.completed ? 'Completed' : 'Mark Complete'}
-        </span>
-      </button>
-
-      {/* Title */}
-      <input
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-        className="w-full text-sm font-bold text-[#2d3435] bg-[#f2f4f4] rounded-[10px] px-3 py-2.5 outline-none focus:ring-2 focus:ring-[#1F3649]/10"
-        placeholder="Task title..."
+    <>
+      {/* Backdrop */}
+      <div
+        className={cn(
+          'fixed inset-0 z-40 bg-black/20 transition-opacity duration-300',
+          open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        )}
+        onClick={onClose}
       />
 
-      {/* Category */}
-      <div className="space-y-1.5">
-        <label className="text-[9px] font-bold text-[#adb3b4] uppercase tracking-wider block">Category</label>
-        <select
-          value={categoryId}
-          onChange={e => setCategoryId(e.target.value)}
-          className="w-full text-xs font-semibold text-[#2d3435] bg-[#f2f4f4] rounded-[10px] px-3 py-2.5 border-none outline-none cursor-pointer"
-        >
-          <option value="">None</option>
-          {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-        </select>
-      </div>
-
-      {/* Project */}
-      <div className="space-y-1.5">
-        <label className="text-[9px] font-bold text-[#adb3b4] uppercase tracking-wider block">Project</label>
-        <select
-          value={projectId}
-          onChange={e => setProjectId(e.target.value)}
-          className="w-full text-xs font-semibold text-[#2d3435] bg-[#f2f4f4] rounded-[10px] px-3 py-2.5 border-none outline-none cursor-pointer"
-        >
-          <option value="">None</option>
-          {PROJECT_OPTIONS.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
-        </select>
-      </div>
-
-      {/* Goal */}
-      <div className="space-y-1.5">
-        <label className="text-[9px] font-bold text-[#adb3b4] uppercase tracking-wider block">Goal</label>
-        <select
-          value={goalId}
-          onChange={e => setGoalId(e.target.value)}
-          className="w-full text-xs font-semibold text-[#2d3435] bg-[#f2f4f4] rounded-[10px] px-3 py-2.5 border-none outline-none cursor-pointer"
-        >
-          <option value="">None</option>
-          {goals.map(g => <option key={g.id} value={g.id}>{g.title}</option>)}
-        </select>
-      </div>
-
-      {/* Priority */}
-      <div className="space-y-1.5">
-        <label className="text-[9px] font-bold text-[#adb3b4] uppercase tracking-wider block">Priority</label>
-        <div className="flex items-center gap-1">
-          {SIDE_PRIORITIES.map(p => (
-            <button
-              key={p.value}
-              onClick={() => setPriority(p.value)}
-              className={cn(
-                'flex-1 py-2 text-[9px] font-bold uppercase tracking-wider rounded-[8px] transition-all cursor-pointer',
-                priority === p.value ? SIDE_PRIORITY_ACTIVE[p.value] : SIDE_PRIORITY_STYLES[p.value]
-              )}
-            >
-              {p.label}
-            </button>
-          ))}
+      {/* Slide-in panel */}
+      <div
+        className={cn(
+          'fixed right-0 top-0 h-full w-[340px] z-50 bg-white shadow-[-4px_0_24px_rgba(45,52,53,0.10)] flex flex-col transition-transform duration-300 ease-in-out',
+          open ? 'translate-x-0' : 'translate-x-full'
+        )}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#f2f4f4] shrink-0">
+          <h3 className="text-xs font-bold text-[#adb3b4] uppercase tracking-wider">Task Details</h3>
+          <button onClick={onClose} className="p-1 hover:bg-[#f2f4f4] rounded-[8px] transition-colors cursor-pointer">
+            <X size={14} className="text-[#adb3b4]" />
+          </button>
         </div>
-      </div>
 
-      {/* Energy */}
-      <div className="space-y-1.5">
-        <label className="text-[9px] font-bold text-[#adb3b4] uppercase tracking-wider block">Energy</label>
-        <div className="flex items-center gap-2 bg-[#f2f4f4] rounded-[10px] px-3 py-2.5">
-          {([1, 2, 3] as const).map(level => (
-            <button key={level} onClick={() => setEnergy(level)} className="cursor-pointer">
-              <Lightning size={16} weight="fill" className={cn('transition-colors', level <= energy ? 'text-[#f59e0b]' : 'text-[#e8eaeb]')} />
-            </button>
-          ))}
-          <span className="ml-auto text-[10px] font-bold text-[#adb3b4]">{energy}/3</span>
-        </div>
-      </div>
+        {task ? (
+          <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+            {/* Complete toggle */}
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
+              <button
+                onClick={() => toggleTask(task.id, !task.completed)}
+                className="flex items-center gap-2 cursor-pointer group w-full"
+              >
+                {task.completed
+                  ? <CheckCircle size={22} weight="fill" className="text-[#22c55e]" />
+                  : <Circle size={22} weight="regular" className="text-[#c3c7cd] group-hover:text-[#1F3649] transition-colors" />
+                }
+                <span className={cn(
+                  'text-sm font-bold',
+                  task.completed ? 'line-through text-[#adb3b4]' : 'text-[#2d3435]'
+                )}>
+                  {task.completed ? 'Completed' : 'Mark Complete'}
+                </span>
+              </button>
+            </div>
 
-      {/* Time */}
-      <div className="space-y-1.5">
-        <label className="text-[9px] font-bold text-[#adb3b4] uppercase tracking-wider block">Time</label>
-        <div className="flex items-center gap-1">
-          {TIME_OPTIONS.map(opt => (
-            <button
-              key={opt.minutes}
-              onClick={() => setEstimatedMinutes(opt.minutes)}
-              className={cn(
-                'flex-1 py-2 text-[9px] font-bold uppercase tracking-wider rounded-[8px] transition-all cursor-pointer',
-                estimatedMinutes === opt.minutes ? 'bg-[#1F3649] text-white' : 'bg-[#f2f4f4] text-[#5a6061]'
-              )}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      </div>
+            {/* Title + Description */}
+            <div className="px-6 py-5 border-b border-[#f2f4f4] space-y-4">
+              <div>
+                <SidebarFieldLabel>Title</SidebarFieldLabel>
+                <SidebarInput
+                  value={title}
+                  onChange={e => setTitle(e.target.value)}
+                  placeholder="Task title..."
+                />
+              </div>
+              <div>
+                <SidebarFieldLabel>Description</SidebarFieldLabel>
+                <SidebarTextarea
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  placeholder="Add a description..."
+                  rows={3}
+                />
+              </div>
+            </div>
 
-      {/* Due date */}
-      <div className="space-y-1.5">
-        <label className="text-[9px] font-bold text-[#adb3b4] uppercase tracking-wider block">Due Date</label>
-        <div className="flex items-center gap-2 bg-[#f2f4f4] rounded-[10px] px-3 py-2.5">
-          <CalendarBlank size={12} className="text-[#adb3b4]" />
-          <input
-            type="date"
-            value={dueDate}
-            onChange={e => setDueDate(e.target.value)}
-            className="flex-1 text-xs font-semibold text-[#2d3435] bg-transparent outline-none cursor-pointer"
-          />
-        </div>
-      </div>
+            {/* Category */}
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
+              <SidebarFieldLabel>Category</SidebarFieldLabel>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <DropdownMenuTriggerButton className="w-full justify-between">
+                    <span>{selectedCategory?.name ?? 'None'}</span>
+                    <CaretDown size={12} />
+                  </DropdownMenuTriggerButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-[292px]">
+                  <DropdownMenuItem onSelect={() => setCategoryId('')}>None</DropdownMenuItem>
+                  {categories.map(c => (
+                    <DropdownMenuItem key={c.id} onSelect={() => setCategoryId(c.id)}>
+                      {c.name}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
-      {/* Actions */}
-      <div className="flex items-center gap-2 pt-2 border-t border-[#f2f4f4]">
-        <button
-          onClick={handleSave}
-          disabled={!title.trim()}
-          className={cn(
-            'flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-white py-2.5 rounded-[10px] transition-all cursor-pointer disabled:opacity-40',
-            saved ? 'bg-[#22c55e]' : 'bg-[#1F3649] hover:opacity-90'
-          )}
-        >
-          <FloppyDisk size={12} />
-          {saved ? 'Saved!' : 'Save'}
-        </button>
-        <button
-          onClick={handleDelete}
-          className="p-2.5 text-[#adb3b4] hover:text-[#dc2626] hover:bg-[#dc2626]/10 rounded-[10px] transition-colors cursor-pointer"
-        >
-          <Trash size={14} />
-        </button>
+            {/* Project */}
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
+              <SidebarFieldLabel>Project</SidebarFieldLabel>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <DropdownMenuTriggerButton className="w-full justify-between">
+                    <span>{selectedProject?.title ?? 'None'}</span>
+                    <CaretDown size={12} />
+                  </DropdownMenuTriggerButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-[292px]">
+                  <DropdownMenuItem onSelect={() => setProjectId('')}>None</DropdownMenuItem>
+                  {PROJECT_OPTIONS.map(p => (
+                    <DropdownMenuItem key={p.id} onSelect={() => setProjectId(p.id)}>
+                      {p.title}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            {/* Goal */}
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
+              <SidebarFieldLabel>Goal</SidebarFieldLabel>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <DropdownMenuTriggerButton className="w-full justify-between">
+                    <span>{selectedGoal?.title ?? 'None'}</span>
+                    <CaretDown size={12} />
+                  </DropdownMenuTriggerButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-[292px]">
+                  <DropdownMenuItem onSelect={() => setGoalId('')}>None</DropdownMenuItem>
+                  {goals.map(g => (
+                    <DropdownMenuItem key={g.id} onSelect={() => setGoalId(g.id)}>
+                      {g.title}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            {/* Priority */}
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
+              <SidebarFieldLabel>Priority</SidebarFieldLabel>
+              <div className="flex items-center gap-1">
+                {SIDE_PRIORITIES.map(p => (
+                  <button
+                    key={p.value}
+                    onClick={() => setPriority(p.value)}
+                    className={cn(
+                      'flex-1 py-2 text-[9px] font-bold uppercase tracking-wider rounded-[8px] transition-all cursor-pointer',
+                      priority === p.value ? SIDE_PRIORITY_ACTIVE[p.value] : SIDE_PRIORITY_STYLES[p.value]
+                    )}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Energy */}
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
+              <SidebarFieldLabel>Energy</SidebarFieldLabel>
+              <div className="flex items-center gap-2 bg-[#f2f4f4] rounded-[10px] px-3 py-2.5">
+                {([1, 2, 3] as const).map(level => (
+                  <button key={level} onClick={() => setEnergy(level)} className="cursor-pointer">
+                    <Lightning size={16} weight="fill" className={cn('transition-colors', level <= energy ? 'text-[#f59e0b]' : 'text-[#e8eaeb]')} />
+                  </button>
+                ))}
+                <span className="ml-auto text-[10px] font-bold text-[#adb3b4]">{energy}/3</span>
+              </div>
+            </div>
+
+            {/* Time */}
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
+              <SidebarFieldLabel>Time</SidebarFieldLabel>
+              <div className="flex items-center gap-1">
+                {TIME_OPTIONS.map(opt => (
+                  <button
+                    key={opt.minutes}
+                    onClick={() => setEstimatedMinutes(opt.minutes)}
+                    className={cn(
+                      'flex-1 py-2 text-[9px] font-bold uppercase tracking-wider rounded-[8px] transition-all cursor-pointer',
+                      estimatedMinutes === opt.minutes ? 'bg-[#1F3649] text-white' : 'bg-[#f2f4f4] text-[#5a6061]'
+                    )}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Due date */}
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
+              <SidebarFieldLabel>Due Date</SidebarFieldLabel>
+              <div className="flex items-center gap-2 bg-[#f2f4f4] rounded-[10px] px-3 py-2.5">
+                <CalendarBlank size={12} className="text-[#adb3b4]" />
+                <input
+                  type="date"
+                  value={dueDate}
+                  onChange={e => setDueDate(e.target.value)}
+                  className="flex-1 text-xs font-semibold text-[#2d3435] bg-transparent outline-none cursor-pointer"
+                />
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="px-6 py-5 flex items-center gap-2">
+              <button
+                onClick={handleSave}
+                disabled={!title.trim()}
+                className={cn(
+                  'flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-white py-2.5 rounded-[10px] transition-all cursor-pointer disabled:opacity-40',
+                  saved ? 'bg-[#22c55e]' : 'bg-[#1F3649] hover:opacity-90'
+                )}
+              >
+                <FloppyDisk size={12} />
+                {saved ? 'Saved!' : 'Save'}
+              </button>
+              <button
+                onClick={handleDelete}
+                className="p-2.5 text-[#adb3b4] hover:text-[#dc2626] hover:bg-[#dc2626]/10 rounded-[10px] transition-colors cursor-pointer"
+              >
+                <Trash size={14} />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex-1 flex items-center justify-center">
+            <p className="text-sm text-[#adb3b4]">Select a task to view details</p>
+          </div>
+        )}
       </div>
-    </div>
+    </>
   )
 }
 
@@ -839,26 +918,26 @@ export default function Tasks() {
       {/* Filter & Sort Bar */}
       <div className="flex items-center gap-2 flex-wrap">
         {/* Project filter dropdown */}
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
+        <RadixDropdown.Root>
+          <RadixDropdown.Trigger asChild>
             <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#f2f4f4] text-xs text-[#5a6061] font-semibold hover:bg-[#ebeeef] transition-colors cursor-pointer">
               <FunnelSimple size={11} />
               {filterProject === 'all' ? 'All Projects' : PROJECT_MAP[filterProject]?.title ?? 'Project'}
               <CaretDown size={10} className="text-[#adb3b4]" />
             </button>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
+          </RadixDropdown.Trigger>
+          <RadixDropdown.Portal>
+            <RadixDropdown.Content
               align="start" sideOffset={6}
               className="z-50 min-w-[160px] rounded-[12px] border border-[#ECEFF2] bg-white shadow-[0_12px_44px_rgba(45,52,53,0.08)] p-1 outline-none"
             >
-              <DropdownMenu.Item
+              <RadixDropdown.Item
                 onClick={() => setFilterProject('all')}
                 className={cn('flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-[8px] cursor-pointer outline-none transition-colors',
                   filterProject === 'all' ? 'bg-[#1F3649]/8 text-[#1F3649] font-semibold' : 'text-[#5a6061] hover:bg-[#f2f4f4]')}
-              >All Projects</DropdownMenu.Item>
+              >All Projects</RadixDropdown.Item>
               {taskProjects.map(p => (
-                <DropdownMenu.Item
+                <RadixDropdown.Item
                   key={p.id}
                   onClick={() => setFilterProject(p.id)}
                   className={cn('flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-[8px] cursor-pointer outline-none transition-colors',
@@ -866,90 +945,90 @@ export default function Tasks() {
                 >
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
                   {p.title}
-                </DropdownMenu.Item>
+                </RadixDropdown.Item>
               ))}
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
+            </RadixDropdown.Content>
+          </RadixDropdown.Portal>
+        </RadixDropdown.Root>
 
         {/* Priority filter dropdown */}
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
+        <RadixDropdown.Root>
+          <RadixDropdown.Trigger asChild>
             <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#f2f4f4] text-xs text-[#5a6061] font-semibold hover:bg-[#ebeeef] transition-colors cursor-pointer">
               {filterPriority === 'all' ? 'All Priorities' : PRIORITY_STYLES[filterPriority].label}
               <CaretDown size={10} className="text-[#adb3b4]" />
             </button>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
+          </RadixDropdown.Trigger>
+          <RadixDropdown.Portal>
+            <RadixDropdown.Content
               align="start" sideOffset={6}
               className="z-50 min-w-[140px] rounded-[12px] border border-[#ECEFF2] bg-white shadow-[0_12px_44px_rgba(45,52,53,0.08)] p-1 outline-none"
             >
               {([['all', 'All Priorities'], ['urgent', 'Urgent'], ['high', 'High'], ['normal', 'Normal'], ['low', 'Low']] as const).map(([val, label]) => (
-                <DropdownMenu.Item
+                <RadixDropdown.Item
                   key={val}
                   onClick={() => setFilterPriority(val)}
                   className={cn('flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-[8px] cursor-pointer outline-none transition-colors',
                     filterPriority === val ? 'bg-[#1F3649]/8 text-[#1F3649] font-semibold' : 'text-[#5a6061] hover:bg-[#f2f4f4]')}
-                >{label}</DropdownMenu.Item>
+                >{label}</RadixDropdown.Item>
               ))}
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
+            </RadixDropdown.Content>
+          </RadixDropdown.Portal>
+        </RadixDropdown.Root>
 
         {/* Energy filter dropdown */}
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
+        <RadixDropdown.Root>
+          <RadixDropdown.Trigger asChild>
             <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#f2f4f4] text-xs text-[#5a6061] font-semibold hover:bg-[#ebeeef] transition-colors cursor-pointer">
               <Lightning size={11} weight="fill" className="text-[#f59e0b]" />
               {filterEnergy === 'all' ? 'All Energy' : `Energy ${filterEnergy}/3`}
               <CaretDown size={10} className="text-[#adb3b4]" />
             </button>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
+          </RadixDropdown.Trigger>
+          <RadixDropdown.Portal>
+            <RadixDropdown.Content
               align="start" sideOffset={6}
               className="z-50 min-w-[130px] rounded-[12px] border border-[#ECEFF2] bg-white shadow-[0_12px_44px_rgba(45,52,53,0.08)] p-1 outline-none"
             >
               {([['all', 'All Energy'], [3, 'High (3/3)'], [2, 'Medium (2/3)'], [1, 'Low (1/3)']] as const).map(([val, label]) => (
-                <DropdownMenu.Item
+                <RadixDropdown.Item
                   key={String(val)}
                   onClick={() => setFilterEnergy(val as any)}
                   className={cn('flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-[8px] cursor-pointer outline-none transition-colors',
                     filterEnergy === val ? 'bg-[#1F3649]/8 text-[#1F3649] font-semibold' : 'text-[#5a6061] hover:bg-[#f2f4f4]')}
-                >{label}</DropdownMenu.Item>
+                >{label}</RadixDropdown.Item>
               ))}
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
+            </RadixDropdown.Content>
+          </RadixDropdown.Portal>
+        </RadixDropdown.Root>
 
         <div className="flex-1" />
 
         {/* Sort dropdown */}
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
+        <RadixDropdown.Root>
+          <RadixDropdown.Trigger asChild>
             <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#f2f4f4] text-xs text-[#5a6061] font-semibold hover:bg-[#ebeeef] transition-colors cursor-pointer">
               <SortAscending size={11} />
               {sortBy === 'priority' ? 'Priority' : sortBy === 'energy' ? 'Energy' : 'Due date'}
               <CaretDown size={10} className="text-[#adb3b4]" />
             </button>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
+          </RadixDropdown.Trigger>
+          <RadixDropdown.Portal>
+            <RadixDropdown.Content
               align="end" sideOffset={6}
               className="z-50 min-w-[140px] rounded-[12px] border border-[#ECEFF2] bg-white shadow-[0_12px_44px_rgba(45,52,53,0.08)] p-1 outline-none"
             >
               {([['priority', 'Priority'], ['energy', 'Energy level'], ['date', 'Due date']] as const).map(([val, label]) => (
-                <DropdownMenu.Item
+                <RadixDropdown.Item
                   key={val}
                   onClick={() => setSortBy(val)}
                   className={cn('flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-[8px] cursor-pointer outline-none transition-colors',
                     sortBy === val ? 'bg-[#1F3649]/8 text-[#1F3649] font-semibold' : 'text-[#5a6061] hover:bg-[#f2f4f4]')}
-                >{label}</DropdownMenu.Item>
+                >{label}</RadixDropdown.Item>
               ))}
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
+            </RadixDropdown.Content>
+          </RadixDropdown.Portal>
+        </RadixDropdown.Root>
 
         <button
           onClick={() => setTaskModalOpen(true)}
@@ -1010,20 +1089,17 @@ export default function Tasks() {
       )}
       </div>
 
-      {/* Task detail sidebar (board view only) */}
-      {selectedTaskId && view === 'board' && (
-        <div className="w-full lg:w-72 lg:shrink-0 lg:sticky lg:top-6 space-y-0 lg:overflow-y-auto lg:max-h-[calc(100vh-6rem)]" style={{ scrollbarWidth: 'none' }}>
-          <TaskSidePanel
-            taskId={selectedTaskId}
-            onClose={() => setSelectedTaskId(null)}
-            goals={goals}
-            categories={categories}
-            updateTask={updateTask}
-            toggleTask={toggleTask}
-            deleteTask={deleteTask}
-          />
-        </div>
-      )}
+      {/* Task detail sidebar (board view only — fixed overlay) */}
+      <TaskSidePanel
+        taskId={selectedTaskId}
+        open={!!selectedTaskId && view === 'board'}
+        onClose={() => setSelectedTaskId(null)}
+        goals={goals}
+        categories={categories}
+        updateTask={updateTask}
+        toggleTask={toggleTask}
+        deleteTask={deleteTask}
+      />
 
       {/* Undo toast */}
       {toastMessage && (

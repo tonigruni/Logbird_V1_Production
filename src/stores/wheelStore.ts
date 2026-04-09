@@ -114,6 +114,7 @@ export const useWheelStore = create<WheelState>((set) => ({
     if (data) set((state) => ({ checkins: [data, ...state.checkins] }))
   },
   createGoal: async (goal) => {
+    if (goal.title && goal.title.length > 500) throw new Error('Goal title must be 500 characters or fewer')
     if (DEMO_MODE) {
       const data = { ...goal, id: crypto.randomUUID(), created_at: new Date().toISOString() }
       set((state) => ({ goals: [data, ...state.goals] })); return
@@ -122,6 +123,7 @@ export const useWheelStore = create<WheelState>((set) => ({
     if (data) set((state) => ({ goals: [data, ...state.goals] }))
   },
   updateGoal: async (id, updates) => {
+    if (updates.title && updates.title.length > 500) throw new Error('Goal title must be 500 characters or fewer')
     if (DEMO_MODE) {
       set((state) => ({ goals: state.goals.map((g) => g.id === id ? { ...g, ...updates } : g) })); return
     }
@@ -133,6 +135,7 @@ export const useWheelStore = create<WheelState>((set) => ({
     set((state) => ({ goals: state.goals.filter((g) => g.id !== id) }))
   },
   createTask: async (task) => {
+    if (task.title && task.title.length > 500) throw new Error('Task title must be 500 characters or fewer')
     if (DEMO_MODE) {
       const data = { ...task, id: crypto.randomUUID(), created_at: new Date().toISOString() }
       set((state) => ({ tasks: [data, ...state.tasks] })); return
@@ -141,6 +144,7 @@ export const useWheelStore = create<WheelState>((set) => ({
     if (data) set((state) => ({ tasks: [data, ...state.tasks] }))
   },
   updateTask: async (id, updates) => {
+    if (updates.title && updates.title.length > 500) throw new Error('Task title must be 500 characters or fewer')
     if (DEMO_MODE) {
       set((state) => ({ tasks: state.tasks.map((t) => t.id === id ? { ...t, ...updates } : t) })); return
     }

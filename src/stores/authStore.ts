@@ -36,8 +36,6 @@ export const useAuthStore = create<AuthState>((set) => ({
       .eq('user_id', userId)
       .single()
     if (data) {
-      if (data.anthropic_api_key) localStorage.setItem('anthropic_api_key', data.anthropic_api_key)
-      if (data.anthropic_model) localStorage.setItem('anthropic_model', data.anthropic_model)
       if (data.avatar_url) set({ avatarUrl: data.avatar_url })
     }
   },

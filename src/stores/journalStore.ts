@@ -66,6 +66,7 @@ export const useJournalStore = create<JournalState>((set) => ({
     set({ templates: data ?? [] })
   },
   createEntry: async (entry) => {
+    if (entry.content && entry.content.length > 50000) throw new Error('Journal entry content must be 50,000 characters or fewer')
     if (DEMO_MODE) {
       const newEntry = { ...entry, id: crypto.randomUUID(), created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
       set((state) => ({ entries: [newEntry, ...state.entries] }))
@@ -83,6 +84,7 @@ export const useJournalStore = create<JournalState>((set) => ({
     return null
   },
   updateEntry: async (id, updates) => {
+    if (updates.content && updates.content.length > 50000) throw new Error('Journal entry content must be 50,000 characters or fewer')
     // Always apply optimistic update immediately (handles client-side-only fields like is_favorite)
     set((state) => ({
       entries: state.entries.map((e) =>

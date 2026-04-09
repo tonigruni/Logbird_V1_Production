@@ -3,7 +3,18 @@ import type { JournalEntry, JournalTemplate } from '../stores/journalStore'
 import type { WheelCategory, WheelCheckin, Goal, Task } from '../stores/wheelStore'
 
 // Default to demo mode when Supabase env vars aren't configured (e.g. Vercel without secrets)
-export const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true' || !import.meta.env.VITE_SUPABASE_URL
+// Production safety: never allow demo mode in production builds
+const _rawDemoMode = import.meta.env.VITE_DEMO_MODE === 'true' || !import.meta.env.VITE_SUPABASE_URL
+
+if (_rawDemoMode && import.meta.env.PROD) {
+  console.error(
+    '[SECURITY] DEMO_MODE was enabled in a production build. ' +
+    'This bypasses authentication and is a security risk. ' +
+    'Forcing DEMO_MODE to false. Check your environment variables.'
+  )
+}
+
+export const DEMO_MODE = _rawDemoMode && !import.meta.env.PROD
 
 export const DEMO_USER: User = {
   id: 'demo-user-id',

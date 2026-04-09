@@ -41,7 +41,6 @@ export default function Settings() {
       { user_id: user.id, anthropic_api_key: trimmed },
       { onConflict: 'user_id' }
     )
-    localStorage.setItem('anthropic_api_key', trimmed)
     setKeyLoading(false)
     setKeySaved(true)
     setTimeout(() => setKeySaved(false), 2500)
