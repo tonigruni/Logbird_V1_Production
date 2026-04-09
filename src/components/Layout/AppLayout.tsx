@@ -32,6 +32,10 @@ function useSectionConfig(pathname: string, search: string, navigate: ReturnType
   if (pathname === '/wheel')    return { title: 'Wheel of Life', tabs: null }
   if (pathname === '/account')  return { title: 'Account', tabs: null }
   if (pathname === '/settings') return { title: 'Settings', tabs: null }
+  if (pathname === '/tasks' || pathname.startsWith('/tasks/')) return { title: 'Tasks', tabs: null }
+  if (pathname === '/goals') return { title: 'Goals', tabs: null }
+  if (pathname === '/projects' || pathname.startsWith('/projects/')) return { title: 'Projects', tabs: null }
+  if (pathname === '/timeboxing') return { title: 'Timeboxing', tabs: null }
 
   if (['/journal', '/insights'].includes(pathname)) {
     return {

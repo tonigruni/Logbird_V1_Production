@@ -15,6 +15,30 @@
   box-shadow:    var(--card-shadow);
 }
 
+/* ── Input component ─────────────────────────────────────────
+   Matches the Journal page input style — use className="input"
+   ─────────────────────────────────────────────────────────── */
+.input {
+  width: 100%;
+  border-radius: 15px;
+  border: 1px solid var(--card-border-color);
+  background: var(--color-surface);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+.input::placeholder {
+  color: var(--color-text-faint);
+  opacity: 0.7;
+}
+.input:focus-visible {
+  border-color: rgba(31, 54, 73, 0.3);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(31, 54, 73, 0.1);
+}
+
 * { box-sizing: border-box; }
 
 @keyframes popIn {
@@ -28,7 +52,7 @@ button { border-radius: 15px; }
 
 body {
   background-color: var(--color-bg);
-  color: #2d3435;
+  color: var(--color-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }

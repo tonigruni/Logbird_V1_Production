@@ -25,11 +25,22 @@ Sourced from Figma file: `aWTiyX4DB1CfCaolgkK7Sr`
 - **Body / paragraphs:** DM Sans (Google Fonts) — token: `--font-sans`
 - **Mono:** JetBrains Mono (code blocks, API keys) — token: `--font-mono`
 
-## Cards
-- **Corner radius:** 15px (token: `--card-radius`)
-- **Border:** 1px solid `#ECEFF2` (token: `--card-border-color`)
-- **Shadow:** none
-- Applied via `.card` CSS class
+## Component Classes (global CSS)
+Use these classes directly — do not recreate them inline.
+
+### `.card`
+- Corner radius: 15px (token: `--card-radius`)
+- Border: 1px solid `#ECEFF2` (token: `--card-border-color`)
+- Shadow: none
+- Usage: `<div className="bg-surface card p-8">`
+
+### `.input`
+- Width: 100%, border-radius: 15px
+- Border: 1px solid `#ECEFF2`, background: `surface`
+- Padding: `0.75rem 1rem`, font-size: `0.875rem`
+- Subtle shadow, transitions on focus
+- Focus ring: `rgba(31,54,73,0.1)` with border `rgba(31,54,73,0.3)`
+- Usage: `<input className="input" />` or `<select className="input">`
 
 ## Border Radius
 - Default: `1rem` (`--radius-default`)

@@ -10,21 +10,21 @@ import GradientBarsBackground from '../components/ui/GradientBarsBackground'
 import { cn } from '../lib/utils'
 
 const JOURNAL_CAT_COLORS: Record<string, { bg: string; text: string }> = {
-  Personal:  { bg: 'bg-[#1F3649]/10',  text: 'text-[#1F3649]' },
+  Personal:  { bg: 'bg-primary/10',  text: 'text-primary' },
   Work:      { bg: 'bg-[#586062]/10',  text: 'text-[#586062]' },
   Dreams:    { bg: 'bg-[#9f403d]/10',  text: 'text-[#9f403d]' },
   Ideas:     { bg: 'bg-[#162838]/10',  text: 'text-[#162838]' },
-  Travel:    { bg: 'bg-[#0d9488]/10',  text: 'text-[#0d9488]' },
+  Travel:    { bg: 'bg-[#22c55e]/10',  text: 'text-[#22c55e]' },
   Health:    { bg: 'bg-[#16a34a]/10',  text: 'text-[#16a34a]' },
   Gratitude: { bg: 'bg-[#ca8a04]/10',  text: 'text-[#ca8a04]' },
 }
 function getJournalCatColor(cat: string) {
-  return JOURNAL_CAT_COLORS[cat] ?? { bg: 'bg-[#ebeeef]', text: 'text-[#5a6061]' }
+  return JOURNAL_CAT_COLORS[cat] ?? { bg: 'bg-[#ebeeef]', text: 'text-on-surface-variant' }
 }
 const MOOD_META: Record<number, { short: string; chipClass: string; icon: typeof Frown }> = {
   1: { short: 'Very Low', chipClass: 'bg-red-100 text-red-700',         icon: Frown },
   2: { short: 'Low',      chipClass: 'bg-orange-100 text-orange-700',   icon: Frown },
-  3: { short: 'Neutral',  chipClass: 'bg-[#ebeeef] text-[#5a6061]',     icon: Meh   },
+  3: { short: 'Neutral',  chipClass: 'bg-[#ebeeef] text-on-surface-variant',     icon: Meh   },
   4: { short: 'Good',     chipClass: 'bg-green-100 text-green-700',     icon: Smile },
   5: { short: 'Excellent',chipClass: 'bg-emerald-100 text-emerald-800', icon: Smile },
 }
@@ -95,7 +95,7 @@ export default function Dashboard() {
       <div className="pb-24 flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-3">
           <div className="w-8 h-8 border-2 border-[#1F3649] border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm text-[#5a6061]">Loading your dashboard...</p>
+          <p className="text-sm text-on-surface-variant">Loading your dashboard...</p>
         </div>
       </div>
     )
@@ -104,7 +104,7 @@ export default function Dashboard() {
   return (
     <div className="pb-24 space-y-6 md:space-y-8">
       {/* Hero Banner */}
-      <div className="relative bg-[#1F3649] card overflow-hidden px-6 py-10 md:px-10 md:py-14">
+      <div className="relative bg-primary card overflow-hidden px-6 py-10 md:px-10 md:py-14">
         <GradientBarsBackground />
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-[0.07]">
@@ -138,8 +138,8 @@ export default function Dashboard() {
       {/* Two stat cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
         {/* Wheel of Life Card */}
-        <div className="bg-white card p-5 md:p-8">
-          <h2 className="text-sm font-bold text-[#5a6061] uppercase tracking-wider mb-4">
+        <div className="bg-surface card p-5 md:p-8">
+          <h2 className="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-4">
             Wheel of Life
           </h2>
           <div className="flex items-center gap-6">
@@ -185,7 +185,7 @@ export default function Dashboard() {
               </ResponsiveContainer>
               {/* Center percentage */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-2xl font-bold text-[#2d3435]">
+                <span className="text-2xl font-bold text-on-surface">
                   {avgScore}%
                 </span>
               </div>
@@ -200,8 +200,8 @@ export default function Dashboard() {
                       backgroundColor: CATEGORY_COLORS[cat] ?? '#6b63f5',
                     }}
                   />
-                  <span className="text-xs text-[#5a6061] truncate">{cat}</span>
-                  <span className="text-xs font-semibold text-[#2d3435] ml-auto">
+                  <span className="text-xs text-on-surface-variant truncate">{cat}</span>
+                  <span className="text-xs font-semibold text-on-surface ml-auto">
                     {score}/10
                   </span>
                 </div>
@@ -211,20 +211,20 @@ export default function Dashboard() {
         </div>
 
         {/* High Priority Tasks Card */}
-        <div className="bg-white card p-5 md:p-8">
+        <div className="bg-surface card p-5 md:p-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-bold text-[#5a6061] uppercase tracking-wider">
+            <h2 className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">
               High Priority Tasks
             </h2>
-            <span className="text-xs text-[#5a6061]">
+            <span className="text-xs text-on-surface-variant">
               {completedGoals} of {totalGoals} goals completed
             </span>
           </div>
 
           {/* Progress bar */}
-          <div className="w-full bg-[#f2f4f4] rounded-full h-1.5 mb-5">
+          <div className="w-full bg-muted rounded-full h-1.5 mb-5">
             <div
-              className="h-1.5 rounded-full bg-[#1F3649] transition-all"
+              className="h-1.5 rounded-full bg-primary transition-all"
               style={{
                 width: `${tasks.length ? (completedTasks / tasks.length) * 100 : 0}%`,
               }}
@@ -238,28 +238,28 @@ export default function Dashboard() {
                 className="flex items-center gap-3 cursor-pointer group"
                 onClick={() => toggleTask(task.id, !task.completed)}
               >
-                <div className="w-5 h-5 rounded-md border-2 border-[#adb3b4] flex items-center justify-center shrink-0 group-hover:border-[#1F3649] transition-colors">
-                  {task.completed && <Check size={12} className="text-[#1F3649]" />}
+                <div className="w-5 h-5 rounded-md border-2 border-outline-variant flex items-center justify-center shrink-0 group-hover:border-primary transition-colors">
+                  {task.completed && <Check size={12} className="text-primary" />}
                 </div>
-                <span className="text-sm text-[#5a6061] truncate">
+                <span className="text-sm text-on-surface-variant truncate">
                   {task.title}
                 </span>
               </label>
             ))}
             {pendingTasks.length === 0 && (
-              <p className="text-sm text-[#5a6061] text-center py-4">
+              <p className="text-sm text-on-surface-variant text-center py-4">
                 All tasks completed!
               </p>
             )}
           </div>
 
           {tasks.length > 0 && (
-            <div className="mt-4 pt-3 bg-[#f2f4f4] -mx-8 -mb-8 px-8 pb-8 rounded-b-xl">
+            <div className="mt-4 pt-3 bg-muted -mx-8 -mb-8 px-8 pb-8 rounded-b-xl">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-[#1F3649]">
+                <span className="text-xs font-semibold text-primary">
                   {Math.round((completedTasks / tasks.length) * 100)}%
                 </span>
-                <span className="text-xs text-[#5a6061]">tasks completed</span>
+                <span className="text-xs text-on-surface-variant">tasks completed</span>
               </div>
             </div>
           )}
@@ -269,23 +269,23 @@ export default function Dashboard() {
       {/* Recent Journal Entries */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg md:text-2xl font-bold text-[#2d3435]">
+          <h2 className="text-lg md:text-2xl font-bold text-on-surface">
             Recent Journal Entries
           </h2>
           <button
             onClick={() => navigate('/journal')}
-            className="text-sm text-[#1F3649] font-semibold hover:underline transition-colors cursor-pointer"
+            className="text-sm text-primary font-semibold hover:underline transition-colors cursor-pointer"
           >
             View all
           </button>
         </div>
 
         {recentEntries.length === 0 ? (
-          <div className="bg-white card p-10 text-center">
-            <p className="text-sm text-[#5a6061]">No journal entries yet.</p>
+          <div className="bg-surface card p-10 text-center">
+            <p className="text-sm text-on-surface-variant">No journal entries yet.</p>
             <button
               onClick={() => navigate('/journal')}
-              className="mt-2 text-sm text-[#1F3649] hover:underline cursor-pointer"
+              className="mt-2 text-sm text-primary hover:underline cursor-pointer"
             >
               Write your first entry
             </button>
@@ -300,10 +300,10 @@ export default function Dashboard() {
                 <div
                   key={entry.id}
                   onClick={() => navigate('/journal')}
-                  className="bg-white card p-5 hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all group cursor-pointer"
+                  className="bg-surface card p-5 hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all group cursor-pointer"
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">
+                    <span className="text-[10px] font-bold text-outline-variant uppercase tracking-wider">
                       {format(new Date(entry.created_at), 'MMM d, yyyy')}
                     </span>
                     <button
@@ -313,14 +313,14 @@ export default function Dashboard() {
                       <Star size={12} fill={entry.is_favorite ? 'currentColor' : 'none'} />
                     </button>
                   </div>
-                  <h3 className="text-sm font-bold text-[#2d3435] mb-2 line-clamp-2 group-hover:text-[#1F3649] transition-colors">
+                  <h3 className="text-sm font-bold text-on-surface mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                     {entry.title}
                   </h3>
-                  <p className="text-xs text-[#5a6061] line-clamp-3 leading-relaxed mb-4">
+                  <p className="text-xs text-on-surface-variant line-clamp-3 leading-relaxed mb-4">
                     {stripMd(entry.content).slice(0, 120)}…
                   </p>
-                  <div className="flex items-center justify-between pt-3 border-t border-[#f2f4f4]">
-                    <span className="text-[10px] font-semibold text-[#adb3b4]">{countWords(entry.content)}</span>
+                  <div className="flex items-center justify-between pt-3 border-t border-muted">
+                    <span className="text-[10px] font-semibold text-outline-variant">{countWords(entry.content)}</span>
                     <div className="flex items-center gap-1.5">
                       {cc && entry.category && (
                         <span className={cn('inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-[15px]', cc.bg, cc.text)}>

@@ -14,6 +14,13 @@ import Account from './pages/Account'
 import Settings from './pages/Settings'
 import Analysis from './pages/Analysis'
 import Insights from './pages/Insights'
+import ProjectsOverview from './pages/ProjectsOverview'
+import ProjectCreate from './pages/ProjectCreate'
+import ProjectDetail from './pages/ProjectDetail'
+import Tasks from './pages/Tasks'
+import TaskEdit from './pages/TaskEdit'
+import Goals from './pages/Goals'
+import Timeboxing from './pages/Timeboxing'
 
 export default function App() {
   const { setSession, setLoading, setUser, loadProfile } = useAuthStore()
@@ -54,6 +61,13 @@ export default function App() {
           <Route path="wheel" element={<WheelOfLife />} />
           <Route path="analysis" element={<Analysis />} />
           <Route path="insights" element={<Insights />} />
+          <Route path="tasks" element={<Tasks />} />
+          <Route path="tasks/:id" element={<TaskEdit />} />
+          <Route path="goals" element={<Goals />} />
+          <Route path="timeboxing" element={<Timeboxing />} />
+          <Route path="projects" element={<ProjectsOverview />} />
+          <Route path="projects/new" element={<ProjectCreate />} />
+          <Route path="projects/:slug" element={<ProjectDetail />} />
           <Route path="account" element={<Account />} />
           <Route path="settings" element={<Settings />} />
         </Route>

@@ -331,7 +331,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; dot: string }>
   Work:      { bg: 'bg-[#586062]/10',  text: 'text-[#586062]',  dot: '#586062' },
   Dreams:    { bg: 'bg-[#9f403d]/10',  text: 'text-[#9f403d]',  dot: '#fe8983' },
   Ideas:     { bg: 'bg-[#162838]/10',  text: 'text-[#162838]',  dot: '#3f9eff' },
-  Travel:    { bg: 'bg-[#0d9488]/10',  text: 'text-[#0d9488]',  dot: '#0d9488' },
+  Travel:    { bg: 'bg-[#22c55e]/10',  text: 'text-[#22c55e]',  dot: '#22c55e' },
   Health:    { bg: 'bg-[#16a34a]/10',  text: 'text-[#16a34a]',  dot: '#22c55e' },
   Gratitude: { bg: 'bg-[#ca8a04]/10',  text: 'text-[#ca8a04]',  dot: '#eab308' },
 }

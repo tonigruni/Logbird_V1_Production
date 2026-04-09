@@ -23,6 +23,7 @@ export interface Goal {
   id: string
   user_id: string
   category_id: string
+  project_id: string | null
   title: string
   description: string | null
   status: string
@@ -30,13 +31,20 @@ export interface Goal {
   created_at: string
 }
 
+export type TaskPriority = 'urgent' | 'high' | 'normal' | 'low'
+export type TaskEnergy = 1 | 2 | 3
+
 export interface Task {
   id: string
   user_id: string
   goal_id: string | null
   category_id: string | null
+  project_id: string | null
   title: string
   completed: boolean
+  priority: TaskPriority
+  energy: TaskEnergy
+  estimated_minutes: number | null
   due_date: string | null
   created_at: string
 }
@@ -64,6 +72,7 @@ interface WheelState {
   updateGoal: (id: string, updates: Partial<Goal>) => Promise<void>
   deleteGoal: (id: string) => Promise<void>
   createTask: (task: Omit<Task, 'id' | 'created_at'>) => Promise<void>
+  updateTask: (id: string, updates: Partial<Task>) => Promise<void>
   toggleTask: (id: string, completed: boolean) => Promise<void>
   deleteTask: (id: string) => Promise<void>
   addCustomCategory: (userId: string, name: string) => Promise<void>
@@ -130,6 +139,13 @@ export const useWheelStore = create<WheelState>((set) => ({
     }
     const { data } = await supabase.from('tasks').insert(task).select().single()
     if (data) set((state) => ({ tasks: [data, ...state.tasks] }))
+  },
+  updateTask: async (id, updates) => {
+    if (DEMO_MODE) {
+      set((state) => ({ tasks: state.tasks.map((t) => t.id === id ? { ...t, ...updates } : t) })); return
+    }
+    const { data } = await supabase.from('tasks').update(updates).eq('id', id).select().single()
+    if (data) set((state) => ({ tasks: state.tasks.map((t) => (t.id === id ? data : t)) }))
   },
   toggleTask: async (id, completed) => {
     if (!DEMO_MODE) await supabase.from('tasks').update({ completed }).eq('id', id)

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import {
   Plus,
   Target,
@@ -19,6 +19,23 @@ import {
   Lightbulb,
   CheckCircle2,
   Circle,
+  Pencil,
+  Calendar,
+  Clock,
+  Timer,
+  Pause,
+  Play,
+  Square,
+  Bold,
+  Italic,
+  AtSign,
+  ThumbsUp,
+  Flag,
+  User,
+  MoreHorizontal,
+  Paperclip,
+  Share2,
+  Tag,
 } from 'lucide-react'
 import {
   RadarChart,
@@ -212,7 +229,27 @@ export default function WheelOfLife() {
   const [newGoal, setNewGoal] = useState({ categoryId: '', title: '', description: '', targetDate: '' })
   const [newTask, setNewTask] = useState({ goalId: '', categoryId: '', title: '' })
   const [reflectionText, setReflectionText] = useState('')
+  const [editingDesc, setEditingDesc] = useState(false)
+  const [editDesc, setEditDesc] = useState('')
+  // Timer state
+  const [timerRunning, setTimerRunning] = useState(false)
+  const [timerSeconds, setTimerSeconds] = useState(0)
+  const [totalLoggedSeconds, setTotalLoggedSeconds] = useState(0)
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  // Activity / comments
+  const [commentText, setCommentText] = useState('')
+  const [goalComments, setGoalComments] = useState<{ id: string; text: string; createdAt: Date }[]>([])
   const navigate = useNavigate()
+
+  // Timer effect
+  useEffect(() => {
+    if (timerRunning) {
+      timerRef.current = setInterval(() => setTimerSeconds((s) => s + 1), 1000)
+    } else {
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
+    return () => { if (timerRef.current) clearInterval(timerRef.current) }
+  }, [timerRunning])
 
   useEffect(() => {
     if (user) fetchAll(user.id)
@@ -261,6 +298,7 @@ export default function WheelOfLife() {
     await createGoal({
       user_id: user.id,
       category_id: newGoal.categoryId,
+      project_id: null,
       title: newGoal.title,
       description: newGoal.description || null,
       status: 'active',
@@ -275,8 +313,12 @@ export default function WheelOfLife() {
       user_id: user.id,
       goal_id: goalId,
       category_id: categoryId,
+      project_id: null,
       title: newTask.title,
       completed: false,
+      priority: 'normal',
+      energy: 2,
+      estimated_minutes: null,
       due_date: null,
     })
     setNewTask({ goalId: '', categoryId: '', title: '' })
@@ -406,167 +448,499 @@ export default function WheelOfLife() {
     const cat = categories.find((c) => c.id === selectedGoal.category_id)
     const goalTasks = tasks.filter((t) => t.goal_id === selectedGoal.id)
     const completedCount = goalTasks.filter((t) => t.completed).length
+    const pendingTasks = goalTasks.filter((t) => !t.completed)
+    const doneTasks = goalTasks.filter((t) => t.completed)
     const progressPercent = goalTasks.length > 0 ? Math.round((completedCount / goalTasks.length) * 100) : 0
     const meta = getCategoryMeta(cat?.name ?? '')
 
+    const fmtTime = (s: number) => {
+      const h = Math.floor(s / 3600)
+      const m = Math.floor((s % 3600) / 60)
+      const sec = s % 60
+      if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
+      return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
+    }
+
+    const stopTimer = () => {
+      setTimerRunning(false)
+      if (timerSeconds > 0) {
+        setTotalLoggedSeconds((prev) => prev + timerSeconds)
+        setTimerSeconds(0)
+      }
+    }
+
     return (
       <div className="pb-24 animate-fade-in">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 mb-6 text-sm">
-          <button
-            onClick={() => setSelectedGoal(null)}
-            className="text-[#5a6061] hover:text-[#2d3435] transition-colors cursor-pointer flex items-center gap-1"
-          >
-            <ChevronLeft size={14} />
-            Goals & Tasks
-          </button>
-          <span className="text-[#5a6061]">/</span>
-          <span className="text-[#2d3435] font-medium">{selectedGoal.title}</span>
+        {/* Header */}
+        <div className="mb-6 flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <div className="space-y-2 flex-1 min-w-0">
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-1.5 text-sm text-on-surface-variant">
+              <button
+                onClick={() => { setSelectedGoal(null); setTimerRunning(false); setTimerSeconds(0); setTotalLoggedSeconds(0) }}
+                className="hover:text-on-surface transition-colors cursor-pointer flex items-center gap-1"
+              >
+                <ChevronLeft size={14} />
+                Goals & Tasks
+              </button>
+              <ChevronRight size={13} className="opacity-40" />
+              <span className="text-primary font-medium truncate max-w-xs">{selectedGoal.title}</span>
+            </div>
+            {/* Title inline edit */}
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-on-surface leading-tight">
+              {selectedGoal.title}
+            </h1>
+            {/* Badges row */}
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <span
+                className="px-3 py-1 rounded-full text-xs font-bold"
+                style={{ backgroundColor: `${meta.color}18`, color: meta.color }}
+              >
+                {cat?.name ?? 'General'}
+              </span>
+              <button
+                onClick={() => updateGoal(selectedGoal.id, { status: selectedGoal.status === 'completed' ? 'active' : 'completed' })}
+                className={cn(
+                  'px-3 py-1 rounded-full text-xs font-bold cursor-pointer transition-colors',
+                  selectedGoal.status === 'completed' ? 'bg-[#22c55e]/10 text-[#16a34a]' : 'bg-[#f59e0b]/10 text-[#b45309]'
+                )}
+              >
+                {selectedGoal.status === 'completed' ? 'Completed' : 'In Progress'}
+              </button>
+              {selectedGoal.target_date && (
+                <span className="flex items-center gap-1 text-xs text-on-surface-variant bg-[#f2f4f4] px-3 py-1 rounded-full">
+                  <Calendar size={10} />
+                  Due {format(new Date(selectedGoal.target_date), 'MMM d, yyyy')}
+                </span>
+              )}
+            </div>
+          </div>
+          {/* Action buttons */}
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => {
+                const prefill = `## ${selectedGoal.title}\n\n`
+                navigate('/journal', { state: { prefill } })
+              }}
+              className="flex items-center gap-1.5 bg-[#f2f4f4] hover:bg-[#e4e9ea] text-on-surface-variant px-4 py-2 text-sm font-semibold rounded-[12px] transition-colors cursor-pointer"
+            >
+              <Share2 size={13} />
+              Send to Journal
+            </button>
+            <button
+              onClick={async () => { await deleteGoal(selectedGoal.id); setSelectedGoal(null) }}
+              className="flex items-center gap-1.5 bg-[#f2f4f4] hover:bg-[#fce8e8] text-on-surface-variant hover:text-[#9f403d] px-4 py-2 text-sm font-semibold rounded-[12px] transition-colors cursor-pointer"
+            >
+              <Trash2 size={13} />
+              Delete
+            </button>
+            <button
+              onClick={() => updateGoal(selectedGoal.id, { status: 'completed' })}
+              disabled={selectedGoal.status === 'completed'}
+              className="flex items-center gap-1.5 bg-primary hover:opacity-90 disabled:opacity-50 text-white px-4 py-2 text-sm font-semibold rounded-[12px] transition-all cursor-pointer"
+            >
+              <CheckCircle2 size={13} />
+              {selectedGoal.status === 'completed' ? 'Completed' : 'Mark Complete'}
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main content */}
-          <div className="lg:col-span-2 space-y-5">
-            {/* Goal header card */}
-            <div className="bg-white card p-8">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${meta.color}15` }}>
-                  <Target size={22} style={{ color: meta.color }} />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs px-2.5 py-0.5 rounded-[15px] font-medium" style={{ backgroundColor: `${meta.color}15`, color: meta.color }}>
-                      {cat?.name ?? 'General'}
-                    </span>
-                    <span className={cn(
-                      'text-xs px-2.5 py-0.5 rounded-[15px] font-medium',
-                      selectedGoal.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#f59e0b]/10 text-[#f59e0b]'
-                    )}>
-                      {selectedGoal.status}
-                    </span>
-                  </div>
-                  <h2 className="text-xl font-bold text-[#2d3435]">{selectedGoal.title}</h2>
-                  {selectedGoal.description && (
-                    <p className="text-sm text-[#5a6061] mt-1">{selectedGoal.description}</p>
-                  )}
-                  {selectedGoal.target_date && (
-                    <p className="text-xs text-[#5a6061] opacity-60 mt-2">Target: {format(new Date(selectedGoal.target_date), 'MMMM d, yyyy')}</p>
-                  )}
-                </div>
-              </div>
-            </div>
+        {/* Main bento grid */}
+        <div className="grid grid-cols-12 gap-5">
 
-            {/* Focus Objectives */}
-            <div className="bg-white card p-8">
+          {/* ── LEFT PANE ────────────────────────────────────── */}
+          <div className="col-span-12 lg:col-span-8 space-y-5">
+
+            {/* Description */}
+            <section className="bg-surface card p-6 md:p-8">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-[#2d3435]">Focus Objectives</h3>
-                <span className="text-xs text-[#5a6061] opacity-60">{completedCount}/{goalTasks.length} completed</span>
+                <h3 className="text-base font-bold text-on-surface">Description</h3>
+                <button
+                  onClick={() => { setEditingDesc(!editingDesc); setEditDesc(selectedGoal.description ?? '') }}
+                  className="p-1.5 rounded-lg hover:bg-[#f2f4f4] transition-colors cursor-pointer text-on-surface-variant hover:text-primary"
+                >
+                  <Pencil size={13} />
+                </button>
+              </div>
+              {editingDesc ? (
+                <div className="space-y-3">
+                  <textarea
+                    value={editDesc}
+                    onChange={(e) => setEditDesc(e.target.value)}
+                    className="input resize-none h-28"
+                    placeholder="Add a description for this goal..."
+                    autoFocus
+                  />
+                  <div className="flex gap-2 justify-end">
+                    <button onClick={() => setEditingDesc(false)} className="text-sm px-4 py-2 rounded-[12px] bg-[#f2f4f4] text-on-surface font-medium cursor-pointer hover:bg-[#e4e9ea] transition-colors">Cancel</button>
+                    <button onClick={async () => { await updateGoal(selectedGoal.id, { description: editDesc || null }); setEditingDesc(false) }} className="text-sm px-4 py-2 rounded-[12px] bg-primary text-white font-medium cursor-pointer hover:opacity-90 transition-all">Save</button>
+                  </div>
+                </div>
+              ) : (
+                <div onClick={() => { setEditingDesc(true); setEditDesc(selectedGoal.description ?? '') }} className="cursor-text">
+                  {selectedGoal.description
+                    ? <p className="text-sm text-on-surface-variant leading-relaxed">{selectedGoal.description}</p>
+                    : <p className="text-sm italic text-on-surface-variant/30 hover:text-on-surface-variant/50 transition-colors">No description yet — click to add one.</p>
+                  }
+                </div>
+              )}
+            </section>
+
+            {/* Focus Objectives / Checklist */}
+            <section className="bg-surface card p-6 md:p-8">
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-3">
+                  <h3 className="text-base font-bold text-on-surface">Focus Objectives</h3>
+                  <span className="bg-[#f2f4f4] text-on-surface-variant px-2 py-0.5 rounded-md text-xs font-bold">{completedCount}/{goalTasks.length}</span>
+                </div>
               </div>
 
-              {goalTasks.length === 0 ? (
-                <p className="text-sm text-[#5a6061] opacity-60 py-4 text-center">No tasks yet. Add one below.</p>
-              ) : (
-                <div className="space-y-2">
-                  {goalTasks.map((task) => (
-                    <div key={task.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#f2f4f4] transition-all group">
-                      <button
-                        onClick={() => toggleTask(task.id, !task.completed)}
-                        className="cursor-pointer shrink-0"
-                      >
-                        {task.completed ? (
-                          <CheckCircle2 size={18} className="text-[#22c55e]" />
-                        ) : (
-                          <Circle size={18} className="text-[#5a6061] opacity-60" />
+              {goalTasks.length > 0 && (
+                <div className="mb-5">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-xs text-on-surface-variant">{progressPercent}% complete</span>
+                    <span className="text-xs text-on-surface-variant">{completedCount} of {goalTasks.length} done</span>
+                  </div>
+                  <div className="w-full bg-[#f2f4f4] rounded-full h-2">
+                    <div className="h-2 rounded-full transition-all duration-500" style={{ width: `${progressPercent}%`, backgroundColor: meta.color }} />
+                  </div>
+                </div>
+              )}
+
+              {/* To Do section */}
+              {pendingTasks.length > 0 && (
+                <div className="mb-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">To Do</span>
+                    <div className="flex-1 h-px bg-[#ECEFF2]" />
+                    <span className="text-[10px] font-bold text-on-surface-variant/40">{pendingTasks.length}</span>
+                  </div>
+                  <div className="space-y-1">
+                    {pendingTasks.map((task) => (
+                      <div key={task.id} className="flex items-center gap-3 px-3 py-2.5 hover:bg-[#f2f4f4] rounded-xl transition-colors group">
+                        <button onClick={() => toggleTask(task.id, true)} className="cursor-pointer shrink-0 text-[#adb3b4] hover:text-primary transition-colors">
+                          <Circle size={17} />
+                        </button>
+                        <span className="text-sm flex-1 text-on-surface">{task.title}</span>
+                        {task.due_date && (
+                          <span className="flex items-center gap-1 text-[10px] text-on-surface-variant/40 bg-[#f2f4f4] px-2 py-0.5 rounded-full">
+                            <Calendar size={9} />{format(new Date(task.due_date), 'MMM d')}
+                          </span>
                         )}
-                      </button>
-                      <span className={cn('text-sm flex-1', task.completed ? 'line-through text-[#5a6061] opacity-60' : 'text-[#2d3435]')}>
-                        {task.title}
-                      </span>
-                      {task.due_date && (
-                        <span className="text-xs text-[#5a6061] opacity-60">{format(new Date(task.due_date), 'MMM d')}</span>
-                      )}
-                      <button
-                        onClick={() => deleteTask(task.id)}
-                        className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-[#9f403d]/10 text-[#5a6061] opacity-60 hover:text-[#9f403d] rounded-lg transition-all cursor-pointer"
-                      >
-                        <Trash2 size={13} />
-                      </button>
+                        <button onClick={() => deleteTask(task.id)} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-[#fce8e8] hover:text-[#9f403d] text-on-surface-variant rounded-lg transition-all cursor-pointer">
+                          <Trash2 size={12} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Done section */}
+              {doneTasks.length > 0 && (
+                <div className="mb-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">Completed</span>
+                    <div className="flex-1 h-px bg-[#ECEFF2]" />
+                    <span className="text-[10px] font-bold text-on-surface-variant/40">{doneTasks.length}</span>
+                  </div>
+                  <div className="space-y-1">
+                    {doneTasks.map((task) => (
+                      <div key={task.id} className="flex items-center gap-3 px-3 py-2.5 hover:bg-[#f2f4f4] rounded-xl transition-colors group">
+                        <button onClick={() => toggleTask(task.id, false)} className="cursor-pointer shrink-0 text-[#22c55e]">
+                          <CheckCircle2 size={17} />
+                        </button>
+                        <span className="text-sm flex-1 line-through text-on-surface-variant/40">{task.title}</span>
+                        <button onClick={() => deleteTask(task.id)} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-[#fce8e8] hover:text-[#9f403d] text-on-surface-variant rounded-lg transition-all cursor-pointer">
+                          <Trash2 size={12} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {goalTasks.length === 0 && (
+                <p className="text-sm text-on-surface-variant/40 py-4 text-center">No tasks yet. Add one below.</p>
+              )}
+
+              {/* Add task input */}
+              <div className="flex gap-2 pt-4 border-t border-[#ECEFF2]">
+                <input
+                  value={newTask.goalId === selectedGoal.id ? newTask.title : ''}
+                  onChange={(e) => setNewTask({ goalId: selectedGoal.id, categoryId: selectedGoal.category_id, title: e.target.value })}
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleAddTask(selectedGoal.id, selectedGoal.category_id) }}
+                  placeholder="Add a new task and press Enter..."
+                  className="input text-sm"
+                />
+                <button
+                  onClick={() => handleAddTask(selectedGoal.id, selectedGoal.category_id)}
+                  disabled={!newTask.title || newTask.goalId !== selectedGoal.id}
+                  className="bg-primary hover:opacity-90 disabled:opacity-40 text-white px-4 py-2.5 rounded-[12px] transition-all cursor-pointer shrink-0"
+                >
+                  <Plus size={15} />
+                </button>
+              </div>
+            </section>
+
+            {/* Activity & Discussion */}
+            <section className="bg-surface card p-6 md:p-8">
+              <h3 className="text-base font-bold text-on-surface mb-5">Activity & Discussion</h3>
+
+              {/* Comment thread */}
+              {goalComments.length > 0 && (
+                <div className="space-y-4 mb-5">
+                  {goalComments.map((c) => (
+                    <div key={c.id} className="flex gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold shrink-0">
+                        <User size={14} />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-baseline gap-2 mb-1">
+                          <span className="text-sm font-semibold text-on-surface">You</span>
+                          <span className="text-xs text-on-surface-variant/40">{format(c.createdAt, 'MMM d, h:mm a')}</span>
+                        </div>
+                        <div className="bg-[#f2f4f4] rounded-xl px-4 py-3 text-sm text-on-surface leading-relaxed">
+                          {c.text}
+                        </div>
+                        <div className="flex items-center gap-3 mt-2 px-1">
+                          <button className="flex items-center gap-1 text-xs text-on-surface-variant/40 hover:text-primary transition-colors cursor-pointer">
+                            <ThumbsUp size={11} /> Like
+                          </button>
+                          <button className="text-xs text-on-surface-variant/40 hover:text-primary transition-colors cursor-pointer">Reply</button>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
               )}
 
-              {/* Add task */}
-              <div className="flex gap-2 mt-4 pt-4">
-                <input
-                  value={newTask.goalId === selectedGoal.id ? newTask.title : ''}
-                  onChange={(e) => setNewTask({ goalId: selectedGoal.id, categoryId: selectedGoal.category_id, title: e.target.value })}
-                  onKeyDown={(e) => { if (e.key === 'Enter') handleAddTask(selectedGoal.id, selectedGoal.category_id) }}
-                  placeholder="Add a new task..."
-                  className="flex-1 rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10"
+              {/* Comment box */}
+              <div className="rounded-[15px] border border-[#ECEFF2] focus-within:border-primary/30 focus-within:ring-[3px] focus-within:ring-primary/10 transition-all overflow-hidden">
+                <textarea
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  placeholder="Add a comment, note, or reflection..."
+                  className="w-full bg-surface px-5 py-4 text-sm text-on-surface resize-none h-24 focus:outline-none placeholder:text-on-surface-variant/30"
                 />
-                <button
-                  onClick={() => handleAddTask(selectedGoal.id, selectedGoal.category_id)}
-                  disabled={!newTask.title || newTask.goalId !== selectedGoal.id}
-                  className="bg-[#1F3649] hover:opacity-90 disabled:opacity-50 text-white px-4 py-2.5 text-sm font-semibold rounded-[10px] transition-all cursor-pointer"
-                >
-                  <Plus size={16} />
-                </button>
+                <div className="flex items-center justify-between px-4 py-2.5 border-t border-[#ECEFF2] bg-[#f2f4f4]/60">
+                  {/* Formatting toolbar */}
+                  <div className="flex items-center gap-1">
+                    {[
+                      { Icon: Bold, label: 'Bold' },
+                      { Icon: Italic, label: 'Italic' },
+                      { Icon: Paperclip, label: 'Attach' },
+                      { Icon: AtSign, label: 'Mention' },
+                    ].map(({ Icon, label }) => (
+                      <button key={label} title={label} className="p-1.5 rounded-lg text-on-surface-variant/50 hover:text-primary hover:bg-white transition-all cursor-pointer">
+                        <Icon size={13} />
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => {
+                      if (!commentText.trim()) return
+                      setGoalComments((prev) => [...prev, { id: Date.now().toString(), text: commentText.trim(), createdAt: new Date() }])
+                      setCommentText('')
+                    }}
+                    disabled={!commentText.trim()}
+                    className="bg-primary hover:opacity-90 disabled:opacity-40 text-white text-xs font-semibold px-4 py-1.5 rounded-[10px] transition-all cursor-pointer"
+                  >
+                    Post
+                  </button>
+                </div>
               </div>
-            </div>
 
-            {/* Reflections */}
-            <div className="bg-white card p-8">
-              <h3 className="font-semibold text-[#2d3435] mb-3">Reflections</h3>
-              <textarea
-                value={reflectionText}
-                onChange={(e) => setReflectionText(e.target.value)}
-                placeholder="Add a reflection or note about this goal..."
-                className="w-full rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10 resize-none h-24"
-              />
-              <div className="flex gap-2 mt-3">
-                <button
-                  onClick={() => {
-                    const prefill = `## ${selectedGoal.title}\n\n${reflectionText}`
-                    navigate('/journal', { state: { prefill } })
-                  }}
-                  disabled={!reflectionText.trim()}
-                  className="bg-[#e4e9ea] hover:bg-[#dde4e5] text-[#2d3435] disabled:opacity-50 px-4 py-2 text-sm font-semibold rounded-[10px] transition-colors cursor-pointer"
-                >
-                  Add Entry
-                </button>
-              </div>
-            </div>
+              {/* Send to journal */}
+              {reflectionText.trim() === '' && goalComments.length === 0 && (
+                <p className="text-xs text-on-surface-variant/30 text-center mt-3">
+                  Write something to track your progress over time
+                </p>
+              )}
+            </section>
+
           </div>
 
-          {/* Right sidebar */}
-          <div className="space-y-5">
-            {/* Progress donut */}
-            <div className="bg-white card p-8 flex flex-col items-center">
-              <h3 className="text-sm font-medium text-[#5a6061] mb-3">Progress</h3>
-              <ScoreDonut score={progressPercent} maxScore={100} color={meta.color} size={140} />
-              <p className="text-xs text-[#5a6061] opacity-60 mt-2">{completedCount} of {goalTasks.length} tasks done</p>
-            </div>
+          {/* ── RIGHT PANE ───────────────────────────────────── */}
+          <div className="col-span-12 lg:col-span-4 space-y-5">
 
-            {/* Key Milestones */}
-            <div className="bg-white card p-6">
-              <h4 className="text-sm font-semibold text-[#2d3435] mb-4">Key Milestones</h4>
-              <div className="space-y-4">
-                {goalTasks.slice(0, 4).map((task, i) => (
-                  <div key={task.id} className="flex gap-3">
-                    <div className="flex flex-col items-center">
-                      <div className={cn('w-3 h-3 rounded-full', task.completed ? 'bg-[#22c55e]' : 'bg-[#ebeeef]')} />
-                      {i < Math.min(goalTasks.length, 4) - 1 && <div className="w-0.5 h-full bg-[#ebeeef] mt-1" />}
-                    </div>
-                    <div className="pb-3">
-                      <p className={cn('text-sm', task.completed ? 'text-[#5a6061] opacity-60 line-through' : 'text-[#2d3435]')}>{task.title}</p>
-                      {task.due_date && <p className="text-xs text-[#5a6061] opacity-60 mt-0.5">{format(new Date(task.due_date), 'MMM d, yyyy')}</p>}
-                    </div>
+            {/* Time Tracking */}
+            <section className="bg-surface card p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Timer size={15} className="text-primary" />
+                <h3 className="text-sm font-bold text-on-surface">Time Tracking</h3>
+              </div>
+
+              {/* Stopwatch display */}
+              <div className="bg-[#f2f4f4] rounded-2xl p-5 mb-4 text-center">
+                <div className="text-3xl font-mono font-bold text-on-surface tracking-tight mb-1">
+                  {fmtTime(timerSeconds)}
+                </div>
+                <div className="text-xs text-on-surface-variant/50">
+                  {timerRunning ? 'Running...' : timerSeconds > 0 ? 'Paused' : 'Ready'}
+                </div>
+              </div>
+
+              {/* Controls */}
+              <div className="flex gap-2 mb-4">
+                <button
+                  onClick={() => setTimerRunning((r) => !r)}
+                  className={cn(
+                    'flex-1 flex items-center justify-center gap-2 py-2.5 rounded-[12px] text-sm font-semibold transition-all cursor-pointer',
+                    timerRunning
+                      ? 'bg-[#f59e0b]/10 text-[#b45309] hover:bg-[#f59e0b]/20'
+                      : 'bg-primary text-white hover:opacity-90'
+                  )}
+                >
+                  {timerRunning ? <Pause size={14} /> : <Play size={14} />}
+                  {timerRunning ? 'Pause' : 'Start'}
+                </button>
+                <button
+                  onClick={stopTimer}
+                  disabled={timerSeconds === 0 && !timerRunning}
+                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-[12px] bg-[#f2f4f4] hover:bg-[#e4e9ea] disabled:opacity-40 text-on-surface-variant text-sm font-semibold transition-colors cursor-pointer"
+                >
+                  <Square size={13} />
+                  Stop
+                </button>
+              </div>
+
+              {/* Stats */}
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between py-2 border-b border-[#ECEFF2]">
+                  <span className="text-xs text-on-surface-variant">Total Logged</span>
+                  <span className="text-xs font-bold text-on-surface font-mono">{fmtTime(totalLoggedSeconds)}</span>
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-xs text-on-surface-variant">Estimated</span>
+                  <span className="text-xs font-bold text-on-surface-variant/40">—</span>
+                </div>
+              </div>
+            </section>
+
+            {/* File Attachments */}
+            <section className="bg-surface card p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Paperclip size={15} className="text-primary" />
+                  <h3 className="text-sm font-bold text-on-surface">Attachments</h3>
+                </div>
+                <button className="text-xs text-primary font-semibold hover:underline cursor-pointer">+ Add</button>
+              </div>
+
+              {/* Image grid placeholder */}
+              <div className="grid grid-cols-3 gap-1.5 mb-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="aspect-square rounded-lg bg-[#f2f4f4] flex items-center justify-center text-on-surface-variant/20 text-xs border border-dashed border-[#ECEFF2]">
+                    <Paperclip size={14} className="opacity-30" />
                   </div>
                 ))}
-                {goalTasks.length === 0 && <p className="text-xs text-[#5a6061] opacity-60">No milestones yet</p>}
               </div>
-            </div>
+
+              {/* File row placeholder */}
+              <div className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f2f4f4] transition-colors cursor-pointer group">
+                <div className="w-8 h-8 rounded-lg bg-[#1F3649]/10 flex items-center justify-center shrink-0">
+                  <Flag size={12} className="text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-on-surface truncate">goal-brief.pdf</p>
+                  <p className="text-[10px] text-on-surface-variant/40">2.4 MB</p>
+                </div>
+                <Download size={13} className="text-on-surface-variant/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+
+              <p className="text-[10px] text-on-surface-variant/30 text-center mt-3">Drop files here or click Add</p>
+            </section>
+
+            {/* Task Details */}
+            <section className="bg-surface card p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <Tag size={15} className="text-primary" />
+                <h3 className="text-sm font-bold text-on-surface">Details</h3>
+              </div>
+              <div className="space-y-0">
+                {/* Assignee */}
+                <div className="flex items-center justify-between py-3 border-b border-[#ECEFF2]">
+                  <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                    <User size={13} className="text-on-surface-variant/50" />
+                    Assignee
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                      <User size={10} className="text-white" />
+                    </div>
+                    <span className="text-xs font-semibold text-on-surface">You</span>
+                  </div>
+                </div>
+
+                {/* Category */}
+                <div className="flex items-center justify-between py-3 border-b border-[#ECEFF2]">
+                  <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                    <Target size={13} className="text-on-surface-variant/50" />
+                    Category
+                  </div>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: `${meta.color}15`, color: meta.color }}>
+                    {cat?.name ?? 'General'}
+                  </span>
+                </div>
+
+                {/* Status */}
+                <div className="flex items-center justify-between py-3 border-b border-[#ECEFF2]">
+                  <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                    <CheckCircle2 size={13} className="text-on-surface-variant/50" />
+                    Status
+                  </div>
+                  <button
+                    onClick={() => updateGoal(selectedGoal.id, { status: selectedGoal.status === 'completed' ? 'active' : 'completed' })}
+                    className={cn(
+                      'text-xs font-bold px-2 py-0.5 rounded-full cursor-pointer transition-colors',
+                      selectedGoal.status === 'completed' ? 'bg-[#22c55e]/10 text-[#16a34a]' : 'bg-[#f59e0b]/10 text-[#b45309]'
+                    )}
+                  >
+                    {selectedGoal.status === 'completed' ? 'Completed' : 'In Progress'}
+                  </button>
+                </div>
+
+                {/* Target Date */}
+                {selectedGoal.target_date && (
+                  <div className="flex items-center justify-between py-3 border-b border-[#ECEFF2]">
+                    <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                      <Calendar size={13} className="text-on-surface-variant/50" />
+                      Target Date
+                    </div>
+                    <span className="text-xs font-semibold text-on-surface">{format(new Date(selectedGoal.target_date), 'MMM d, yyyy')}</span>
+                  </div>
+                )}
+
+                {/* Last Activity */}
+                <div className="flex items-center justify-between py-3 border-b border-[#ECEFF2]">
+                  <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                    <Clock size={13} className="text-on-surface-variant/50" />
+                    Last Activity
+                  </div>
+                  <span className="text-xs text-on-surface-variant/50">Just now</span>
+                </div>
+
+                {/* Created */}
+                <div className="flex items-center justify-between py-3">
+                  <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                    <Flag size={13} className="text-on-surface-variant/50" />
+                    Created
+                  </div>
+                  <span className="text-xs font-semibold text-on-surface">{format(new Date(selectedGoal.created_at), 'MMM d, yyyy')}</span>
+                </div>
+              </div>
+            </section>
+
+            {/* Progress donut */}
+            <section className="bg-surface card p-6">
+              <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 mb-4">Overall Progress</p>
+              <div className="flex flex-col items-center py-2">
+                <ScoreDonut score={progressPercent} maxScore={100} color={meta.color} size={120} />
+                <p className="text-xs text-on-surface-variant mt-3">{completedCount} of {goalTasks.length} tasks done</p>
+              </div>
+            </section>
+
           </div>
         </div>
       </div>
