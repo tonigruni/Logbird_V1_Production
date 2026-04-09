@@ -2,7 +2,8 @@ import type { User } from '@supabase/supabase-js'
 import type { JournalEntry, JournalTemplate } from '../stores/journalStore'
 import type { WheelCategory, WheelCheckin, Goal, Task } from '../stores/wheelStore'
 
-export const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true'
+// Default to demo mode when Supabase env vars aren't configured (e.g. Vercel without secrets)
+export const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true' || !import.meta.env.VITE_SUPABASE_URL
 
 export const DEMO_USER: User = {
   id: 'demo-user-id',
