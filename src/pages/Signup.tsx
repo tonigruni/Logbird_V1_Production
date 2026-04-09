@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { DEMO_MODE } from '../lib/demo'
 
 const inputCls =
   'w-full rounded-[15px] border border-[#e8eaeb] bg-white px-4 py-3 text-sm text-[#2d3435] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#586062]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10'
@@ -12,6 +13,11 @@ export default function Signup() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+
+  // In demo mode, skip signup entirely
+  useEffect(() => {
+    if (DEMO_MODE) navigate('/', { replace: true })
+  }, [])
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()

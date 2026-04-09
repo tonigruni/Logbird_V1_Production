@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { DEMO_MODE } from '../lib/demo'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -8,6 +9,11 @@ export default function Login() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+
+  // In demo mode, skip login entirely
+  useEffect(() => {
+    if (DEMO_MODE) navigate('/', { replace: true })
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
