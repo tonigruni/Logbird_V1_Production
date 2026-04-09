@@ -32,6 +32,14 @@ export default function App() {
       return
     }
     supabase.auth.getSession().then(({ data: { session } }) => {
+      // If user chose not to stay signed in, sign them out when the browser is reopened
+      if (session && localStorage.getItem('logbird_keep_signed_in') === 'false') {
+        if (!sessionStorage.getItem('logbird_session_active')) {
+          supabase.auth.signOut()
+          setLoading(false)
+          return
+        }
+      }
       setSession(session)
       if (session?.user) loadProfile(session.user.id)
       setLoading(false)

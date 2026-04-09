@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" fill="none">
+  <defs>
+    <radialGradient id="bg" cx="48%" cy="42%" r="72%">
+      <stop offset="0%" stop-color="#e8e5e0"/>
+      <stop offset="100%" stop-color="#d6d2cc"/>
+    </radialGradient>
+    <radialGradient id="vignette" cx="50%" cy="42%" r="55%">
+      <stop offset="0%" stop-color="#1F3649" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#1F3649" stop-opacity="0.06"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <rect width="800" height="1000" fill="url(#vignette)"/>
+
+  <!-- Concentric rings — Wheel of Life motif -->
+  <circle cx="400" cy="420" r="52"  stroke="rgba(31,54,73,0.22)" stroke-width="1"/>
+  <circle cx="400" cy="420" r="115" stroke="rgba(31,54,73,0.14)" stroke-width="1"/>
+  <circle cx="400" cy="420" r="185" stroke="rgba(31,54,73,0.09)" stroke-width="1"/>
+  <circle cx="400" cy="420" r="255" stroke="rgba(31,54,73,0.06)" stroke-width="1"/>
+  <circle cx="400" cy="420" r="328" stroke="rgba(31,54,73,0.04)" stroke-width="1"/>
+  <circle cx="400" cy="420" r="400" stroke="rgba(31,54,73,0.025)" stroke-width="1"/>
+
+  <!-- Compass cross hairs -->
+  <line x1="400" y1="0"   x2="400" y2="1000" stroke="rgba(31,54,73,0.05)" stroke-width="1"/>
+  <line x1="0"   y1="420" x2="800" y2="420"  stroke="rgba(31,54,73,0.05)" stroke-width="1"/>
+
+  <!-- Diagonal compass lines -->
+  <line x1="117" y1="137" x2="683" y2="703" stroke="rgba(31,54,73,0.03)" stroke-width="1"/>
+  <line x1="683" y1="137" x2="117" y2="703" stroke="rgba(31,54,73,0.03)" stroke-width="1"/>
+
+  <!-- Cardinal point markers -->
+  <circle cx="400" cy="93"  r="3.5" fill="rgba(31,54,73,0.30)"/>
+  <circle cx="728" cy="420" r="3.5" fill="rgba(31,54,73,0.22)"/>
+  <circle cx="72"  cy="420" r="3.5" fill="rgba(31,54,73,0.22)"/>
+  <circle cx="400" cy="748" r="3.5" fill="rgba(31,54,73,0.22)"/>
+
+  <!-- Inner tick marks -->
+  <line x1="400" y1="367" x2="400" y2="375" stroke="rgba(31,54,73,0.38)" stroke-width="1.5"/>
+  <line x1="400" y1="463" x2="400" y2="471" stroke="rgba(31,54,73,0.25)" stroke-width="1.5"/>
+  <line x1="348" y1="420" x2="356" y2="420" stroke="rgba(31,54,73,0.32)" stroke-width="1.5"/>
+  <line x1="444" y1="420" x2="452" y2="420" stroke="rgba(31,54,73,0.32)" stroke-width="1.5"/>
+
+  <!-- Bird in flight — minimal outline -->
+  <path d="M 155 410 C 220 368 310 368 390 403"
+    stroke="rgba(31,54,73,0.65)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M 410 403 C 490 368 580 368 645 410"
+    stroke="rgba(31,54,73,0.65)" stroke-width="1.5" stroke-linecap="round"/>
+  <ellipse cx="400" cy="406" rx="11" ry="7" fill="rgba(31,54,73,0.55)"/>
+  <path d="M 394 411 C 391 432 386 452 389 470" stroke="rgba(31,54,73,0.35)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M 400 413 C 400 434 400 454 400 472" stroke="rgba(31,54,73,0.40)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M 406 411 C 409 432 414 452 411 470" stroke="rgba(31,54,73,0.35)" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Scattered particles -->
+  <circle cx="142" cy="228" r="2"   fill="rgba(31,54,73,0.18)"/>
+  <circle cx="665" cy="195" r="1.5" fill="rgba(31,54,73,0.14)"/>
+  <circle cx="88"  cy="585" r="2"   fill="rgba(31,54,73,0.12)"/>
+  <circle cx="718" cy="630" r="1.5" fill="rgba(31,54,73,0.15)"/>
+  <circle cx="695" cy="285" r="1"   fill="rgba(31,54,73,0.20)"/>
+  <circle cx="108" cy="460" r="1"   fill="rgba(31,54,73,0.16)"/>
+  <circle cx="305" cy="660" r="1.5" fill="rgba(31,54,73,0.11)"/>
+  <circle cx="495" cy="710" r="2"   fill="rgba(31,54,73,0.11)"/>
+  <circle cx="218" cy="720" r="1"   fill="rgba(31,54,73,0.14)"/>
+  <circle cx="572" cy="590" r="1.5" fill="rgba(31,54,73,0.13)"/>
+  <circle cx="740" cy="500" r="1"   fill="rgba(31,54,73,0.10)"/>
+  <circle cx="58"  cy="330" r="1.5" fill="rgba(31,54,73,0.12)"/>
+  <circle cx="370" cy="160" r="1"   fill="rgba(31,54,73,0.17)"/>
+  <circle cx="430" cy="150" r="1.5" fill="rgba(31,54,73,0.14)"/>
+
+  <!-- Subtle label -->
+  <text x="400" y="916"
+    text-anchor="middle"
+    fill="rgba(31,54,73,0.18)"
+    font-size="10"
+    font-family="system-ui, -apple-system, sans-serif"
+    letter-spacing="5"
+    font-weight="400">PERSONAL OS</text>
+</svg>

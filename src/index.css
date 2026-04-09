@@ -254,6 +254,59 @@ input[type='date'] { color-scheme: light; }
   pointer-events: none;
 }
 
+/* ── Auth page animations ──────────────────────────────────── */
+@keyframes authFadeIn {
+  to { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
+.auth-fade {
+  opacity: 0;
+  filter: blur(3px);
+  transform: translateY(10px);
+  animation: authFadeIn 0.45s ease forwards;
+}
+.auth-delay-1 { animation-delay: 0.05s; }
+.auth-delay-2 { animation-delay: 0.10s; }
+.auth-delay-3 { animation-delay: 0.15s; }
+.auth-delay-4 { animation-delay: 0.20s; }
+.auth-delay-5 { animation-delay: 0.25s; }
+.auth-delay-6 { animation-delay: 0.30s; }
+.auth-delay-7 { animation-delay: 0.35s; }
+.auth-delay-8 { animation-delay: 0.40s; }
+
+/* ── Auth slide-in from right (hero panel) ─────────────────── */
+@keyframes authSlideRight {
+  to { opacity: 1; filter: blur(0); transform: translateX(0); }
+}
+.auth-slide-right {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateX(24px);
+  animation: authSlideRight 0.6s ease forwards;
+}
+
+/* ── Auth testimonial card pop-in ───────────────────────────── */
+@keyframes authTestimonial {
+  to { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+}
+.auth-testimonial {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(16px) scale(0.97);
+  animation: authTestimonial 0.5s ease forwards;
+}
+
+/* ── Auth glass input wrapper ──────────────────────────────── */
+.auth-input {
+  border-radius: 15px;
+  border: 1px solid var(--card-border-color);
+  background: var(--color-surface);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.auth-input:focus-within {
+  border-color: rgba(31, 54, 73, 0.3);
+  box-shadow: 0 0 0 3px rgba(31, 54, 73, 0.08);
+}
+
 /* Select dark arrow */
 select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23586062' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
