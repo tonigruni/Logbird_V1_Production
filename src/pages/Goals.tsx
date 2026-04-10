@@ -5,6 +5,8 @@ import {
   Lightning,
   ListBullets,
   SquaresFour,
+  Columns,
+  Plus,
   ArrowRight,
   Calendar,
   CheckCircle,
@@ -26,6 +28,129 @@ const PROJECT_MAP: Record<string, { title: string; slug: string; color: string }
   'proj-identity-redesign': { title: 'Identity Redesign', slug: 'identity-redesign', color: '#1F3649' },
   'proj-focus-mastery': { title: 'Focus Mastery', slug: 'focus-mastery', color: '#22c55e' },
   'proj-senior-track': { title: 'Senior Track Prep', slug: 'senior-track-prep', color: '#1F3649' },
+}
+
+// ---------------------------------------------------------------------------
+// Category colour palette
+// ---------------------------------------------------------------------------
+
+const CATEGORY_COLORS: Record<string, string> = {
+  'Health': '#22c55e',
+  'Career': '#1F3649',
+  'Finance': '#f59e0b',
+  'Relationships': '#ec4899',
+  'Personal Growth': '#8b5cf6',
+  'Fun': '#f97316',
+  'Environment': '#06b6d4',
+  'Family/Friends': '#e11d48',
+}
+
+function getCategoryColor(name: string | null): string {
+  return (name && CATEGORY_COLORS[name]) || '#1F3649'
+}
+
+// ---------------------------------------------------------------------------
+// Goal Card (portfolio view)
+// ---------------------------------------------------------------------------
+
+function GoalCard({ goal, categoryName, taskCount, completedCount }: {
+  goal: Goal
+  categoryName: string | null
+  taskCount: number
+  completedCount: number
+}) {
+  const progress = taskCount > 0 ? Math.round(completedCount / taskCount * 100) : 0
+  const color = getCategoryColor(categoryName)
+
+  return (
+    <article className="bg-white card overflow-hidden hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 group cursor-pointer">
+      {/* Coloured header */}
+      <div className="h-28 relative overflow-hidden" style={{ backgroundColor: color + '18' }}>
+        <div
+          className="absolute inset-0"
+          style={{ background: `linear-gradient(135deg, ${color}28 0%, ${color}08 100%)` }}
+        />
+        <Target
+          size={64}
+          weight="bold"
+          className="absolute -bottom-3 -right-3 opacity-[0.08]"
+          style={{ color }}
+        />
+        <span
+          className="absolute top-3 left-3 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
+          style={{ color, backgroundColor: color + '20' }}
+        >
+          {categoryName || 'Goal'}
+        </span>
+        <span className={cn(
+          'absolute top-3 right-3 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider',
+          goal.status === 'active' ? 'bg-[#1F3649]/10 text-[#1F3649]' :
+          goal.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' :
+          'bg-[#adb3b4]/10 text-[#adb3b4]'
+        )}>
+          {goal.status}
+        </span>
+      </div>
+
+      {/* Body */}
+      <div className="p-5 space-y-3">
+        <div>
+          <h3 className="font-bold text-[#2d3435] text-sm leading-snug group-hover:text-[#1F3649] transition-colors">
+            {goal.title}
+          </h3>
+          {goal.description && (
+            <p className="text-xs text-[#5a6061] leading-relaxed line-clamp-2 mt-1">
+              {goal.description}
+            </p>
+          )}
+        </div>
+
+        {/* Progress */}
+        <div>
+          <div className="flex justify-between text-[10px] font-bold mb-1.5">
+            <span className="text-[#adb3b4] uppercase tracking-wider">Progress</span>
+            <span style={{ color }}>{progress}%</span>
+          </div>
+          <div className="w-full h-1.5 bg-[#f2f4f4] rounded-full overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{ width: `${progress}%`, backgroundColor: color }}
+            />
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between">
+          <span className="flex items-center gap-1 text-[10px] text-[#adb3b4]">
+            <CheckSquare size={10} />
+            {completedCount}/{taskCount} tasks
+          </span>
+          {goal.target_date && (
+            <span className="flex items-center gap-1 text-[10px] text-[#adb3b4]">
+              <Calendar size={10} />
+              {new Date(goal.target_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            </span>
+          )}
+        </div>
+      </div>
+    </article>
+  )
+}
+
+function NewGoalCard() {
+  return (
+    <button className="group flex flex-col items-center justify-center bg-white/60 card min-h-[220px] !border-2 !border-dashed !border-[#adb3b4]/30 hover:bg-white hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 cursor-pointer w-full">
+      <div className="w-12 h-12 rounded-full bg-[#f2f4f4] flex items-center justify-center group-hover:bg-[#1F3649]/10 transition-colors mb-3">
+        <Plus size={22} weight="bold" className="text-[#5a6061] group-hover:text-[#1F3649] transition-colors" />
+      </div>
+      <span className="text-sm font-bold text-[#2d3435] group-hover:text-[#1F3649] transition-colors">
+        Set a New Goal
+      </span>
+      <p className="text-xs text-[#adb3b4] mt-1 max-w-[180px] text-center">
+        Define what you want to achieve and start making progress.
+      </p>
+    </button>
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -127,7 +252,7 @@ export default function Goals() {
   const { user } = useAuthStore()
   const { goals, tasks, categories, fetchAll, updateGoal } = useWheelStore()
 
-  const [view, setView] = useState<'list' | 'board'>('list')
+  const [view, setView] = useState<'portfolio' | 'list' | 'board'>('portfolio')
 
   // Handle board card moves — update goal status
   const handleBoardMove = useCallback((cardId: string, _fromColumnId: string, toColumnId: string) => {
@@ -216,6 +341,15 @@ export default function Goals() {
           </div>
           <div className="flex items-center bg-white/10 rounded-[10px] p-0.5">
             <button
+              onClick={() => setView('portfolio')}
+              className={cn(
+                'p-1.5 rounded-[8px] transition-all',
+                view === 'portfolio' ? 'bg-white/20 text-white' : 'text-white/50'
+              )}
+            >
+              <SquaresFour size={14} weight="bold" />
+            </button>
+            <button
               onClick={() => setView('list')}
               className={cn(
                 'p-1.5 rounded-[8px] transition-all',
@@ -231,16 +365,18 @@ export default function Goals() {
                 view === 'board' ? 'bg-white/20 text-white' : 'text-white/50'
               )}
             >
-              <SquaresFour size={14} weight="bold" />
+              <Columns size={14} weight="bold" />
             </button>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      {view === 'board' ? (
+      {view === 'board' && (
         <BoardView columns={boardColumns} onMoveCard={handleBoardMove} />
-      ) : (
+      )}
+
+      {view === 'list' && (
         <div className="space-y-2">
           {goals.map(goal => {
             const counts = goalTaskCounts[goal.id] || { total: 0, completed: 0 }
@@ -256,12 +392,30 @@ export default function Goals() {
               />
             )
           })}
-
           {goals.length === 0 && (
             <div className="text-center py-16">
               <p className="text-sm text-[#adb3b4]">No goals yet. Create goals in Wheel of Life.</p>
             </div>
           )}
+        </div>
+      )}
+
+      {view === 'portfolio' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          {goals.map(goal => {
+            const counts = goalTaskCounts[goal.id] || { total: 0, completed: 0 }
+            const categoryName = categoryMap[goal.category_id]?.name ?? null
+            return (
+              <GoalCard
+                key={goal.id}
+                goal={goal}
+                categoryName={categoryName}
+                taskCount={counts.total}
+                completedCount={counts.completed}
+              />
+            )
+          })}
+          <NewGoalCard />
         </div>
       )}
     </div>
