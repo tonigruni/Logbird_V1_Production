@@ -1,5 +1,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import GoalDetailView from '../components/GoalDetailView'
+import type { Goal } from '../stores/wheelStore'
 import {
   Target,
   Lightning,
@@ -18,7 +20,6 @@ import { useAuthStore } from '../stores/authStore'
 import BoardView from '../components/BoardView'
 import type { BoardColumn } from '../components/BoardView'
 import GradientBarsBackground from '../components/ui/GradientBarsBackground'
-import type { Goal } from '../stores/wheelStore'
 
 // ---------------------------------------------------------------------------
 // Project lookup (demo)
@@ -53,17 +54,18 @@ function getCategoryColor(name: string | null): string {
 // Goal Card (portfolio view)
 // ---------------------------------------------------------------------------
 
-function GoalCard({ goal, categoryName, taskCount, completedCount }: {
+function GoalCard({ goal, categoryName, taskCount, completedCount, onClick }: {
   goal: Goal
   categoryName: string | null
   taskCount: number
   completedCount: number
+  onClick?: () => void
 }) {
   const progress = taskCount > 0 ? Math.round(completedCount / taskCount * 100) : 0
   const color = getCategoryColor(categoryName)
 
   return (
-    <article className="bg-white card overflow-hidden hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 group cursor-pointer">
+    <article onClick={onClick} className="bg-white card overflow-hidden hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 group cursor-pointer">
       {/* Coloured header */}
       <div className="h-28 relative overflow-hidden" style={{ backgroundColor: color + '18' }}>
         <div
@@ -157,18 +159,19 @@ function NewGoalCard() {
 // Goal Row (list view)
 // ---------------------------------------------------------------------------
 
-function GoalRow({ goal, categoryName, taskCount, completedCount, project }: {
+function GoalRow({ goal, categoryName, taskCount, completedCount, project, onClick }: {
   goal: Goal
   categoryName: string | null
   taskCount: number
   completedCount: number
   project: { title: string; slug: string; color: string } | null
+  onClick?: () => void
 }) {
   const navigate = useNavigate()
   const progress = taskCount > 0 ? Math.round(completedCount / taskCount * 100) : 0
 
   return (
-    <div className="flex items-center gap-4 px-5 py-4 bg-white card group hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300">
+    <div onClick={onClick} className="flex items-center gap-4 px-5 py-4 bg-white card group hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 cursor-pointer">
       {/* Icon */}
       <div className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0"
         style={{ backgroundColor: project ? project.color + '15' : '#1F3649' + '15' }}
@@ -253,6 +256,7 @@ export default function Goals() {
   const { goals, tasks, categories, fetchAll, updateGoal } = useWheelStore()
 
   const [view, setView] = useState<'portfolio' | 'list' | 'board'>('portfolio')
+  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null)
 
   // Handle board card moves — update goal status
   const handleBoardMove = useCallback((cardId: string, _fromColumnId: string, toColumnId: string) => {
@@ -373,7 +377,14 @@ export default function Goals() {
 
       {/* Content */}
       {view === 'board' && (
-        <BoardView columns={boardColumns} onMoveCard={handleBoardMove} />
+        <BoardView
+          columns={boardColumns}
+          onMoveCard={handleBoardMove}
+          onCardClick={(cardId) => {
+            const goal = goals.find(g => g.id === cardId)
+            if (goal) setSelectedGoal(goal)
+          }}
+        />
       )}
 
       {view === 'list' && (
@@ -389,6 +400,7 @@ export default function Goals() {
                 taskCount={counts.total}
                 completedCount={counts.completed}
                 project={project}
+                onClick={() => setSelectedGoal(goal)}
               />
             )
           })}
@@ -412,10 +424,23 @@ export default function Goals() {
                 categoryName={categoryName}
                 taskCount={counts.total}
                 completedCount={counts.completed}
+                onClick={() => setSelectedGoal(goal)}
               />
             )
           })}
           <NewGoalCard />
+        </div>
+      )}
+
+      {/* Goal detail overlay */}
+      {selectedGoal && (
+        <div className="fixed inset-0 z-50 bg-[#f8fafa] overflow-y-auto">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 pt-6">
+            <GoalDetailView
+              goal={selectedGoal}
+              onClose={() => setSelectedGoal(null)}
+            />
+          </div>
         </div>
       )}
     </div>
