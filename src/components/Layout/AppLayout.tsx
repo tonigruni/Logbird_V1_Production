@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom'
-import { Search, LayoutDashboard, BookOpen, Circle, User, Settings, LogOut, Plus } from 'lucide-react'
+import { Search, LayoutDashboard, BookOpen, Circle, User, Settings, LogOut, Plus, FileText } from 'lucide-react'
 import Sidebar from './Sidebar'
 import { useAuthStore } from '../../stores/authStore'
 import { cn } from '../../lib/utils'
@@ -191,6 +191,13 @@ export default function AppLayout() {
                       style={{ borderRadius: 10 }}
                     >
                       <Settings size={14} className="text-[#727A84]" /> Settings
+                    </button>
+                    <button
+                      onClick={() => navigate('/docs')}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
+                      style={{ borderRadius: 10 }}
+                    >
+                      <FileText size={14} className="text-[#727A84]" /> Docs
                     </button>
                   </PopoverBody>
                   <PopoverFooter>

@@ -1,7 +1,7 @@
-import { NavLink, useNavigate, useLocation } from 'react-router-dom'
-import { SquaresFour, BookOpen, ChartDonut, CheckSquare, Target, Kanban, Timer, UserCircle, Gear, SignOut, Files } from '@phosphor-icons/react'
+import { useState, useRef, useEffect } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
+import { SquaresFour, BookOpen, ChartDonut, CheckSquare, Target, Kanban, Timer, CaretDown } from '@phosphor-icons/react'
 import { cn } from '../../lib/utils'
-import { useAuthStore } from '../../stores/authStore'
 
 const topNav = [
   { to: '/', icon: SquaresFour, label: 'Dashboard' },
@@ -19,24 +19,23 @@ const productivityNav = [
   { to: '/timeboxing', icon: Timer, label: 'Timeboxing' },
 ]
 
-const systemNav = [
-  { to: '/docs', icon: Files, label: 'Docs' },
-]
-
-const bottomNav = [
-  { to: '/account', icon: UserCircle, label: 'Account' },
-  { to: '/settings', icon: Gear, label: 'Settings' },
-]
-
 export default function Sidebar() {
-  const { signOut } = useAuthStore()
-  const navigate = useNavigate()
   const location = useLocation()
+  const navRef = useRef<HTMLDivElement>(null)
+  const [canScrollDown, setCanScrollDown] = useState(false)
 
-  const handleSignOut = async () => {
-    await signOut()
-    navigate('/login')
-  }
+  useEffect(() => {
+    const el = navRef.current
+    if (!el) return
+    const check = () => setCanScrollDown(el.scrollHeight > el.clientHeight + el.scrollTop + 2)
+    check()
+    el.addEventListener('scroll', check)
+    window.addEventListener('resize', check)
+    return () => {
+      el.removeEventListener('scroll', check)
+      window.removeEventListener('resize', check)
+    }
+  }, [])
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     cn(
@@ -53,8 +52,8 @@ export default function Sidebar() {
         <img src="/Logo complete dark semibold.png" alt="Logbird" className="h-12 w-auto" />
       </div>
 
-      {/* Nav items */}
-      <nav className="flex-1 overflow-y-auto">
+      {/* Nav items — hidden scrollbar, arrow indicator shows when overflowing */}
+      <div ref={navRef} className="flex-1 overflow-y-auto scrollbar-hide min-h-0">
         <div className="space-y-1">
           {topNav.map(({ to, icon: Icon, label }) => {
             const active = to === '/' ? location.pathname === '/' : location.pathname.startsWith(to)
@@ -104,44 +103,11 @@ export default function Sidebar() {
             })}
           </div>
         </div>
+      </div>
 
-        {/* System section */}
-        <div>
-          <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider px-4 pt-6 pb-2 block">
-            System
-          </span>
-          <div className="space-y-1">
-            {systemNav.map(({ to, icon: Icon, label }) => {
-              const active = location.pathname.startsWith(to)
-              return (
-                <NavLink key={to} to={to} className={() => linkClass({ isActive: active })}>
-                  <Icon size={20} weight={active ? 'bold' : 'regular'} className="shrink-0" />
-                  {label}
-                </NavLink>
-              )
-            })}
-          </div>
-        </div>
-      </nav>
-
-      {/* Bottom section */}
-      <div className="mt-auto space-y-1">
-        {bottomNav.map(({ to, icon: Icon, label }) => {
-          const active = location.pathname.startsWith(to)
-          return (
-            <NavLink key={to} to={to} className={() => linkClass({ isActive: active })}>
-              <Icon size={20} weight={active ? 'bold' : 'regular'} className="shrink-0" />
-              {label}
-            </NavLink>
-          )
-        })}
-        <button
-          onClick={handleSignOut}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-[15px] text-sm font-medium text-[#727A84] hover:bg-[#9f403d]/10 hover:text-[#9f403d] transition-all duration-200 cursor-pointer"
-        >
-          <SignOut size={20} weight="regular" className="shrink-0" />
-          Sign Out
-        </button>
+      {/* Faint scroll-down indicator */}
+      <div className={cn('flex justify-center py-3 transition-opacity duration-200 pointer-events-none', canScrollDown ? 'opacity-100' : 'opacity-0')}>
+        <CaretDown size={14} className="text-[#B5C1C8]" />
       </div>
     </aside>
   )
