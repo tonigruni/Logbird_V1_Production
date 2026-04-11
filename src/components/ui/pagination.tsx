@@ -30,8 +30,8 @@ function PaginationButton({ className, isActive, ...props }: PaginationButtonPro
       className={cn(
         'flex h-10 w-10 items-center justify-center text-sm font-semibold transition-all duration-200 cursor-pointer',
         isActive
-          ? 'bg-[#1F3649] text-white scale-105'
-          : 'text-[#586062] hover:bg-[#f2f4f4] hover:text-[#2d3435]',
+          ? 'bg-[#0C1629] text-white scale-105'
+          : 'text-[#727A84] hover:bg-[#F0F3F3] hover:text-[#0C1629]',
         className,
       )}
       style={{ borderRadius: 10 }}
@@ -45,7 +45,7 @@ function PaginationPrev({ className, ...props }: React.ButtonHTMLAttributes<HTML
     <button
       aria-label="Go to previous page"
       className={cn(
-        'flex h-10 items-center gap-1.5 px-4 text-sm font-semibold text-[#586062] hover:bg-[#f2f4f4] hover:text-[#2d3435] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer',
+        'flex h-10 items-center gap-1.5 px-4 text-sm font-semibold text-[#727A84] hover:bg-[#F0F3F3] hover:text-[#0C1629] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer',
         className,
       )}
       style={{ borderRadius: 10 }}
@@ -61,7 +61,7 @@ function PaginationNext({ className, ...props }: React.ButtonHTMLAttributes<HTML
     <button
       aria-label="Go to next page"
       className={cn(
-        'flex h-10 items-center gap-1.5 px-4 text-sm font-semibold text-[#586062] hover:bg-[#f2f4f4] hover:text-[#2d3435] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer',
+        'flex h-10 items-center gap-1.5 px-4 text-sm font-semibold text-[#727A84] hover:bg-[#F0F3F3] hover:text-[#0C1629] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer',
         className,
       )}
       style={{ borderRadius: 10 }}
@@ -75,7 +75,7 @@ function PaginationNext({ className, ...props }: React.ButtonHTMLAttributes<HTML
 const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<'span'>) => (
   <span
     aria-hidden
-    className={cn('flex h-10 w-10 items-center justify-center text-[#adb3b4]', className)}
+    className={cn('flex h-10 w-10 items-center justify-center text-[#B5C1C8]', className)}
     {...props}
   >
     <MoreHorizontal size={16} />

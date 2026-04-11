@@ -102,13 +102,13 @@ export function FloatingAiAssistant() {
         onClick={() => setIsChatOpen(o => !o)}
         style={{
           borderRadius: '50%',
-          background: 'linear-gradient(135deg, #162838 0%, #1F3649 100%)',
+          background: 'linear-gradient(135deg, #162838 0%, #0C1629 100%)',
           boxShadow: '0 8px 24px rgba(31,54,73,0.4), 0 2px 8px rgba(31,54,73,0.2)',
           border: '2px solid rgba(255,255,255,0.1)',
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" style={{ borderRadius: '50%' }} />
-        <div className="absolute inset-0 animate-ping opacity-10 bg-[#1F3649]" style={{ borderRadius: '50%' }} />
+        <div className="absolute inset-0 animate-ping opacity-10 bg-[#0C1629]" style={{ borderRadius: '50%' }} />
         <div className="relative z-10 text-white">
           {isChatOpen ? <X size={20} /> : <Bot size={22} />}
         </div>
@@ -121,16 +121,16 @@ export function FloatingAiAssistant() {
           className="absolute right-0 w-[400px] animate-pop-in"
           style={{ bottom: '4.5rem' }}
         >
-          <div className="flex flex-col bg-white border border-[#e8eaeb] shadow-[0_16px_48px_rgba(45,52,53,0.12)] overflow-hidden" style={{ borderRadius: 15 }}>
+          <div className="flex flex-col bg-white border border-[#D6DCE0] shadow-[0_16px_48px_rgba(12,22,41,0.12)] overflow-hidden" style={{ borderRadius: 15 }}>
 
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#f2f4f4] bg-[#f2f4f4]">
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#F0F3F3] bg-[#F0F3F3]">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-[#4ade80] animate-pulse" />
-                <span className="text-xs font-semibold text-[#2d3435]">Journal AI</span>
+                <span className="text-xs font-semibold text-[#0C1629]">Journal AI</span>
               </div>
-              <button onClick={() => setIsChatOpen(false)} className="p-1 hover:bg-[#ebeeef] transition-colors" style={{ borderRadius: 8 }}>
-                <X size={14} className="text-[#586062]" />
+              <button onClick={() => setIsChatOpen(false)} className="p-1 hover:bg-[#F0F3F3] transition-colors" style={{ borderRadius: 8 }}>
+                <X size={14} className="text-[#727A84]" />
               </button>
             </div>
 
@@ -140,14 +140,14 @@ export function FloatingAiAssistant() {
                 {messages.map((msg, i) => (
                   <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                     {msg.role === 'assistant' && (
-                      <div className="w-5 h-5 rounded-full bg-[#1F3649]/10 flex items-center justify-center mr-2 mt-0.5 shrink-0">
-                        <Sparkles size={10} className="text-[#1F3649]" />
+                      <div className="w-5 h-5 rounded-full bg-[#0C1629]/10 flex items-center justify-center mr-2 mt-0.5 shrink-0">
+                        <Sparkles size={10} className="text-[#0C1629]" />
                       </div>
                     )}
                     <div className={`max-w-[80%] px-3 py-2 rounded-2xl text-xs leading-relaxed ${
                       msg.role === 'user'
-                        ? 'bg-[#1F3649] text-white rounded-br-sm'
-                        : 'bg-white border border-[#f2f4f4] text-[#2d3435] rounded-bl-sm shadow-sm'
+                        ? 'bg-[#0C1629] text-white rounded-br-sm'
+                        : 'bg-white border border-[#F0F3F3] text-[#0C1629] rounded-bl-sm shadow-sm'
                     }`}>
                       {msg.content}
                     </div>
@@ -155,10 +155,10 @@ export function FloatingAiAssistant() {
                 ))}
                 {isLoading && (
                   <div className="flex justify-start">
-                    <div className="w-5 h-5 rounded-full bg-[#1F3649]/10 flex items-center justify-center mr-2 mt-0.5 shrink-0">
-                      <Sparkles size={10} className="text-[#1F3649] animate-pulse" />
+                    <div className="w-5 h-5 rounded-full bg-[#0C1629]/10 flex items-center justify-center mr-2 mt-0.5 shrink-0">
+                      <Sparkles size={10} className="text-[#0C1629] animate-pulse" />
                     </div>
-                    <div className="bg-white border border-[#f2f4f4] text-[#adb3b4] px-3 py-2 rounded-2xl rounded-bl-sm text-xs shadow-sm">
+                    <div className="bg-white border border-[#F0F3F3] text-[#B5C1C8] px-3 py-2 rounded-2xl rounded-bl-sm text-xs shadow-sm">
                       Thinking…
                     </div>
                   </div>
@@ -175,15 +175,15 @@ export function FloatingAiAssistant() {
                 onKeyDown={handleKeyDown}
                 rows={3}
                 placeholder={messages.length === 0 ? 'Ask about your journal entries, patterns, or reflections…' : 'Ask a follow-up…'}
-                className="w-full bg-[#f2f4f4] border border-transparent rounded-[15px] px-4 py-3 text-sm text-[#2d3435] placeholder:text-[#adb3b4] resize-none outline-none focus:border-[#1F3649]/20 focus:bg-white focus:ring-2 focus:ring-[#1F3649]/10 transition-all scrollbar-hide leading-relaxed"
+                className="w-full bg-[#F0F3F3] border border-transparent rounded-[15px] px-4 py-3 text-sm text-[#0C1629] placeholder:text-[#B5C1C8] resize-none outline-none focus:border-[#0C1629]/20 focus:bg-white focus:ring-2 focus:ring-[#0C1629]/10 transition-all scrollbar-hide leading-relaxed"
                 style={{ scrollbarWidth: 'none' }}
               />
               <div className="flex items-center justify-between mt-2">
-                <span className="text-[10px] text-[#adb3b4]">{input.length}/{maxChars} · Shift+Enter for new line</span>
+                <span className="text-[10px] text-[#B5C1C8]">{input.length}/{maxChars} · Shift+Enter for new line</span>
                 <button
                   onClick={sendMessage}
                   disabled={!input.trim() || isLoading}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-[#1F3649] hover:bg-[#2a4a63] disabled:bg-[#adb3b4] disabled:cursor-not-allowed text-white text-xs font-semibold rounded-[15px] transition-all"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-[#0C1629] hover:bg-[#2a4a63] disabled:bg-[#B5C1C8] disabled:cursor-not-allowed text-white text-xs font-semibold rounded-[15px] transition-all"
                 >
                   <Send size={12} />
                   Send

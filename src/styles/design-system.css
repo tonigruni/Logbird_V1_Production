@@ -9,35 +9,35 @@
 :root {
   /* ── Card ── */
   --card-radius:       15px;
-  --card-border-color: #ECEFF2;
+  --card-border-color: #D6DCE0;
   --card-border:       1px solid var(--card-border-color);
   --card-shadow:       none;
 
   /* ── Brand ── */
-  --color-primary:     #1F3649;
-  --color-primary-dark:#213233;
-  --color-accent:      #1F3649;
-  --color-accent-dark: #162838;
+  --color-primary:     #0C1629;
+  --color-primary-dark:#091120;
+  --color-accent:      #0C1629;
+  --color-accent-dark: #060D17;
 
   /* ── Layout ── */
   --sidebar-width:             288px;
-  --sidebar-border-color:      #ECEFF2;
+  --sidebar-border-color:      #D6DCE0;
   --sidebar-border-width:      1px;
 
   /* ── Surfaces ── */
-  --color-bg:                  #ffffff;
-  --color-surface:             #ffffff;
-  --color-muted:               #f2f4f4;
-  --color-container-lowest:    #ffffff;
-  --color-container-low:       #f2f4f4;
-  --color-container:           #ebeeef;
-  --color-container-high:      #e4e9ea;
-  --color-container-highest:   #dde4e5;
+  --color-bg:                  #FEFEFE;
+  --color-surface:             #FEFEFE;
+  --color-muted:               #F0F3F3;
+  --color-container-lowest:    #FEFEFE;
+  --color-container-low:       #F0F3F3;
+  --color-container:           #F0F3F3;
+  --color-container-high:      #D6DCE0;
+  --color-container-highest:   #D6DCE0;
 
   /* ── Text ── */
-  --color-text:        #2d3435;
-  --color-text-muted:  #5a6061;
-  --color-text-faint:  #adb3b4;
+  --color-text:        #0C1629;
+  --color-text-muted:  #727A84;
+  --color-text-faint:  #B5C1C8;
 
   /* ── Status ── */
   --color-success:     #22c55e;
@@ -56,10 +56,10 @@
   --radius-2xl:     3rem;
 
   /* ── Shadows ── */
-  --shadow-sm:         0 2px 12px rgba(45,52,53,0.04);
-  --shadow-card:       0 10px 40px rgba(45,52,53,0.06);
-  --shadow-card-hover: 0 15px 50px rgba(45,52,53,0.09);
-  --shadow-dropdown:   0 12px 44px rgba(45,52,53,0.08);
-  --shadow-lg:         0 10px 40px rgba(45,52,53,0.10);
-  --shadow-xl:         0 20px 60px rgba(45,52,53,0.12);
+  --shadow-sm:         0 2px 12px rgba(12,22,41,0.04);
+  --shadow-card:       0 10px 40px rgba(12,22,41,0.06);
+  --shadow-card-hover: 0 15px 50px rgba(12,22,41,0.09);
+  --shadow-dropdown:   0 12px 44px rgba(12,22,41,0.08);
+  --shadow-lg:         0 10px 40px rgba(12,22,41,0.10);
+  --shadow-xl:         0 20px 60px rgba(12,22,41,0.12);
 }

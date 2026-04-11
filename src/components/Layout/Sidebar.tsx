@@ -42,8 +42,8 @@ export default function Sidebar() {
     cn(
       'flex items-center gap-3 px-4 py-3 rounded-[15px] text-base tracking-tight transition-all duration-200 cursor-pointer',
       isActive
-        ? 'bg-[#ECEFF2] text-[#1F3649] font-bold'
-        : 'text-[#586062] hover:bg-[#1F3649]/[0.03] font-semibold'
+        ? 'bg-[#D6DCE0] text-[#0C1629] font-bold'
+        : 'text-[#727A84] hover:bg-[#0C1629]/[0.03] font-semibold'
     )
 
   return (
@@ -69,7 +69,7 @@ export default function Sidebar() {
 
         {/* Reflection section */}
         <div>
-          <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider px-4 pt-6 pb-2 block">
+          <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider px-4 pt-6 pb-2 block">
             Reflection
           </span>
           <div className="space-y-1">
@@ -89,7 +89,7 @@ export default function Sidebar() {
 
         {/* Productivity section */}
         <div>
-          <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider px-4 pt-6 pb-2 block">
+          <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider px-4 pt-6 pb-2 block">
             Productivity
           </span>
           <div className="space-y-1">
@@ -107,7 +107,7 @@ export default function Sidebar() {
 
         {/* System section */}
         <div>
-          <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider px-4 pt-6 pb-2 block">
+          <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider px-4 pt-6 pb-2 block">
             System
           </span>
           <div className="space-y-1">
@@ -137,7 +137,7 @@ export default function Sidebar() {
         })}
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-[15px] text-sm font-medium text-[#586062] hover:bg-[#9f403d]/10 hover:text-[#9f403d] transition-all duration-200 cursor-pointer"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-[15px] text-sm font-medium text-[#727A84] hover:bg-[#9f403d]/10 hover:text-[#9f403d] transition-all duration-200 cursor-pointer"
         >
           <SignOut size={20} weight="regular" className="shrink-0" />
           Sign Out

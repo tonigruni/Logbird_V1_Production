@@ -175,7 +175,7 @@ export default function Login() {
 
       {/* ── Right column: gradient bars card + testimonials ── */}
       <section className="hidden md:block flex-1 relative p-4">
-        <div className="auth-slide-right auth-delay-3 absolute top-8 right-8 bottom-8 left-4 rounded-3xl overflow-hidden bg-[#1F3649]">
+        <div className="auth-slide-right auth-delay-3 absolute top-8 right-8 bottom-8 left-4 rounded-3xl overflow-hidden bg-[#0C1629]">
           <GradientBarsBackground barCount={8} animate />
           {/* Intro text — pinned to bottom */}
           <div className="relative z-10 p-10 flex flex-col justify-end h-full">

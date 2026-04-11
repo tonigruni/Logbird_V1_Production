@@ -42,7 +42,7 @@ import { cn } from '../lib/utils'
 
 const CATEGORY_META: Record<string, { color: string; icon: React.ElementType; description: string }> = {
   Health:            { color: '#22c55e', icon: Target, description: 'Physical & mental wellbeing' },
-  Career:            { color: '#1F3649', icon: Target, description: 'Professional growth & satisfaction' },
+  Career:            { color: '#0C1629', icon: Target, description: 'Professional growth & satisfaction' },
   Finance:           { color: '#f59e0b', icon: Target, description: 'Financial security & freedom' },
   Relationships:     { color: '#ef4444', icon: Target, description: 'Romantic & social connections' },
   'Personal Growth': { color: '#8b5cf6', icon: Target, description: 'Learning & self-improvement' },
@@ -62,7 +62,7 @@ function getCategoryMeta(name: string) {
 // Score donut (mirrors WheelOfLife)
 // ---------------------------------------------------------------------------
 
-function ScoreDonut({ score, maxScore = 10, size = 120, color = '#1F3649' }: {
+function ScoreDonut({ score, maxScore = 10, size = 120, color = '#0C1629' }: {
   score: number; maxScore?: number; size?: number; color?: string
 }) {
   const percentage = (score / maxScore) * 100
@@ -78,13 +78,13 @@ function ScoreDonut({ score, maxScore = 10, size = 120, color = '#1F3649' }: {
             dataKey="value" stroke="none"
           >
             <Cell fill={color} />
-            <Cell fill="#ebeeef" />
+            <Cell fill="#F0F3F3" />
           </Pie>
         </PieChart>
       </ResponsiveContainer>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-xl font-bold text-[#2d3435]">
-          {score}<span className="text-sm font-normal text-[#5a6061] opacity-60">/{maxScore}</span>
+        <span className="text-xl font-bold text-[#0C1629]">
+          {score}<span className="text-sm font-normal text-[#727A84] opacity-60">/{maxScore}</span>
         </span>
       </div>
     </div>
@@ -204,7 +204,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               {goal.status === 'completed' ? 'Completed' : 'In Progress'}
             </button>
             {goal.target_date && (
-              <span className="flex items-center gap-1 text-xs text-on-surface-variant bg-[#f2f4f4] px-3 py-1 rounded-full">
+              <span className="flex items-center gap-1 text-xs text-on-surface-variant bg-[#F0F3F3] px-3 py-1 rounded-full">
                 <Calendar size={10} />
                 Due {format(new Date(goal.target_date), 'MMM d, yyyy')}
               </span>
@@ -215,14 +215,14 @@ export default function GoalDetailView({ goal, onClose }: Props) {
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => navigate('/journal', { state: { prefill: `## ${goal.title}\n\n` } })}
-            className="flex items-center gap-1.5 bg-[#f2f4f4] hover:bg-[#e4e9ea] text-on-surface-variant px-4 py-2 text-sm font-semibold rounded-[12px] transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 bg-[#F0F3F3] hover:bg-[#D6DCE0] text-on-surface-variant px-4 py-2 text-sm font-semibold rounded-[12px] transition-colors cursor-pointer"
           >
             <Share2 size={13} />
             Send to Journal
           </button>
           <button
             onClick={async () => { await deleteGoal(goal.id); onClose() }}
-            className="flex items-center gap-1.5 bg-[#f2f4f4] hover:bg-[#fce8e8] text-on-surface-variant hover:text-[#9f403d] px-4 py-2 text-sm font-semibold rounded-[12px] transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 bg-[#F0F3F3] hover:bg-[#fce8e8] text-on-surface-variant hover:text-[#9f403d] px-4 py-2 text-sm font-semibold rounded-[12px] transition-colors cursor-pointer"
           >
             <Trash2 size={13} />
             Delete
@@ -250,7 +250,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               <h3 className="text-base font-bold text-on-surface">Description</h3>
               <button
                 onClick={() => { setEditingDesc(!editingDesc); setEditDesc(goal.description ?? '') }}
-                className="p-1.5 rounded-lg hover:bg-[#f2f4f4] transition-colors cursor-pointer text-on-surface-variant hover:text-primary"
+                className="p-1.5 rounded-lg hover:bg-[#F0F3F3] transition-colors cursor-pointer text-on-surface-variant hover:text-primary"
               >
                 <Pencil size={13} />
               </button>
@@ -265,7 +265,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
                   autoFocus
                 />
                 <div className="flex gap-2 justify-end">
-                  <button onClick={() => setEditingDesc(false)} className="text-sm px-4 py-2 rounded-[12px] bg-[#f2f4f4] text-on-surface font-medium cursor-pointer hover:bg-[#e4e9ea] transition-colors">Cancel</button>
+                  <button onClick={() => setEditingDesc(false)} className="text-sm px-4 py-2 rounded-[12px] bg-[#F0F3F3] text-on-surface font-medium cursor-pointer hover:bg-[#D6DCE0] transition-colors">Cancel</button>
                   <button onClick={async () => { await updateGoal(goal.id, { description: editDesc || null }); setEditingDesc(false) }} className="text-sm px-4 py-2 rounded-[12px] bg-primary text-white font-medium cursor-pointer hover:opacity-90 transition-all">Save</button>
                 </div>
               </div>
@@ -284,7 +284,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-3">
                 <h3 className="text-base font-bold text-on-surface">Focus Objectives</h3>
-                <span className="bg-[#f2f4f4] text-on-surface-variant px-2 py-0.5 rounded-md text-xs font-bold">{completedCount}/{goalTasks.length}</span>
+                <span className="bg-[#F0F3F3] text-on-surface-variant px-2 py-0.5 rounded-md text-xs font-bold">{completedCount}/{goalTasks.length}</span>
               </div>
             </div>
 
@@ -294,7 +294,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
                   <span className="text-xs text-on-surface-variant">{progressPercent}% complete</span>
                   <span className="text-xs text-on-surface-variant">{completedCount} of {goalTasks.length} done</span>
                 </div>
-                <div className="w-full bg-[#f2f4f4] rounded-full h-2">
+                <div className="w-full bg-[#F0F3F3] rounded-full h-2">
                   <div className="h-2 rounded-full transition-all duration-500" style={{ width: `${progressPercent}%`, backgroundColor: meta.color }} />
                 </div>
               </div>
@@ -305,18 +305,18 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               <div className="mb-5">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">To Do</span>
-                  <div className="flex-1 h-px bg-[#ECEFF2]" />
+                  <div className="flex-1 h-px bg-[#D6DCE0]" />
                   <span className="text-[10px] font-bold text-on-surface-variant/40">{pendingTasks.length}</span>
                 </div>
                 <div className="space-y-1">
                   {pendingTasks.map((task) => (
-                    <div key={task.id} className="flex items-center gap-3 px-3 py-2.5 hover:bg-[#f2f4f4] rounded-xl transition-colors group">
-                      <button onClick={() => toggleTask(task.id, true)} className="cursor-pointer shrink-0 text-[#adb3b4] hover:text-primary transition-colors">
+                    <div key={task.id} className="flex items-center gap-3 px-3 py-2.5 hover:bg-[#F0F3F3] rounded-xl transition-colors group">
+                      <button onClick={() => toggleTask(task.id, true)} className="cursor-pointer shrink-0 text-[#B5C1C8] hover:text-primary transition-colors">
                         <Circle size={17} />
                       </button>
                       <span className="text-sm flex-1 text-on-surface">{task.title}</span>
                       {task.due_date && (
-                        <span className="flex items-center gap-1 text-[10px] text-on-surface-variant/40 bg-[#f2f4f4] px-2 py-0.5 rounded-full">
+                        <span className="flex items-center gap-1 text-[10px] text-on-surface-variant/40 bg-[#F0F3F3] px-2 py-0.5 rounded-full">
                           <Calendar size={9} />{format(new Date(task.due_date), 'MMM d')}
                         </span>
                       )}
@@ -334,12 +334,12 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               <div className="mb-5">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">Completed</span>
-                  <div className="flex-1 h-px bg-[#ECEFF2]" />
+                  <div className="flex-1 h-px bg-[#D6DCE0]" />
                   <span className="text-[10px] font-bold text-on-surface-variant/40">{doneTasks.length}</span>
                 </div>
                 <div className="space-y-1">
                   {doneTasks.map((task) => (
-                    <div key={task.id} className="flex items-center gap-3 px-3 py-2.5 hover:bg-[#f2f4f4] rounded-xl transition-colors group">
+                    <div key={task.id} className="flex items-center gap-3 px-3 py-2.5 hover:bg-[#F0F3F3] rounded-xl transition-colors group">
                       <button onClick={() => toggleTask(task.id, false)} className="cursor-pointer shrink-0 text--[#22c55e]">
                         <CheckCircle2 size={17} className="text-[#22c55e]" />
                       </button>
@@ -358,7 +358,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
             )}
 
             {/* Add task */}
-            <div className="flex gap-2 pt-4 border-t border-[#ECEFF2]">
+            <div className="flex gap-2 pt-4 border-t border-[#D6DCE0]">
               <input
                 value={newTaskTitle}
                 onChange={(e) => setNewTaskTitle(e.target.value)}
@@ -392,7 +392,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
                         <span className="text-sm font-semibold text-on-surface">You</span>
                         <span className="text-xs text-on-surface-variant/40">{format(c.createdAt, 'MMM d, h:mm a')}</span>
                       </div>
-                      <div className="bg-[#f2f4f4] rounded-xl px-4 py-3 text-sm text-on-surface leading-relaxed">{c.text}</div>
+                      <div className="bg-[#F0F3F3] rounded-xl px-4 py-3 text-sm text-on-surface leading-relaxed">{c.text}</div>
                       <div className="flex items-center gap-3 mt-2 px-1">
                         <button className="flex items-center gap-1 text-xs text-on-surface-variant/40 hover:text-primary transition-colors cursor-pointer">
                           <ThumbsUp size={11} /> Like
@@ -405,14 +405,14 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               </div>
             )}
 
-            <div className="rounded-[15px] border border-[#ECEFF2] focus-within:border-primary/30 focus-within:ring-[3px] focus-within:ring-primary/10 transition-all overflow-hidden">
+            <div className="rounded-[15px] border border-[#D6DCE0] focus-within:border-primary/30 focus-within:ring-[3px] focus-within:ring-primary/10 transition-all overflow-hidden">
               <textarea
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 placeholder="Add a comment, note, or reflection..."
                 className="w-full bg-surface px-5 py-4 text-sm text-on-surface resize-none h-24 focus:outline-none placeholder:text-on-surface-variant/30"
               />
-              <div className="flex items-center justify-between px-4 py-2.5 border-t border-[#ECEFF2] bg-[#f2f4f4]/60">
+              <div className="flex items-center justify-between px-4 py-2.5 border-t border-[#D6DCE0] bg-[#F0F3F3]/60">
                 <div className="flex items-center gap-1">
                   {[{ Icon: Bold, label: 'Bold' }, { Icon: Italic, label: 'Italic' }, { Icon: Paperclip, label: 'Attach' }, { Icon: AtSign, label: 'Mention' }].map(({ Icon, label }) => (
                     <button key={label} title={label} className="p-1.5 rounded-lg text-on-surface-variant/50 hover:text-primary hover:bg-white transition-all cursor-pointer">
@@ -451,7 +451,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               <Timer size={15} className="text-primary" />
               <h3 className="text-sm font-bold text-on-surface">Time Tracking</h3>
             </div>
-            <div className="bg-[#f2f4f4] rounded-2xl p-5 mb-4 text-center">
+            <div className="bg-[#F0F3F3] rounded-2xl p-5 mb-4 text-center">
               <div className="text-3xl font-mono font-bold text-on-surface tracking-tight mb-1">{fmtTime(timerSeconds)}</div>
               <div className="text-xs text-on-surface-variant/50">{timerRunning ? 'Running...' : timerSeconds > 0 ? 'Paused' : 'Ready'}</div>
             </div>
@@ -469,14 +469,14 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               <button
                 onClick={stopTimer}
                 disabled={timerSeconds === 0 && !timerRunning}
-                className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-[12px] bg-[#f2f4f4] hover:bg-[#e4e9ea] disabled:opacity-40 text-on-surface-variant text-sm font-semibold transition-colors cursor-pointer"
+                className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-[12px] bg-[#F0F3F3] hover:bg-[#D6DCE0] disabled:opacity-40 text-on-surface-variant text-sm font-semibold transition-colors cursor-pointer"
               >
                 <Square size={13} />
                 Stop
               </button>
             </div>
             <div className="space-y-2.5">
-              <div className="flex items-center justify-between py-2 border-b border-[#ECEFF2]">
+              <div className="flex items-center justify-between py-2 border-b border-[#D6DCE0]">
                 <span className="text-xs text-on-surface-variant">Total Logged</span>
                 <span className="text-xs font-bold text-on-surface font-mono">{fmtTime(totalLoggedSeconds)}</span>
               </div>
@@ -490,7 +490,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
           {/* Linked Project */}
           {(() => {
             const linkedProject = projects.find(p => p.id === goal.project_id) ?? null
-            const color = linkedProject?.color || '#1F3649'
+            const color = linkedProject?.color || '#0C1629'
             return (
               <section className="bg-surface card p-6">
                 <div className="flex items-center gap-2 mb-4">
@@ -536,7 +536,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
                         if (e.target.value) await updateGoal(goal.id, { project_id: e.target.value })
                         e.target.value = ''
                       }}
-                      className="w-full text-xs font-semibold text-on-surface-variant bg-[#f2f4f4] px-3 py-2.5 rounded-xl border-none outline-none cursor-pointer"
+                      className="w-full text-xs font-semibold text-on-surface-variant bg-[#F0F3F3] px-3 py-2.5 rounded-xl border-none outline-none cursor-pointer"
                     >
                       <option value="">Link a project…</option>
                       {projects.map(p => (
@@ -560,13 +560,13 @@ export default function GoalDetailView({ goal, onClose }: Props) {
             </div>
             <div className="grid grid-cols-3 gap-1.5 mb-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="aspect-square rounded-lg bg-[#f2f4f4] flex items-center justify-center border border-dashed border-[#ECEFF2]">
+                <div key={i} className="aspect-square rounded-lg bg-[#F0F3F3] flex items-center justify-center border border-dashed border-[#D6DCE0]">
                   <Paperclip size={14} className="opacity-30 text-on-surface-variant" />
                 </div>
               ))}
             </div>
-            <div className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f2f4f4] transition-colors cursor-pointer group">
-              <div className="w-8 h-8 rounded-lg bg-[#1F3649]/10 flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#F0F3F3] transition-colors cursor-pointer group">
+              <div className="w-8 h-8 rounded-lg bg-[#0C1629]/10 flex items-center justify-center shrink-0">
                 <Flag size={12} className="text-primary" />
               </div>
               <div className="flex-1 min-w-0">
@@ -585,7 +585,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               <h3 className="text-sm font-bold text-on-surface">Details</h3>
             </div>
             <div className="space-y-0">
-              <div className="flex items-center justify-between py-3 border-b border-[#ECEFF2]">
+              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
                 <div className="flex items-center gap-2 text-xs text-on-surface-variant">
                   <User size={13} className="text-on-surface-variant/50" />
                   Assignee
@@ -597,7 +597,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
                   <span className="text-xs font-semibold text-on-surface">You</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between py-3 border-b border-[#ECEFF2]">
+              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
                 <div className="flex items-center gap-2 text-xs text-on-surface-variant">
                   <Target size={13} className="text-on-surface-variant/50" />
                   Category
@@ -606,7 +606,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
                   {cat?.name ?? 'General'}
                 </span>
               </div>
-              <div className="flex items-center justify-between py-3 border-b border-[#ECEFF2]">
+              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
                 <div className="flex items-center gap-2 text-xs text-on-surface-variant">
                   <CheckCircle2 size={13} className="text-on-surface-variant/50" />
                   Status
@@ -622,7 +622,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
                 </button>
               </div>
               {goal.target_date && (
-                <div className="flex items-center justify-between py-3 border-b border-[#ECEFF2]">
+                <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
                   <div className="flex items-center gap-2 text-xs text-on-surface-variant">
                     <Calendar size={13} className="text-on-surface-variant/50" />
                     Target Date
@@ -630,7 +630,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
                   <span className="text-xs font-semibold text-on-surface">{format(new Date(goal.target_date), 'MMM d, yyyy')}</span>
                 </div>
               )}
-              <div className="flex items-center justify-between py-3 border-b border-[#ECEFF2]">
+              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
                 <div className="flex items-center gap-2 text-xs text-on-surface-variant">
                   <Clock size={13} className="text-on-surface-variant/50" />
                   Last Activity

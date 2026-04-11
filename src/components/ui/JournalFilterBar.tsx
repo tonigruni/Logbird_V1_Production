@@ -171,7 +171,7 @@ export default function JournalFilterBar({
   const usedTypes = new Set(activeFilters.map(f => f.type))
   const availableTypes = (['Date Range', 'Mood', 'Category', 'Entry Type'] as FilterType[]).filter(t => !usedTypes.has(t))
 
-  const chipClass = 'flex items-center bg-[#f2f4f4] text-xs text-[#5a6061] px-2.5 py-1.5 h-7'
+  const chipClass = 'flex items-center bg-[#F0F3F3] text-xs text-[#727A84] px-2.5 py-1.5 h-7'
 
   return (
     <div className="flex items-center gap-2 flex-wrap mb-5">
@@ -189,13 +189,13 @@ export default function JournalFilterBar({
               transition={{ duration: 0.15 }}
               className="flex items-center gap-[1px] text-xs"
             >
-              <div className={cn(chipClass, 'rounded-l-[8px] gap-1.5 font-semibold text-[#2d3435]')}>
+              <div className={cn(chipClass, 'rounded-l-[8px] gap-1.5 font-semibold text-[#0C1629]')}>
                 {TypeIcon && <TypeIcon size={11} className="shrink-0" />}
                 {filter.type}
               </div>
-              <div className={cn(chipClass, 'text-[#adb3b4]')}>is</div>
+              <div className={cn(chipClass, 'text-[#B5C1C8]')}>is</div>
               {(filter.type === 'Theme' || filter.type === 'Starred') ? (
-                <div className={cn(chipClass, 'font-medium text-[#2d3435]')}>{filter.value}</div>
+                <div className={cn(chipClass, 'font-medium text-[#0C1629]')}>{filter.value}</div>
               ) : (
                 <ValueSelector
                   filter={filter as ActiveFilter & { type: FilterType }}
@@ -205,7 +205,7 @@ export default function JournalFilterBar({
               )}
               <button
                 onClick={() => removeFilter(filter)}
-                className={cn(chipClass, 'rounded-r-[8px] px-1.5 hover:bg-[#ebeeef] hover:text-[#9f403d] transition-colors cursor-pointer')}
+                className={cn(chipClass, 'rounded-r-[8px] px-1.5 hover:bg-[#F0F3F3] hover:text-[#9f403d] transition-colors cursor-pointer')}
               >
                 <X size={11} />
               </button>
@@ -239,7 +239,7 @@ export default function JournalFilterBar({
       {!favoritesOnly && (
         <button
           onClick={() => setFavoritesOnly(true)}
-          className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] text-xs font-semibold transition-colors cursor-pointer bg-[#f2f4f4] text-[#5a6061] hover:bg-[#ebeeef]"
+          className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] text-xs font-semibold transition-colors cursor-pointer bg-[#F0F3F3] text-[#727A84] hover:bg-[#F0F3F3]"
         >
           <Star size={11} />
           Starred
@@ -252,16 +252,16 @@ export default function JournalFilterBar({
       {/* Sort dropdown */}
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#f2f4f4] text-xs text-[#5a6061] font-semibold hover:bg-[#ebeeef] transition-colors cursor-pointer">
+          <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#F0F3F3] text-xs text-[#727A84] font-semibold hover:bg-[#F0F3F3] transition-colors cursor-pointer">
             {sortLabels[sortOrder]}
-            <ChevronDown size={11} className="text-[#adb3b4]" />
+            <ChevronDown size={11} className="text-[#B5C1C8]" />
           </button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
             align="end"
             sideOffset={6}
-            className="z-50 min-w-[160px] rounded-[12px] border border-[#ECEFF2] bg-white shadow-[0_12px_44px_rgba(45,52,53,0.08)] p-1 outline-none"
+            className="z-50 min-w-[160px] rounded-[12px] border border-[#D6DCE0] bg-white shadow-[0_12px_44px_rgba(12,22,41,0.08)] p-1 outline-none"
           >
             {(Object.entries(sortLabels) as [SortOrder, string][]).map(([o, label], i) => (
               <DropdownMenu.Item
@@ -269,8 +269,8 @@ export default function JournalFilterBar({
                 onClick={() => setSortOrder(o)}
                 className={cn(
                   'flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-[8px] cursor-pointer outline-none transition-colors',
-                  sortOrder === o ? 'bg-[#1F3649]/8 text-[#1F3649] font-semibold' : 'text-[#5a6061] hover:bg-[#f2f4f4]',
-                  i === 2 && 'mt-1 pt-2 border-t border-[#f2f4f4]'
+                  sortOrder === o ? 'bg-[#0C1629]/8 text-[#0C1629] font-semibold' : 'text-[#727A84] hover:bg-[#F0F3F3]',
+                  i === 2 && 'mt-1 pt-2 border-t border-[#F0F3F3]'
                 )}
               >
                 {label}
@@ -281,12 +281,12 @@ export default function JournalFilterBar({
       </DropdownMenu.Root>
 
       {/* View mode toggle */}
-      <div className="flex gap-0.5 bg-[#f2f4f4] rounded-[8px] p-1">
+      <div className="flex gap-0.5 bg-[#F0F3F3] rounded-[8px] p-1">
         {([['list', List], ['grid', LayoutGrid]] as const).map(([m, Icon]) => (
           <button
             key={m}
             onClick={() => setLibraryViewMode(m)}
-            className={cn('p-1 rounded-[6px] transition-all cursor-pointer', libraryViewMode === m ? 'bg-white text-[#1F3649] shadow-sm' : 'text-[#adb3b4] hover:text-[#5a6061]')}
+            className={cn('p-1 rounded-[6px] transition-all cursor-pointer', libraryViewMode === m ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#B5C1C8] hover:text-[#727A84]')}
           >
             <Icon size={13} />
           </button>
@@ -310,7 +310,7 @@ function FilterTypeButton({ type, icon: Icon, chipClass, applyFilter }: {
   return (
     <Popover.Root open={open} onOpenChange={(v) => { setOpen(v); if (!v) setSearch('') }}>
       <Popover.Trigger asChild>
-        <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] text-xs font-semibold transition-colors cursor-pointer bg-[#f2f4f4] text-[#5a6061] hover:bg-[#ebeeef]">
+        <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] text-xs font-semibold transition-colors cursor-pointer bg-[#F0F3F3] text-[#727A84] hover:bg-[#F0F3F3]">
           <Icon size={11} />
           {type}
         </button>
@@ -319,12 +319,12 @@ function FilterTypeButton({ type, icon: Icon, chipClass, applyFilter }: {
         <Popover.Content
           align="start"
           sideOffset={6}
-          className="z-50 w-52 rounded-[12px] border border-[#ECEFF2] bg-white shadow-[0_12px_44px_rgba(45,52,53,0.08)] outline-none"
+          className="z-50 w-52 rounded-[12px] border border-[#D6DCE0] bg-white shadow-[0_12px_44px_rgba(12,22,41,0.08)] outline-none"
         >
           <AnimatedHeight>
             <div className="p-1">
               <input
-                className="w-full px-2.5 py-2 text-xs bg-transparent placeholder:text-[#adb3b4] text-[#2d3435] focus:outline-none border-b border-[#f2f4f4] mb-1"
+                className="w-full px-2.5 py-2 text-xs bg-transparent placeholder:text-[#B5C1C8] text-[#0C1629] focus:outline-none border-b border-[#F0F3F3] mb-1"
                 placeholder={`Filter by ${type.toLowerCase()}…`}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
@@ -338,17 +338,17 @@ function FilterTypeButton({ type, icon: Icon, chipClass, applyFilter }: {
                   const MoodIconComp = type === 'Mood' ? moodIcon[value] : null
                   return (
                     <div key={value}>
-                      {showDivider && <div className="mx-2.5 my-1 border-t border-[#f2f4f4]" />}
+                      {showDivider && <div className="mx-2.5 my-1 border-t border-[#F0F3F3]" />}
                       <button
                         onClick={() => { applyFilter(type, value); setOpen(false); setSearch('') }}
                         className={cn(
-                          'w-full text-left flex items-center gap-2 px-2.5 py-1.5 text-xs text-[#2d3435] hover:bg-[#f2f4f4] rounded-[8px] transition-colors cursor-pointer',
+                          'w-full text-left flex items-center gap-2 px-2.5 py-1.5 text-xs text-[#0C1629] hover:bg-[#F0F3F3] rounded-[8px] transition-colors cursor-pointer',
                           isMoodPreset && 'font-semibold'
                         )}
                       >
                         {MoodIconComp && <MoodIconComp size={12} />}
                         {value}
-                        {isMoodPreset && <span className="ml-auto text-[#adb3b4] font-normal text-[10px]">{value === 'Bad Days' ? '1–2' : '4–5'}</span>}
+                        {isMoodPreset && <span className="ml-auto text-[#B5C1C8] font-normal text-[10px]">{value === 'Bad Days' ? '1–2' : '4–5'}</span>}
                       </button>
                     </div>
                   )
@@ -373,7 +373,7 @@ function ValueSelector({ filter, chipClass, applyFilter }: {
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
-        <button className={cn(chipClass, 'hover:bg-[#ebeeef] transition-colors cursor-pointer font-medium text-[#2d3435] gap-1.5')}>
+        <button className={cn(chipClass, 'hover:bg-[#F0F3F3] transition-colors cursor-pointer font-medium text-[#0C1629] gap-1.5')}>
           {filter.type === 'Mood' && (() => { const I = moodIcon[filter.value]; return I ? <I size={11} /> : null })()}
           {filter.value}
         </button>
@@ -382,7 +382,7 @@ function ValueSelector({ filter, chipClass, applyFilter }: {
         <Popover.Content
           align="start"
           sideOffset={6}
-          className="z-50 w-48 rounded-[12px] border border-[#ECEFF2] bg-white shadow-[0_12px_44px_rgba(45,52,53,0.08)] p-1 outline-none"
+          className="z-50 w-48 rounded-[12px] border border-[#D6DCE0] bg-white shadow-[0_12px_44px_rgba(12,22,41,0.08)] p-1 outline-none"
         >
           {options.map((value, i) => {
             const isMoodPreset = filter.type === 'Mood' && (value === 'Bad Days' || value === 'Good Days')
@@ -390,17 +390,17 @@ function ValueSelector({ filter, chipClass, applyFilter }: {
             const MoodIconComp = filter.type === 'Mood' ? moodIcon[value] : null
             return (
               <div key={value}>
-                {showDivider && <div className="mx-2.5 my-1 border-t border-[#f2f4f4]" />}
+                {showDivider && <div className="mx-2.5 my-1 border-t border-[#F0F3F3]" />}
                 <button
                   onClick={() => { applyFilter(filter.type, value); setOpen(false) }}
                   className={cn(
                     'w-full text-left flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-[8px] transition-colors cursor-pointer',
-                    value === filter.value ? 'bg-[#1F3649]/8 text-[#1F3649] font-semibold' : 'text-[#5a6061] hover:bg-[#f2f4f4]'
+                    value === filter.value ? 'bg-[#0C1629]/8 text-[#0C1629] font-semibold' : 'text-[#727A84] hover:bg-[#F0F3F3]'
                   )}
                 >
                   {MoodIconComp && <MoodIconComp size={11} />}
                   {value}
-                  {isMoodPreset && <span className="ml-auto text-[#adb3b4] text-[10px]">{value === 'Bad Days' ? '1–2' : '4–5'}</span>}
+                  {isMoodPreset && <span className="ml-auto text-[#B5C1C8] text-[10px]">{value === 'Bad Days' ? '1–2' : '4–5'}</span>}
                 </button>
               </div>
             )

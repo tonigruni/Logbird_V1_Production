@@ -37,7 +37,7 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
   goalTitle: string | null
   onClick: () => void
 }) {
-  const color = project.color || '#1F3649'
+  const color = project.color || '#0C1629'
   return (
     <article
       onClick={onClick}
@@ -45,7 +45,7 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
     >
       {/* Cover / colour strip */}
       {project.cover_url ? (
-        <div className="h-36 relative overflow-hidden bg-[#f2f4f4]">
+        <div className="h-36 relative overflow-hidden bg-[#F0F3F3]">
           <img
             src={project.cover_url}
             alt={project.title}
@@ -65,17 +65,17 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
       {/* Body */}
       <div className="p-5 space-y-3">
         <div>
-          <h3 className="font-bold text-[#2d3435] text-sm leading-snug group-hover:text-[#1F3649] transition-colors mb-0.5">
+          <h3 className="font-bold text-[#0C1629] text-sm leading-snug group-hover:text-[#0C1629] transition-colors mb-0.5">
             {project.title}
           </h3>
           {goalTitle && (
-            <p className="text-[10px] text-[#adb3b4] flex items-center gap-1">
+            <p className="text-[10px] text-[#B5C1C8] flex items-center gap-1">
               <Target size={9} />
               {goalTitle}
             </p>
           )}
           {project.description && (
-            <p className="text-xs text-[#5a6061] leading-relaxed line-clamp-2 mt-1">
+            <p className="text-xs text-[#727A84] leading-relaxed line-clamp-2 mt-1">
               {project.description}
             </p>
           )}
@@ -84,10 +84,10 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
         {/* Progress */}
         <div>
           <div className="flex justify-between text-[10px] font-bold mb-1.5">
-            <span className="text-[#adb3b4] uppercase tracking-wider">Progress</span>
+            <span className="text-[#B5C1C8] uppercase tracking-wider">Progress</span>
             <span style={{ color }}>{progress}%</span>
           </div>
-          <div className="w-full h-1.5 bg-[#f2f4f4] rounded-full overflow-hidden">
+          <div className="w-full h-1.5 bg-[#F0F3F3] rounded-full overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{ width: `${progress}%`, backgroundColor: color }}
@@ -96,7 +96,7 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
         </div>
 
         {project.target_date && (
-          <p className="text-[10px] text-[#adb3b4]">
+          <p className="text-[10px] text-[#B5C1C8]">
             Due {new Date(project.target_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
           </p>
         )}
@@ -109,15 +109,15 @@ function NewInitiativeCard({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="group flex flex-col items-center justify-center bg-white/60 card min-h-[220px] !border-2 !border-dashed !border-[#adb3b4]/30 hover:bg-white hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 cursor-pointer"
+      className="group flex flex-col items-center justify-center bg-white/60 card min-h-[220px] !border-2 !border-dashed !border-[#B5C1C8]/30 hover:bg-white hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 cursor-pointer"
     >
-      <div className="w-12 h-12 rounded-full bg-[#f2f4f4] flex items-center justify-center group-hover:bg-[#1F3649]/10 transition-colors mb-3">
-        <Plus size={22} weight="bold" className="text-[#5a6061] group-hover:text-[#1F3649] transition-colors" />
+      <div className="w-12 h-12 rounded-full bg-[#F0F3F3] flex items-center justify-center group-hover:bg-[#0C1629]/10 transition-colors mb-3">
+        <Plus size={22} weight="bold" className="text-[#727A84] group-hover:text-[#0C1629] transition-colors" />
       </div>
-      <span className="text-sm font-bold text-[#2d3435] group-hover:text-[#1F3649] transition-colors">
+      <span className="text-sm font-bold text-[#0C1629] group-hover:text-[#0C1629] transition-colors">
         Launch New Initiative
       </span>
-      <p className="text-xs text-[#adb3b4] mt-1 max-w-[200px] text-center">
+      <p className="text-xs text-[#B5C1C8] mt-1 max-w-[200px] text-center">
         Create a structured space for your next breakthrough idea.
       </p>
     </button>
@@ -167,7 +167,7 @@ export default function ProjectsOverview() {
           title: p.title,
           description: p.description ?? undefined,
           tag: goalMap[p.goal_id ?? '']?.title,
-          accentColor: p.color || '#1F3649',
+          accentColor: p.color || '#0C1629',
           priority: 'medium' as const,
         })),
     },
@@ -181,7 +181,7 @@ export default function ProjectsOverview() {
           title: p.title,
           description: p.description ?? undefined,
           tag: goalMap[p.goal_id ?? '']?.title,
-          accentColor: p.color || '#1F3649',
+          accentColor: p.color || '#0C1629',
           priority: 'low' as const,
         })),
     },
@@ -194,7 +194,7 @@ export default function ProjectsOverview() {
           id: p.id,
           title: p.title,
           description: p.description ?? undefined,
-          accentColor: p.color || '#1F3649',
+          accentColor: p.color || '#0C1629',
           priority: 'low' as const,
         })),
     },
@@ -256,11 +256,11 @@ export default function ProjectsOverview() {
         <>
           {/* Sort bar */}
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-[#2d3435]">
+            <h2 className="text-sm font-bold text-[#0C1629]">
               All Projects
-              <span className="ml-2 text-xs font-semibold text-[#adb3b4]">{projects.length}</span>
+              <span className="ml-2 text-xs font-semibold text-[#B5C1C8]">{projects.length}</span>
             </h2>
-            <div className="flex items-center gap-1 text-[10px] font-bold text-[#adb3b4]">
+            <div className="flex items-center gap-1 text-[10px] font-bold text-[#B5C1C8]">
               <SortAscending size={13} />
               {(['recent', 'name', 'progress'] as const).map((s) => (
                 <button
@@ -268,7 +268,7 @@ export default function ProjectsOverview() {
                   onClick={() => setSortBy(s)}
                   className={cn(
                     'px-2 py-1 rounded-md uppercase tracking-wider transition-colors cursor-pointer',
-                    sortBy === s ? 'text-[#1F3649] bg-[#1F3649]/10' : 'hover:text-[#1F3649]'
+                    sortBy === s ? 'text-[#0C1629] bg-[#0C1629]/10' : 'hover:text-[#0C1629]'
                   )}
                 >
                   {s}
@@ -292,7 +292,7 @@ export default function ProjectsOverview() {
           </div>
 
           {projects.length === 0 && (
-            <div className="text-center py-16 text-sm text-[#adb3b4]">
+            <div className="text-center py-16 text-sm text-[#B5C1C8]">
               No projects yet — launch your first initiative above.
             </div>
           )}

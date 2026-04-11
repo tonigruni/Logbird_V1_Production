@@ -33,12 +33,12 @@ function SectionHeader({ icon: Icon, title, description }: {
 }) {
   return (
     <div className="flex items-start gap-4 mb-8">
-      <div className="w-10 h-10 rounded-[12px] bg-[#1F3649]/8 flex items-center justify-center shrink-0 mt-0.5">
-        <Icon size={18} weight="bold" className="text-[#1F3649]" />
+      <div className="w-10 h-10 rounded-[12px] bg-[#0C1629]/8 flex items-center justify-center shrink-0 mt-0.5">
+        <Icon size={18} weight="bold" className="text-[#0C1629]" />
       </div>
       <div>
-        <h2 className="text-lg font-extrabold text-[#2d3435] tracking-tight">{title}</h2>
-        <p className="text-sm text-[#5a6061] mt-0.5">{description}</p>
+        <h2 className="text-lg font-extrabold text-[#0C1629] tracking-tight">{title}</h2>
+        <p className="text-sm text-[#727A84] mt-0.5">{description}</p>
       </div>
     </div>
   )
@@ -46,7 +46,7 @@ function SectionHeader({ icon: Icon, title, description }: {
 
 function DocSection({ children, id }: { children: React.ReactNode; id?: string }) {
   return (
-    <section id={id} className="bg-white rounded-[15px] border border-[#ECEFF2] p-8 space-y-6">
+    <section id={id} className="bg-white rounded-[15px] border border-[#D6DCE0] p-8 space-y-6">
       {children}
     </section>
   )
@@ -54,21 +54,21 @@ function DocSection({ children, id }: { children: React.ReactNode; id?: string }
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-[10px] font-black uppercase tracking-widest text-[#adb3b4]">{children}</span>
+    <span className="text-[10px] font-black uppercase tracking-widest text-[#B5C1C8]">{children}</span>
   )
 }
 
 function UsageNote({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs text-[#5a6061] bg-[#f2f4f4] rounded-[10px] px-4 py-3 leading-relaxed">
-      <span className="font-bold text-[#1F3649]">Used in: </span>{children}
+    <p className="text-xs text-[#727A84] bg-[#F0F3F3] rounded-[10px] px-4 py-3 leading-relaxed">
+      <span className="font-bold text-[#0C1629]">Used in: </span>{children}
     </p>
   )
 }
 
 function Demo({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('rounded-[12px] border border-[#ECEFF2] bg-[#f8fafa] p-6 flex flex-wrap items-center gap-4', className)}>
+    <div className={cn('rounded-[12px] border border-[#D6DCE0] bg-[#f8fafa] p-6 flex flex-wrap items-center gap-4', className)}>
       {children}
     </div>
   )
@@ -82,13 +82,13 @@ function ColourSwatch({ hex, name, role }: { hex: string; name: string; role: st
   return (
     <div className="space-y-2">
       <div
-        className="h-14 w-full rounded-[10px] border border-[#ECEFF2]"
+        className="h-14 w-full rounded-[10px] border border-[#D6DCE0]"
         style={{ backgroundColor: hex }}
       />
       <div>
-        <p className="text-xs font-bold text-[#2d3435]">{name}</p>
-        <p className="text-[10px] font-mono text-[#adb3b4]">{hex}</p>
-        <p className="text-[10px] text-[#5a6061]">{role}</p>
+        <p className="text-xs font-bold text-[#0C1629]">{name}</p>
+        <p className="text-[10px] font-mono text-[#B5C1C8]">{hex}</p>
+        <p className="text-[10px] text-[#727A84]">{role}</p>
       </div>
     </div>
   )
@@ -106,20 +106,20 @@ function DesignSystemTab() {
           <div>
             <Label>Brand & Surfaces</Label>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 mt-3">
-              <ColourSwatch hex="#1F3649" name="Primary" role="Buttons, links, active states" />
+              <ColourSwatch hex="#0C1629" name="Primary" role="Buttons, links, active states" />
               <ColourSwatch hex="#2a4a63" name="Primary Hover" role="Hover state of primary" />
               <ColourSwatch hex="#ffffff" name="Background" role="Page background" />
               <ColourSwatch hex="#ffffff" name="Surface" role="Card backgrounds" />
-              <ColourSwatch hex="#f2f4f4" name="Muted" role="Inputs, secondary BG" />
+              <ColourSwatch hex="#F0F3F3" name="Muted" role="Inputs, secondary BG" />
             </div>
           </div>
           <div>
             <Label>Text</Label>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 mt-3">
-              <ColourSwatch hex="#2d3435" name="On Surface" role="Headings, body text" />
-              <ColourSwatch hex="#5a6061" name="Secondary" role="Supporting text" />
-              <ColourSwatch hex="#adb3b4" name="Faint" role="Placeholders, disabled" />
-              <ColourSwatch hex="#586062" name="Variant" role="Nav labels, metadata" />
+              <ColourSwatch hex="#0C1629" name="On Surface" role="Headings, body text" />
+              <ColourSwatch hex="#727A84" name="Secondary" role="Supporting text" />
+              <ColourSwatch hex="#B5C1C8" name="Faint" role="Placeholders, disabled" />
+              <ColourSwatch hex="#727A84" name="Variant" role="Nav labels, metadata" />
             </div>
           </div>
           <div>
@@ -135,19 +135,19 @@ function DesignSystemTab() {
           <div>
             <Label>Borders</Label>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 mt-3">
-              <ColourSwatch hex="#ECEFF2" name="Card Border" role="Default card border" />
-              <ColourSwatch hex="#e8eaeb" name="Border Light" role="Dividers, subtle" />
-              <ColourSwatch hex="#dde4e5" name="Container High" role="Hover borders" />
+              <ColourSwatch hex="#D6DCE0" name="Card Border" role="Default card border" />
+              <ColourSwatch hex="#D6DCE0" name="Border Light" role="Dividers, subtle" />
+              <ColourSwatch hex="#D6DCE0" name="Container High" role="Hover borders" />
             </div>
           </div>
         </div>
 
         <Demo>
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-[#1F3649]" />
-            <span className="text-xs font-bold text-[#1F3649]">Primary</span>
+            <div className="w-5 h-5 rounded-full bg-[#0C1629]" />
+            <span className="text-xs font-bold text-[#0C1629]">Primary</span>
           </div>
-          <div className="w-px h-8 bg-[#ECEFF2]" />
+          <div className="w-px h-8 bg-[#D6DCE0]" />
           <span className="text-xs text-[#22c55e] font-bold bg-[#22c55e]/10 px-3 py-1 rounded-full">Completed</span>
           <span className="text-xs text-[#f59e0b] font-bold bg-[#f59e0b]/10 px-3 py-1 rounded-full">In Progress</span>
           <span className="text-xs text-[#9f403d] font-bold bg-[#9f403d]/10 px-3 py-1 rounded-full">Destructive</span>
@@ -164,10 +164,10 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Satoshi — Headings</Label>
             <Demo className="flex-col items-start gap-3">
-              <p className="text-3xl font-extrabold text-[#2d3435]" style={{ fontFamily: 'Satoshi, system-ui' }}>Life Goals</p>
-              <p className="text-2xl font-extrabold text-[#2d3435]" style={{ fontFamily: 'Satoshi, system-ui' }}>Project Overview</p>
-              <p className="text-xl font-bold text-[#2d3435]" style={{ fontFamily: 'Satoshi, system-ui' }}>Weekly Journal Entry</p>
-              <p className="text-base font-bold text-[#2d3435]" style={{ fontFamily: 'Satoshi, system-ui' }}>Section heading</p>
+              <p className="text-3xl font-extrabold text-[#0C1629]" style={{ fontFamily: 'Satoshi, system-ui' }}>Life Goals</p>
+              <p className="text-2xl font-extrabold text-[#0C1629]" style={{ fontFamily: 'Satoshi, system-ui' }}>Project Overview</p>
+              <p className="text-xl font-bold text-[#0C1629]" style={{ fontFamily: 'Satoshi, system-ui' }}>Weekly Journal Entry</p>
+              <p className="text-base font-bold text-[#0C1629]" style={{ fontFamily: 'Satoshi, system-ui' }}>Section heading</p>
             </Demo>
             <UsageNote>Page titles (Goals, Dashboard, Projects hero), section headings, goal titles in GoalDetailView header</UsageNote>
           </div>
@@ -175,10 +175,10 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>DM Sans — Body & UI</Label>
             <Demo className="flex-col items-start gap-2">
-              <p className="text-sm text-[#2d3435]">Standard body text — task titles, descriptions, card content.</p>
-              <p className="text-xs text-[#5a6061]">Secondary text — metadata, supporting labels, timestamps.</p>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#adb3b4]">Section Label</p>
-              <p className="text-[10px] font-bold text-[#adb3b4]">Sidebar section header — REFLECTION, PRODUCTIVITY, SYSTEM</p>
+              <p className="text-sm text-[#0C1629]">Standard body text — task titles, descriptions, card content.</p>
+              <p className="text-xs text-[#727A84]">Secondary text — metadata, supporting labels, timestamps.</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#B5C1C8]">Section Label</p>
+              <p className="text-[10px] font-bold text-[#B5C1C8]">Sidebar section header — REFLECTION, PRODUCTIVITY, SYSTEM</p>
             </Demo>
             <UsageNote>Every label, input, button, dropdown, nav item, and body paragraph across the entire app</UsageNote>
           </div>
@@ -186,10 +186,10 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>JetBrains Mono — Code & Data</Label>
             <Demo>
-              <span className="font-mono text-2xl font-bold text-[#2d3435]">00:42:17</span>
-              <span className="font-mono text-sm text-[#5a6061]">00:00</span>
-              <span className="font-mono text-xs text-[#adb3b4]">ID: LOG-042</span>
-              <span className="font-mono text-xs bg-[#1F3649]/8 text-[#1F3649] px-2 py-1 rounded-md">#1F3649</span>
+              <span className="font-mono text-2xl font-bold text-[#0C1629]">00:42:17</span>
+              <span className="font-mono text-sm text-[#727A84]">00:00</span>
+              <span className="font-mono text-xs text-[#B5C1C8]">ID: LOG-042</span>
+              <span className="font-mono text-xs bg-[#0C1629]/8 text-[#0C1629] px-2 py-1 rounded-md">#0C1629</span>
             </Demo>
             <UsageNote>Time tracker display (GoalDetailView), task IDs, hex colour codes, timer values</UsageNote>
           </div>
@@ -204,14 +204,14 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Primary</Label>
             <Demo>
-              <button className="bg-[#1F3649] text-white text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:opacity-90 transition-all cursor-pointer">
+              <button className="bg-[#0C1629] text-white text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:opacity-90 transition-all cursor-pointer">
                 Mark Complete
               </button>
-              <button className="bg-[#1F3649] text-white text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:opacity-90 transition-all cursor-pointer flex items-center gap-2">
+              <button className="bg-[#0C1629] text-white text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:opacity-90 transition-all cursor-pointer flex items-center gap-2">
                 <Target size={14} />
                 Set a New Goal
               </button>
-              <button className="bg-[#1F3649] text-white text-sm font-semibold px-5 py-2.5 rounded-[15px] opacity-40 cursor-not-allowed">
+              <button className="bg-[#0C1629] text-white text-sm font-semibold px-5 py-2.5 rounded-[15px] opacity-40 cursor-not-allowed">
                 Disabled
               </button>
             </Demo>
@@ -221,10 +221,10 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Secondary (Muted)</Label>
             <Demo>
-              <button className="bg-[#f2f4f4] text-[#2d3435] text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:bg-[#ebeeef] transition-colors cursor-pointer">
+              <button className="bg-[#F0F3F3] text-[#0C1629] text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:bg-[#F0F3F3] transition-colors cursor-pointer">
                 Cancel
               </button>
-              <button className="bg-[#f2f4f4] text-[#586062] text-sm font-semibold px-4 py-2 rounded-[12px] hover:bg-[#e4e9ea] transition-colors cursor-pointer flex items-center gap-1.5">
+              <button className="bg-[#F0F3F3] text-[#727A84] text-sm font-semibold px-4 py-2 rounded-[12px] hover:bg-[#D6DCE0] transition-colors cursor-pointer flex items-center gap-1.5">
                 <BookOpen size={13} />
                 Send to Journal
               </button>
@@ -235,7 +235,7 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Destructive</Label>
             <Demo>
-              <button className="bg-[#f2f4f4] text-[#9f403d] text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:bg-[#fce8e8] transition-colors cursor-pointer">
+              <button className="bg-[#F0F3F3] text-[#9f403d] text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:bg-[#fce8e8] transition-colors cursor-pointer">
                 Delete Goal
               </button>
               <button className="text-[#9f403d]/60 text-sm font-semibold hover:text-[#9f403d] transition-colors cursor-pointer flex items-center gap-1.5">
@@ -248,13 +248,13 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Ghost / Text</Label>
             <Demo>
-              <button className="text-[#586062] text-sm font-semibold hover:text-[#1F3649] transition-colors cursor-pointer">
+              <button className="text-[#727A84] text-sm font-semibold hover:text-[#0C1629] transition-colors cursor-pointer">
                 Back to Projects
               </button>
-              <button className="text-xs font-semibold text-[#1F3649] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
+              <button className="text-xs font-semibold text-[#0C1629] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
                 View Goal →
               </button>
-              <button className="text-xs text-[#1F3649] font-semibold hover:underline cursor-pointer">+ Add</button>
+              <button className="text-xs text-[#0C1629] font-semibold hover:underline cursor-pointer">+ Add</button>
             </Demo>
             <UsageNote>Back navigation buttons, "View Goal / View Project" links in TaskEdit sidebar, attachment "+ Add" links</UsageNote>
           </div>
@@ -269,15 +269,15 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Default Card</Label>
             <Demo className="items-start">
-              <div className="bg-white rounded-[15px] border border-[#ECEFF2] p-5 w-64">
-                <p className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider mb-1">CAREER</p>
-                <h4 className="text-sm font-bold text-[#2d3435] mb-1">Launch Logbird to first 100 paying users</h4>
-                <p className="text-xs text-[#5a6061] line-clamp-2">Turn Logbird from a personal tool into a real SaaS.</p>
+              <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-5 w-64">
+                <p className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider mb-1">CAREER</p>
+                <h4 className="text-sm font-bold text-[#0C1629] mb-1">Launch Logbird to first 100 paying users</h4>
+                <p className="text-xs text-[#727A84] line-clamp-2">Turn Logbird from a personal tool into a real SaaS.</p>
                 <div className="mt-3 flex items-center gap-2">
-                  <div className="flex-1 h-1.5 bg-[#f2f4f4] rounded-full">
-                    <div className="h-full w-2/5 rounded-full bg-[#1F3649]" />
+                  <div className="flex-1 h-1.5 bg-[#F0F3F3] rounded-full">
+                    <div className="h-full w-2/5 rounded-full bg-[#0C1629]" />
                   </div>
-                  <span className="text-[10px] font-bold text-[#1F3649]">40%</span>
+                  <span className="text-[10px] font-bold text-[#0C1629]">40%</span>
                 </div>
               </div>
             </Demo>
@@ -287,9 +287,9 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Card Hover State</Label>
             <Demo>
-              <div className="bg-white rounded-[15px] border border-[#ECEFF2] p-5 w-64 shadow-[0_20px_40px_rgba(7,33,51,0.05)] cursor-pointer">
-                <p className="text-xs font-bold text-[#2d3435]">Hovered card</p>
-                <p className="text-xs text-[#5a6061]">shadow-[0_20px_40px_rgba(7,33,51,0.05)]</p>
+              <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-5 w-64 shadow-[0_20px_40px_rgba(7,33,51,0.05)] cursor-pointer">
+                <p className="text-xs font-bold text-[#0C1629]">Hovered card</p>
+                <p className="text-xs text-[#727A84]">shadow-[0_20px_40px_rgba(7,33,51,0.05)]</p>
               </div>
             </Demo>
             <UsageNote>Applied on hover via Tailwind group-hover — goal cards, project cards, task rows</UsageNote>
@@ -298,7 +298,7 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Hero / Banner Card</Label>
             <Demo className="p-0 overflow-hidden">
-              <div className="relative bg-[#1F3649] rounded-[12px] overflow-hidden px-8 py-6 w-full">
+              <div className="relative bg-[#0C1629] rounded-[12px] overflow-hidden px-8 py-6 w-full">
                 <div className="absolute inset-0 opacity-[0.07]">
                   <svg className="absolute inset-0 w-full h-full"><defs><pattern id="ds-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" /></pattern></defs><rect width="100%" height="100%" fill="url(#ds-grid)" /></svg>
                 </div>
@@ -323,8 +323,8 @@ function DesignSystemTab() {
             <Demo>
               <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#22c55e]/10 text-[#16a34a]">Completed</span>
               <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#f59e0b]/10 text-[#b45309]">In Progress</span>
-              <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#adb3b4]/10 text-[#5a6061]">Archived</span>
-              <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#1F3649]/10 text-[#1F3649]">Active</span>
+              <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#B5C1C8]/10 text-[#727A84]">Archived</span>
+              <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#0C1629]/10 text-[#0C1629]">Active</span>
             </Demo>
             <UsageNote>Goal status (GoalDetailView header), project status (ProjectDetail hero), task status in TaskEdit sidebar</UsageNote>
           </div>
@@ -334,8 +334,8 @@ function DesignSystemTab() {
             <Demo>
               <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#dc2626]/10 text-[#dc2626]">Urgent</span>
               <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#f59e0b]/10 text-[#f59e0b]">High</span>
-              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#1F3649]/10 text-[#1F3649]">Normal</span>
-              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#adb3b4]/10 text-[#5a6061]">Low</span>
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#0C1629]/10 text-[#0C1629]">Normal</span>
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#B5C1C8]/10 text-[#727A84]">Low</span>
             </Demo>
             <UsageNote>Task rows in ProjectDetail, TaskEdit sidebar summary, Tasks list page</UsageNote>
           </div>
@@ -345,7 +345,7 @@ function DesignSystemTab() {
             <Demo>
               {[
                 { name: 'Health', color: '#22c55e' },
-                { name: 'Career', color: '#1F3649' },
+                { name: 'Career', color: '#0C1629' },
                 { name: 'Finance', color: '#f59e0b' },
                 { name: 'Relationships', color: '#ec4899' },
                 { name: 'Personal Growth', color: '#8b5cf6' },
@@ -370,7 +370,7 @@ function DesignSystemTab() {
             <Label>Text Input</Label>
             <Demo>
               <input
-                className="w-64 bg-white rounded-[15px] border border-[#ECEFF2] px-4 py-2.5 text-sm text-[#2d3435] placeholder-[#adb3b4] outline-none focus:ring-2 focus:ring-[#1F3649]/10 focus:border-[#1F3649]/20 transition-shadow"
+                className="w-64 bg-white rounded-[15px] border border-[#D6DCE0] px-4 py-2.5 text-sm text-[#0C1629] placeholder-[#B5C1C8] outline-none focus:ring-2 focus:ring-[#0C1629]/10 focus:border-[#0C1629]/20 transition-shadow"
                 placeholder="Add a new task and press Enter..."
               />
             </Demo>
@@ -381,7 +381,7 @@ function DesignSystemTab() {
             <Label>Textarea</Label>
             <Demo>
               <textarea
-                className="w-full bg-white rounded-[15px] border border-[#ECEFF2] px-4 py-3 text-sm text-[#2d3435] placeholder-[#adb3b4] outline-none focus:ring-2 focus:ring-[#1F3649]/10 resize-none h-24 transition-shadow"
+                className="w-full bg-white rounded-[15px] border border-[#D6DCE0] px-4 py-3 text-sm text-[#0C1629] placeholder-[#B5C1C8] outline-none focus:ring-2 focus:ring-[#0C1629]/10 resize-none h-24 transition-shadow"
                 placeholder="Add a comment, note, or reflection..."
               />
             </Demo>
@@ -391,7 +391,7 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Select / Dropdown</Label>
             <Demo>
-              <select className="bg-white rounded-[15px] border border-[#ECEFF2] px-4 py-2.5 text-sm text-[#2d3435] outline-none focus:ring-2 focus:ring-[#1F3649]/10 cursor-pointer">
+              <select className="bg-white rounded-[15px] border border-[#D6DCE0] px-4 py-2.5 text-sm text-[#0C1629] outline-none focus:ring-2 focus:ring-[#0C1629]/10 cursor-pointer">
                 <option>No goal linked</option>
                 <option>Get shredded for summer</option>
                 <option>Launch Logbird</option>
@@ -409,19 +409,19 @@ function DesignSystemTab() {
         <div className="space-y-5">
           <div className="space-y-2">
             <Label>Page Container</Label>
-            <div className="bg-[#f8fafa] rounded-[10px] border border-[#ECEFF2] p-4 font-mono text-xs text-[#5a6061] space-y-1">
-              <p><span className="text-[#1F3649] font-bold">max-w</span>: 1400px (–– sidebar-width)</p>
-              <p><span className="text-[#1F3649] font-bold">px</span>: 16px mobile → 48px desktop</p>
-              <p><span className="text-[#1F3649] font-bold">pb</span>: 96px (space for bottom mobile nav)</p>
+            <div className="bg-[#f8fafa] rounded-[10px] border border-[#D6DCE0] p-4 font-mono text-xs text-[#727A84] space-y-1">
+              <p><span className="text-[#0C1629] font-bold">max-w</span>: 1400px (–– sidebar-width)</p>
+              <p><span className="text-[#0C1629] font-bold">px</span>: 16px mobile → 48px desktop</p>
+              <p><span className="text-[#0C1629] font-bold">pb</span>: 96px (space for bottom mobile nav)</p>
             </div>
           </div>
 
           <div className="space-y-2">
             <Label>Sidebar</Label>
-            <div className="bg-[#f8fafa] rounded-[10px] border border-[#ECEFF2] p-4 font-mono text-xs text-[#5a6061] space-y-1">
-              <p><span className="text-[#1F3649] font-bold">width</span>: 288px (–– sidebar-width)</p>
-              <p><span className="text-[#1F3649] font-bold">bg</span>: white · border-right: 1px solid #ECEFF2</p>
-              <p><span className="text-[#1F3649] font-bold">py</span>: 32px · px: 16px · sticky top-0</p>
+            <div className="bg-[#f8fafa] rounded-[10px] border border-[#D6DCE0] p-4 font-mono text-xs text-[#727A84] space-y-1">
+              <p><span className="text-[#0C1629] font-bold">width</span>: 288px (–– sidebar-width)</p>
+              <p><span className="text-[#0C1629] font-bold">bg</span>: white · border-right: 1px solid #D6DCE0</p>
+              <p><span className="text-[#0C1629] font-bold">py</span>: 32px · px: 16px · sticky top-0</p>
             </div>
           </div>
 
@@ -432,7 +432,7 @@ function DesignSystemTab() {
               backgroundSize: '20px 20px',
               backgroundPosition: '10px 10px',
             }}>
-              <p className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">
+              <p className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">
                 Dot grid — main content area background
               </p>
             </Demo>
@@ -443,13 +443,13 @@ function DesignSystemTab() {
             <Label>Two-Column Detail Layout</Label>
             <Demo className="items-start p-3">
               <div className="flex gap-3 w-full">
-                <div className="flex-1 bg-white border border-[#ECEFF2] rounded-[10px] p-3 text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">
+                <div className="flex-1 bg-white border border-[#D6DCE0] rounded-[10px] p-3 text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">
                   Left pane — col-span-8<br />
-                  <span className="font-normal normal-case text-[#5a6061]">Description, tasks, activity</span>
+                  <span className="font-normal normal-case text-[#727A84]">Description, tasks, activity</span>
                 </div>
-                <div className="w-1/3 bg-white border border-[#ECEFF2] rounded-[10px] p-3 text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">
+                <div className="w-1/3 bg-white border border-[#D6DCE0] rounded-[10px] p-3 text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">
                   Right pane — col-span-4<br />
-                  <span className="font-normal normal-case text-[#5a6061]">Timer, project link, metadata</span>
+                  <span className="font-normal normal-case text-[#727A84]">Timer, project link, metadata</span>
                 </div>
               </div>
             </Demo>
@@ -467,31 +467,31 @@ function DesignSystemTab() {
             <Label>Sidebar Nav Item</Label>
             <Demo className="flex-col items-start gap-2">
               {/* Active */}
-              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] bg-[#ECEFF2] text-[#1F3649] font-bold w-56 cursor-pointer">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] bg-[#D6DCE0] text-[#0C1629] font-bold w-56 cursor-pointer">
                 <Target size={20} weight="bold" className="shrink-0" />
                 <span className="text-base tracking-tight">Goals</span>
               </div>
               {/* Inactive */}
-              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] text-[#586062] font-semibold hover:bg-[#1F3649]/[0.03] w-56 cursor-pointer">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] text-[#727A84] font-semibold hover:bg-[#0C1629]/[0.03] w-56 cursor-pointer">
                 <BookOpen size={20} weight="regular" className="shrink-0" />
                 <span className="text-base tracking-tight">Journal</span>
               </div>
-              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] text-[#586062] font-semibold hover:bg-[#1F3649]/[0.03] w-56 cursor-pointer">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] text-[#727A84] font-semibold hover:bg-[#0C1629]/[0.03] w-56 cursor-pointer">
                 <Kanban size={20} weight="regular" className="shrink-0" />
                 <span className="text-base tracking-tight">Projects</span>
               </div>
             </Demo>
-            <UsageNote>Left sidebar — active: bg-[#ECEFF2] + bold weight. Inactive: text-[#586062] + regular weight + hover:bg-[#1F3649]/3</UsageNote>
+            <UsageNote>Left sidebar — active: bg-[#D6DCE0] + bold weight. Inactive: text-[#727A84] + regular weight + hover:bg-[#0C1629]/3</UsageNote>
           </div>
 
           <div className="space-y-3">
             <Label>Page Tab Bar (header)</Label>
             <Demo>
-              <div className="flex items-center gap-1 bg-[#f2f4f4] rounded-[10px] p-1">
+              <div className="flex items-center gap-1 bg-[#F0F3F3] rounded-[10px] p-1">
                 {['Overview', 'All Entries', 'Calendar', 'Templates'].map((tab, i) => (
                   <button key={tab} className={cn(
                     'text-xs font-bold px-3 py-1.5 rounded-[8px] transition-all cursor-pointer',
-                    i === 0 ? 'bg-white text-[#1F3649] shadow-sm' : 'text-[#586062]'
+                    i === 0 ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84]'
                   )}>
                     {tab}
                   </button>
@@ -504,12 +504,12 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Breadcrumb</Label>
             <Demo>
-              <div className="flex items-center gap-1.5 text-sm text-[#5a6061]">
-                <button className="hover:text-[#2d3435] cursor-pointer flex items-center gap-1 font-medium">
+              <div className="flex items-center gap-1.5 text-sm text-[#727A84]">
+                <button className="hover:text-[#0C1629] cursor-pointer flex items-center gap-1 font-medium">
                   ‹ Goals
                 </button>
                 <span className="opacity-40">›</span>
-                <span className="text-[#1F3649] font-semibold">Launch Logbird to first 100 paying users</span>
+                <span className="text-[#0C1629] font-semibold">Launch Logbird to first 100 paying users</span>
               </div>
             </Demo>
             <UsageNote>GoalDetailView header — "‹ Goals › [goal title]". Same pattern in ProjectDetail "← Back to Projects"</UsageNote>
@@ -534,8 +534,8 @@ function DesignSystemTab() {
                 { size: 22, label: '22 — task toggle' },
               ].map(({ size, label }) => (
                 <div key={size} className="flex flex-col items-center gap-1">
-                  <Target size={size} weight="bold" className="text-[#1F3649]" />
-                  <span className="text-[9px] font-mono text-[#adb3b4] whitespace-nowrap">{label}</span>
+                  <Target size={size} weight="bold" className="text-[#0C1629]" />
+                  <span className="text-[9px] font-mono text-[#B5C1C8] whitespace-nowrap">{label}</span>
                 </div>
               ))}
             </Demo>
@@ -545,16 +545,16 @@ function DesignSystemTab() {
             <Label>Weight Convention</Label>
             <Demo>
               <div className="flex flex-col items-center gap-1">
-                <Target size={20} weight="regular" className="text-[#586062]" />
-                <span className="text-[9px] font-mono text-[#adb3b4]">regular — inactive</span>
+                <Target size={20} weight="regular" className="text-[#727A84]" />
+                <span className="text-[9px] font-mono text-[#B5C1C8]">regular — inactive</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <Target size={20} weight="bold" className="text-[#1F3649]" />
-                <span className="text-[9px] font-mono text-[#adb3b4]">bold — active</span>
+                <Target size={20} weight="bold" className="text-[#0C1629]" />
+                <span className="text-[9px] font-mono text-[#B5C1C8]">bold — active</span>
               </div>
               <div className="flex flex-col items-center gap-1">
                 <CheckSquare size={20} weight="fill" className="text-[#22c55e]" />
-                <span className="text-[9px] font-mono text-[#adb3b4]">fill — completed state</span>
+                <span className="text-[9px] font-mono text-[#B5C1C8]">fill — completed state</span>
               </div>
             </Demo>
             <UsageNote>Sidebar uses regular/bold toggle based on active state. Task checkboxes use fill when done. Badges use fill for status icons.</UsageNote>
@@ -611,14 +611,14 @@ function RoadmapCard({ item, variant }: {
   const styles = {
     shipped:     { dot: 'bg-[#22c55e]', ring: 'ring-[#22c55e]/20', text: 'text-[#22c55e]', bg: 'bg-[#22c55e]/8' },
     'in-progress': { dot: 'bg-[#f59e0b]', ring: 'ring-[#f59e0b]/20', text: 'text-[#f59e0b]', bg: 'bg-[#f59e0b]/8' },
-    next:        { dot: 'bg-[#1F3649]', ring: 'ring-[#1F3649]/20', text: 'text-[#1F3649]', bg: 'bg-[#1F3649]/8' },
-    future:      { dot: 'bg-[#adb3b4]', ring: 'ring-[#adb3b4]/20', text: 'text-[#adb3b4]', bg: 'bg-[#adb3b4]/8' },
+    next:        { dot: 'bg-[#0C1629]', ring: 'ring-[#0C1629]/20', text: 'text-[#0C1629]', bg: 'bg-[#0C1629]/8' },
+    future:      { dot: 'bg-[#B5C1C8]', ring: 'ring-[#B5C1C8]/20', text: 'text-[#B5C1C8]', bg: 'bg-[#B5C1C8]/8' },
   }[variant]
 
   const Icon = item.icon
 
   return (
-    <div className="bg-white rounded-[15px] border border-[#ECEFF2] p-5 flex items-start gap-4 hover:shadow-[0_10px_40px_rgba(45,52,53,0.06)] transition-shadow">
+    <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-5 flex items-start gap-4 hover:shadow-[0_10px_40px_rgba(12,22,41,0.06)] transition-shadow">
       <div className={cn('w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0', styles.bg)}>
         {Icon
           ? <Icon size={16} weight="bold" className={styles.text} />
@@ -627,14 +627,14 @@ function RoadmapCard({ item, variant }: {
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <h4 className="text-sm font-bold text-[#2d3435]">{item.title}</h4>
+          <h4 className="text-sm font-bold text-[#0C1629]">{item.title}</h4>
           {item.tag && (
             <span className={cn('text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full', styles.bg, styles.text)}>
               {item.tag}
             </span>
           )}
         </div>
-        <p className="text-xs text-[#5a6061] leading-relaxed">{item.desc}</p>
+        <p className="text-xs text-[#727A84] leading-relaxed">{item.desc}</p>
       </div>
     </div>
   )
@@ -649,8 +649,8 @@ function RoadmapTab() {
         <div className="flex items-center gap-3 mb-5">
           <CheckCircle size={20} weight="fill" className="text-[#22c55e]" />
           <div>
-            <h2 className="text-base font-extrabold text-[#2d3435]">Shipped</h2>
-            <p className="text-xs text-[#5a6061]">Features live in the current build</p>
+            <h2 className="text-base font-extrabold text-[#0C1629]">Shipped</h2>
+            <p className="text-xs text-[#727A84]">Features live in the current build</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -663,8 +663,8 @@ function RoadmapTab() {
         <div className="flex items-center gap-3 mb-5">
           <Clock size={20} weight="fill" className="text-[#f59e0b]" />
           <div>
-            <h2 className="text-base font-extrabold text-[#2d3435]">In Progress</h2>
-            <p className="text-xs text-[#5a6061]">Being built right now</p>
+            <h2 className="text-base font-extrabold text-[#0C1629]">In Progress</h2>
+            <p className="text-xs text-[#727A84]">Being built right now</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -675,10 +675,10 @@ function RoadmapTab() {
       {/* Next Up */}
       <div>
         <div className="flex items-center gap-3 mb-5">
-          <Rocket size={20} weight="fill" className="text-[#1F3649]" />
+          <Rocket size={20} weight="fill" className="text-[#0C1629]" />
           <div>
-            <h2 className="text-base font-extrabold text-[#2d3435]">Next Up</h2>
-            <p className="text-xs text-[#5a6061]">Planned for the near-term — roughly in priority order</p>
+            <h2 className="text-base font-extrabold text-[#0C1629]">Next Up</h2>
+            <p className="text-xs text-[#727A84]">Planned for the near-term — roughly in priority order</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -689,10 +689,10 @@ function RoadmapTab() {
       {/* Future */}
       <div>
         <div className="flex items-center gap-3 mb-5">
-          <Lightbulb size={20} weight="fill" className="text-[#adb3b4]" />
+          <Lightbulb size={20} weight="fill" className="text-[#B5C1C8]" />
           <div>
-            <h2 className="text-base font-extrabold text-[#2d3435]">Future Ideas</h2>
-            <p className="text-xs text-[#5a6061]">Directionally committed, not yet scoped</p>
+            <h2 className="text-base font-extrabold text-[#0C1629]">Future Ideas</h2>
+            <p className="text-xs text-[#727A84]">Directionally committed, not yet scoped</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -723,8 +723,8 @@ export default function Docs() {
       {/* Header */}
       <div className="flex items-start justify-between gap-6 flex-wrap">
         <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-[#2d3435] tracking-tight">Docs</h1>
-          <p className="text-sm text-[#5a6061] mt-1">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-[#0C1629] tracking-tight">Docs</h1>
+          <p className="text-sm text-[#727A84] mt-1">
             {tab === 'design'
               ? 'Living design system — tokens, components, and usage examples straight from the codebase.'
               : "What\u2019s shipped, what\u2019s in progress, and what\u2019s coming next."}
@@ -732,7 +732,7 @@ export default function Docs() {
         </div>
 
         {/* Tab switcher */}
-        <div className="flex items-center bg-[#f2f4f4] rounded-[12px] p-1 shrink-0">
+        <div className="flex items-center bg-[#F0F3F3] rounded-[12px] p-1 shrink-0">
           {TABS.map(t => (
             <button
               key={t.id}
@@ -740,8 +740,8 @@ export default function Docs() {
               className={cn(
                 'px-5 py-2 text-sm font-bold rounded-[10px] transition-all cursor-pointer',
                 tab === t.id
-                  ? 'bg-white text-[#1F3649] shadow-sm'
-                  : 'text-[#586062] hover:text-[#2d3435]'
+                  ? 'bg-white text-[#0C1629] shadow-sm'
+                  : 'text-[#727A84] hover:text-[#0C1629]'
               )}
             >
               {t.label}

@@ -11,7 +11,7 @@ import { cn } from '../lib/utils'
 
 const JOURNAL_CAT_COLORS: Record<string, { bg: string; text: string }> = {
   Personal:  { bg: 'bg-primary/10',  text: 'text-primary' },
-  Work:      { bg: 'bg-[#586062]/10',  text: 'text-[#586062]' },
+  Work:      { bg: 'bg-[#727A84]/10',  text: 'text-[#727A84]' },
   Dreams:    { bg: 'bg-[#9f403d]/10',  text: 'text-[#9f403d]' },
   Ideas:     { bg: 'bg-[#162838]/10',  text: 'text-[#162838]' },
   Travel:    { bg: 'bg-[#22c55e]/10',  text: 'text-[#22c55e]' },
@@ -19,12 +19,12 @@ const JOURNAL_CAT_COLORS: Record<string, { bg: string; text: string }> = {
   Gratitude: { bg: 'bg-[#ca8a04]/10',  text: 'text-[#ca8a04]' },
 }
 function getJournalCatColor(cat: string) {
-  return JOURNAL_CAT_COLORS[cat] ?? { bg: 'bg-[#ebeeef]', text: 'text-on-surface-variant' }
+  return JOURNAL_CAT_COLORS[cat] ?? { bg: 'bg-[#F0F3F3]', text: 'text-on-surface-variant' }
 }
 const MOOD_META: Record<number, { short: string; chipClass: string; icon: typeof Frown }> = {
   1: { short: 'Very Low', chipClass: 'bg-red-100 text-red-700',         icon: Frown },
   2: { short: 'Low',      chipClass: 'bg-orange-100 text-orange-700',   icon: Frown },
-  3: { short: 'Neutral',  chipClass: 'bg-[#ebeeef] text-on-surface-variant',     icon: Meh   },
+  3: { short: 'Neutral',  chipClass: 'bg-[#F0F3F3] text-on-surface-variant',     icon: Meh   },
   4: { short: 'Good',     chipClass: 'bg-green-100 text-green-700',     icon: Smile },
   5: { short: 'Excellent',chipClass: 'bg-emerald-100 text-emerald-800', icon: Smile },
 }
@@ -94,7 +94,7 @@ export default function Dashboard() {
     return (
       <div className="pb-24 flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-3">
-          <div className="w-8 h-8 border-2 border-[#1F3649] border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-8 h-8 border-2 border-[#0C1629] border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-sm text-on-surface-variant">Loading your dashboard...</p>
         </div>
       </div>
@@ -159,7 +159,7 @@ export default function Dashboard() {
                     isAnimationActive={false}
                   >
                     {donutBackground.map((_, i) => (
-                      <Cell key={`bg-${i}`} fill="#ebeeef" />
+                      <Cell key={`bg-${i}`} fill="#F0F3F3" />
                     ))}
                   </Pie>
                   {/* Score ring */}
@@ -300,7 +300,7 @@ export default function Dashboard() {
                 <div
                   key={entry.id}
                   onClick={() => navigate('/journal')}
-                  className="bg-surface card p-5 hover:shadow-[0_8px_30px_rgba(45,52,53,0.08)] transition-all group cursor-pointer"
+                  className="bg-surface card p-5 hover:shadow-[0_8px_30px_rgba(12,22,41,0.08)] transition-all group cursor-pointer"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <span className="text-[10px] font-bold text-outline-variant uppercase tracking-wider">
@@ -308,7 +308,7 @@ export default function Dashboard() {
                     </span>
                     <button
                       onClick={(e) => { e.stopPropagation(); updateEntry(entry.id, { is_favorite: !entry.is_favorite }) }}
-                      className={cn('p-1 rounded-lg transition-all cursor-pointer -mt-0.5', entry.is_favorite ? 'text-[#ca8a04]' : 'text-[#dde4e5] hover:text-[#ca8a04]')}
+                      className={cn('p-1 rounded-lg transition-all cursor-pointer -mt-0.5', entry.is_favorite ? 'text-[#ca8a04]' : 'text-[#D6DCE0] hover:text-[#ca8a04]')}
                     >
                       <Star size={12} fill={entry.is_favorite ? 'currentColor' : 'none'} />
                     </button>
