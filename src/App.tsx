@@ -21,6 +21,7 @@ import Tasks from './pages/Tasks'
 import TaskEdit from './pages/TaskEdit'
 import Goals from './pages/Goals'
 import GoalDetailPage from './pages/GoalDetailPage'
+import GoalCreate from './pages/GoalCreate'
 import Timeboxing from './pages/Timeboxing'
 import Docs from './pages/Docs'
 
@@ -74,6 +75,7 @@ export default function App() {
           <Route path="tasks" element={<Tasks />} />
           <Route path="tasks/:id" element={<TaskEdit />} />
           <Route path="goals" element={<Goals />} />
+          <Route path="goals/new" element={<GoalCreate />} />
           <Route path="goals/:id" element={<GoalDetailPage />} />
           <Route path="timeboxing" element={<Timeboxing />} />
           <Route path="projects" element={<ProjectsOverview />} />
