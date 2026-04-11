@@ -120,15 +120,18 @@ export default function Sidebar() {
         <CaretDown size={14} className="text-[#B5C1C8]" />
       </div>
 
-      {/* Bottom bar: settings popover + sign out */}
-      <div className="pt-3 border-t border-[#F0F3F3] flex items-center gap-1 px-1">
+      {/* Bottom bar: settings + profile name */}
+      <div className="pt-3 border-t border-[#F0F3F3] px-1">
         <Popover>
           <PopoverTrigger asChild>
             <button
-              className="flex items-center justify-center w-9 h-9 rounded-[10px] text-[#727A84] hover:bg-[#F0F3F3] transition-colors cursor-pointer shrink-0"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-[13px] text-[#727A84] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
               aria-label="Settings"
             >
-              <Gear size={18} />
+              <Gear size={22} className="shrink-0" />
+              <span className="text-sm font-semibold text-[#0C1629] truncate">
+                {(user?.user_metadata?.full_name as string) || user?.email?.split('@')[0] || 'My Account'}
+              </span>
             </button>
           </PopoverTrigger>
           <PopoverContent align="start" side="top" className="w-60">
@@ -181,14 +184,6 @@ export default function Sidebar() {
             </PopoverFooter>
           </PopoverContent>
         </Popover>
-
-        <button
-          onClick={handleSignOut}
-          className="flex-1 flex items-center gap-3 px-3 py-3 rounded-[15px] text-sm font-medium text-[#727A84] hover:bg-[#9f403d]/10 hover:text-[#9f403d] transition-all duration-200 cursor-pointer"
-        >
-          <SignOut size={20} weight="regular" className="shrink-0" />
-          Sign Out
-        </button>
       </div>
     </aside>
   )
