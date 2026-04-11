@@ -1,6 +1,16 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { SortAscending, Plus, ListBullets, SquaresFour, Columns, Kanban, Target, Calendar, Briefcase, Rocket, Lightning, Star, Brain, Heart, Leaf, Code, BookOpen, Camera, Trophy, Flag, Globe, Fire, Lightbulb, Hammer, Smiley, Sparkle, Diamond, MusicNote } from '@phosphor-icons/react'
+import {
+  SortAscending, Plus, ListBullets, SquaresFour, Columns, Kanban, Target, Calendar,
+  Briefcase, Rocket, Lightning, Star, Brain, Heart, Leaf, Code, BookOpen, Camera,
+  Trophy, Flag, Globe, Fire, Lightbulb, Hammer, Smiley, Sparkle, MusicNote,
+  Sun, Moon, Tree, Waves, FlowerLotus, Cloud, Wind, Bicycle, Barbell, Coffee,
+  Headphones, GameController, SoccerBall, Palette, Compass, PuzzlePiece,
+  Crown, Shield, Robot, Gift, ShoppingCart, Package, CreditCard, Wrench, Scissors,
+  House, Buildings, Desktop, DeviceMobile, AirplaneTilt,
+  GraduationCap, Microscope, Stethoscope, Dna, ChartLine, TrendUp,
+  Handshake, PencilSimple, Fingerprint, Planet,
+} from '@phosphor-icons/react'
 
 export const CARD_PALETTE_OPTIONS = [
   '#f6fee7', '#f0faff', '#f1f8f4', '#fff7eb', '#fafaf9',
@@ -8,13 +18,36 @@ export const CARD_PALETTE_OPTIONS = [
 ]
 
 export const ICON_OPTIONS: Array<{ name: string; Icon: React.ElementType }> = [
-  { name: 'Kanban', Icon: Kanban }, { name: 'Briefcase', Icon: Briefcase }, { name: 'Rocket', Icon: Rocket },
-  { name: 'Lightning', Icon: Lightning }, { name: 'Target', Icon: Target }, { name: 'Star', Icon: Star },
-  { name: 'Brain', Icon: Brain }, { name: 'Heart', Icon: Heart }, { name: 'Leaf', Icon: Leaf },
-  { name: 'Code', Icon: Code }, { name: 'BookOpen', Icon: BookOpen }, { name: 'Camera', Icon: Camera },
-  { name: 'Trophy', Icon: Trophy }, { name: 'Flag', Icon: Flag }, { name: 'Globe', Icon: Globe },
-  { name: 'Fire', Icon: Fire }, { name: 'Lightbulb', Icon: Lightbulb }, { name: 'Hammer', Icon: Hammer },
-  { name: 'MusicNote', Icon: MusicNote }, { name: 'Sparkle', Icon: Sparkle },
+  // Work & Productivity
+  { name: 'Kanban', Icon: Kanban }, { name: 'Briefcase', Icon: Briefcase }, { name: 'Target', Icon: Target },
+  { name: 'ChartLine', Icon: ChartLine }, { name: 'TrendUp', Icon: TrendUp }, { name: 'Handshake', Icon: Handshake },
+  { name: 'PencilSimple', Icon: PencilSimple }, { name: 'Code', Icon: Code }, { name: 'Desktop', Icon: Desktop },
+  { name: 'DeviceMobile', Icon: DeviceMobile },
+  // People & Life
+  { name: 'Brain', Icon: Brain }, { name: 'Heart', Icon: Heart }, { name: 'Smiley', Icon: Smiley },
+  { name: 'GraduationCap', Icon: GraduationCap }, { name: 'Stethoscope', Icon: Stethoscope },
+  { name: 'Fingerprint', Icon: Fingerprint }, { name: 'Dna', Icon: Dna },
+  // Energy & Action
+  { name: 'Rocket', Icon: Rocket }, { name: 'Lightning', Icon: Lightning }, { name: 'Fire', Icon: Fire },
+  { name: 'Sparkle', Icon: Sparkle }, { name: 'Star', Icon: Star }, { name: 'Trophy', Icon: Trophy },
+  { name: 'Crown', Icon: Crown }, { name: 'Flag', Icon: Flag }, { name: 'Barbell', Icon: Barbell },
+  { name: 'SoccerBall', Icon: SoccerBall }, { name: 'Bicycle', Icon: Bicycle },
+  // Nature
+  { name: 'Leaf', Icon: Leaf }, { name: 'Tree', Icon: Tree }, { name: 'FlowerLotus', Icon: FlowerLotus },
+  { name: 'Sun', Icon: Sun }, { name: 'Moon', Icon: Moon }, { name: 'Waves', Icon: Waves },
+  { name: 'Cloud', Icon: Cloud }, { name: 'Wind', Icon: Wind }, { name: 'Planet', Icon: Planet },
+  // Creative
+  { name: 'Palette', Icon: Palette }, { name: 'Camera', Icon: Camera }, { name: 'MusicNote', Icon: MusicNote },
+  { name: 'BookOpen', Icon: BookOpen }, { name: 'Microscope', Icon: Microscope },
+  // Objects & Places
+  { name: 'Lightbulb', Icon: Lightbulb }, { name: 'Hammer', Icon: Hammer }, { name: 'Wrench', Icon: Wrench },
+  { name: 'Scissors', Icon: Scissors }, { name: 'Shield', Icon: Shield }, { name: 'Robot', Icon: Robot },
+  { name: 'PuzzlePiece', Icon: PuzzlePiece }, { name: 'Compass', Icon: Compass },
+  { name: 'House', Icon: House }, { name: 'Buildings', Icon: Buildings }, { name: 'Globe', Icon: Globe },
+  { name: 'AirplaneTilt', Icon: AirplaneTilt }, { name: 'Headphones', Icon: Headphones },
+  { name: 'GameController', Icon: GameController }, { name: 'Coffee', Icon: Coffee },
+  { name: 'Gift', Icon: Gift }, { name: 'ShoppingCart', Icon: ShoppingCart },
+  { name: 'Package', Icon: Package }, { name: 'CreditCard', Icon: CreditCard },
 ]
 
 export const ICON_MAP: Record<string, React.ElementType> = Object.fromEntries(ICON_OPTIONS.map(o => [o.name, o.Icon]))
