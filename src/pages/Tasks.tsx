@@ -868,10 +868,36 @@ export default function Tasks() {
   return (
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start pb-24">
       <div className="flex-1 min-w-0 w-full space-y-6 md:space-y-8">
-      {/* Page heading */}
-      <div>
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#0C1629] leading-tight">Task Backlog</h1>
-        <p className="text-sm text-[#727A84] mt-1">{activeTasks.length} tasks active • {highEnergyToday} high energy required today</p>
+      {/* Hero Banner */}
+      <div className="relative bg-primary card overflow-hidden px-6 py-5 md:px-10 md:py-7">
+        <GradientBarsBackground barCount={14} />
+        <div className="absolute inset-0 opacity-[0.07]">
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(107,99,245,0.4) 0%, transparent 40%), radial-gradient(circle at 60% 80%, rgba(255,255,255,0.2) 0%, transparent 45%)' }} />
+          <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs><pattern id="tasks-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" /></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#tasks-grid)" />
+          </svg>
+        </div>
+        <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h1 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">Task Backlog</h1>
+            <p className="text-white/70 mt-1 text-sm">{activeTasks.length} tasks active • {highEnergyToday} high energy required today</p>
+          </div>
+          <div className="flex items-center bg-white/10 rounded-[10px] p-1">
+            <button
+              onClick={() => navigate('/tasks?view=board')}
+              className={cn('p-2 rounded-[8px] transition-all cursor-pointer', view === 'board' ? 'bg-white/20 text-white' : 'text-white/50 hover:text-white/80')}
+            >
+              <SquaresFour size={18} weight="bold" />
+            </button>
+            <button
+              onClick={() => navigate('/tasks?view=list')}
+              className={cn('p-2 rounded-[8px] transition-all cursor-pointer', view === 'list' ? 'bg-white/20 text-white' : 'text-white/50 hover:text-white/80')}
+            >
+              <ListBullets size={18} weight="bold" />
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Filter & Sort Bar */}
