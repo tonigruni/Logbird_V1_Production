@@ -14,6 +14,8 @@ import type { Project } from '../stores/projectStore'
 // Helpers
 // ---------------------------------------------------------------------------
 
+const CARD_PALETTES = ['#f6fee7', '#f0faff', '#f1f8f4', '#fff7eb', '#fafaf9', '#fef6ee']
+
 function projectProgress(projectId: string, tasks: { project_id: string | null; completed: boolean }[]): number {
   const pts = tasks.filter((t) => t.project_id === projectId)
   if (pts.length === 0) return 0
@@ -31,53 +33,52 @@ const STATUS_LABEL: Record<Project['status'], string> = {
 // Components
 // ---------------------------------------------------------------------------
 
-function ProjectCard({ project, progress, goalTitle, onClick }: {
+function ProjectCard({ project, progress, goalTitle, onClick, index }: {
   project: Project
   progress: number
   goalTitle: string | null
   onClick: () => void
+  index: number
 }) {
   const color = project.color || '#0C1629'
+  const bg = CARD_PALETTES[index % CARD_PALETTES.length]
+
   return (
     <article
       onClick={onClick}
-      className="bg-white card overflow-hidden hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 group cursor-pointer"
+      className="card overflow-hidden hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 group cursor-pointer"
+      style={{ backgroundColor: bg }}
     >
-      {/* Cover / colour strip */}
-      {project.cover_url ? (
-        <div className="h-36 relative overflow-hidden bg-[#F0F3F3]">
-          <img
-            src={project.cover_url}
-            alt={project.title}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-          <span className="absolute top-3 left-3 text-[10px] font-bold text-white/90 bg-black/25 backdrop-blur-sm px-2.5 py-1 rounded-full uppercase tracking-wider">
-            {STATUS_LABEL[project.status]}
-          </span>
-        </div>
-      ) : (
-        <div className="h-10 w-full" style={{ backgroundColor: color + '22' }}>
-          <div className="h-full w-1.5" style={{ backgroundColor: color }} />
-        </div>
-      )}
+      {/* Slim top accent line */}
+      <div className="h-[3px] w-full" style={{ backgroundColor: color }} />
 
       {/* Body */}
       <div className="p-5 space-y-3">
+        {/* Icon row + status */}
+        <div className="flex items-start justify-between">
+          <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0" style={{ backgroundColor: color + '18' }}>
+            <Kanban size={16} weight="bold" style={{ color }} />
+          </div>
+          <span className={cn(
+            'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider',
+            project.status === 'active' || project.status === 'in_progress' ? 'bg-[#0C1629]/10 text-[#0C1629]' :
+            project.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' :
+            'bg-[#B5C1C8]/10 text-[#B5C1C8]'
+          )}>
+            {STATUS_LABEL[project.status]}
+          </span>
+        </div>
+
+        {/* Title + meta */}
         <div>
-          <h3 className="font-bold text-[#0C1629] text-sm leading-snug group-hover:text-[#0C1629] transition-colors mb-0.5">
-            {project.title}
-          </h3>
+          <h3 className="font-bold text-[#0C1629] text-sm leading-snug mb-0.5">{project.title}</h3>
           {goalTitle && (
             <p className="text-[10px] text-[#B5C1C8] flex items-center gap-1">
-              <Target size={9} />
-              {goalTitle}
+              <Target size={9} /> {goalTitle}
             </p>
           )}
           {project.description && (
-            <p className="text-xs text-[#727A84] leading-relaxed line-clamp-2 mt-1">
-              {project.description}
-            </p>
+            <p className="text-xs text-[#727A84] leading-relaxed line-clamp-2 mt-1">{project.description}</p>
           )}
         </div>
 
@@ -87,16 +88,14 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
             <span className="text-[#B5C1C8] uppercase tracking-wider">Progress</span>
             <span style={{ color }}>{progress}%</span>
           </div>
-          <div className="w-full h-1.5 bg-[#F0F3F3] rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{ width: `${progress}%`, backgroundColor: color }}
-            />
+          <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: color + '18' }}>
+            <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, backgroundColor: color }} />
           </div>
         </div>
 
         {project.target_date && (
-          <p className="text-[10px] text-[#B5C1C8]">
+          <p className="text-[10px] text-[#B5C1C8] flex items-center gap-1">
+            <Calendar size={9} />
             Due {new Date(project.target_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
           </p>
         )}
@@ -328,10 +327,11 @@ export default function ProjectsOverview() {
       {view === 'grid' && (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-            {sortedProjects.map((project) => (
+            {sortedProjects.map((project, i) => (
               <ProjectCard
                 key={project.id}
                 project={project}
+                index={i}
                 progress={projectProgress(project.id, tasks)}
                 goalTitle={project.goal_id ? goalMap[project.goal_id]?.title ?? null : null}
                 onClick={() => navigate(`/projects/${project.id}`)}
