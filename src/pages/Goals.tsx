@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import GoalDetailView from '../components/GoalDetailView'
 import type { Goal } from '../stores/wheelStore'
 import {
   Target,
@@ -256,7 +255,6 @@ export default function Goals() {
   const { goals, tasks, categories, fetchAll, updateGoal } = useWheelStore()
 
   const [view, setView] = useState<'portfolio' | 'list' | 'board'>('portfolio')
-  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null)
 
   // Handle board card moves — update goal status
   const handleBoardMove = useCallback((cardId: string, _fromColumnId: string, toColumnId: string) => {
@@ -382,7 +380,7 @@ export default function Goals() {
           onMoveCard={handleBoardMove}
           onCardClick={(cardId) => {
             const goal = goals.find(g => g.id === cardId)
-            if (goal) setSelectedGoal(goal)
+            if (goal) navigate(`/goals/${goal.id}`)
           }}
         />
       )}
@@ -400,7 +398,7 @@ export default function Goals() {
                 taskCount={counts.total}
                 completedCount={counts.completed}
                 project={project}
-                onClick={() => setSelectedGoal(goal)}
+                onClick={() => navigate(`/goals/${goal.id}`)}
               />
             )
           })}
@@ -424,7 +422,7 @@ export default function Goals() {
                 categoryName={categoryName}
                 taskCount={counts.total}
                 completedCount={counts.completed}
-                onClick={() => setSelectedGoal(goal)}
+                onClick={() => navigate(`/goals/${goal.id}`)}
               />
             )
           })}
@@ -432,17 +430,7 @@ export default function Goals() {
         </div>
       )}
 
-      {/* Goal detail overlay */}
-      {selectedGoal && (
-        <div className="fixed inset-0 z-50 bg-[#f8fafa] overflow-y-auto">
-          <div className="max-w-7xl mx-auto px-4 md:px-8 pt-6">
-            <GoalDetailView
-              goal={selectedGoal}
-              onClose={() => setSelectedGoal(null)}
-            />
-          </div>
-        </div>
-      )}
+
     </div>
   )
 }
