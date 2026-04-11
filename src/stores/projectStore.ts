@@ -12,6 +12,8 @@ export interface Project {
   color: string | null
   cover_url: string | null
   target_date: string | null
+  card_color: string | null
+  card_icon: string | null
   created_at: string
   updated_at: string
 }

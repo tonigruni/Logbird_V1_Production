@@ -11,12 +11,15 @@ import {
   CheckSquare,
   PaperPlaneTilt,
   Plus,
+  PaintBrush,
 } from '@phosphor-icons/react'
 import { cn } from '../lib/utils'
 import { useWheelStore } from '../stores/wheelStore'
 import { useProjectStore } from '../stores/projectStore'
 import { useAuthStore } from '../stores/authStore'
 import type { Task as StoreTask } from '../stores/wheelStore'
+import { Popover, PopoverTrigger, PopoverContent, PopoverBody } from '../components/ui/popover'
+import { CARD_PALETTE_OPTIONS, ICON_OPTIONS, ICON_MAP } from './ProjectsOverview'
 
 // ---------------------------------------------------------------------------
 // Palette helpers
@@ -263,7 +266,55 @@ export default function ProjectDetail() {
       </button>
 
       {/* Hero card */}
-      <div className="card overflow-hidden" style={{ backgroundColor: paletteColor(project.id) }}>
+      <div className="card overflow-hidden relative" style={{ backgroundColor: project.card_color || paletteColor(project.id) }}>
+
+        {/* Customise picker — top right */}
+        <div className="absolute top-4 right-4 z-10">
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="w-8 h-8 flex items-center justify-center rounded-[10px] bg-[#0C1629]/[0.06] hover:bg-[#0C1629]/10 text-[#727A84] transition-colors cursor-pointer" aria-label="Customise card">
+                <PaintBrush size={14} />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-64 p-0">
+              <PopoverBody className="p-3 space-y-3">
+                <p className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Card Color</p>
+                <div className="grid grid-cols-5 gap-2">
+                  {CARD_PALETTE_OPTIONS.map(c => (
+                    <button
+                      key={c}
+                      onClick={() => updateProject(project.id, { card_color: c })}
+                      className={cn(
+                        'w-9 h-9 rounded-[8px] border-2 transition-all cursor-pointer',
+                        (project.card_color || paletteColor(project.id)) === c ? 'border-[#0C1629] scale-110' : 'border-transparent hover:border-[#D6DCE0]'
+                      )}
+                      style={{ backgroundColor: c }}
+                    />
+                  ))}
+                </div>
+                <p className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider pt-1">Icon</p>
+                <div className="grid grid-cols-5 gap-1.5">
+                  {ICON_OPTIONS.map(({ name, Icon }) => (
+                    <button
+                      key={name}
+                      onClick={() => updateProject(project.id, { card_icon: name })}
+                      title={name}
+                      className={cn(
+                        'w-9 h-9 flex items-center justify-center rounded-[8px] transition-all cursor-pointer',
+                        (project.card_icon || 'Kanban') === name
+                          ? 'bg-[#0C1629] text-white'
+                          : 'bg-[#0C1629]/[0.06] text-[#727A84] hover:bg-[#0C1629]/10 hover:text-[#0C1629]'
+                      )}
+                    >
+                      <Icon size={15} />
+                    </button>
+                  ))}
+                </div>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </div>
+
         <div className="p-8 md:p-10">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#0C1629]/10 text-[#0C1629]">

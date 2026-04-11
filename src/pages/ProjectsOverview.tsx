@@ -1,6 +1,23 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { SortAscending, Plus, ListBullets, SquaresFour, Columns, Kanban, Target, Calendar } from '@phosphor-icons/react'
+import { SortAscending, Plus, ListBullets, SquaresFour, Columns, Kanban, Target, Calendar, Briefcase, Rocket, Lightning, Star, Brain, Heart, Leaf, Code, BookOpen, Camera, Trophy, Flag, Globe, Fire, Lightbulb, Hammer, Smiley, Sparkle, Diamond, MusicNote } from '@phosphor-icons/react'
+
+export const CARD_PALETTE_OPTIONS = [
+  '#f6fee7', '#f0faff', '#f1f8f4', '#fff7eb', '#fafaf9',
+  '#fef6ee', '#fdf4ff', '#fff1f2', '#f5f3ff', '#fffbeb',
+]
+
+export const ICON_OPTIONS: Array<{ name: string; Icon: React.ElementType }> = [
+  { name: 'Kanban', Icon: Kanban }, { name: 'Briefcase', Icon: Briefcase }, { name: 'Rocket', Icon: Rocket },
+  { name: 'Lightning', Icon: Lightning }, { name: 'Target', Icon: Target }, { name: 'Star', Icon: Star },
+  { name: 'Brain', Icon: Brain }, { name: 'Heart', Icon: Heart }, { name: 'Leaf', Icon: Leaf },
+  { name: 'Code', Icon: Code }, { name: 'BookOpen', Icon: BookOpen }, { name: 'Camera', Icon: Camera },
+  { name: 'Trophy', Icon: Trophy }, { name: 'Flag', Icon: Flag }, { name: 'Globe', Icon: Globe },
+  { name: 'Fire', Icon: Fire }, { name: 'Lightbulb', Icon: Lightbulb }, { name: 'Hammer', Icon: Hammer },
+  { name: 'MusicNote', Icon: MusicNote }, { name: 'Sparkle', Icon: Sparkle },
+]
+
+export const ICON_MAP: Record<string, React.ElementType> = Object.fromEntries(ICON_OPTIONS.map(o => [o.name, o.Icon]))
 import { cn } from '../lib/utils'
 import BoardView from '../components/BoardView'
 import type { BoardColumn } from '../components/BoardView'
@@ -44,8 +61,8 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
   goalTitle: string | null
   onClick: () => void
 }) {
-  const color = project.color || '#0C1629'
-  const bg = paletteColor(project.id)
+  const bg = project.card_color || paletteColor(project.id)
+  const CardIcon = ICON_MAP[project.card_icon || ''] || Kanban
 
   return (
     <article
@@ -58,7 +75,7 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
         {/* Icon row + status */}
         <div className="flex items-start justify-between">
           <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 bg-[#0C1629]/10">
-            <Kanban size={16} weight="bold" className="text-[#0C1629]" />
+            <CardIcon size={16} weight="bold" className="text-[#0C1629]" />
           </div>
           <span className={cn(
             'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider',
