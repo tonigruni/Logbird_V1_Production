@@ -120,11 +120,11 @@ export default function Sidebar() {
       </div>
 
       {/* Bottom bar: settings popover + sign out */}
-      <div className="pt-3 border-t border-[#F0F3F3] flex items-center gap-2 px-1">
+      <div className="pt-3 border-t border-[#F0F3F3] flex items-center gap-1 px-1">
         <Popover>
           <PopoverTrigger asChild>
             <button
-              className="flex items-center justify-center w-9 h-9 rounded-[10px] text-[#727A84] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
+              className="flex items-center justify-center w-9 h-9 rounded-[10px] text-[#727A84] hover:bg-[#F0F3F3] transition-colors cursor-pointer shrink-0"
               aria-label="Settings"
             >
               <Gear size={18} />
@@ -156,10 +156,10 @@ export default function Sidebar() {
 
         <button
           onClick={handleSignOut}
-          className="flex items-center justify-center w-9 h-9 rounded-[10px] text-[#727A84] hover:bg-[#9f403d]/10 hover:text-[#9f403d] transition-colors cursor-pointer"
-          aria-label="Sign Out"
+          className="flex-1 flex items-center gap-3 px-3 py-3 rounded-[15px] text-sm font-medium text-[#727A84] hover:bg-[#9f403d]/10 hover:text-[#9f403d] transition-all duration-200 cursor-pointer"
         >
-          <SignOut size={18} />
+          <SignOut size={20} weight="regular" className="shrink-0" />
+          Sign Out
         </button>
       </div>
     </aside>
