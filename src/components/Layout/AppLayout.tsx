@@ -32,9 +32,20 @@ function useSectionConfig(pathname: string, search: string, navigate: ReturnType
   const isJournal = pathname === '/journal'
 
   if (pathname === '/' ) return { title: 'Dashboard', tabs: null }
-  if (pathname === '/wheel')    return { title: 'Wheel of Life', tabs: null }
   if (pathname === '/account')  return { title: 'Account', tabs: null }
   if (pathname === '/settings') return { title: 'Settings', tabs: null }
+  if (pathname === '/wheel') {
+    const wheelTab = new URLSearchParams(search).get('tab') || 'checkin'
+    return {
+      title: 'Wheel of Life',
+      pillTabs: [
+        { label: 'Check-in',     active: wheelTab === 'checkin', path: '/wheel?tab=checkin' },
+        { label: 'Goals & Tasks',active: wheelTab === 'goals',   path: '/wheel?tab=goals'   },
+        { label: 'History',      active: wheelTab === 'history', path: '/wheel?tab=history' },
+      ] as TabConfig[],
+      tabs: null,
+    }
+  }
   if (pathname === '/tasks' || pathname.startsWith('/tasks/')) {
     const viewParam = new URLSearchParams(search).get('view') || 'board'
     return {
@@ -105,7 +116,7 @@ export default function AppLayout() {
   const { user } = useAuthStore()
   const [searchQuery, setSearchQuery] = useState('')
 
-  const { title, tabs } = useSectionConfig(location.pathname, location.search, navigate)
+  const { title, tabs, pillTabs } = useSectionConfig(location.pathname, location.search, navigate) as { title: string; tabs: TabConfig[] | null; pillTabs?: TabConfig[] }
   const isJournalContext = ['/journal', '/insights'].includes(location.pathname)
   const { avatarUrl } = useAuthStore()
 
@@ -140,8 +151,8 @@ export default function AppLayout() {
     <div className="flex h-screen overflow-hidden bg-background">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        {/* Top App Bar — hidden on /wheel (profile button lives inline there) */}
-        {location.pathname !== '/wheel' && <header className="w-full bg-background/80 backdrop-blur-xl sticky top-0 z-40 shrink-0 border-b border-[#F0F3F3]">
+        {/* Top App Bar */}
+        <header className="w-full bg-background/80 backdrop-blur-xl sticky top-0 z-40 shrink-0 border-b border-[#F0F3F3]">
           <div className="max-w-[1400px] mx-auto px-4 md:px-12 py-4 md:py-5 flex justify-between items-center gap-3">
 
             <div className="flex items-center gap-4 md:gap-10 min-w-0 flex-1">
@@ -149,6 +160,24 @@ export default function AppLayout() {
               <span className="text-lg md:text-xl font-black tracking-tight shrink-0 text-[#0C1629]">
                 {title}
               </span>
+
+              {/* Pill-style tabs (e.g. Wheel of Life) */}
+              {pillTabs && (
+                <nav className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[10px] overflow-x-auto scrollbar-hide shrink-0">
+                  {pillTabs.map(({ label, active, path }) => (
+                    <button
+                      key={label}
+                      onClick={() => path && navigate(path)}
+                      className={cn(
+                        'px-4 py-1.5 text-xs font-semibold rounded-[7px] transition-all cursor-pointer whitespace-nowrap',
+                        active ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
+                      )}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </nav>
+              )}
 
               {/* Sub-tabs — only when the section has them */}
               {tabs && (
@@ -255,7 +284,7 @@ export default function AppLayout() {
             </div>
 
           </div>
-        </header>}
+        </header>
 
         {/* Main content */}
         <main
