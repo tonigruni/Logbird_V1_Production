@@ -19,6 +19,17 @@ import { useAuthStore } from '../stores/authStore'
 import type { Task as StoreTask } from '../stores/wheelStore'
 
 // ---------------------------------------------------------------------------
+// Palette helpers
+// ---------------------------------------------------------------------------
+
+const CARD_PALETTES = ['#f6fee7', '#f0faff', '#f1f8f4', '#fff7eb', '#fafaf9', '#fef6ee']
+function paletteColor(id: string) {
+  let hash = 0
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0
+  return CARD_PALETTES[hash % CARD_PALETTES.length]
+}
+
+// ---------------------------------------------------------------------------
 // Status helpers
 // ---------------------------------------------------------------------------
 
@@ -251,36 +262,27 @@ export default function ProjectDetail() {
         Back to Projects
       </button>
 
-      {/* Hero banner */}
-      <div
-        className="rounded-[15px] relative overflow-hidden"
-        style={{ background: `linear-gradient(135deg, ${accentColor} 0%, ${accentColor}cc 100%)` }}
-      >
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)',
-            backgroundSize: '16px 16px',
-          }}
-        />
-        <div className="relative p-8 md:p-10">
+      {/* Hero card */}
+      <div className="card overflow-hidden" style={{ backgroundColor: paletteColor(project.id) }}>
+        <div className="h-[3px] w-full" style={{ backgroundColor: accentColor }} />
+        <div className="p-8 md:p-10">
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-[10px] font-bold text-white/90 bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full uppercase tracking-wider">
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#0C1629]/10 text-[#0C1629]">
               {project.status.replace('_', ' ')}
             </span>
             {linkedGoal && (
-              <span className="text-[10px] font-bold text-white/90 bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 bg-[#0C1629]/10 text-[#0C1629]">
                 <Target size={10} />
                 {linkedGoal.title}
               </span>
             )}
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-3">
+          <h1 className="text-2xl md:text-3xl font-black text-[#0C1629] tracking-tight mb-3">
             {project.title}
           </h1>
           {project.description && (
-            <p className="text-sm text-white/80 leading-relaxed max-w-2xl">
+            <p className="text-sm text-[#727A84] leading-relaxed max-w-2xl">
               {project.description}
             </p>
           )}
@@ -288,14 +290,14 @@ export default function ProjectDetail() {
           <div className="flex items-center gap-2 mt-6">
             <button
               onClick={() => navigate('/tasks')}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/90 bg-white/15 backdrop-blur-sm hover:bg-white/25 px-3.5 py-2 rounded-[10px] transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0C1629] bg-[#0C1629]/10 hover:bg-[#0C1629]/20 px-3.5 py-2 rounded-[10px] transition-all cursor-pointer"
             >
               <CheckSquare size={13} /> View All Tasks
             </button>
             {linkedGoal && (
               <button
                 onClick={() => navigate(`/goals/${linkedGoal.id}`)}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/90 bg-white/15 backdrop-blur-sm hover:bg-white/25 px-3.5 py-2 rounded-[10px] transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0C1629] bg-[#0C1629]/10 hover:bg-[#0C1629]/20 px-3.5 py-2 rounded-[10px] transition-all cursor-pointer"
               >
                 <Target size={13} /> Open Goal
               </button>
