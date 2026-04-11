@@ -140,8 +140,8 @@ export default function AppLayout() {
     <div className="flex h-screen overflow-hidden bg-background">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        {/* Top App Bar */}
-        <header className="w-full bg-background/80 backdrop-blur-xl sticky top-0 z-40 shrink-0 border-b border-[#F0F3F3]">
+        {/* Top App Bar — hidden on /wheel (profile button lives inline there) */}
+        {location.pathname !== '/wheel' && <header className="w-full bg-background/80 backdrop-blur-xl sticky top-0 z-40 shrink-0 border-b border-[#F0F3F3]">
           <div className="max-w-[1400px] mx-auto px-4 md:px-12 py-4 md:py-5 flex justify-between items-center gap-3">
 
             <div className="flex items-center gap-4 md:gap-10 min-w-0 flex-1">
@@ -255,7 +255,7 @@ export default function AppLayout() {
             </div>
 
           </div>
-        </header>
+        </header>}
 
         {/* Main content */}
         <main

@@ -36,7 +36,11 @@ import {
   Paperclip,
   Share2,
   Tag,
+  Settings,
+  LogOut,
 } from 'lucide-react'
+import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverTitle, PopoverDescription, PopoverBody, PopoverFooter } from '../components/ui/popover'
+import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import { LogbirdDatePicker } from '../components/ui/date-range-picker'
 import {
   RadarChart,
@@ -458,25 +462,81 @@ export default function WheelOfLife() {
 
   return (
     <div className="pb-24">
-      {/* Header + tabs */}
+      {/* Header + tabs + profile */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#0C1629]">Wheel of Life</h1>
           <p className="text-sm text-[#727A84] mt-1">Rate each area of your life to understand your overall balance and identify areas for growth.</p>
         </div>
-        <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[10px] self-start shrink-0 overflow-x-auto scrollbar-hide">
-          {([['checkin', 'Check-in'], ['goals', 'Goals & Tasks'], ['history', 'History']] as const).map(([id, label]) => (
-            <button
-              key={id}
-              onClick={() => setTab(id)}
-              className={cn(
-                'px-4 py-1.5 text-xs font-semibold rounded-[7px] transition-all cursor-pointer whitespace-nowrap',
-                tab === id ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
-              )}
-            >
-              {label}
-            </button>
-          ))}
+        <div className="flex items-center gap-2 self-start shrink-0">
+          <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[10px] overflow-x-auto scrollbar-hide">
+            {([['checkin', 'Check-in'], ['goals', 'Goals & Tasks'], ['history', 'History']] as const).map(([id, label]) => (
+              <button
+                key={id}
+                onClick={() => setTab(id)}
+                className={cn(
+                  'px-4 py-1.5 text-xs font-semibold rounded-[7px] transition-all cursor-pointer whitespace-nowrap',
+                  tab === id ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {/* Inline profile button */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                className="w-8 h-8 !rounded-full bg-[#F0F3F3] cursor-pointer active:scale-95 transition-transform flex items-center justify-center shrink-0 hover:bg-[#c8d1d2] overflow-hidden border border-[#F0F3F3]"
+                aria-label="Account"
+              >
+                <User size={15} className="text-[#727A84]" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-60">
+              <PopoverHeader>
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-9 w-9 shrink-0">
+                    <AvatarFallback className="bg-[#F0F3F3]">
+                      <User size={16} className="text-[#727A84]" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <PopoverTitle className="truncate">
+                      {(user?.user_metadata?.full_name as string) || 'My Account'}
+                    </PopoverTitle>
+                    <PopoverDescription className="truncate">{user?.email}</PopoverDescription>
+                  </div>
+                </div>
+              </PopoverHeader>
+              <PopoverBody className="space-y-0.5">
+                <button
+                  onClick={() => navigate('/account')}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
+                  style={{ borderRadius: 10 }}
+                >
+                  <User size={14} className="text-[#727A84]" /> View Profile
+                </button>
+                <button
+                  onClick={() => navigate('/settings')}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
+                  style={{ borderRadius: 10 }}
+                >
+                  <Settings size={14} className="text-[#727A84]" /> Settings
+                </button>
+              </PopoverBody>
+              <PopoverFooter>
+                <button
+                  onClick={() => useAuthStore.getState().signOut()}
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-[#727A84] hover:text-[#0C1629] hover:bg-[#F0F3F3] border border-[#F0F3F3] transition-colors cursor-pointer"
+                  style={{ borderRadius: 10 }}
+                >
+                  <LogOut size={13} /> Sign Out
+                </button>
+              </PopoverFooter>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
