@@ -128,8 +128,8 @@ export default function Sidebar() {
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-[13px] text-[#727A84] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
               aria-label="Settings"
             >
-              <Gear size={22} className="shrink-0" />
-              <span className="text-sm font-semibold text-[#0C1629] truncate">
+              <UserCircle size={22} className="shrink-0" />
+              <span className="text-sm font-semibold truncate">
                 {(user?.user_metadata?.full_name as string) || user?.email?.split('@')[0] || 'My Account'}
               </span>
             </button>
