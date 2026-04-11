@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { SortAscending, Plus, ListBullets, SquaresFour, Target } from '@phosphor-icons/react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { SortAscending, Plus, ListBullets, SquaresFour, Columns, Kanban, Target, Calendar } from '@phosphor-icons/react'
 import { cn } from '../lib/utils'
 import BoardView from '../components/BoardView'
 import type { BoardColumn } from '../components/BoardView'
@@ -105,6 +105,55 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
   )
 }
 
+function ProjectRow({ project, progress, goalTitle, onClick }: {
+  project: Project
+  progress: number
+  goalTitle: string | null
+  onClick: () => void
+}) {
+  const color = project.color || '#0C1629'
+  return (
+    <div onClick={onClick} className="flex items-center gap-4 px-5 py-4 bg-white card group hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 cursor-pointer">
+      <div className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0" style={{ backgroundColor: color + '15' }}>
+        <Kanban size={18} weight="bold" style={{ color }} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <h4 className="text-sm font-bold text-[#0C1629] leading-snug">{project.title}</h4>
+        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+          {goalTitle && (
+            <span className="text-[10px] font-bold text-[#727A84] uppercase tracking-wider flex items-center gap-1">
+              <Target size={9} />{goalTitle}
+            </span>
+          )}
+          {project.description && (
+            <span className="text-[10px] text-[#B5C1C8] truncate max-w-[200px]">{project.description}</span>
+          )}
+        </div>
+      </div>
+      <div className="hidden sm:flex items-center gap-2 shrink-0 w-32">
+        <div className="flex-1 h-1.5 bg-[#F0F3F3] rounded-full overflow-hidden">
+          <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, backgroundColor: color }} />
+        </div>
+        <span className="text-[10px] font-bold text-[#B5C1C8] w-8 text-right">{progress}%</span>
+      </div>
+      {project.target_date && (
+        <span className="hidden lg:flex items-center gap-1 text-[10px] font-semibold text-[#B5C1C8] shrink-0">
+          <Calendar size={10} />
+          {new Date(project.target_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+        </span>
+      )}
+      <span className={cn(
+        'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shrink-0',
+        project.status === 'active' || project.status === 'in_progress' ? 'bg-[#0C1629]/10 text-[#0C1629]' :
+        project.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' :
+        'bg-[#B5C1C8]/10 text-[#B5C1C8]'
+      )}>
+        {STATUS_LABEL[project.status]}
+      </span>
+    </div>
+  )
+}
+
 function NewInitiativeCard({ onClick }: { onClick: () => void }) {
   return (
     <button
@@ -134,7 +183,9 @@ export default function ProjectsOverview() {
   const { projects, fetchProjects } = useProjectStore()
   const { tasks, goals, fetchAll } = useWheelStore()
 
-  const [view, setView] = useState<'grid' | 'board'>('grid')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const view = (searchParams.get('view') || 'grid') as 'grid' | 'list' | 'board'
+  const setView = (v: 'grid' | 'list' | 'board') => setSearchParams({ view: v }, { replace: true })
   const [sortBy, setSortBy] = useState<'recent' | 'name' | 'progress'>('recent')
 
   useEffect(() => {
@@ -235,49 +286,47 @@ export default function ProjectsOverview() {
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center bg-white/10 rounded-[10px] p-0.5">
-              <button
-                onClick={() => setView('grid')}
-                className={cn('p-1.5 rounded-[8px] transition-all', view === 'grid' ? 'bg-white/20 text-white' : 'text-white/50')}
-              >
+              <button onClick={() => setView('grid')} className={cn('p-1.5 rounded-[8px] transition-all', view === 'grid' ? 'bg-white/20 text-white' : 'text-white/50')}>
                 <SquaresFour size={14} weight="bold" />
               </button>
-              <button
-                onClick={() => setView('board')}
-                className={cn('p-1.5 rounded-[8px] transition-all', view === 'board' ? 'bg-white/20 text-white' : 'text-white/50')}
-              >
+              <button onClick={() => setView('list')} className={cn('p-1.5 rounded-[8px] transition-all', view === 'list' ? 'bg-white/20 text-white' : 'text-white/50')}>
                 <ListBullets size={14} weight="bold" />
+              </button>
+              <button onClick={() => setView('board')} className={cn('p-1.5 rounded-[8px] transition-all', view === 'board' ? 'bg-white/20 text-white' : 'text-white/50')}>
+                <Columns size={14} weight="bold" />
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {view === 'grid' ? (
-        <>
-          {/* Sort bar */}
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-[#0C1629]">
-              All Projects
-              <span className="ml-2 text-xs font-semibold text-[#B5C1C8]">{projects.length}</span>
-            </h2>
-            <div className="flex items-center gap-1 text-[10px] font-bold text-[#B5C1C8]">
-              <SortAscending size={13} />
-              {(['recent', 'name', 'progress'] as const).map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setSortBy(s)}
-                  className={cn(
-                    'px-2 py-1 rounded-md uppercase tracking-wider transition-colors cursor-pointer',
-                    sortBy === s ? 'text-[#0C1629] bg-[#0C1629]/10' : 'hover:text-[#0C1629]'
-                  )}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
+      {/* Sort bar — grid + list */}
+      {view !== 'board' && (
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-bold text-[#0C1629]">
+            All Projects
+            <span className="ml-2 text-xs font-semibold text-[#B5C1C8]">{projects.length}</span>
+          </h2>
+          <div className="flex items-center gap-1 text-[10px] font-bold text-[#B5C1C8]">
+            <SortAscending size={13} />
+            {(['recent', 'name', 'progress'] as const).map((s) => (
+              <button
+                key={s}
+                onClick={() => setSortBy(s)}
+                className={cn(
+                  'px-2 py-1 rounded-md uppercase tracking-wider transition-colors cursor-pointer',
+                  sortBy === s ? 'text-[#0C1629] bg-[#0C1629]/10' : 'hover:text-[#0C1629]'
+                )}
+              >
+                {s}
+              </button>
+            ))}
           </div>
+        </div>
+      )}
 
-          {/* Grid */}
+      {view === 'grid' && (
+        <>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
             {sortedProjects.map((project) => (
               <ProjectCard
@@ -290,14 +339,34 @@ export default function ProjectsOverview() {
             ))}
             <NewInitiativeCard onClick={() => navigate('/projects/new')} />
           </div>
-
           {projects.length === 0 && (
             <div className="text-center py-16 text-sm text-[#B5C1C8]">
               No projects yet — launch your first initiative above.
             </div>
           )}
         </>
-      ) : (
+      )}
+
+      {view === 'list' && (
+        <div className="space-y-2">
+          {sortedProjects.map((project) => (
+            <ProjectRow
+              key={project.id}
+              project={project}
+              progress={projectProgress(project.id, tasks)}
+              goalTitle={project.goal_id ? goalMap[project.goal_id]?.title ?? null : null}
+              onClick={() => navigate(`/projects/${project.id}`)}
+            />
+          ))}
+          {projects.length === 0 && (
+            <div className="text-center py-16 text-sm text-[#B5C1C8]">
+              No projects yet — launch your first initiative above.
+            </div>
+          )}
+        </div>
+      )}
+
+      {view === 'board' && (
         <BoardView
           columns={boardColumns}
           onCardClick={(cardId) => navigate(`/projects/${cardId}`)}

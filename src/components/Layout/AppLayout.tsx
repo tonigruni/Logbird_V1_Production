@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom'
 import { Search, LayoutDashboard, BookOpen, Circle, User, Settings, LogOut, Plus, FileText } from 'lucide-react'
+import { SquaresFour, ListBullets, Columns } from '@phosphor-icons/react'
 import Sidebar from './Sidebar'
 import { useAuthStore } from '../../stores/authStore'
 import { cn } from '../../lib/utils'
@@ -21,6 +22,7 @@ interface TabConfig {
   path?: string
   onClick?: () => void
   isAction?: boolean
+  icon?: React.ElementType
 }
 
 // Per-section config: title and sub-tabs
@@ -34,7 +36,18 @@ function useSectionConfig(pathname: string, search: string, navigate: ReturnType
   if (pathname === '/settings') return { title: 'Settings', tabs: null }
   if (pathname === '/tasks' || pathname.startsWith('/tasks/')) return { title: 'Tasks', tabs: null }
   if (pathname === '/goals') return { title: 'Goals', tabs: null }
-  if (pathname === '/projects' || pathname.startsWith('/projects/')) return { title: 'Projects', tabs: null }
+  if (pathname === '/projects') {
+    const viewParam = new URLSearchParams(search).get('view') || 'grid'
+    return {
+      title: 'Projects',
+      tabs: [
+        { label: 'Grid',  active: viewParam === 'grid',  path: '/projects?view=grid',  icon: SquaresFour },
+        { label: 'List',  active: viewParam === 'list',  path: '/projects?view=list',  icon: ListBullets },
+        { label: 'Board', active: viewParam === 'board', path: '/projects?view=board', icon: Columns },
+      ] as TabConfig[],
+    }
+  }
+  if (pathname.startsWith('/projects/')) return { title: 'Projects', tabs: null }
   if (pathname === '/timeboxing') return { title: 'Timeboxing', tabs: null }
 
   if (['/journal', '/insights'].includes(pathname)) {
@@ -113,7 +126,7 @@ export default function AppLayout() {
               {/* Sub-tabs — only when the section has them */}
               {tabs && (
                 <nav className="flex items-center gap-5 md:gap-7 overflow-x-auto scrollbar-hide">
-                  {tabs.map(({ label, active, path, onClick, isAction }) => (
+                  {tabs.map(({ label, active, path, onClick, isAction, icon: Icon }) => (
                     isAction ? (
                       <button
                         key={label}
@@ -129,6 +142,7 @@ export default function AppLayout() {
                         onClick={() => path && navigate(path)}
                         className={tabClass(active)}
                       >
+                        {Icon && <Icon size={14} weight={active ? 'bold' : 'regular'} className="shrink-0" />}
                         {label}
                       </button>
                     )
