@@ -264,7 +264,6 @@ export default function ProjectDetail() {
 
       {/* Hero card */}
       <div className="card overflow-hidden" style={{ backgroundColor: paletteColor(project.id) }}>
-        <div className="h-[3px] w-full" style={{ backgroundColor: accentColor }} />
         <div className="p-8 md:p-10">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#0C1629]/10 text-[#0C1629]">

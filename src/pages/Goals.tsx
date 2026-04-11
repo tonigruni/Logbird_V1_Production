@@ -31,78 +31,52 @@ const PROJECT_MAP: Record<string, { title: string; slug: string; color: string }
 }
 
 // ---------------------------------------------------------------------------
-// Category colour palette
+// Card palette
 // ---------------------------------------------------------------------------
 
-const CATEGORY_COLORS: Record<string, string> = {
-  'Health': '#22c55e',
-  'Career': '#0C1629',
-  'Finance': '#f59e0b',
-  'Relationships': '#ec4899',
-  'Personal Growth': '#8b5cf6',
-  'Fun': '#f97316',
-  'Environment': '#06b6d4',
-  'Family/Friends': '#e11d48',
-}
-
-function getCategoryColor(name: string | null): string {
-  return (name && CATEGORY_COLORS[name]) || '#0C1629'
-}
+const CARD_PALETTES = ['#f6fee7', '#f0faff', '#f1f8f4', '#fff7eb', '#fafaf9', '#fef6ee']
 
 // ---------------------------------------------------------------------------
 // Goal Card (portfolio view)
 // ---------------------------------------------------------------------------
 
-function GoalCard({ goal, categoryName, taskCount, completedCount, onClick }: {
+function GoalCard({ goal, categoryName, taskCount, completedCount, onClick, index }: {
   goal: Goal
   categoryName: string | null
   taskCount: number
   completedCount: number
   onClick?: () => void
+  index: number
 }) {
   const progress = taskCount > 0 ? Math.round(completedCount / taskCount * 100) : 0
-  const color = getCategoryColor(categoryName)
+  const bg = CARD_PALETTES[index % CARD_PALETTES.length]
 
   return (
-    <article onClick={onClick} className="bg-white card overflow-hidden hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 group cursor-pointer">
-      {/* Coloured header */}
-      <div className="h-28 relative overflow-hidden" style={{ backgroundColor: color + '18' }}>
-        <div
-          className="absolute inset-0"
-          style={{ background: `linear-gradient(135deg, ${color}28 0%, ${color}08 100%)` }}
-        />
-        <Target
-          size={64}
-          weight="bold"
-          className="absolute -bottom-3 -right-3 opacity-[0.08]"
-          style={{ color }}
-        />
-        <span
-          className="absolute top-3 left-3 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
-          style={{ color, backgroundColor: color + '20' }}
-        >
-          {categoryName || 'Goal'}
-        </span>
-        <span className={cn(
-          'absolute top-3 right-3 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider',
-          goal.status === 'active' ? 'bg-[#0C1629]/10 text-[#0C1629]' :
-          goal.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' :
-          'bg-[#B5C1C8]/10 text-[#B5C1C8]'
-        )}>
-          {goal.status}
-        </span>
-      </div>
-
-      {/* Body */}
+    <article onClick={onClick} className="card overflow-hidden hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 group cursor-pointer" style={{ backgroundColor: bg }}>
       <div className="p-5 space-y-3">
+        {/* Icon + status row */}
+        <div className="flex items-start justify-between">
+          <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 bg-[#0C1629]/10">
+            <Target size={16} weight="bold" className="text-[#0C1629]" />
+          </div>
+          <span className={cn(
+            'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider',
+            goal.status === 'active' ? 'bg-[#0C1629]/10 text-[#0C1629]' :
+            goal.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' :
+            'bg-[#B5C1C8]/10 text-[#B5C1C8]'
+          )}>
+            {goal.status}
+          </span>
+        </div>
+
+        {/* Category + title + description */}
         <div>
-          <h3 className="font-bold text-[#0C1629] text-sm leading-snug group-hover:text-[#0C1629] transition-colors">
-            {goal.title}
-          </h3>
+          {categoryName && (
+            <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">{categoryName}</span>
+          )}
+          <h3 className="font-bold text-[#0C1629] text-sm leading-snug mt-0.5">{goal.title}</h3>
           {goal.description && (
-            <p className="text-xs text-[#727A84] leading-relaxed line-clamp-2 mt-1">
-              {goal.description}
-            </p>
+            <p className="text-xs text-[#727A84] leading-relaxed line-clamp-2 mt-1">{goal.description}</p>
           )}
         </div>
 
@@ -110,13 +84,10 @@ function GoalCard({ goal, categoryName, taskCount, completedCount, onClick }: {
         <div>
           <div className="flex justify-between text-[10px] font-bold mb-1.5">
             <span className="text-[#B5C1C8] uppercase tracking-wider">Progress</span>
-            <span style={{ color }}>{progress}%</span>
+            <span className="text-[#0C1629]">{progress}%</span>
           </div>
-          <div className="w-full h-1.5 bg-[#F0F3F3] rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{ width: `${progress}%`, backgroundColor: color }}
-            />
+          <div className="w-full h-1.5 bg-[#0C1629]/10 rounded-full overflow-hidden">
+            <div className="h-full rounded-full bg-[#0C1629] transition-all duration-500" style={{ width: `${progress}%` }} />
           </div>
         </div>
 
@@ -413,13 +384,14 @@ export default function Goals() {
 
       {view === 'portfolio' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {goals.map(goal => {
+          {goals.map((goal, i) => {
             const counts = goalTaskCounts[goal.id] || { total: 0, completed: 0 }
             const categoryName = categoryMap[goal.category_id]?.name ?? null
             return (
               <GoalCard
                 key={goal.id}
                 goal={goal}
+                index={i}
                 categoryName={categoryName}
                 taskCount={counts.total}
                 completedCount={counts.completed}

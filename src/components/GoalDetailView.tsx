@@ -294,8 +294,8 @@ export default function GoalDetailView({ goal, onClose }: Props) {
                   <span className="text-xs text-on-surface-variant">{progressPercent}% complete</span>
                   <span className="text-xs text-on-surface-variant">{completedCount} of {goalTasks.length} done</span>
                 </div>
-                <div className="w-full bg-[#F0F3F3] rounded-full h-2">
-                  <div className="h-2 rounded-full transition-all duration-500" style={{ width: `${progressPercent}%`, backgroundColor: meta.color }} />
+                <div className="w-full bg-[#0C1629]/10 rounded-full h-2">
+                  <div className="h-2 rounded-full bg-[#0C1629] transition-all duration-500" style={{ width: `${progressPercent}%` }} />
                 </div>
               </div>
             )}

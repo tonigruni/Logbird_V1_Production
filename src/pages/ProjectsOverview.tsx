@@ -49,15 +49,12 @@ function ProjectCard({ project, progress, goalTitle, onClick, index }: {
       className="card overflow-hidden hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 group cursor-pointer"
       style={{ backgroundColor: bg }}
     >
-      {/* Slim top accent line */}
-      <div className="h-[3px] w-full" style={{ backgroundColor: color }} />
-
       {/* Body */}
       <div className="p-5 space-y-3">
         {/* Icon row + status */}
         <div className="flex items-start justify-between">
-          <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0" style={{ backgroundColor: color + '18' }}>
-            <Kanban size={16} weight="bold" style={{ color }} />
+          <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 bg-[#0C1629]/10">
+            <Kanban size={16} weight="bold" className="text-[#0C1629]" />
           </div>
           <span className={cn(
             'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider',
@@ -86,10 +83,10 @@ function ProjectCard({ project, progress, goalTitle, onClick, index }: {
         <div>
           <div className="flex justify-between text-[10px] font-bold mb-1.5">
             <span className="text-[#B5C1C8] uppercase tracking-wider">Progress</span>
-            <span style={{ color }}>{progress}%</span>
+            <span className="text-[#0C1629]">{progress}%</span>
           </div>
-          <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: color + '18' }}>
-            <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, backgroundColor: color }} />
+          <div className="w-full h-1.5 rounded-full overflow-hidden bg-[#0C1629]/10">
+            <div className="h-full rounded-full transition-all duration-500 bg-[#0C1629]" style={{ width: `${progress}%` }} />
           </div>
         </div>
 
