@@ -122,7 +122,7 @@ export default function Sidebar() {
       </div>
 
       {/* Bottom bar: settings + profile name */}
-      <div className="pt-3 border-t border-[#F0F3F3] px-1">
+      <div className="py-3 border-t border-[#F0F3F3] px-1">
         <Popover>
           <PopoverTrigger asChild>
             <button
