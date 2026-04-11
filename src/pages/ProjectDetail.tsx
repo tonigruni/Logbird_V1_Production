@@ -318,16 +318,12 @@ export default function ProjectDetail() {
         </div>
 
         <div className="p-8 md:p-10">
+          {/* Icon + status */}
           <div className="flex items-center gap-2 mb-4">
+            {(() => { const HeroIcon = ICON_MAP[project.card_icon || ''] || Kanban; return <HeroIcon size={16} weight="bold" className="text-[#0C1629] shrink-0" /> })()}
             <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#0C1629]/10 text-[#0C1629]">
               {project.status.replace('_', ' ')}
             </span>
-            {linkedGoal && (
-              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 bg-[#0C1629]/10 text-[#0C1629]">
-                <Target size={10} />
-                {linkedGoal.title}
-              </span>
-            )}
           </div>
 
           <h1 className="text-2xl md:text-3xl font-black text-[#0C1629] tracking-tight mb-3">
@@ -338,23 +334,6 @@ export default function ProjectDetail() {
               {project.description}
             </p>
           )}
-
-          <div className="flex items-center gap-2 mt-6">
-            <button
-              onClick={() => navigate('/tasks')}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0C1629] bg-[#0C1629]/10 hover:bg-[#0C1629]/20 px-3.5 py-2 rounded-[10px] transition-all cursor-pointer"
-            >
-              <CheckSquare size={13} /> View All Tasks
-            </button>
-            {linkedGoal && (
-              <button
-                onClick={() => navigate(`/goals/${linkedGoal.id}`)}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0C1629] bg-[#0C1629]/10 hover:bg-[#0C1629]/20 px-3.5 py-2 rounded-[10px] transition-all cursor-pointer"
-              >
-                <Target size={13} /> Open Goal
-              </button>
-            )}
-          </div>
         </div>
       </div>
 
