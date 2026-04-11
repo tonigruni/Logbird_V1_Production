@@ -16,6 +16,7 @@ import {
 import { cn } from '../lib/utils'
 import { useWheelStore } from '../stores/wheelStore'
 import { useProjectStore } from '../stores/projectStore'
+import type { Project } from '../stores/projectStore'
 import { useAuthStore } from '../stores/authStore'
 import type { Task as StoreTask } from '../stores/wheelStore'
 import { Popover, PopoverTrigger, PopoverContent, PopoverBody } from '../components/ui/popover'
@@ -220,6 +221,10 @@ export default function ProjectDetail() {
   const progress = projectTasks.length > 0 ? Math.round((completedCount / projectTasks.length) * 100) : 0
 
   const [linkGoalId, setLinkGoalId] = useState('')
+  const [editingTitle, setEditingTitle] = useState(false)
+  const [editTitle, setEditTitle] = useState('')
+  const [editingDesc, setEditingDesc] = useState(false)
+  const [editDesc, setEditDesc] = useState('')
 
   function handleAddTask(title: string, goalId: string | null) {
     if (!user || !project) return
@@ -326,12 +331,40 @@ export default function ProjectDetail() {
             </span>
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-black text-[#0C1629] tracking-tight mb-3">
-            {project.title}
-          </h1>
-          {project.description && (
-            <p className="text-sm text-[#727A84] leading-relaxed max-w-2xl">
-              {project.description}
+          {editingTitle ? (
+            <input
+              value={editTitle}
+              onChange={e => setEditTitle(e.target.value)}
+              onBlur={() => { updateProject(project.id, { title: editTitle.trim() || project.title }); setEditingTitle(false) }}
+              onKeyDown={e => { if (e.key === 'Enter') { updateProject(project.id, { title: editTitle.trim() || project.title }); setEditingTitle(false) } if (e.key === 'Escape') setEditingTitle(false) }}
+              className="text-2xl md:text-3xl font-black text-[#0C1629] tracking-tight mb-3 bg-transparent border-b-2 border-[#0C1629]/30 focus:border-[#0C1629] outline-none w-full max-w-2xl"
+              autoFocus
+            />
+          ) : (
+            <h1
+              onClick={() => { setEditingTitle(true); setEditTitle(project.title) }}
+              className="text-2xl md:text-3xl font-black text-[#0C1629] tracking-tight mb-3 cursor-text hover:opacity-75 transition-opacity"
+            >
+              {project.title}
+            </h1>
+          )}
+
+          {editingDesc ? (
+            <textarea
+              value={editDesc}
+              onChange={e => setEditDesc(e.target.value)}
+              onBlur={() => { updateProject(project.id, { description: editDesc.trim() || null }); setEditingDesc(false) }}
+              onKeyDown={e => { if (e.key === 'Escape') { updateProject(project.id, { description: editDesc.trim() || null }); setEditingDesc(false) } }}
+              rows={3}
+              className="text-sm text-[#727A84] leading-relaxed max-w-2xl bg-transparent border-b border-[#D6DCE0] focus:border-[#0C1629]/40 outline-none w-full resize-none"
+              autoFocus
+            />
+          ) : (
+            <p
+              onClick={() => { setEditingDesc(true); setEditDesc(project.description || '') }}
+              className="text-sm text-[#727A84] leading-relaxed max-w-2xl cursor-text hover:opacity-75 transition-opacity min-h-[1.5rem]"
+            >
+              {project.description || <span className="italic opacity-40">Add a description…</span>}
             </p>
           )}
         </div>
@@ -384,24 +417,42 @@ export default function ProjectDetail() {
 
           {/* Metadata */}
           <div className="grid grid-cols-2 gap-3">
-            <MetaCard label="Status" value={project.status.replace('_', ' ')} color={accentColor} />
+            {/* Status — editable select */}
+            <div className="bg-white card p-5">
+              <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block mb-1">Status</span>
+              <select
+                value={project.status}
+                onChange={e => updateProject(project.id, { status: e.target.value as Project['status'] })}
+                className="text-sm font-bold text-[#0C1629] bg-transparent border-none outline-none cursor-pointer w-full -ml-0.5"
+              >
+                <option value="active">Active</option>
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
+
             <MetaCard label="Tasks" value={projectTasks.length} />
-            {project.target_date && (
-              <MetaCard
-                label="Target Date"
-                value={new Date(project.target_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+
+            {/* Target Date — editable */}
+            <div className="bg-white card p-5">
+              <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block mb-1">Target Date</span>
+              <input
+                type="date"
+                value={project.target_date ? project.target_date.slice(0, 10) : ''}
+                onChange={e => updateProject(project.id, { target_date: e.target.value || null })}
+                className="text-sm font-bold text-[#0C1629] bg-transparent border-none outline-none cursor-pointer w-full -ml-0.5"
               />
-            )}
+            </div>
+
+            {/* Progress — read-only */}
             <div className="bg-white card p-5">
               <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block mb-2">Progress</span>
               <div className="flex items-center gap-2">
-                <div className="flex-1 h-1.5 bg-[#F0F3F3] rounded-full overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{ width: `${progress}%`, backgroundColor: accentColor }}
-                  />
+                <div className="flex-1 h-1.5 bg-[#0C1629]/10 rounded-full overflow-hidden">
+                  <div className="h-full rounded-full bg-[#0C1629] transition-all duration-500" style={{ width: `${progress}%` }} />
                 </div>
-                <span className="text-sm font-bold" style={{ color: accentColor }}>{progress}%</span>
+                <span className="text-sm font-bold text-[#0C1629]">{progress}%</span>
               </div>
             </div>
           </div>
