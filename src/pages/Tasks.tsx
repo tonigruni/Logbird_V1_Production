@@ -869,7 +869,7 @@ export default function Tasks() {
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start pb-24">
       <div className="flex-1 min-w-0 w-full space-y-6 md:space-y-8">
       {/* Hero Banner */}
-      <div className="relative bg-[#253A5E] card overflow-hidden px-6 py-5 md:px-10 md:py-7">
+      <div className="relative bg-[#2a4a63] card overflow-hidden px-6 py-5 md:px-10 md:py-7">
         <GradientBarsBackground barCount={14} />
         <div className="absolute inset-0 opacity-[0.07]">
           <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(107,99,245,0.4) 0%, transparent 40%), radial-gradient(circle at 60% 80%, rgba(255,255,255,0.2) 0%, transparent 45%)' }} />
