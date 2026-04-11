@@ -293,22 +293,24 @@ export default function ProjectDetail() {
                   ))}
                 </div>
                 <p className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider pt-1">Icon</p>
-                <div className="grid grid-cols-5 gap-1.5">
-                  {ICON_OPTIONS.map(({ name, Icon }) => (
-                    <button
-                      key={name}
-                      onClick={() => updateProject(project.id, { card_icon: name })}
-                      title={name}
-                      className={cn(
-                        'w-9 h-9 flex items-center justify-center rounded-[8px] transition-all cursor-pointer',
-                        (project.card_icon || 'Kanban') === name
-                          ? 'bg-[#0C1629] text-white'
-                          : 'bg-[#0C1629]/[0.06] text-[#727A84] hover:bg-[#0C1629]/10 hover:text-[#0C1629]'
-                      )}
-                    >
-                      <Icon size={15} />
-                    </button>
-                  ))}
+                <div className="overflow-y-auto max-h-52 scrollbar-hide">
+                  <div className="grid grid-cols-5 gap-1.5">
+                    {ICON_OPTIONS.map(({ name, Icon }) => (
+                      <button
+                        key={name}
+                        onClick={() => updateProject(project.id, { card_icon: name })}
+                        title={name}
+                        className={cn(
+                          'w-9 h-9 flex items-center justify-center rounded-[8px] transition-all cursor-pointer',
+                          (project.card_icon || 'Kanban') === name
+                            ? 'bg-[#0C1629] text-white'
+                            : 'bg-[#0C1629]/[0.06] text-[#727A84] hover:bg-[#0C1629]/10 hover:text-[#0C1629]'
+                        )}
+                      >
+                        <Icon size={15} />
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </PopoverBody>
             </PopoverContent>
