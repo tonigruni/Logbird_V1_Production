@@ -1013,23 +1013,6 @@ export default function Tasks() {
           </RadixDropdown.Portal>
         </RadixDropdown.Root>
 
-        <div className="flex-1" />
-
-        {/* View switcher */}
-        <div className="flex items-center bg-[#F0F3F3] rounded-[10px] p-0.5">
-          <button
-            onClick={() => navigate('/tasks?view=board')}
-            className={cn('p-1.5 rounded-[8px] transition-all cursor-pointer', view === 'board' ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#B5C1C8] hover:text-[#727A84]')}
-          >
-            <SquaresFour size={15} weight="bold" />
-          </button>
-          <button
-            onClick={() => navigate('/tasks?view=list')}
-            className={cn('p-1.5 rounded-[8px] transition-all cursor-pointer', view === 'list' ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#B5C1C8] hover:text-[#727A84]')}
-          >
-            <ListBullets size={15} weight="bold" />
-          </button>
-        </div>
       </div>
 
       {/* Main content */}
