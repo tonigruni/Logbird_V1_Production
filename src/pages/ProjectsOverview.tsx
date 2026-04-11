@@ -14,7 +14,7 @@ import {
 
 export const CARD_PALETTE_OPTIONS = [
   // Tinted pastels
-  '#f6fee7', '#f0faff', '#f1f8f4', '#fff7eb', '#fafaf9',
+  '#ffffff', '#f0faff', '#f1f8f4', '#fff7eb', '#fafaf9',
   '#fef6ee', '#fdf4ff', '#fff1f2', '#f5f3ff', '#fffbeb',
   // Greyscale / muted
   '#f4f4f4', '#f0f2f5', '#f3f3f1', '#eef0f3', '#f2f1ef',
