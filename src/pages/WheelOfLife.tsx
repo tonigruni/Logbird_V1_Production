@@ -621,7 +621,7 @@ export default function WheelOfLife() {
                 document.body.removeChild(link)
                 URL.revokeObjectURL(url)
               }}
-              className="flex items-center gap-2 bg-[#D6DCE0] hover:bg-[#D6DCE0] text-[#0C1629] px-5 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer"
+              className="flex items-center gap-2 bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-5 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer"
             >
               <Download size={15} />
               Download Results

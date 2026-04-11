@@ -138,7 +138,7 @@ export default function Analysis() {
             )}
             <button
               onClick={runAnalysis}
-              className="bg-[#D6DCE0] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer flex items-center gap-2"
+              className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer flex items-center gap-2"
             >
               <RefreshCw size={14} />
               Retry
@@ -229,7 +229,7 @@ export default function Analysis() {
         <div className="flex flex-wrap gap-3">
           <button
             onClick={runAnalysis}
-            className="bg-[#D6DCE0] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer flex items-center gap-2"
+            className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer flex items-center gap-2"
           >
             <RefreshCw size={14} />
             <span>Refresh</span>
@@ -467,7 +467,7 @@ export default function Analysis() {
             </p>
           </div>
         </div>
-        <div className="h-1.5 flex-1 mx-8 bg-[#D6DCE0] rounded-full overflow-hidden hidden lg:block">
+        <div className="h-1.5 flex-1 mx-8 bg-[#F0F3F3] rounded-full overflow-hidden hidden lg:block">
           <div
             className="h-full bg-[#0C1629] rounded-full transition-all"
             style={{ width: `${analysis.clarityScore}%` }}

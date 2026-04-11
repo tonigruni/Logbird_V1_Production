@@ -42,7 +42,7 @@ export default function Sidebar() {
     cn(
       'flex items-center gap-3 px-4 py-3 rounded-[15px] text-base tracking-tight transition-all duration-200 cursor-pointer',
       isActive
-        ? 'bg-[#D6DCE0] text-[#0C1629] font-bold'
+        ? 'bg-[#F0F3F3] text-[#0C1629] font-bold'
         : 'text-[#727A84] hover:bg-[#0C1629]/[0.03] font-semibold'
     )
 

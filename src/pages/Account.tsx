@@ -330,7 +330,7 @@ export default function Account() {
               <button
                 type="submit"
                 disabled={profileLoading}
-                className="bg-[#D6DCE0] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer"
+                className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer"
               >
                 {profileLoading ? 'Updating...' : 'Update Profile'}
               </button>
@@ -363,7 +363,7 @@ export default function Account() {
               <button
                 type="submit"
                 disabled={bioLoading}
-                className="bg-[#D6DCE0] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer"
+                className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer"
               >
                 {bioLoading ? 'Saving...' : 'Save Bio'}
               </button>
@@ -420,7 +420,7 @@ export default function Account() {
               <button
                 type="submit"
                 disabled={passwordLoading}
-                className="bg-[#D6DCE0] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-2"
+                className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-2"
               >
                 <Lock size={13} />
                 {passwordLoading ? 'Saving...' : 'Save Changes'}
@@ -480,7 +480,7 @@ export default function Account() {
                       setDeleteConfirm('')
                       setDeleteError('')
                     }}
-                    className="bg-[#D6DCE0] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer"
+                    className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>

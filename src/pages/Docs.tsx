@@ -479,7 +479,7 @@ function DesignSystemTab() {
             <Label>Sidebar Nav Item</Label>
             <Demo className="flex-col items-start gap-2">
               {/* Active */}
-              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] bg-[#D6DCE0] text-[#0C1629] font-bold w-56 cursor-pointer">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] bg-[#F0F3F3] text-[#0C1629] font-bold w-56 cursor-pointer">
                 <Target size={20} weight="bold" className="shrink-0" />
                 <span className="text-base tracking-tight">Goals</span>
               </div>
@@ -493,7 +493,7 @@ function DesignSystemTab() {
                 <span className="text-base tracking-tight">Projects</span>
               </div>
             </Demo>
-            <UsageNote>Left sidebar — active: bg-[#D6DCE0] + bold weight. Inactive: text-[#727A84] + regular weight + hover:bg-[#0C1629]/3</UsageNote>
+            <UsageNote>Left sidebar — active: bg-[#F0F3F3] + bold weight. Inactive: text-[#727A84] + regular weight + hover:bg-[#0C1629]/3</UsageNote>
           </div>
 
           <div className="space-y-3">

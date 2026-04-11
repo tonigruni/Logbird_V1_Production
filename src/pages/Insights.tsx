@@ -229,7 +229,7 @@ export default function Insights() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="bg-[#D6DCE0] hover:bg-[#D6DCE0] text-[#0C1629] px-5 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer flex items-center gap-2 disabled:opacity-50"
+                  className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-5 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer flex items-center gap-2 disabled:opacity-50"
                 >
                   <Save size={14} />
                   {saving ? 'Saving...' : 'Save'}
@@ -237,7 +237,7 @@ export default function Insights() {
                 <button
                   onClick={handleExport}
                   disabled={exporting}
-                  className="bg-[#D6DCE0] hover:bg-[#D6DCE0] text-[#0C1629] px-5 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer flex items-center gap-2 disabled:opacity-50"
+                  className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-5 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer flex items-center gap-2 disabled:opacity-50"
                 >
                   <Download size={14} />
                   {exporting ? 'Exporting...' : 'Export PDF'}
@@ -666,7 +666,7 @@ export default function Insights() {
               <div className="space-y-6 md:space-y-10">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-6">
-                    <div className="w-14 h-14 bg-[#D6DCE0] rounded-full flex items-center justify-center">
+                    <div className="w-14 h-14 bg-[#F0F3F3] rounded-full flex items-center justify-center">
                       <SmilePlus size={24} className="text-[#0C1629]" />
                     </div>
                     <div>
@@ -687,7 +687,7 @@ export default function Insights() {
 
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-6">
-                    <div className="w-14 h-14 bg-[#D6DCE0] rounded-full flex items-center justify-center">
+                    <div className="w-14 h-14 bg-[#F0F3F3] rounded-full flex items-center justify-center">
                       <FileEdit size={24} className="text-[#727A84]" />
                     </div>
                     <div>
@@ -707,7 +707,7 @@ export default function Insights() {
 
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-6">
-                    <div className="w-14 h-14 bg-[#D6DCE0] rounded-full flex items-center justify-center">
+                    <div className="w-14 h-14 bg-[#F0F3F3] rounded-full flex items-center justify-center">
                       <AlertTriangle size={24} className="text-[#9f403d]" />
                     </div>
                     <div>

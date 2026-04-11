@@ -155,7 +155,7 @@ export default function AppLayout() {
               <Popover>
                 <PopoverTrigger asChild>
                   <button
-                    className="w-8 h-8 md:w-9 md:h-9 !rounded-full bg-[#D6DCE0] cursor-pointer active:scale-95 transition-transform flex items-center justify-center shrink-0 hover:bg-[#c8d1d2] overflow-hidden border border-[#F0F3F3]"
+                    className="w-8 h-8 md:w-9 md:h-9 !rounded-full bg-[#F0F3F3] cursor-pointer active:scale-95 transition-transform flex items-center justify-center shrink-0 hover:bg-[#c8d1d2] overflow-hidden border border-[#F0F3F3]"
                     aria-label="Account"
                   >
                     <User size={15} className="text-[#727A84]" />
@@ -165,7 +165,7 @@ export default function AppLayout() {
                   <PopoverHeader>
                     <div className="flex items-center gap-3">
                       <Avatar className="h-9 w-9 shrink-0">
-                        <AvatarFallback className="bg-[#D6DCE0]">
+                        <AvatarFallback className="bg-[#F0F3F3]">
                           <User size={16} className="text-[#727A84]" />
                         </AvatarFallback>
                       </Avatar>
