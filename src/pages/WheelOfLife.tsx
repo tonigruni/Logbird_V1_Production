@@ -458,28 +458,26 @@ export default function WheelOfLife() {
 
   return (
     <div className="pb-24">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#0C1629]">Wheel of Life Assessment</h1>
-        <p className="text-sm text-[#727A84] mt-1">
-          Rate each area of your life to understand your overall balance and identify areas for growth.
-        </p>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 mb-6 bg-[#F0F3F3] p-1.5 rounded-xl w-fit overflow-x-auto scrollbar-hide">
-        {([['checkin', 'Check-in'], ['goals', 'Goals & Tasks'], ['history', 'History']] as const).map(([id, label]) => (
-          <button
-            key={id}
-            onClick={() => setTab(id)}
-            className={cn(
-              'px-5 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer',
-              tab === id ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
-            )}
-          >
-            {label}
-          </button>
-        ))}
+      {/* Header + tabs */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#0C1629]">Wheel of Life</h1>
+          <p className="text-sm text-[#727A84] mt-1">Rate each area of your life to understand your overall balance and identify areas for growth.</p>
+        </div>
+        <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[10px] self-start shrink-0 overflow-x-auto scrollbar-hide">
+          {([['checkin', 'Check-in'], ['goals', 'Goals & Tasks'], ['history', 'History']] as const).map(([id, label]) => (
+            <button
+              key={id}
+              onClick={() => setTab(id)}
+              className={cn(
+                'px-4 py-1.5 text-xs font-semibold rounded-[7px] transition-all cursor-pointer whitespace-nowrap',
+                tab === id ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* CHECK-IN TAB */}
