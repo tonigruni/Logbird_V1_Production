@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { SquaresFour, BookOpen, ChartDonut, CheckSquare, Target, Kanban, Timer, CaretDown, Gear, SignOut, UserCircle, Files } from '@phosphor-icons/react'
+import { User } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { useAuthStore } from '../../stores/authStore'
 import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverTitle, PopoverDescription, PopoverBody, PopoverFooter } from '../ui/popover'
@@ -125,10 +126,12 @@ export default function Sidebar() {
         <Popover>
           <PopoverTrigger asChild>
             <button
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-[13px] text-[#727A84] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
-              aria-label="Settings"
+              className="w-full flex items-center gap-3 px-2 py-2 rounded-[13px] text-[#727A84] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
+              aria-label="Account"
             >
-              <UserCircle size={22} className="shrink-0" />
+              <div className="w-8 h-8 rounded-full bg-[#F0F3F3] border border-[#F0F3F3] flex items-center justify-center shrink-0 hover:bg-[#c8d1d2]">
+                <User size={15} className="text-[#727A84]" />
+              </div>
               <span className="text-sm font-semibold truncate">
                 {(user?.user_metadata?.full_name as string) || user?.email?.split('@')[0] || 'My Account'}
               </span>
