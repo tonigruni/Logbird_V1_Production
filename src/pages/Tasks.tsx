@@ -869,7 +869,7 @@ export default function Tasks() {
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start pb-24">
       <div className="flex-1 min-w-0 w-full space-y-6 md:space-y-8">
       {/* Hero Banner */}
-      <div className="relative bg-[#2a4a63] card overflow-hidden px-6 py-5 md:px-10 md:py-7">
+      <div className="relative bg-[#B5C1C8] card overflow-hidden px-6 py-5 md:px-10 md:py-7">
         <GradientBarsBackground barCount={14} />
         <div className="absolute inset-0 opacity-[0.07]">
           <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(107,99,245,0.4) 0%, transparent 40%), radial-gradient(circle at 60% 80%, rgba(255,255,255,0.2) 0%, transparent 45%)' }} />
@@ -880,19 +880,19 @@ export default function Tasks() {
         </div>
         <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">Task Backlog</h1>
-            <p className="text-white/70 mt-1 text-sm">{activeTasks.length} tasks active • {highEnergyToday} high energy required today</p>
+            <h1 className="text-xl md:text-2xl font-extrabold text-[#0C1629] tracking-tight">Task Backlog</h1>
+            <p className="text-[#0C1629]/60 mt-1 text-sm">{activeTasks.length} tasks active • {highEnergyToday} high energy required today</p>
           </div>
-          <div className="flex items-center bg-white/10 rounded-[10px] p-1">
+          <div className="flex items-center bg-[#0C1629]/10 rounded-[10px] p-1">
             <button
               onClick={() => navigate('/tasks?view=board')}
-              className={cn('p-2 rounded-[8px] transition-all cursor-pointer', view === 'board' ? 'bg-white/20 text-white' : 'text-white/50 hover:text-white/80')}
+              className={cn('p-2 rounded-[8px] transition-all cursor-pointer', view === 'board' ? 'bg-[#0C1629]/20 text-[#0C1629]' : 'text-[#0C1629]/40 hover:text-[#0C1629]/70')}
             >
               <SquaresFour size={18} weight="bold" />
             </button>
             <button
               onClick={() => navigate('/tasks?view=list')}
-              className={cn('p-2 rounded-[8px] transition-all cursor-pointer', view === 'list' ? 'bg-white/20 text-white' : 'text-white/50 hover:text-white/80')}
+              className={cn('p-2 rounded-[8px] transition-all cursor-pointer', view === 'list' ? 'bg-[#0C1629]/20 text-[#0C1629]' : 'text-[#0C1629]/40 hover:text-[#0C1629]/70')}
             >
               <ListBullets size={18} weight="bold" />
             </button>
