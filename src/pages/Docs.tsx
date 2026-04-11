@@ -104,17 +104,28 @@ function DesignSystemTab() {
 
         <div className="space-y-6">
           <div>
-            <Label>Brand & Surfaces</Label>
+            <Label>Named Palette — 6 Core Swatches</Label>
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 mt-3">
+              <ColourSwatch hex="#FEFEFE" name="White as Heaven" role="Page & card backgrounds" />
+              <ColourSwatch hex="#F0F3F3" name="Zappy Zebra" role="Inputs, muted surfaces" />
+              <ColourSwatch hex="#D6DCE0" name="Hidden Creek" role="Borders, dividers" />
+              <ColourSwatch hex="#B5C1C8" name="Kinder" role="Faint text, placeholders" />
+              <ColourSwatch hex="#727A84" name="Deep Shale" role="Secondary & muted text" />
+              <ColourSwatch hex="#0C1629" name="Liberty Blue" role="Primary brand, headings" />
+            </div>
+          </div>
+          <div>
+            <Label>Semantic Tokens</Label>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 mt-3">
               <ColourSwatch hex="#0C1629" name="Primary" role="Buttons, links, active states" />
-              <ColourSwatch hex="#2a4a63" name="Primary Hover" role="Hover state of primary" />
-              <ColourSwatch hex="#ffffff" name="Background" role="Page background" />
-              <ColourSwatch hex="#ffffff" name="Surface" role="Card backgrounds" />
+              <ColourSwatch hex="#1E2A3A" name="Primary Hover" role="Hover state of primary" />
+              <ColourSwatch hex="#FEFEFE" name="Background" role="Page background" />
+              <ColourSwatch hex="#FEFEFE" name="Surface" role="Card backgrounds" />
               <ColourSwatch hex="#F0F3F3" name="Muted" role="Inputs, secondary BG" />
             </div>
           </div>
           <div>
-            <Label>Text</Label>
+            <Label>Text Scale</Label>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 mt-3">
               <ColourSwatch hex="#0C1629" name="On Surface" role="Headings, body text" />
               <ColourSwatch hex="#727A84" name="Secondary" role="Supporting text" />
@@ -133,11 +144,12 @@ function DesignSystemTab() {
             </div>
           </div>
           <div>
-            <Label>Borders</Label>
+            <Label>Borders & Containers</Label>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 mt-3">
               <ColourSwatch hex="#D6DCE0" name="Card Border" role="Default card border" />
               <ColourSwatch hex="#D6DCE0" name="Border Light" role="Dividers, subtle" />
               <ColourSwatch hex="#D6DCE0" name="Container High" role="Hover borders" />
+              <ColourSwatch hex="#F0F3F3" name="Container Low" role="Section fills" />
             </div>
           </div>
         </div>
