@@ -108,7 +108,7 @@ export function LogbirdDateRangePicker({
             {(segment) => (
               <DateSegment
                 segment={segment}
-                className="px-0.5 rounded focus:bg-[#0C1629] focus:text-white outline-none tabular-nums"
+                className="px-0.5 rounded focus:bg-[#0C1629]/[0.07] outline-none tabular-nums"
               />
             )}
           </DateInput>
@@ -120,7 +120,7 @@ export function LogbirdDateRangePicker({
             {(segment) => (
               <DateSegment
                 segment={segment}
-                className="px-0.5 rounded focus:bg-[#0C1629] focus:text-white outline-none tabular-nums"
+                className="px-0.5 rounded focus:bg-[#0C1629]/[0.07] outline-none tabular-nums"
               />
             )}
           </DateInput>
@@ -243,7 +243,7 @@ export function LogbirdDatePicker({
           {(segment) => (
             <DateSegment
               segment={segment}
-              className="px-0.5 rounded focus:bg-[#0C1629] focus:text-white outline-none tabular-nums"
+              className="px-0.5 rounded focus:bg-[#0C1629]/[0.07] outline-none tabular-nums"
             />
           )}
         </DateInput>
