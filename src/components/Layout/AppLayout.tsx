@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom'
 import { Search, LayoutDashboard, BookOpen, Circle, User, Settings, LogOut, Plus, FileText } from 'lucide-react'
-import { SquaresFour, ListBullets, Columns } from '@phosphor-icons/react'
+import { SquaresFour, ListBullets, Columns, PencilSimpleLine } from '@phosphor-icons/react'
 import Sidebar from './Sidebar'
 import { useAuthStore } from '../../stores/authStore'
 import { cn } from '../../lib/utils'
@@ -22,6 +22,7 @@ interface TabConfig {
   path?: string
   onClick?: () => void
   isAction?: boolean
+  compact?: boolean
   icon?: React.ElementType
 }
 
@@ -34,7 +35,23 @@ function useSectionConfig(pathname: string, search: string, navigate: ReturnType
   if (pathname === '/wheel')    return { title: 'Wheel of Life', tabs: null }
   if (pathname === '/account')  return { title: 'Account', tabs: null }
   if (pathname === '/settings') return { title: 'Settings', tabs: null }
-  if (pathname === '/tasks' || pathname.startsWith('/tasks/')) return { title: 'Tasks', tabs: null }
+  if (pathname === '/tasks' || pathname.startsWith('/tasks/')) {
+    const viewParam = new URLSearchParams(search).get('view') || 'board'
+    return {
+      title: 'Tasks',
+      tabs: [
+        { label: 'Board', active: viewParam === 'board', path: '/tasks?view=board', icon: SquaresFour },
+        { label: 'List',  active: viewParam === 'list',  path: '/tasks?view=list',  icon: ListBullets },
+        {
+          label: 'Create Task',
+          active: false,
+          isAction: true,
+          icon: PencilSimpleLine,
+          onClick: () => navigate('/tasks', { state: { openModal: true } }),
+        },
+      ] as TabConfig[],
+    }
+  }
   if (pathname === '/goals') return { title: 'Goals', tabs: null }
   if (pathname === '/projects') {
     const viewParam = new URLSearchParams(search).get('view') || 'grid'
@@ -126,14 +143,14 @@ export default function AppLayout() {
               {/* Sub-tabs — only when the section has them */}
               {tabs && (
                 <nav className="flex items-center gap-5 md:gap-7 overflow-x-auto scrollbar-hide">
-                  {tabs.map(({ label, active, path, onClick, isAction, icon: Icon }) => (
+                  {tabs.map(({ label, active, path, onClick, isAction, compact, icon: Icon }) => (
                     isAction ? (
                       <button
                         key={label}
                         onClick={onClick}
                         className="inline-flex items-center gap-1.5 bg-[#0C1629] hover:opacity-90 text-white text-sm font-semibold px-4 py-2 rounded-[10px] transition-all cursor-pointer whitespace-nowrap shrink-0"
                       >
-                        <Plus size={14} className="shrink-0" />
+                        {Icon ? <Icon size={14} className="shrink-0" /> : <Plus size={14} className="shrink-0" />}
                         {label}
                       </button>
                     ) : (

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import * as RadixDropdown from '@radix-ui/react-dropdown-menu'
 import {
   Lightning,
@@ -662,7 +662,9 @@ export default function Tasks() {
   const [filterPriority, setFilterPriority] = useState<TaskPriority | 'all'>('all')
   const [filterEnergy, setFilterEnergy] = useState<1 | 2 | 3 | 'all'>('all')
   const [sortBy, setSortBy] = useState<SortBy>('priority')
-  const [view, setView] = useState<'list' | 'board'>('board')
+  const [searchParams] = useSearchParams()
+  const location = useLocation()
+  const view = (searchParams.get('view') as 'list' | 'board') || 'board'
   const [toastMessage, setToastMessage] = useState<string | null>(null)
   const [taskModalOpen, setTaskModalOpen] = useState(false)
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
@@ -838,6 +840,14 @@ export default function Tasks() {
     return { goalTitle: goal.title, project }
   }, [activeTasks, goalMap])
 
+  // Open modal when navigated here with state: { openModal: true }
+  useEffect(() => {
+    if (location.state?.openModal) {
+      setTaskModalOpen(true)
+      window.history.replaceState({}, '')
+    }
+  }, [location.state])
+
   function handleQuickAdd(title: string) {
     if (!user) return
     createTask({
@@ -977,35 +987,21 @@ export default function Tasks() {
           </RadixDropdown.Portal>
         </RadixDropdown.Root>
 
-        <button
-          onClick={() => setTaskModalOpen(true)}
-          className="flex items-center gap-1.5 text-xs font-semibold text-white bg-[#0C1629] h-7 px-3 rounded-[8px] hover:opacity-90 transition-opacity cursor-pointer"
-        >
-          <PencilSimpleLine size={12} />
-          Create Task
-        </button>
-
         <div className="flex-1" />
 
-        {/* View switcher — right side */}
+        {/* View switcher */}
         <div className="flex items-center bg-[#F0F3F3] rounded-[10px] p-0.5">
           <button
-            onClick={() => setView('list')}
-            className={cn(
-              'p-1.5 rounded-[8px] transition-all cursor-pointer',
-              view === 'list' ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#B5C1C8] hover:text-[#727A84]'
-            )}
-          >
-            <ListBullets size={15} weight="bold" />
-          </button>
-          <button
-            onClick={() => setView('board')}
-            className={cn(
-              'p-1.5 rounded-[8px] transition-all cursor-pointer',
-              view === 'board' ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#B5C1C8] hover:text-[#727A84]'
-            )}
+            onClick={() => navigate('/tasks?view=board')}
+            className={cn('p-1.5 rounded-[8px] transition-all cursor-pointer', view === 'board' ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#B5C1C8] hover:text-[#727A84]')}
           >
             <SquaresFour size={15} weight="bold" />
+          </button>
+          <button
+            onClick={() => navigate('/tasks?view=list')}
+            className={cn('p-1.5 rounded-[8px] transition-all cursor-pointer', view === 'list' ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#B5C1C8] hover:text-[#727A84]')}
+          >
+            <ListBullets size={15} weight="bold" />
           </button>
         </div>
       </div>
