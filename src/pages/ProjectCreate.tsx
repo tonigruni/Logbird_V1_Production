@@ -10,6 +10,8 @@ import {
   Clock,
 } from '@phosphor-icons/react'
 import { cn } from '../lib/utils'
+import { useProjectStore } from '../stores/projectStore'
+import { useAuthStore } from '../stores/authStore'
 
 // ---------------------------------------------------------------------------
 // Project Type options
@@ -24,6 +26,8 @@ type ProjectType = typeof PROJECT_TYPES[number]
 
 export default function ProjectCreate() {
   const navigate = useNavigate()
+  const { createProject } = useProjectStore()
+  const { user } = useAuthStore()
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -32,6 +36,7 @@ export default function ProjectCreate() {
   const [endDate, setEndDate] = useState('')
   const [objectives, setObjectives] = useState<string[]>([])
   const [newObjective, setNewObjective] = useState('')
+  const [saving, setSaving] = useState(false)
 
   // Calculate duration
   const duration = (() => {
@@ -52,9 +57,26 @@ export default function ProjectCreate() {
     setObjectives(prev => prev.filter((_, i) => i !== index))
   }
 
-  function handleCreate() {
-    // In a full implementation, this would persist to the store/db
-    navigate('/projects')
+  async function handleCreate() {
+    if (!user || !name.trim()) return
+    setSaving(true)
+    try {
+      const project = await createProject({
+        user_id: user.id,
+        title: name.trim(),
+        description: [description.trim(), objectives.length ? `Objectives:\n${objectives.map(o => `• ${o}`).join('\n')}` : ''].filter(Boolean).join('\n\n') || null,
+        status: 'active',
+        goal_id: null,
+        color: '#0C1629',
+        cover_url: null,
+        target_date: endDate || null,
+      })
+      if (project) navigate(`/projects/${project.id}`)
+      else navigate('/projects')
+    } catch (e) {
+      console.error(e)
+      setSaving(false)
+    }
   }
 
   const isValid = name.trim().length > 0

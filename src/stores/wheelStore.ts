@@ -22,7 +22,7 @@ export interface WheelCheckin {
 export interface Goal {
   id: string
   user_id: string
-  category_id: string
+  category_id: string | null
   project_id: string | null
   title: string
   description: string | null

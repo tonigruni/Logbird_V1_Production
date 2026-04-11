@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ArrowLeft,
@@ -89,7 +89,7 @@ function Label({ children }: { children: React.ReactNode }) {
 export default function GoalCreate() {
   const navigate = useNavigate()
   const { categories, createTask, fetchAll } = useWheelStore()
-  const { projects, createProject, fetchProjects } = useProjectStore()
+  const { projects, createProject, updateProject, fetchProjects } = useProjectStore()
   const { user } = useAuthStore()
 
   // ── Core Identity ──
@@ -126,6 +126,11 @@ export default function GoalCreate() {
   const [saving, setSaving] = useState(false)
   const [errors, setErrors] = useState<{ title?: string; category?: string }>({})
 
+  // Bug fix 3: load projects on mount so dropdown is populated on direct nav
+  useEffect(() => {
+    if (user) fetchProjects(user.id)
+  }, [user?.id])
+
   const activeCategories = categories.filter(c => c.is_active)
   const linkedProject    = projects.find(p => p.id === linkedProjectId)
 
@@ -155,10 +160,12 @@ export default function GoalCreate() {
     if (!newProjectName.trim() || !user) return
     setCreatingProject(true)
     try {
-      await createProject({ user_id: user.id, title: newProjectName.trim(), description: '', color: newProjectColor, status: 'active' })
-      await fetchProjects()
-      const fresh = useProjectStore.getState().projects
-      const created = fresh.find(p => p.title === newProjectName.trim())
+      const created = await createProject({
+        user_id: user.id, title: newProjectName.trim(), description: null,
+        color: newProjectColor, status: 'active', goal_id: null, cover_url: null, target_date: null,
+      })
+      // Bug fix 2: pass userId to fetchProjects
+      await fetchProjects(user.id)
       if (created) setLinkedProjectId(created.id)
       setNewProjectName('')
       setShowNewProject(false)
@@ -187,11 +194,17 @@ export default function GoalCreate() {
 
       if (error || !goal) throw error
 
+      // Bug fix 4: keep project.goal_id in sync with goal.project_id
+      if (linkedProjectId) {
+        await updateProject(linkedProjectId, { goal_id: goal.id })
+      }
+
       for (const t of tasks) {
         await createTask({ user_id: user!.id, goal_id: goal.id, category_id: categoryId, project_id: linkedProjectId, title: t.title, completed: false, priority: t.priority as any, energy: 2, estimated_minutes: t.estimated_minutes, due_date: null })
       }
 
       await fetchAll(user!.id)
+      await fetchProjects(user!.id)
       navigate(`/goals/${goal.id}`)
     } catch (e) {
       console.error(e)
