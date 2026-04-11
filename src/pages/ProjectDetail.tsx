@@ -435,8 +435,8 @@ export default function ProjectDetail() {
 
             <MetaCard label="Tasks" value={projectTasks.length} />
 
-            {/* Project Dates — editable range */}
-            <div className="bg-white card p-5">
+            {/* Project Dates — editable range, full width */}
+            <div className="col-span-2 bg-white card p-5">
               <LogbirdDateRangePicker
                 label="Timeline"
                 value={{ start: project.start_date ?? null, end: project.end_date ?? null }}
@@ -446,8 +446,8 @@ export default function ProjectDetail() {
               />
             </div>
 
-            {/* Progress — read-only */}
-            <div className="bg-white card p-5">
+            {/* Progress — read-only, full width */}
+            <div className="col-span-2 bg-white card p-5">
               <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block mb-2">Progress</span>
               <div className="flex items-center gap-2">
                 <div className="flex-1 h-1.5 bg-[#0C1629]/10 rounded-full overflow-hidden">
