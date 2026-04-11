@@ -187,7 +187,7 @@ export default function AppLayout() {
                       <button
                         key={label}
                         onClick={onClick}
-                        className="inline-flex items-center gap-1.5 bg-[#8896A8] hover:bg-[#7A8898] text-white text-sm font-semibold px-4 py-2 rounded-[10px] transition-all cursor-pointer whitespace-nowrap shrink-0"
+                        className="inline-flex items-center gap-1.5 bg-[#F0F3F3] hover:bg-[#E4E9EC] text-[#0C1629] text-sm font-semibold px-4 py-2 rounded-[10px] transition-all cursor-pointer whitespace-nowrap shrink-0"
                       >
                         {Icon ? <Icon size={14} className="shrink-0" /> : <Plus size={14} className="shrink-0" />}
                         {label}
