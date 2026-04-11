@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import type { Goal } from '../stores/wheelStore'
 import {
   Target,
@@ -230,7 +230,12 @@ export default function Goals() {
   const { user } = useAuthStore()
   const { goals, tasks, categories, fetchAll, updateGoal } = useWheelStore()
 
-  const [view, setView] = useState<'portfolio' | 'list' | 'board'>('portfolio')
+  const [searchParams] = useSearchParams()
+  const view = (searchParams.get('view') as 'portfolio' | 'list' | 'board') || 'portfolio'
+
+  const [filterCategory, setFilterCategory] = useState('all')
+  const [filterStatus, setFilterStatus]     = useState('all')
+  const [sortBy, setSortBy]                 = useState<'recent' | 'alpha' | 'progress'>('recent')
 
   // Handle board card moves — update goal status
   const handleBoardMove = useCallback((cardId: string, _fromColumnId: string, toColumnId: string) => {
@@ -286,68 +291,81 @@ export default function Goals() {
 
   const activeGoals = goals.filter(g => g.status === 'active')
 
+  const displayGoals = useMemo(() => {
+    let list = [...goals]
+    if (filterCategory !== 'all') list = list.filter(g => g.category_id === filterCategory)
+    if (filterStatus !== 'all') list = list.filter(g => g.status === filterStatus)
+    if (sortBy === 'alpha') list.sort((a, b) => a.title.localeCompare(b.title))
+    else if (sortBy === 'progress') {
+      list.sort((a, b) => {
+        const pa = goalTaskCounts[a.id] ? Math.round(goalTaskCounts[a.id].completed / goalTaskCounts[a.id].total * 100) : 0
+        const pb = goalTaskCounts[b.id] ? Math.round(goalTaskCounts[b.id].completed / goalTaskCounts[b.id].total * 100) : 0
+        return pb - pa
+      })
+    }
+    return list
+  }, [goals, filterCategory, filterStatus, sortBy, goalTaskCounts])
+
   return (
     <div className="pb-24 space-y-6 md:space-y-8">
       {/* Hero Banner */}
       <div className="relative bg-primary card overflow-hidden px-6 py-5 md:px-10 md:py-7">
         <GradientBarsBackground barCount={10} />
         <div className="absolute inset-0 opacity-[0.07]">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(107,99,245,0.4) 0%, transparent 40%), radial-gradient(circle at 60% 80%, rgba(255,255,255,0.2) 0%, transparent 45%)',
-            }}
-          />
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(107,99,245,0.4) 0%, transparent 40%), radial-gradient(circle at 60% 80%, rgba(255,255,255,0.2) 0%, transparent 45%)' }} />
           <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="goals-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
-              </pattern>
-            </defs>
+            <defs><pattern id="goals-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" /></pattern></defs>
             <rect width="100%" height="100%" fill="url(#goals-grid)" />
           </svg>
         </div>
         <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">
-              Life Goals
-            </h1>
-            <p className="text-white/60 mt-1 text-xs max-w-md">
-              {activeGoals.length} active goals • {goals.length} total — align your actions with your vision.
-            </p>
+            <h1 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">Life Goals</h1>
+            <p className="text-white/70 mt-1 text-sm">{activeGoals.length} active goals • {goals.length} total — align your actions with your vision.</p>
           </div>
-          <div className="flex items-center bg-white/10 rounded-[10px] p-0.5">
-            <button
-              onClick={() => setView('portfolio')}
-              className={cn(
-                'p-1.5 rounded-[8px] transition-all',
-                view === 'portfolio' ? 'bg-white/20 text-white' : 'text-white/50'
-              )}
-            >
-              <SquaresFour size={14} weight="bold" />
-            </button>
-            <button
-              onClick={() => setView('list')}
-              className={cn(
-                'p-1.5 rounded-[8px] transition-all',
-                view === 'list' ? 'bg-white/20 text-white' : 'text-white/50'
-              )}
-            >
-              <ListBullets size={14} weight="bold" />
-            </button>
-            <button
-              onClick={() => setView('board')}
-              className={cn(
-                'p-1.5 rounded-[8px] transition-all',
-                view === 'board' ? 'bg-white/20 text-white' : 'text-white/50'
-              )}
-            >
-              <Columns size={14} weight="bold" />
-            </button>
+          <div className="flex items-center bg-white/10 rounded-[10px] p-1">
+            <button onClick={() => navigate('/goals?view=portfolio')} className={cn('p-2 rounded-[8px] transition-all cursor-pointer', view === 'portfolio' ? 'bg-white/20 text-white' : 'text-white/50 hover:text-white/80')}><SquaresFour size={18} weight="bold" /></button>
+            <button onClick={() => navigate('/goals?view=list')} className={cn('p-2 rounded-[8px] transition-all cursor-pointer', view === 'list' ? 'bg-white/20 text-white' : 'text-white/50 hover:text-white/80')}><ListBullets size={18} weight="bold" /></button>
+            <button onClick={() => navigate('/goals?view=board')} className={cn('p-2 rounded-[8px] transition-all cursor-pointer', view === 'board' ? 'bg-white/20 text-white' : 'text-white/50 hover:text-white/80')}><Columns size={18} weight="bold" /></button>
           </div>
         </div>
       </div>
+
+      {/* Filter bar */}
+      {view !== 'board' && (
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Category filter */}
+          <select
+            value={filterCategory}
+            onChange={e => setFilterCategory(e.target.value)}
+            className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#F0F3F3] text-xs text-[#727A84] font-semibold outline-none cursor-pointer"
+          >
+            <option value="all">All Categories</option>
+            {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+          {/* Status filter */}
+          <select
+            value={filterStatus}
+            onChange={e => setFilterStatus(e.target.value)}
+            className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#F0F3F3] text-xs text-[#727A84] font-semibold outline-none cursor-pointer"
+          >
+            <option value="all">All Statuses</option>
+            <option value="active">Active</option>
+            <option value="paused">Paused</option>
+            <option value="completed">Completed</option>
+          </select>
+          <div className="flex-1" />
+          {/* Sort */}
+          <div className="flex items-center gap-1 text-[10px] font-bold text-[#B5C1C8]">
+            <CheckSquare size={13} />
+            {(['recent', 'alpha', 'progress'] as const).map(s => (
+              <button key={s} onClick={() => setSortBy(s)} className={cn('px-2 py-1 rounded-md uppercase tracking-wider transition-colors cursor-pointer', sortBy === s ? 'text-[#0C1629] bg-[#0C1629]/10' : 'hover:text-[#0C1629]')}>
+                {s === 'recent' ? 'Recent' : s === 'alpha' ? 'A–Z' : 'Progress'}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Content */}
       {view === 'board' && (
@@ -363,7 +381,7 @@ export default function Goals() {
 
       {view === 'list' && (
         <div className="space-y-2">
-          {goals.map(goal => {
+          {displayGoals.map(goal => {
             const counts = goalTaskCounts[goal.id] || { total: 0, completed: 0 }
             const project = goal.project_id ? PROJECT_MAP[goal.project_id] : null
             return (
@@ -378,7 +396,7 @@ export default function Goals() {
               />
             )
           })}
-          {goals.length === 0 && (
+          {displayGoals.length === 0 && (
             <div className="text-center py-16">
               <p className="text-sm text-[#B5C1C8]">No goals yet. Create goals in Wheel of Life.</p>
             </div>
@@ -388,7 +406,7 @@ export default function Goals() {
 
       {view === 'portfolio' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {goals.map((goal) => {
+          {displayGoals.map((goal) => {
             const counts = goalTaskCounts[goal.id] || { total: 0, completed: 0 }
             const categoryName = categoryMap[goal.category_id]?.name ?? null
             return (

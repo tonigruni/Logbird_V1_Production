@@ -52,7 +52,17 @@ function useSectionConfig(pathname: string, search: string, navigate: ReturnType
       ] as TabConfig[],
     }
   }
-  if (pathname === '/goals') return { title: 'Goals', tabs: null }
+  if (pathname === '/goals') {
+    const viewParam = new URLSearchParams(search).get('view') || 'portfolio'
+    return {
+      title: 'Goals',
+      tabs: [
+        { label: 'Portfolio', active: viewParam === 'portfolio', path: '/goals?view=portfolio', icon: SquaresFour },
+        { label: 'List',      active: viewParam === 'list',      path: '/goals?view=list',      icon: ListBullets },
+        { label: 'Board',     active: viewParam === 'board',     path: '/goals?view=board',     icon: Columns },
+      ] as TabConfig[],
+    }
+  }
   if (pathname === '/projects') {
     const viewParam = new URLSearchParams(search).get('view') || 'grid'
     return {
