@@ -3,7 +3,8 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { SquaresFour, BookOpen, ChartDonut, CheckSquare, Target, Kanban, Timer, CaretDown, Gear, SignOut, UserCircle, Files } from '@phosphor-icons/react'
 import { cn } from '../../lib/utils'
 import { useAuthStore } from '../../stores/authStore'
-import { Popover, PopoverTrigger, PopoverContent, PopoverBody } from '../ui/popover'
+import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverTitle, PopoverDescription, PopoverBody, PopoverFooter } from '../ui/popover'
+import { Avatar, AvatarFallback } from '../ui/avatar'
 
 const topNav = [
   { to: '/', icon: SquaresFour, label: 'Dashboard' },
@@ -24,7 +25,7 @@ const productivityNav = [
 export default function Sidebar() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { signOut } = useAuthStore()
+  const { signOut, user } = useAuthStore()
   const navRef = useRef<HTMLDivElement>(null)
   const [canScrollDown, setCanScrollDown] = useState(false)
 
@@ -130,27 +131,54 @@ export default function Sidebar() {
               <Gear size={18} />
             </button>
           </PopoverTrigger>
-          <PopoverContent align="start" side="top" className="w-52">
-            <PopoverBody className="space-y-0.5 py-1">
+          <PopoverContent align="start" side="top" className="w-60">
+            <PopoverHeader>
+              <div className="flex items-center gap-3">
+                <Avatar className="h-9 w-9 shrink-0">
+                  <AvatarFallback className="bg-[#F0F3F3]">
+                    <UserCircle size={16} className="text-[#727A84]" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <PopoverTitle className="truncate">
+                    {(user?.user_metadata?.full_name as string) || 'My Account'}
+                  </PopoverTitle>
+                  <PopoverDescription className="truncate">{user?.email}</PopoverDescription>
+                </div>
+              </div>
+            </PopoverHeader>
+            <PopoverBody className="space-y-0.5">
               <button
                 onClick={() => navigate('/account')}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer rounded-[10px]"
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
+                style={{ borderRadius: 10 }}
               >
-                <UserCircle size={14} className="text-[#727A84]" /> Account
+                <UserCircle size={14} className="text-[#727A84]" /> View Profile
               </button>
               <button
                 onClick={() => navigate('/settings')}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer rounded-[10px]"
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
+                style={{ borderRadius: 10 }}
               >
                 <Gear size={14} className="text-[#727A84]" /> Settings
               </button>
               <button
                 onClick={() => navigate('/docs')}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer rounded-[10px]"
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
+                style={{ borderRadius: 10 }}
               >
                 <Files size={14} className="text-[#727A84]" /> Docs
               </button>
             </PopoverBody>
+            <PopoverFooter>
+              <button
+                onClick={handleSignOut}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-[#727A84] hover:text-[#0C1629] hover:bg-[#F0F3F3] border border-[#F0F3F3] transition-colors cursor-pointer"
+                style={{ borderRadius: 10 }}
+              >
+                <SignOut size={13} /> Sign Out
+              </button>
+            </PopoverFooter>
           </PopoverContent>
         </Popover>
 
