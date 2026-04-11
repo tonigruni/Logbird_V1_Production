@@ -110,6 +110,8 @@ export default function GoalDetailView({ goal, onClose }: Props) {
     if (user) fetchProjects(user.id)
   }, [user?.id])
 
+  const [editingTitle, setEditingTitle]     = useState(false)
+  const [editTitle, setEditTitle]           = useState('')
   const [editingDesc, setEditingDesc]       = useState(false)
   const [editDesc, setEditDesc]             = useState('')
   const [timerRunning, setTimerRunning]     = useState(false)
@@ -182,10 +184,31 @@ export default function GoalDetailView({ goal, onClose }: Props) {
             <ChevronRight size={13} className="opacity-40" />
             <span className="text-primary font-medium truncate max-w-xs">{goal.title}</span>
           </div>
-          {/* Title */}
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-on-surface leading-tight">
-            {goal.title}
-          </h1>
+          {/* Title — inline editable */}
+          {editingTitle ? (
+            <input
+              autoFocus
+              value={editTitle}
+              onChange={e => setEditTitle(e.target.value)}
+              onBlur={async () => {
+                if (editTitle.trim() && editTitle.trim() !== goal.title)
+                  await updateGoal(goal.id, { title: editTitle.trim() })
+                setEditingTitle(false)
+              }}
+              onKeyDown={e => {
+                if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
+                if (e.key === 'Escape') { setEditingTitle(false) }
+              }}
+              className="text-2xl md:text-3xl font-extrabold tracking-tight text-on-surface leading-tight w-full bg-transparent border-none outline-none border-b-2 border-[#0C1629]/20 focus:border-[#0C1629]/50 pb-0.5"
+            />
+          ) : (
+            <h1
+              onClick={() => { setEditTitle(goal.title); setEditingTitle(true) }}
+              className="text-2xl md:text-3xl font-extrabold tracking-tight text-on-surface leading-tight cursor-text hover:opacity-80 transition-opacity"
+            >
+              {goal.title}
+            </h1>
+          )}
           {/* Badges */}
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <span
@@ -213,13 +236,6 @@ export default function GoalDetailView({ goal, onClose }: Props) {
         </div>
         {/* Action buttons */}
         <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={() => navigate('/journal', { state: { prefill: `## ${goal.title}\n\n` } })}
-            className="flex items-center gap-1.5 bg-[#F0F3F3] hover:bg-[#D6DCE0] text-on-surface-variant px-4 py-2 text-sm font-semibold rounded-[12px] transition-colors cursor-pointer"
-          >
-            <Share2 size={13} />
-            Send to Journal
-          </button>
           <button
             onClick={async () => { await deleteGoal(goal.id); onClose() }}
             className="flex items-center gap-1.5 bg-[#F0F3F3] hover:bg-[#fce8e8] text-on-surface-variant hover:text-[#9f403d] px-4 py-2 text-sm font-semibold rounded-[12px] transition-colors cursor-pointer"
@@ -445,6 +461,75 @@ export default function GoalDetailView({ goal, onClose }: Props) {
         {/* ── RIGHT PANE ────────────────────────────────── */}
         <div className="col-span-12 lg:col-span-4 space-y-5">
 
+          {/* Details — first */}
+          <section className="bg-surface card p-6">
+            <div className="flex items-center gap-2 mb-5">
+              <Tag size={15} className="text-primary" />
+              <h3 className="text-sm font-bold text-on-surface">Details</h3>
+            </div>
+            <div className="space-y-0">
+              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
+                <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                  <User size={13} className="text-on-surface-variant/50" />
+                  Assignee
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                    <User size={10} className="text-white" />
+                  </div>
+                  <span className="text-xs font-semibold text-on-surface">You</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
+                <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                  <Target size={13} className="text-on-surface-variant/50" />
+                  Category
+                </div>
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: `${meta.color}15`, color: meta.color }}>
+                  {cat?.name ?? 'General'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
+                <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                  <CheckCircle2 size={13} className="text-on-surface-variant/50" />
+                  Status
+                </div>
+                <button
+                  onClick={() => updateGoal(goal.id, { status: goal.status === 'completed' ? 'active' : 'completed' })}
+                  className={cn(
+                    'text-xs font-bold px-2 py-0.5 rounded-full cursor-pointer transition-colors',
+                    goal.status === 'completed' ? 'bg-[#22c55e]/10 text-[#16a34a]' : 'bg-[#f59e0b]/10 text-[#b45309]'
+                  )}
+                >
+                  {goal.status === 'completed' ? 'Completed' : 'In Progress'}
+                </button>
+              </div>
+              {goal.target_date && (
+                <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
+                  <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                    <Calendar size={13} className="text-on-surface-variant/50" />
+                    Target Date
+                  </div>
+                  <span className="text-xs font-semibold text-on-surface">{format(new Date(goal.target_date), 'MMM d, yyyy')}</span>
+                </div>
+              )}
+              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
+                <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                  <Clock size={13} className="text-on-surface-variant/50" />
+                  Last Activity
+                </div>
+                <span className="text-xs text-on-surface-variant/50">Just now</span>
+              </div>
+              <div className="flex items-center justify-between py-3">
+                <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                  <Flag size={13} className="text-on-surface-variant/50" />
+                  Created
+                </div>
+                <span className="text-xs font-semibold text-on-surface">{format(new Date(goal.created_at), 'MMM d, yyyy')}</span>
+              </div>
+            </div>
+          </section>
+
           {/* Time Tracking */}
           <section className="bg-surface card p-6">
             <div className="flex items-center gap-2 mb-4">
@@ -576,75 +661,6 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               <Download size={13} className="text-on-surface-variant/40 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <p className="text-[10px] text-on-surface-variant/30 text-center mt-3">Drop files here or click Add</p>
-          </section>
-
-          {/* Details */}
-          <section className="bg-surface card p-6">
-            <div className="flex items-center gap-2 mb-5">
-              <Tag size={15} className="text-primary" />
-              <h3 className="text-sm font-bold text-on-surface">Details</h3>
-            </div>
-            <div className="space-y-0">
-              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
-                <div className="flex items-center gap-2 text-xs text-on-surface-variant">
-                  <User size={13} className="text-on-surface-variant/50" />
-                  Assignee
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                    <User size={10} className="text-white" />
-                  </div>
-                  <span className="text-xs font-semibold text-on-surface">You</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
-                <div className="flex items-center gap-2 text-xs text-on-surface-variant">
-                  <Target size={13} className="text-on-surface-variant/50" />
-                  Category
-                </div>
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: `${meta.color}15`, color: meta.color }}>
-                  {cat?.name ?? 'General'}
-                </span>
-              </div>
-              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
-                <div className="flex items-center gap-2 text-xs text-on-surface-variant">
-                  <CheckCircle2 size={13} className="text-on-surface-variant/50" />
-                  Status
-                </div>
-                <button
-                  onClick={() => updateGoal(goal.id, { status: goal.status === 'completed' ? 'active' : 'completed' })}
-                  className={cn(
-                    'text-xs font-bold px-2 py-0.5 rounded-full cursor-pointer transition-colors',
-                    goal.status === 'completed' ? 'bg-[#22c55e]/10 text-[#16a34a]' : 'bg-[#f59e0b]/10 text-[#b45309]'
-                  )}
-                >
-                  {goal.status === 'completed' ? 'Completed' : 'In Progress'}
-                </button>
-              </div>
-              {goal.target_date && (
-                <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
-                  <div className="flex items-center gap-2 text-xs text-on-surface-variant">
-                    <Calendar size={13} className="text-on-surface-variant/50" />
-                    Target Date
-                  </div>
-                  <span className="text-xs font-semibold text-on-surface">{format(new Date(goal.target_date), 'MMM d, yyyy')}</span>
-                </div>
-              )}
-              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
-                <div className="flex items-center gap-2 text-xs text-on-surface-variant">
-                  <Clock size={13} className="text-on-surface-variant/50" />
-                  Last Activity
-                </div>
-                <span className="text-xs text-on-surface-variant/50">Just now</span>
-              </div>
-              <div className="flex items-center justify-between py-3">
-                <div className="flex items-center gap-2 text-xs text-on-surface-variant">
-                  <Flag size={13} className="text-on-surface-variant/50" />
-                  Created
-                </div>
-                <span className="text-xs font-semibold text-on-surface">{format(new Date(goal.created_at), 'MMM d, yyyy')}</span>
-              </div>
-            </div>
           </section>
 
           {/* Progress donut */}
