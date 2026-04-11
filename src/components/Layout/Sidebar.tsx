@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
-import { SquaresFour, BookOpen, ChartDonut, CheckSquare, Target, Kanban, Timer, CaretDown } from '@phosphor-icons/react'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { SquaresFour, BookOpen, ChartDonut, CheckSquare, Target, Kanban, Timer, CaretDown, Gear, SignOut, UserCircle, Files } from '@phosphor-icons/react'
 import { cn } from '../../lib/utils'
+import { useAuthStore } from '../../stores/authStore'
+import { Popover, PopoverTrigger, PopoverContent, PopoverBody } from '../ui/popover'
 
 const topNav = [
   { to: '/', icon: SquaresFour, label: 'Dashboard' },
@@ -21,8 +23,15 @@ const productivityNav = [
 
 export default function Sidebar() {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { signOut } = useAuthStore()
   const navRef = useRef<HTMLDivElement>(null)
   const [canScrollDown, setCanScrollDown] = useState(false)
+
+  const handleSignOut = async () => {
+    await signOut()
+    navigate('/login')
+  }
 
   useEffect(() => {
     const el = navRef.current
@@ -108,6 +117,50 @@ export default function Sidebar() {
       {/* Faint scroll-down indicator */}
       <div className={cn('flex justify-center py-3 transition-opacity duration-200 pointer-events-none', canScrollDown ? 'opacity-100' : 'opacity-0')}>
         <CaretDown size={14} className="text-[#B5C1C8]" />
+      </div>
+
+      {/* Bottom bar: settings popover + sign out */}
+      <div className="pt-3 border-t border-[#F0F3F3] flex items-center gap-2 px-1">
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              className="flex items-center justify-center w-9 h-9 rounded-[10px] text-[#727A84] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
+              aria-label="Settings"
+            >
+              <Gear size={18} />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent align="start" side="top" className="w-52">
+            <PopoverBody className="space-y-0.5 py-1">
+              <button
+                onClick={() => navigate('/account')}
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer rounded-[10px]"
+              >
+                <UserCircle size={14} className="text-[#727A84]" /> Account
+              </button>
+              <button
+                onClick={() => navigate('/settings')}
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer rounded-[10px]"
+              >
+                <Gear size={14} className="text-[#727A84]" /> Settings
+              </button>
+              <button
+                onClick={() => navigate('/docs')}
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer rounded-[10px]"
+              >
+                <Files size={14} className="text-[#727A84]" /> Docs
+              </button>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
+
+        <button
+          onClick={handleSignOut}
+          className="flex items-center justify-center w-9 h-9 rounded-[10px] text-[#727A84] hover:bg-[#9f403d]/10 hover:text-[#9f403d] transition-colors cursor-pointer"
+          aria-label="Sign Out"
+        >
+          <SignOut size={18} />
+        </button>
       </div>
     </aside>
   )
