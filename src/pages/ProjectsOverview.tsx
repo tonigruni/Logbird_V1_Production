@@ -337,18 +337,16 @@ export default function ProjectsOverview() {
                 : 'Track every initiative from concept to completion. Your projects, organised and always in motion.'}
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center bg-white/10 rounded-[10px] p-0.5">
-              <button onClick={() => setView('grid')} className={cn('p-1.5 rounded-[8px] transition-all', view === 'grid' ? 'bg-white/20 text-white' : 'text-white/50')}>
-                <SquaresFour size={14} weight="bold" />
-              </button>
-              <button onClick={() => setView('list')} className={cn('p-1.5 rounded-[8px] transition-all', view === 'list' ? 'bg-white/20 text-white' : 'text-white/50')}>
-                <ListBullets size={14} weight="bold" />
-              </button>
-              <button onClick={() => setView('board')} className={cn('p-1.5 rounded-[8px] transition-all', view === 'board' ? 'bg-white/20 text-white' : 'text-white/50')}>
-                <Columns size={14} weight="bold" />
-              </button>
-            </div>
+          <div className="flex items-center bg-white/10 rounded-[10px] p-1">
+            <button onClick={() => setView('grid')} className={cn('p-2 rounded-[8px] transition-all cursor-pointer', view === 'grid' ? 'bg-white/20 text-white' : 'text-white/50 hover:text-white/80')}>
+              <SquaresFour size={18} weight="bold" />
+            </button>
+            <button onClick={() => setView('list')} className={cn('p-2 rounded-[8px] transition-all cursor-pointer', view === 'list' ? 'bg-white/20 text-white' : 'text-white/50 hover:text-white/80')}>
+              <ListBullets size={18} weight="bold" />
+            </button>
+            <button onClick={() => setView('board')} className={cn('p-2 rounded-[8px] transition-all cursor-pointer', view === 'board' ? 'bg-white/20 text-white' : 'text-white/50 hover:text-white/80')}>
+              <Columns size={18} weight="bold" />
+            </button>
           </div>
         </div>
       </div>
