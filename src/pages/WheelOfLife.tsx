@@ -37,6 +37,7 @@ import {
   Share2,
   Tag,
 } from 'lucide-react'
+import { LogbirdDatePicker } from '../components/ui/date-range-picker'
 import {
   RadarChart,
   PolarGrid,
@@ -710,11 +711,9 @@ export default function WheelOfLife() {
                 placeholder="Description (optional)..."
                 className="rounded-[15px] border border-[#D6DCE0] bg-white px-4 py-3 text-sm text-[#0C1629] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#727A84]/50 focus-visible:border-[#0C1629]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0C1629]/10"
               />
-              <input
-                type="date"
-                value={newGoal.targetDate}
-                onChange={(e) => setNewGoal((p) => ({ ...p, targetDate: e.target.value }))}
-                className="rounded-[15px] border border-[#D6DCE0] bg-white px-4 py-3 text-sm text-[#0C1629] shadow-sm shadow-black/5 transition-shadow focus-visible:border-[#0C1629]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0C1629]/10 cursor-pointer"
+              <LogbirdDatePicker
+                value={newGoal.targetDate || null}
+                onChange={(v) => setNewGoal((p) => ({ ...p, targetDate: v ?? '' }))}
               />
             </div>
             <button

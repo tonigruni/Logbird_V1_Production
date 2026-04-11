@@ -14,6 +14,8 @@ export interface Project {
   target_date: string | null
   card_color: string | null
   card_icon: string | null
+  start_date: string | null
+  end_date: string | null
   created_at: string
   updated_at: string
 }

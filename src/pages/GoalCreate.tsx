@@ -6,11 +6,12 @@ import {
   Plus,
   X,
   RocketLaunch,
-  CalendarBlank,
   CheckSquare,
   Kanban,
   Flag,
+  CalendarBlank,
 } from '@phosphor-icons/react'
+import { LogbirdDatePicker } from '../components/ui/date-range-picker'
 import { cn } from '../lib/utils'
 import { useWheelStore } from '../stores/wheelStore'
 import { useProjectStore } from '../stores/projectStore'
@@ -361,11 +362,9 @@ export default function GoalCreate() {
                     placeholder="Phase title"
                     className="text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-3 py-2.5 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow"
                   />
-                  <input
-                    type="date"
-                    value={m.date}
-                    onChange={e => updateMilestone(i, 'date', e.target.value)}
-                    className="text-sm text-[#0C1629] bg-[#F0F3F3] rounded-[10px] px-3 py-2.5 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow cursor-pointer"
+                  <LogbirdDatePicker
+                    value={m.date || null}
+                    onChange={(v) => updateMilestone(i, 'date', v ?? '')}
                   />
                   <button
                     onClick={() => removeMilestone(i)}

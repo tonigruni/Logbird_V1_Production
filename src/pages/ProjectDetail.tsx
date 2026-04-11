@@ -21,6 +21,7 @@ import { useAuthStore } from '../stores/authStore'
 import type { Task as StoreTask } from '../stores/wheelStore'
 import { Popover, PopoverTrigger, PopoverContent, PopoverBody } from '../components/ui/popover'
 import { CARD_PALETTE_OPTIONS, ICON_OPTIONS, ICON_MAP } from './ProjectsOverview'
+import { LogbirdDateRangePicker } from '../components/ui/date-range-picker'
 
 // ---------------------------------------------------------------------------
 // Palette helpers
@@ -434,14 +435,14 @@ export default function ProjectDetail() {
 
             <MetaCard label="Tasks" value={projectTasks.length} />
 
-            {/* Target Date — editable */}
+            {/* Project Dates — editable range */}
             <div className="bg-white card p-5">
-              <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block mb-1">Target Date</span>
-              <input
-                type="date"
-                value={project.target_date ? project.target_date.slice(0, 10) : ''}
-                onChange={e => updateProject(project.id, { target_date: e.target.value || null })}
-                className="text-sm font-bold text-[#0C1629] bg-transparent border-none outline-none cursor-pointer w-full -ml-0.5"
+              <LogbirdDateRangePicker
+                label="Timeline"
+                value={{ start: project.start_date ?? null, end: project.end_date ?? null }}
+                onChange={({ start, end }) =>
+                  updateProject(project.id, { start_date: start, end_date: end })
+                }
               />
             </div>
 

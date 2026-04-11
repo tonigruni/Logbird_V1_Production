@@ -6,9 +6,9 @@ import {
   FloppyDisk,
   Plus,
   X,
-  CalendarBlank,
   Clock,
 } from '@phosphor-icons/react'
+import { LogbirdDateRangePicker } from '../components/ui/date-range-picker'
 import { cn } from '../lib/utils'
 import { useProjectStore } from '../stores/projectStore'
 import { useAuthStore } from '../stores/authStore'
@@ -70,6 +70,8 @@ export default function ProjectCreate() {
         color: '#0C1629',
         cover_url: null,
         target_date: endDate || null,
+        start_date: startDate || null,
+        end_date: endDate || null,
       })
       if (project) navigate(`/projects/${project.id}`)
       else navigate('/projects')
@@ -156,32 +158,15 @@ export default function ProjectCreate() {
 
         {/* Project Timeline */}
         <div className="space-y-3">
-          <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
-            Project Timeline
-          </label>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="bg-white card p-4 space-y-1.5">
-              <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider flex items-center gap-1">
-                <CalendarBlank size={10} />
-                Start Date
-              </span>
-              <input
-                type="date"
-                value={startDate}
-                onChange={e => setStartDate(e.target.value)}
-                className="w-full text-sm font-semibold text-[#0C1629] bg-transparent outline-none cursor-pointer"
-              />
-            </div>
-            <div className="bg-white card p-4 space-y-1.5">
-              <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider flex items-center gap-1">
-                <CalendarBlank size={10} />
-                Expected Completion
-              </span>
-              <input
-                type="date"
-                value={endDate}
-                onChange={e => setEndDate(e.target.value)}
-                className="w-full text-sm font-semibold text-[#0C1629] bg-transparent outline-none cursor-pointer"
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+            <div className="sm:col-span-2 bg-white card p-4">
+              <LogbirdDateRangePicker
+                label="Project Timeline"
+                value={{ start: startDate || null, end: endDate || null }}
+                onChange={({ start, end }) => {
+                  setStartDate(start ?? '')
+                  setEndDate(end ?? '')
+                }}
               />
             </div>
             <div className="bg-white card p-4 space-y-1.5">

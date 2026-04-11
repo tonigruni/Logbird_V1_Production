@@ -3,9 +3,9 @@ import { createPortal } from 'react-dom'
 import {
   X,
   Lightning,
-  CalendarBlank,
   RocketLaunch,
 } from '@phosphor-icons/react'
+import { LogbirdDatePicker } from './ui/date-range-picker'
 import { cn } from '../lib/utils'
 import { useWheelStore } from '../stores/wheelStore'
 import { useAuthStore } from '../stores/authStore'
@@ -269,18 +269,11 @@ export default function TaskCreateModal({ open, onClose, defaultProjectId, defau
 
           {/* Due Date */}
           <div className="space-y-2">
-            <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
-              Schedule
-            </label>
-            <div className="flex items-center gap-2 bg-[#F0F3F3] rounded-[10px] px-4 py-3">
-              <CalendarBlank size={14} className="text-[#B5C1C8] shrink-0" />
-              <input
-                type="date"
-                value={dueDate}
-                onChange={e => setDueDate(e.target.value)}
-                className="flex-1 text-sm font-semibold text-[#0C1629] bg-transparent outline-none cursor-pointer"
-              />
-            </div>
+            <LogbirdDatePicker
+              label="Schedule"
+              value={dueDate || null}
+              onChange={(v) => setDueDate(v ?? '')}
+            />
           </div>
         </div>
 

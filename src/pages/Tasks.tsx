@@ -18,10 +18,10 @@ import {
   FunnelSimple,
   X,
   FloppyDisk,
-  CalendarBlank,
   Trash,
 } from '@phosphor-icons/react'
 import { cn } from '../lib/utils'
+import { LogbirdDatePicker } from '../components/ui/date-range-picker'
 import BoardView from '../components/BoardView'
 import type { BoardColumn } from '../components/BoardView'
 import TaskCreateModal from '../components/TaskCreateModal'
@@ -604,16 +604,11 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
 
             {/* Due date */}
             <div className="px-6 py-5 border-b border-[#F0F3F3]">
-              <SidebarFieldLabel>Due Date</SidebarFieldLabel>
-              <div className="flex items-center gap-2 bg-[#F0F3F3] rounded-[10px] px-3 py-2.5">
-                <CalendarBlank size={12} className="text-[#B5C1C8]" />
-                <input
-                  type="date"
-                  value={dueDate}
-                  onChange={e => setDueDate(e.target.value)}
-                  className="flex-1 text-xs font-semibold text-[#0C1629] bg-transparent outline-none cursor-pointer"
-                />
-              </div>
+              <LogbirdDatePicker
+                label="Due Date"
+                value={dueDate || null}
+                onChange={(v) => setDueDate(v ?? '')}
+              />
             </div>
 
             {/* Actions */}

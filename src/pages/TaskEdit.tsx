@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   FloppyDisk,
   Lightning,
-  CalendarBlank,
   Target,
   Kanban,
   Trash,
@@ -12,6 +11,7 @@ import {
   Circle,
   ArrowRight,
 } from '@phosphor-icons/react'
+import { LogbirdDatePicker } from '../components/ui/date-range-picker'
 import { cn } from '../lib/utils'
 import { useWheelStore } from '../stores/wheelStore'
 import { useProjectStore } from '../stores/projectStore'
@@ -299,18 +299,11 @@ export default function TaskEdit() {
 
           {/* Due Date */}
           <div className="space-y-2">
-            <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
-              Schedule
-            </label>
-            <div className="flex items-center gap-2 bg-white card px-5 py-3.5">
-              <CalendarBlank size={14} className="text-[#B5C1C8] shrink-0" />
-              <input
-                type="date"
-                value={dueDate}
-                onChange={e => setDueDate(e.target.value)}
-                className="flex-1 text-sm font-semibold text-[#0C1629] bg-transparent outline-none cursor-pointer"
-              />
-            </div>
+            <LogbirdDatePicker
+              label="Schedule"
+              value={dueDate || null}
+              onChange={(v) => setDueDate(v ?? '')}
+            />
           </div>
 
           {/* Actions */}
