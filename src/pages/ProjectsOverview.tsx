@@ -15,6 +15,11 @@ import type { Project } from '../stores/projectStore'
 // ---------------------------------------------------------------------------
 
 const CARD_PALETTES = ['#f6fee7', '#f0faff', '#f1f8f4', '#fff7eb', '#fafaf9', '#fef6ee']
+function paletteColor(id: string) {
+  let hash = 0
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0
+  return CARD_PALETTES[hash % CARD_PALETTES.length]
+}
 
 function projectProgress(projectId: string, tasks: { project_id: string | null; completed: boolean }[]): number {
   const pts = tasks.filter((t) => t.project_id === projectId)
@@ -33,15 +38,14 @@ const STATUS_LABEL: Record<Project['status'], string> = {
 // Components
 // ---------------------------------------------------------------------------
 
-function ProjectCard({ project, progress, goalTitle, onClick, index }: {
+function ProjectCard({ project, progress, goalTitle, onClick }: {
   project: Project
   progress: number
   goalTitle: string | null
   onClick: () => void
-  index: number
 }) {
   const color = project.color || '#0C1629'
-  const bg = CARD_PALETTES[index % CARD_PALETTES.length]
+  const bg = paletteColor(project.id)
 
   return (
     <article
@@ -324,11 +328,10 @@ export default function ProjectsOverview() {
       {view === 'grid' && (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-            {sortedProjects.map((project, i) => (
+            {sortedProjects.map((project) => (
               <ProjectCard
                 key={project.id}
                 project={project}
-                index={i}
                 progress={projectProgress(project.id, tasks)}
                 goalTitle={project.goal_id ? goalMap[project.goal_id]?.title ?? null : null}
                 onClick={() => navigate(`/projects/${project.id}`)}

@@ -35,21 +35,25 @@ const PROJECT_MAP: Record<string, { title: string; slug: string; color: string }
 // ---------------------------------------------------------------------------
 
 const CARD_PALETTES = ['#f6fee7', '#f0faff', '#f1f8f4', '#fff7eb', '#fafaf9', '#fef6ee']
+function paletteColor(id: string) {
+  let hash = 0
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0
+  return CARD_PALETTES[hash % CARD_PALETTES.length]
+}
 
 // ---------------------------------------------------------------------------
 // Goal Card (portfolio view)
 // ---------------------------------------------------------------------------
 
-function GoalCard({ goal, categoryName, taskCount, completedCount, onClick, index }: {
+function GoalCard({ goal, categoryName, taskCount, completedCount, onClick }: {
   goal: Goal
   categoryName: string | null
   taskCount: number
   completedCount: number
   onClick?: () => void
-  index: number
 }) {
   const progress = taskCount > 0 ? Math.round(completedCount / taskCount * 100) : 0
-  const bg = CARD_PALETTES[index % CARD_PALETTES.length]
+  const bg = paletteColor(goal.id)
 
   return (
     <article onClick={onClick} className="card overflow-hidden hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 group cursor-pointer" style={{ backgroundColor: bg }}>
@@ -384,14 +388,13 @@ export default function Goals() {
 
       {view === 'portfolio' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {goals.map((goal, i) => {
+          {goals.map((goal) => {
             const counts = goalTaskCounts[goal.id] || { total: 0, completed: 0 }
             const categoryName = categoryMap[goal.category_id]?.name ?? null
             return (
               <GoalCard
                 key={goal.id}
                 goal={goal}
-                index={i}
                 categoryName={categoryName}
                 taskCount={counts.total}
                 completedCount={counts.completed}
