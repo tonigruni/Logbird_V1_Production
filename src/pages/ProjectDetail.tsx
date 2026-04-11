@@ -14,159 +14,45 @@ import {
 } from '@phosphor-icons/react'
 import { cn } from '../lib/utils'
 import { useWheelStore } from '../stores/wheelStore'
+import { useProjectStore } from '../stores/projectStore'
 import { useAuthStore } from '../stores/authStore'
 import type { Task as StoreTask } from '../stores/wheelStore'
-
-// ---------------------------------------------------------------------------
-// Demo data — keyed by slug
-// ---------------------------------------------------------------------------
-
-interface DemoTask {
-  id: string
-  title: string
-  goal: string
-  status: 'IN REVIEW' | 'IN PROGRESS' | 'TODO' | 'DONE'
-  energy: 'high' | 'medium' | 'low'
-}
-
-interface ProjectData {
-  projectId: string       // maps to project_id in the store
-  title: string
-  description: string
-  category: string
-  categoryColor: string
-  gradient: string
-  priority: string
-  status: string
-  timeline: string
-  budget: string
-  completion: number
-  demoTasks: DemoTask[]
-}
-
-const ENERGY_ORDER = { high: 0, medium: 1, low: 2 }
-
-const PROJECTS: Record<string, ProjectData> = {
-  'identity-redesign': {
-    projectId: 'proj-identity-redesign',
-    title: 'Identity Redesign',
-    description: 'Reimagining the visual language for the 2024 global expansion strategy. A comprehensive brand overhaul spanning digital touchpoints, physical spaces, and internal culture artifacts.',
-    category: 'Creative',
-    categoryColor: '#1F3649',
-    gradient: 'from-[#1F3649] to-[#4a6175]',
-    priority: 'High Priority',
-    status: 'Active Build',
-    timeline: 'Mar 24 — Sep 24',
-    budget: '$48.2K',
-    completion: 75,
-    demoTasks: [
-      { id: 'IR-042', title: 'Finalize brand color system', goal: 'Visual Consistency', status: 'IN REVIEW', energy: 'high' },
-      { id: 'IR-089', title: 'Typography scale — responsive breakpoints', goal: 'Design System', status: 'IN PROGRESS', energy: 'medium' },
-      { id: 'IR-112', title: 'Stakeholder review: logo variants', goal: 'Sign-off', status: 'TODO', energy: 'low' },
-    ],
-  },
-  'focus-mastery': {
-    projectId: 'proj-focus-mastery',
-    title: 'Focus Mastery',
-    description: 'Internal wellbeing program focused on deep-work habits and cognitive health. Building frameworks for sustained attention in a distraction-heavy environment.',
-    category: 'Wellness',
-    categoryColor: '#22c55e',
-    gradient: 'from-[#22c55e] to-[#86efac]',
-    priority: 'Medium Priority',
-    status: 'In Progress',
-    timeline: 'Jan 24 — Jun 25',
-    budget: '$12.8K',
-    completion: 30,
-    demoTasks: [
-      { id: 'FM-015', title: 'Design deep-work protocol template', goal: 'Cognitive Framework', status: 'IN PROGRESS', energy: 'high' },
-      { id: 'FM-023', title: 'Pilot program — Team Alpha', goal: 'Validation', status: 'TODO', energy: 'medium' },
-      { id: 'FM-031', title: 'Metrics dashboard for focus scoring', goal: 'Tracking', status: 'TODO', energy: 'low' },
-    ],
-  },
-  'senior-track-prep': {
-    projectId: 'proj-senior-track',
-    title: 'Senior Track Prep',
-    description: 'Portfolio curation and leadership certification for Q4 promotions. A structured path to senior-level readiness through mentorship, artifacts, and milestone reviews.',
-    category: 'Career',
-    categoryColor: '#1F3649',
-    gradient: 'from-[#1F3649] to-[#4a6175]',
-    priority: 'High Priority',
-    status: 'Active Build',
-    timeline: 'Feb 24 — Dec 24',
-    budget: '$8.5K',
-    completion: 90,
-    demoTasks: [
-      { id: 'ST-088', title: 'Compile leadership artifact portfolio', goal: 'Promotion Review', status: 'IN REVIEW', energy: 'high' },
-      { id: 'ST-091', title: 'Schedule mock panel interview', goal: 'Readiness', status: 'DONE', energy: 'medium' },
-      { id: 'ST-095', title: 'Final mentor debrief session', goal: 'Closure', status: 'IN PROGRESS', energy: 'low' },
-    ],
-  },
-}
-
-const DEFAULT_PROJECT = PROJECTS['identity-redesign']
 
 // ---------------------------------------------------------------------------
 // Status helpers
 // ---------------------------------------------------------------------------
 
-const STATUS_ORDER: Record<string, number> = { 'IN PROGRESS': 0, 'IN REVIEW': 1, 'TODO': 2, 'DONE': 3 }
-
-const STATUS_STYLES: Record<DemoTask['status'], { bg: string; text: string; icon: typeof CheckCircle }> = {
-  'IN REVIEW': { bg: 'bg-[#1F3649]/10', text: 'text-[#1F3649]', icon: Clock },
-  'IN PROGRESS': { bg: 'bg-[#f59e0b]/10', text: 'text-[#f59e0b]', icon: Lightning },
-  'TODO': { bg: 'bg-[#adb3b4]/10', text: 'text-[#5a6061]', icon: Circle },
-  'DONE': { bg: 'bg-[#22c55e]/10', text: 'text-[#22c55e]', icon: CheckCircle },
+const PRIORITY_STYLES: Record<string, { bg: string; text: string }> = {
+  urgent: { bg: 'bg-[#dc2626]/10', text: 'text-[#dc2626]' },
+  high:   { bg: 'bg-[#f59e0b]/10', text: 'text-[#f59e0b]' },
+  normal: { bg: 'bg-[#1F3649]/10', text: 'text-[#1F3649]' },
+  low:    { bg: 'bg-[#adb3b4]/10', text: 'text-[#5a6061]' },
 }
 
 // ---------------------------------------------------------------------------
-// Components
+// Task row
 // ---------------------------------------------------------------------------
 
-function DemoTaskRow({ task, accentColor }: { task: DemoTask; accentColor: string }) {
-  const navigate = useNavigate()
-  const style = STATUS_STYLES[task.status]
-  const StatusIcon = style.icon
-
-  return (
-    <div
-      onClick={() => navigate('/tasks')}
-      className="flex items-center gap-4 px-5 py-4 bg-white card group hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 cursor-pointer"
-    >
-      <div className="w-1 h-10 rounded-full shrink-0" style={{ backgroundColor: accentColor }} />
-      <div className="flex-1 min-w-0">
-        <h4 className="text-sm font-bold text-[#2d3435] leading-snug group-hover:text-[#1F3649] transition-colors">{task.title}</h4>
-        <p className="text-[11px] text-[#adb3b4] mt-0.5">
-          <span className="font-mono">ID: {task.id}</span>
-          <span className="mx-1.5">•</span>
-          <Target size={10} className="inline -mt-[1px] mr-0.5" />
-          {task.goal}
-        </p>
-      </div>
-      <div className="flex items-center gap-1 shrink-0">
-        <Lightning size={12} weight="fill" style={{ color: accentColor }} />
-        <span className="text-[10px] font-bold uppercase tracking-wider text-[#adb3b4]">{task.energy}</span>
-      </div>
-      <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shrink-0 ${style.bg} ${style.text}`}>
-        <StatusIcon size={10} weight="bold" className="inline mr-1 -mt-[1px]" />
-        {task.status}
-      </span>
-      <ArrowRight size={14} className="text-[#c3c7cd] opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-    </div>
-  )
-}
-
-function StoreTaskRow({ task, goalTitle, accentColor, onToggle }: {
+function TaskRow({ task, goalTitle, accentColor, onToggle, onClick }: {
   task: StoreTask
   goalTitle: string | null
   accentColor: string
-  onToggle: () => void
+  onToggle: (e: React.MouseEvent) => void
+  onClick: () => void
 }) {
+  const p = PRIORITY_STYLES[task.priority] ?? PRIORITY_STYLES.normal
   return (
-    <div className={cn(
-      'flex items-center gap-4 px-5 py-4 bg-white card group transition-all duration-300',
-      task.completed ? 'opacity-60' : 'hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)]'
-    )}>
-      <button onClick={onToggle} className="shrink-0 cursor-pointer">
+    <div
+      onClick={onClick}
+      className={cn(
+        'flex items-center gap-4 px-5 py-4 bg-white card group cursor-pointer transition-all duration-300',
+        task.completed ? 'opacity-60' : 'hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)]'
+      )}
+    >
+      <button
+        onClick={onToggle}
+        className="shrink-0 cursor-pointer"
+      >
         {task.completed
           ? <CheckCircle size={22} weight="fill" className="text-[#22c55e]" />
           : <Circle size={22} weight="regular" className="text-[#c3c7cd] hover:text-[#1F3649] transition-colors" />
@@ -186,23 +72,10 @@ function StoreTaskRow({ task, goalTitle, accentColor, onToggle }: {
           </p>
         )}
       </div>
-      <span className={cn(
-        'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shrink-0',
-        task.completed ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#adb3b4]/10 text-[#5a6061]'
-      )}>
-        {task.completed ? 'Done' : 'To Do'}
+      <span className={cn('text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shrink-0', p.bg, p.text)}>
+        {task.priority}
       </span>
-    </div>
-  )
-}
-
-function MetadataCard({ label, value, accentColor }: { label: string; value: string | number; accentColor?: string }) {
-  return (
-    <div className="bg-white card p-5">
-      <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block mb-1">{label}</span>
-      <span className="text-sm font-bold text-[#2d3435]" style={accentColor ? { color: accentColor } : undefined}>
-        {value}
-      </span>
+      <ArrowRight size={14} className="text-[#c3c7cd] opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
     </div>
   )
 }
@@ -211,8 +84,7 @@ function MetadataCard({ label, value, accentColor }: { label: string; value: str
 // Add Task Form
 // ---------------------------------------------------------------------------
 
-function AddTaskForm({ projectId, accentColor, goals, onAdd }: {
-  projectId: string
+function AddTaskForm({ accentColor, goals, onAdd }: {
   accentColor: string
   goals: Array<{ id: string; title: string }>
   onAdd: (title: string, goalId: string | null) => void
@@ -226,6 +98,7 @@ function AddTaskForm({ projectId, accentColor, goals, onAdd }: {
     onAdd(title.trim(), goalId || null)
     setTitle('')
     setGoalId('')
+    setIsOpen(false)
   }
 
   if (!isOpen) {
@@ -245,8 +118,8 @@ function AddTaskForm({ projectId, accentColor, goals, onAdd }: {
       <h4 className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">New Task</h4>
       <input
         value={title}
-        onChange={e => setTitle(e.target.value)}
-        onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+        onChange={(e) => setTitle(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
         placeholder="Task title..."
         className="w-full text-sm text-[#2d3435] placeholder-[#adb3b4] bg-[#f2f4f4] rounded-[10px] px-4 py-2.5 outline-none focus:ring-2 focus:ring-[#1F3649]/10"
         autoFocus
@@ -254,11 +127,11 @@ function AddTaskForm({ projectId, accentColor, goals, onAdd }: {
       <div className="flex items-center gap-3">
         <select
           value={goalId}
-          onChange={e => setGoalId(e.target.value)}
+          onChange={(e) => setGoalId(e.target.value)}
           className="flex-1 text-xs font-semibold text-[#5a6061] bg-[#f2f4f4] px-3 py-2 rounded-[10px] border-none outline-none cursor-pointer"
         >
           <option value="">No goal linked</option>
-          {goals.map(g => (
+          {goals.map((g) => (
             <option key={g.id} value={g.id}>{g.title}</option>
           ))}
         </select>
@@ -283,56 +156,64 @@ function AddTaskForm({ projectId, accentColor, goals, onAdd }: {
 }
 
 // ---------------------------------------------------------------------------
+// Metadata card
+// ---------------------------------------------------------------------------
+
+function MetaCard({ label, value, color }: { label: string; value: string | number; color?: string }) {
+  return (
+    <div className="bg-white card p-5">
+      <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block mb-1">{label}</span>
+      <span className="text-sm font-bold text-[#2d3435]" style={color ? { color } : undefined}>{value}</span>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Main Page
 // ---------------------------------------------------------------------------
 
 export default function ProjectDetail() {
-  const { slug } = useParams<{ slug: string }>()
+  const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const project = (slug && PROJECTS[slug]) || DEFAULT_PROJECT
   const { user } = useAuthStore()
+  const { projects, fetchProjects, updateProject } = useProjectStore()
   const { tasks, goals, fetchAll, createTask, toggleTask } = useWheelStore()
 
   useEffect(() => {
-    if (user) fetchAll(user.id)
+    if (user) {
+      fetchProjects(user.id)
+      fetchAll(user.id)
+    }
   }, [user?.id])
 
-  const [sortBy, setSortBy] = useState<'status' | 'energy'>('status')
+  const project = useMemo(() => projects.find((p) => p.id === id), [projects, id])
+  const accentColor = project?.color || '#1F3649'
 
-  // Store tasks linked to this project
   const projectTasks = useMemo(
-    () => tasks.filter(t => t.project_id === project.projectId),
-    [tasks, project.projectId]
+    () => tasks.filter((t) => t.project_id === id),
+    [tasks, id]
   )
 
-  // Goals linked to this project (for the add task dropdown)
-  const projectGoals = useMemo(
-    () => goals.filter(g => g.project_id === project.projectId).map(g => ({ id: g.id, title: g.title })),
-    [goals, project.projectId]
+  const linkedGoal = useMemo(
+    () => (project?.goal_id ? goals.find((g) => g.id === project.goal_id) ?? null : null),
+    [goals, project]
   )
 
-  // All goals for linking (in case user wants to link to any goal)
-  const allGoals = useMemo(
-    () => goals.map(g => ({ id: g.id, title: g.title })),
-    [goals]
-  )
+  const allGoals = useMemo(() => goals.map((g) => ({ id: g.id, title: g.title })), [goals])
+  const goalMap = useMemo(() => Object.fromEntries(goals.map((g) => [g.id, g])), [goals])
 
-  const goalMap = useMemo(() => Object.fromEntries(goals.map(g => [g.id, g])), [goals])
+  const completedCount = projectTasks.filter((t) => t.completed).length
+  const progress = projectTasks.length > 0 ? Math.round((completedCount / projectTasks.length) * 100) : 0
 
-  const sortedDemoTasks = [...project.demoTasks].sort((a, b) => {
-    if (sortBy === 'status') return STATUS_ORDER[a.status] - STATUS_ORDER[b.status]
-    return ENERGY_ORDER[a.energy] - ENERGY_ORDER[b.energy]
-  })
-
-  const totalTaskCount = project.demoTasks.length + projectTasks.length
+  const [linkGoalId, setLinkGoalId] = useState('')
 
   function handleAddTask(title: string, goalId: string | null) {
-    if (!user) return
+    if (!user || !project) return
     createTask({
       user_id: user.id,
       goal_id: goalId,
       category_id: null,
-      project_id: project.projectId,
+      project_id: project.id,
       title,
       completed: false,
       priority: 'normal',
@@ -340,6 +221,23 @@ export default function ProjectDetail() {
       estimated_minutes: null,
       due_date: null,
     })
+  }
+
+  if (!project) {
+    return (
+      <div className="space-y-8 pb-24">
+        <button
+          onClick={() => navigate('/projects')}
+          className="inline-flex items-center gap-2 text-sm font-semibold text-[#586062] hover:text-[#1F3649] transition-colors cursor-pointer"
+        >
+          <ArrowLeft size={16} />
+          Back to Projects
+        </button>
+        <div className="text-center py-16">
+          <p className="text-sm text-[#adb3b4]">Project not found.</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -354,8 +252,12 @@ export default function ProjectDetail() {
       </button>
 
       {/* Hero banner */}
-      <div className={`bg-gradient-to-br ${project.gradient} rounded-[15px] relative overflow-hidden`}>
-        <div className="absolute inset-0 opacity-20"
+      <div
+        className="rounded-[15px] relative overflow-hidden"
+        style={{ background: `linear-gradient(135deg, ${accentColor} 0%, ${accentColor}cc 100%)` }}
+      >
+        <div
+          className="absolute inset-0 opacity-20"
           style={{
             backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)',
             backgroundSize: '16px 16px',
@@ -364,19 +266,24 @@ export default function ProjectDetail() {
         <div className="relative p-8 md:p-10">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-[10px] font-bold text-white/90 bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full uppercase tracking-wider">
-              {project.status}
+              {project.status.replace('_', ' ')}
             </span>
-            <span className="text-[10px] font-bold text-white/90 bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full uppercase tracking-wider">
-              {project.priority}
-            </span>
+            {linkedGoal && (
+              <span className="text-[10px] font-bold text-white/90 bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
+                <Target size={10} />
+                {linkedGoal.title}
+              </span>
+            )}
           </div>
 
           <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-3">
             {project.title}
           </h1>
-          <p className="text-sm text-white/80 leading-relaxed max-w-2xl">
-            {project.description}
-          </p>
+          {project.description && (
+            <p className="text-sm text-white/80 leading-relaxed max-w-2xl">
+              {project.description}
+            </p>
+          )}
 
           <div className="flex items-center gap-2 mt-6">
             <button
@@ -385,121 +292,133 @@ export default function ProjectDetail() {
             >
               <CheckSquare size={13} /> View All Tasks
             </button>
-            <button
-              onClick={() => navigate('/goals')}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/90 bg-white/15 backdrop-blur-sm hover:bg-white/25 px-3.5 py-2 rounded-[10px] transition-all cursor-pointer"
-            >
-              <Target size={13} /> View Goals
-            </button>
+            {linkedGoal && (
+              <button
+                onClick={() => navigate(`/goals/${linkedGoal.id}`)}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/90 bg-white/15 backdrop-blur-sm hover:bg-white/25 px-3.5 py-2 rounded-[10px] transition-all cursor-pointer"
+              >
+                <Target size={13} /> Open Goal
+              </button>
+            )}
           </div>
         </div>
       </div>
 
       {/* Two-column layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
         {/* Main column — Tasks */}
         <div className="lg:col-span-2 space-y-5">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-bold text-[#2d3435] tracking-tight">
-              Project Tasks
-              <span className="ml-2 text-xs font-semibold text-[#adb3b4]">{totalTaskCount}</span>
+              Tasks
+              <span className="ml-2 text-xs font-semibold text-[#adb3b4]">{projectTasks.length}</span>
             </h2>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setSortBy('energy')}
-                className={`text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${
-                  sortBy === 'energy' ? 'text-[#1F3649] border-b border-[#1F3649]' : 'text-[#adb3b4] hover:text-[#1F3649]'
-                }`}
-              >
-                By Energy
-              </button>
-              <button
-                onClick={() => setSortBy('status')}
-                className={`text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${
-                  sortBy === 'status' ? 'text-[#1F3649] border-b border-[#1F3649]' : 'text-[#adb3b4] hover:text-[#1F3649]'
-                }`}
-              >
-                By Status
-              </button>
-            </div>
+            {projectTasks.length > 0 && (
+              <span className="text-xs text-[#adb3b4]">
+                {completedCount}/{projectTasks.length} done
+              </span>
+            )}
           </div>
 
-          {/* Store tasks (real, toggleable) */}
-          {projectTasks.length > 0 && (
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider px-1">Your Tasks</span>
-              {projectTasks.map(task => (
-                <StoreTaskRow
-                  key={task.id}
-                  task={task}
-                  goalTitle={task.goal_id ? goalMap[task.goal_id]?.title ?? null : null}
-                  accentColor={project.categoryColor}
-                  onToggle={() => toggleTask(task.id, !task.completed)}
-                />
-              ))}
-            </div>
+          {projectTasks.length === 0 && (
+            <p className="text-sm text-[#adb3b4] py-4">No tasks yet — add the first one below.</p>
           )}
 
-          {/* Demo tasks (static) */}
           <div className="space-y-2">
-            {projectTasks.length > 0 && (
-              <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider px-1">Sample Tasks</span>
-            )}
-            {sortedDemoTasks.map(task => (
-              <DemoTaskRow key={task.id} task={task} accentColor={project.categoryColor} />
+            {projectTasks.map((task) => (
+              <TaskRow
+                key={task.id}
+                task={task}
+                goalTitle={task.goal_id ? goalMap[task.goal_id]?.title ?? null : null}
+                accentColor={accentColor}
+                onToggle={(e) => { e.stopPropagation(); toggleTask(task.id, !task.completed) }}
+                onClick={() => navigate(`/tasks/${task.id}`)}
+              />
             ))}
           </div>
 
-          {/* Add task */}
           <AddTaskForm
-            projectId={project.projectId}
-            accentColor={project.categoryColor}
+            accentColor={accentColor}
             goals={allGoals}
             onAdd={handleAddTask}
           />
         </div>
 
-        {/* Sidebar column — Metadata */}
+        {/* Sidebar */}
         <div className="space-y-5">
-          <h2 className="text-base font-bold text-[#2d3435] tracking-tight">Project Metadata</h2>
+          <h2 className="text-base font-bold text-[#2d3435] tracking-tight">Details</h2>
 
+          {/* Metadata */}
           <div className="grid grid-cols-2 gap-3">
-            <MetadataCard label="Timeline" value={project.timeline} />
-            <MetadataCard label="Total Budget" value={project.budget} />
-            <MetadataCard label="Total Tasks" value={totalTaskCount} />
+            <MetaCard label="Status" value={project.status.replace('_', ' ')} color={accentColor} />
+            <MetaCard label="Tasks" value={projectTasks.length} />
+            {project.target_date && (
+              <MetaCard
+                label="Target Date"
+                value={new Date(project.target_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+              />
+            )}
             <div className="bg-white card p-5">
-              <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block mb-2">Completion</span>
+              <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block mb-2">Progress</span>
               <div className="flex items-center gap-2">
                 <div className="flex-1 h-1.5 bg-[#f2f4f4] rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-500"
-                    style={{ width: `${project.completion}%`, backgroundColor: project.categoryColor }}
+                    style={{ width: `${progress}%`, backgroundColor: accentColor }}
                   />
                 </div>
-                <span className="text-sm font-bold" style={{ color: project.categoryColor }}>{project.completion}%</span>
+                <span className="text-sm font-bold" style={{ color: accentColor }}>{progress}%</span>
               </div>
             </div>
           </div>
 
-          {/* Linked Goals */}
-          {projectGoals.length > 0 && (
-            <div className="bg-white card p-5 space-y-3">
-              <h3 className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Linked Goals</h3>
+          {/* Linked Goal */}
+          <div className="bg-white card p-5 space-y-3">
+            <h3 className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Linked Goal</h3>
+            {linkedGoal ? (
+              <>
+                <button
+                  onClick={() => navigate(`/goals/${linkedGoal.id}`)}
+                  className="w-full flex items-center gap-3 text-left hover:bg-[#f2f4f4] px-3 py-2 rounded-[10px] transition-colors cursor-pointer group"
+                >
+                  <div className="w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0" style={{ backgroundColor: accentColor + '20' }}>
+                    <Target size={14} style={{ color: accentColor }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-[#2d3435] truncate">{linkedGoal.title}</p>
+                    <p className="text-[10px] text-[#adb3b4] capitalize">{linkedGoal.status}</p>
+                  </div>
+                  <ArrowRight size={12} className="text-[#adb3b4] opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+                <button
+                  onClick={() => updateProject(project.id, { goal_id: null })}
+                  className="text-[10px] font-semibold text-[#adb3b4] hover:text-[#dc2626] transition-colors cursor-pointer"
+                >
+                  Unlink goal
+                </button>
+              </>
+            ) : (
               <div className="space-y-2">
-                {projectGoals.map(g => (
-                  <button
-                    key={g.id}
-                    onClick={() => navigate('/goals')}
-                    className="w-full flex items-center gap-2 text-left hover:bg-[#f2f4f4] px-3 py-2 rounded-[10px] transition-colors cursor-pointer"
-                  >
-                    <Target size={14} style={{ color: project.categoryColor }} />
-                    <span className="text-xs font-semibold text-[#2d3435]">{g.title}</span>
-                    <ArrowRight size={10} className="text-[#adb3b4] ml-auto" />
-                  </button>
-                ))}
+                <p className="text-xs text-[#adb3b4] italic">No goal linked</p>
+                <select
+                  value={linkGoalId}
+                  onChange={async (e) => {
+                    if (!e.target.value) return
+                    setLinkGoalId(e.target.value)
+                    await updateProject(project.id, { goal_id: e.target.value })
+                    setLinkGoalId('')
+                  }}
+                  className="w-full text-xs font-semibold text-[#5a6061] bg-[#f2f4f4] px-3 py-2.5 rounded-[10px] border-none outline-none cursor-pointer"
+                >
+                  <option value="">Link a goal...</option>
+                  {goals.map((g) => (
+                    <option key={g.id} value={g.id}>{g.title}</option>
+                  ))}
+                </select>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

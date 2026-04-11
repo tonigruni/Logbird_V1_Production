@@ -77,7 +77,7 @@ export default function App() {
           <Route path="timeboxing" element={<Timeboxing />} />
           <Route path="projects" element={<ProjectsOverview />} />
           <Route path="projects/new" element={<ProjectCreate />} />
-          <Route path="projects/:slug" element={<ProjectDetail />} />
+          <Route path="projects/:id" element={<ProjectDetail />} />
           <Route path="account" element={<Account />} />
           <Route path="settings" element={<Settings />} />
         </Route>

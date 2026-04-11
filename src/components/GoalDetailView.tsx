@@ -25,10 +25,13 @@ import {
   Paperclip,
   Share2,
   Tag,
+  Kanban,
+  X,
 } from 'lucide-react'
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 import { useAuthStore } from '../stores/authStore'
 import { useWheelStore } from '../stores/wheelStore'
+import { useProjectStore } from '../stores/projectStore'
 import type { Goal } from '../stores/wheelStore'
 import { format } from 'date-fns'
 import { cn } from '../lib/utils'
@@ -100,7 +103,12 @@ interface Props {
 export default function GoalDetailView({ goal, onClose }: Props) {
   const { user } = useAuthStore()
   const { categories, tasks, updateGoal, deleteGoal, createTask, toggleTask, deleteTask } = useWheelStore()
+  const { projects, fetchProjects } = useProjectStore()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (user) fetchProjects(user.id)
+  }, [user?.id])
 
   const [editingDesc, setEditingDesc]       = useState(false)
   const [editDesc, setEditDesc]             = useState('')
@@ -150,6 +158,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
     await createTask({
       user_id: user.id,
       goal_id: goal.id,
+      project_id: goal.project_id,
       category_id: goal.category_id,
       title: newTaskTitle.trim(),
     })
@@ -477,6 +486,68 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               </div>
             </div>
           </section>
+
+          {/* Linked Project */}
+          {(() => {
+            const linkedProject = projects.find(p => p.id === goal.project_id) ?? null
+            const color = linkedProject?.color || '#1F3649'
+            return (
+              <section className="bg-surface card p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Kanban size={15} className="text-primary" />
+                  <h3 className="text-sm font-bold text-on-surface">Linked Project</h3>
+                </div>
+                {linkedProject ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0"
+                        style={{ backgroundColor: color + '22' }}
+                      >
+                        <Kanban size={14} style={{ color }} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-on-surface truncate">{linkedProject.title}</p>
+                        <p className="text-[10px] text-on-surface-variant/50 capitalize">{linkedProject.status.replace('_', ' ')}</p>
+                      </div>
+                      <button
+                        onClick={() => updateGoal(goal.id, { project_id: null })}
+                        className="p-1 rounded-lg text-on-surface-variant/30 hover:text-[#dc2626] hover:bg-[#fce8e8] transition-all cursor-pointer"
+                        title="Unlink project"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => navigate(`/projects/${linkedProject.id}`)}
+                      className="text-xs font-semibold flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
+                      style={{ color }}
+                    >
+                      <ChevronRight size={12} />
+                      Open Project
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-xs italic text-on-surface-variant/30">No project linked</p>
+                    <select
+                      defaultValue=""
+                      onChange={async (e) => {
+                        if (e.target.value) await updateGoal(goal.id, { project_id: e.target.value })
+                        e.target.value = ''
+                      }}
+                      className="w-full text-xs font-semibold text-on-surface-variant bg-[#f2f4f4] px-3 py-2.5 rounded-xl border-none outline-none cursor-pointer"
+                    >
+                      <option value="">Link a project…</option>
+                      {projects.map(p => (
+                        <option key={p.id} value={p.id}>{p.title}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </section>
+            )
+          })()}
 
           {/* Attachments */}
           <section className="bg-surface card p-6">

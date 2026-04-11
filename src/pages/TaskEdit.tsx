@@ -14,18 +14,9 @@ import {
 } from '@phosphor-icons/react'
 import { cn } from '../lib/utils'
 import { useWheelStore } from '../stores/wheelStore'
+import { useProjectStore } from '../stores/projectStore'
 import { useAuthStore } from '../stores/authStore'
 import type { TaskPriority, TaskEnergy } from '../stores/wheelStore'
-
-// ---------------------------------------------------------------------------
-// Project lookup
-// ---------------------------------------------------------------------------
-
-const PROJECT_OPTIONS = [
-  { id: 'proj-identity-redesign', title: 'Identity Redesign', slug: 'identity-redesign', color: '#1F3649' },
-  { id: 'proj-focus-mastery', title: 'Focus Mastery', slug: 'focus-mastery', color: '#22c55e' },
-  { id: 'proj-senior-track', title: 'Senior Track Prep', slug: 'senior-track-prep', color: '#1F3649' },
-]
 
 const PRIORITIES: { value: TaskPriority; label: string }[] = [
   { value: 'low', label: 'Low' },
@@ -64,9 +55,10 @@ export default function TaskEdit() {
   const navigate = useNavigate()
   const { user } = useAuthStore()
   const { tasks, goals, categories, updateTask, deleteTask, toggleTask, fetchAll } = useWheelStore()
+  const { projects, fetchProjects } = useProjectStore()
 
   useEffect(() => {
-    if (user) fetchAll(user.id)
+    if (user) { fetchAll(user.id); fetchProjects(user.id) }
   }, [user?.id])
 
   const task = useMemo(() => tasks.find(t => t.id === id), [tasks, id])
@@ -103,8 +95,8 @@ export default function TaskEdit() {
 
   const linkedProject = useMemo(() => {
     if (!projectId) return null
-    return PROJECT_OPTIONS.find(p => p.id === projectId) ?? null
-  }, [projectId])
+    return projects.find(p => p.id === projectId) ?? null
+  }, [projectId, projects])
 
   if (!task) {
     return (
@@ -220,7 +212,7 @@ export default function TaskEdit() {
                 className="w-full text-xs font-semibold text-[#2d3435] bg-white card px-4 py-3.5 border-none outline-none cursor-pointer focus:ring-2 focus:ring-[#1F3649]/10"
               >
                 <option value="">No project</option>
-                {PROJECT_OPTIONS.map(p => (
+                {projects.map(p => (
                   <option key={p.id} value={p.id}>{p.title}</option>
                 ))}
               </select>
@@ -385,7 +377,7 @@ export default function TaskEdit() {
                 </div>
               </div>
               <button
-                onClick={() => navigate('/goals')}
+                onClick={() => navigate(`/goals/${linkedGoal.id}`)}
                 className="text-xs font-semibold flex items-center gap-1 hover:gap-2 transition-all cursor-pointer text-[#1F3649]"
               >
                 <Target size={12} />
@@ -402,16 +394,16 @@ export default function TaskEdit() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded-[10px] flex items-center justify-center"
-                  style={{ backgroundColor: linkedProject.color + '15' }}
+                  style={{ backgroundColor: (linkedProject.color || '#1F3649') + '15' }}
                 >
-                  <Kanban size={14} style={{ color: linkedProject.color }} />
+                  <Kanban size={14} style={{ color: linkedProject.color || '#1F3649' }} />
                 </div>
                 <p className="text-sm font-bold text-[#2d3435] truncate">{linkedProject.title}</p>
               </div>
               <button
-                onClick={() => navigate(`/projects/${linkedProject.slug}`)}
+                onClick={() => navigate(`/projects/${linkedProject.id}`)}
                 className="text-xs font-semibold flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
-                style={{ color: linkedProject.color }}
+                style={{ color: linkedProject.color || '#1F3649' }}
               >
                 <Kanban size={12} />
                 View Project
