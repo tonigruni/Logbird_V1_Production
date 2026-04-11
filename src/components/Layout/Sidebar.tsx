@@ -57,7 +57,7 @@ export default function Sidebar() {
     )
 
   return (
-    <aside className="hidden md:flex shrink-0 flex-col h-screen bg-background border-r border-sidebar-border py-8 px-4 sticky top-0 z-50" style={{ width: 'var(--sidebar-width)' }}>
+    <aside className="hidden md:flex shrink-0 flex-col h-screen bg-background border-r border-sidebar-border pt-8 pb-0 px-4 sticky top-0 z-50" style={{ width: 'var(--sidebar-width)' }}>
       {/* Logo */}
       <div className="mb-10 px-4">
         <img src="/Logo complete dark semibold.png" alt="Logbird" className="h-12 w-auto" />
