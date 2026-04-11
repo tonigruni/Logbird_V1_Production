@@ -1,5 +1,5 @@
 import { NavLink, useNavigate, useLocation } from 'react-router-dom'
-import { SquaresFour, BookOpen, ChartDonut, CheckSquare, Target, Kanban, Timer, UserCircle, Gear, SignOut } from '@phosphor-icons/react'
+import { SquaresFour, BookOpen, ChartDonut, CheckSquare, Target, Kanban, Timer, UserCircle, Gear, SignOut, Files } from '@phosphor-icons/react'
 import { cn } from '../../lib/utils'
 import { useAuthStore } from '../../stores/authStore'
 
@@ -17,6 +17,10 @@ const productivityNav = [
   { to: '/goals', icon: Target, label: 'Goals' },
   { to: '/projects', icon: Kanban, label: 'Projects' },
   { to: '/timeboxing', icon: Timer, label: 'Timeboxing' },
+]
+
+const systemNav = [
+  { to: '/docs', icon: Files, label: 'Docs' },
 ]
 
 const bottomNav = [
@@ -90,6 +94,24 @@ export default function Sidebar() {
           </span>
           <div className="space-y-1">
             {productivityNav.map(({ to, icon: Icon, label }) => {
+              const active = location.pathname.startsWith(to)
+              return (
+                <NavLink key={to} to={to} className={() => linkClass({ isActive: active })}>
+                  <Icon size={20} weight={active ? 'bold' : 'regular'} className="shrink-0" />
+                  {label}
+                </NavLink>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* System section */}
+        <div>
+          <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider px-4 pt-6 pb-2 block">
+            System
+          </span>
+          <div className="space-y-1">
+            {systemNav.map(({ to, icon: Icon, label }) => {
               const active = location.pathname.startsWith(to)
               return (
                 <NavLink key={to} to={to} className={() => linkClass({ isActive: active })}>

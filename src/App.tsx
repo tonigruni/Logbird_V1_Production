@@ -22,6 +22,7 @@ import TaskEdit from './pages/TaskEdit'
 import Goals from './pages/Goals'
 import GoalDetailPage from './pages/GoalDetailPage'
 import Timeboxing from './pages/Timeboxing'
+import Docs from './pages/Docs'
 
 export default function App() {
   const { setSession, setLoading, setUser, loadProfile } = useAuthStore()
@@ -78,6 +79,7 @@ export default function App() {
           <Route path="projects" element={<ProjectsOverview />} />
           <Route path="projects/new" element={<ProjectCreate />} />
           <Route path="projects/:id" element={<ProjectDetail />} />
+          <Route path="docs" element={<Docs />} />
           <Route path="account" element={<Account />} />
           <Route path="settings" element={<Settings />} />
         </Route>
