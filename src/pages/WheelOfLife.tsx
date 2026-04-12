@@ -3,6 +3,7 @@ import {
   Plus, Target, Trash2, ChevronDown, ChevronRight, ChevronLeft,
   Download, ArrowRight, Heart, Briefcase, DollarSign, Users,
   TrendingUp, Smile, UserCheck, Lightbulb, CheckCircle2, Circle,
+  Frown, Meh,
 } from 'lucide-react'
 import { LogbirdDatePicker } from '../components/ui/date-range-picker'
 import {
@@ -197,6 +198,14 @@ function getCategoryColor(name: string) {
   return CATEGORY_COLOR[name] ?? '#6b63f5'
 }
 
+const MOOD_META: Record<number, { label: string; color: string; bg: string; icon: React.ElementType }> = {
+  1: { label: 'Very Low',  color: '#dc2626', bg: '#fef2f2', icon: Frown },
+  2: { label: 'Low',       color: '#ea580c', bg: '#fff7ed', icon: Frown },
+  3: { label: 'Neutral',   color: '#9ca3af', bg: '#f9fafb', icon: Meh   },
+  4: { label: 'Good',      color: '#16a34a', bg: '#f0fdf4', icon: Smile },
+  5: { label: 'Excellent', color: '#065f46', bg: '#ecfdf5', icon: Smile },
+}
+
 // Donut chart component
 function ScoreDonut({ score, maxScore = 10, size = 100, color = '#0C1629' }: {
   score: number; maxScore?: number; size?: number; color?: string
@@ -265,6 +274,7 @@ export default function WheelOfLife() {
     CHECK_IN_DOMAINS.forEach(d => d.subAreas.forEach(sa => { init[`${d.id}.${sa.key}`] = 5 }))
     return init
   })
+  const [moodScore, setMoodScore] = useState<number | null>(null)
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [activeDomainId, setActiveDomainId] = useState(CHECK_IN_DOMAINS[0].id)
@@ -356,7 +366,7 @@ export default function WheelOfLife() {
         <div className="space-y-5">
 
           {/* Domain tab bar */}
-          <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[10px] overflow-x-auto scrollbar-hide">
+          <div className="flex flex-wrap gap-1.5">
             {CHECK_IN_DOMAINS.map((domain) => {
               const isActive = domain.id === activeDomainId
               return (
@@ -365,12 +375,16 @@ export default function WheelOfLife() {
                   type="button"
                   onClick={() => setActiveDomainId(domain.id)}
                   className={cn(
-                    'flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-[7px] whitespace-nowrap shrink-0 transition-all cursor-pointer',
-                    isActive ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
+                    'flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 border',
+                    isActive
+                      ? 'text-white border-transparent shadow-sm'
+                      : 'text-[#727A84] bg-white border-[#F0F3F3] hover:border-[#D6DCE0]'
                   )}
+                  style={isActive ? { backgroundColor: domain.color, borderColor: domain.color } : {}}
                 >
-                  <domain.icon size={12} style={{ color: isActive ? domain.color : undefined }} />
-                  {domain.name}
+                  <domain.icon size={13} />
+                  <span className="hidden sm:inline">{domain.name}</span>
+                  <span className="sm:hidden">{domain.name.split(' ')[0]}</span>
                 </button>
               )
             })}
@@ -492,6 +506,40 @@ export default function WheelOfLife() {
 
             {/* Sidebar */}
             <div className="space-y-4">
+
+              {/* Mood */}
+              <div className="bg-white card overflow-hidden">
+                <div className="p-5 border-b border-[#F0F3F3]">
+                  <h3 className="text-xs font-bold text-[#0C1629] uppercase tracking-wider mb-4">Current Mood</h3>
+                  <div className="grid grid-cols-5 gap-2">
+                    {([1,2,3,4,5] as const).map(score => {
+                      const meta = MOOD_META[score]
+                      const active = moodScore === score
+                      const Icon = meta.icon
+                      return (
+                        <button key={score} type="button"
+                          onClick={() => setMoodScore(active ? null : score)}
+                          title={meta.label}
+                          style={active ? { backgroundColor: meta.bg, borderColor: meta.color + '60' } : {}}
+                          className={cn(
+                            'aspect-square flex items-center justify-center rounded-xl transition-all cursor-pointer border',
+                            active ? 'scale-110 shadow-sm border' : 'border-transparent hover:bg-[#F0F3F3]'
+                          )}
+                        >
+                          <Icon size={22} color={meta.color} strokeWidth={2.2} />
+                        </button>
+                      )
+                    })}
+                  </div>
+                  {moodScore && (
+                    <p className="text-[10px] text-center font-semibold mt-2 uppercase tracking-wider"
+                      style={{ color: MOOD_META[moodScore].color }}>
+                      {MOOD_META[moodScore].label}
+                    </p>
+                  )}
+                </div>
+              </div>
+
               {/* Overall */}
               <div className="bg-white card p-6 flex flex-col items-center gap-3">
                 <p className="text-xs font-semibold text-[#727A84] uppercase tracking-wide">
