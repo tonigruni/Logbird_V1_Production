@@ -8,7 +8,7 @@ import {
 import { LogbirdDatePicker } from '../components/ui/date-range-picker'
 import {
   RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer,
-  Tooltip, PieChart, Pie, Cell,
+  Tooltip, PieChart, Pie, Cell, LineChart, Line, YAxis,
 } from 'recharts'
 import { useAuthStore } from '../stores/authStore'
 import { useWheelStore } from '../stores/wheelStore'
@@ -18,7 +18,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { cn } from '../lib/utils'
 
-type Tab = 'checkin' | 'goals' | 'history'
+type Tab = 'dashboard' | 'checkin' | 'goals' | 'history'
 
 // Fixed 8 check-in domains with sub-areas and reflection questions
 const CHECK_IN_DOMAINS = [
@@ -267,7 +267,7 @@ export default function WheelOfLife() {
 
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-  const tab = (searchParams.get('tab') as Tab) || 'checkin'
+  const tab = (searchParams.get('tab') as Tab) || 'dashboard'
 
   // Check-in state
   const [subScores, setSubScores] = useState<Record<string, number>>(() => {
@@ -366,10 +366,23 @@ export default function WheelOfLife() {
   }
 
   const TAB_META: Record<Tab, { title: string; sub: string }> = {
-    checkin: { title: 'Check-in',       sub: 'Rate and reflect on each area of your life' },
-    goals:   { title: 'Goals & Tasks',  sub: 'Track your goals and milestones' },
-    history: { title: 'History',        sub: 'Your past check-ins over time' },
+    dashboard: { title: 'Dashboard',     sub: 'Your life balance at a glance' },
+    checkin:   { title: 'Check-in',      sub: 'Rate and reflect on each area of your life' },
+    goals:     { title: 'Goals & Tasks', sub: 'Track your goals and milestones' },
+    history:   { title: 'History',       sub: 'Your past check-ins over time' },
   }
+
+  // Radar data — shortened names to avoid label overlap
+  const radarData = CHECK_IN_DOMAINS.map(d => ({
+    area: d.name.split(' ')[0],
+    score: scores[d.name] ?? 5,
+    fullName: d.name,
+    color: d.color,
+  }))
+
+  // Per-domain trend: last 6 check-ins
+  const domainHistory = (domainName: string) =>
+    checkins.slice(-6).map((c, i) => ({ i, v: (c.scores as Record<string, number>)?.[domainName] ?? 0 }))
 
   return (
     <div className="pb-24">
@@ -379,6 +392,171 @@ export default function WheelOfLife() {
         <h1 className="text-2xl font-extrabold text-[#0C1629] tracking-tight">{TAB_META[tab].title}</h1>
         <p className="text-sm text-[#727A84] mt-1">{TAB_META[tab].sub}</p>
       </div>
+
+      {/* ── DASHBOARD TAB ── */}
+      {tab === 'dashboard' && (
+        <div className="space-y-6">
+
+          {/* Top row: radar + summary sidebar */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+            {/* Radar chart */}
+            <div className="lg:col-span-2 bg-white card p-6 md:p-8">
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <h2 className="text-base font-bold text-[#0C1629]">Life Balance</h2>
+                  <p className="text-xs text-[#727A84] mt-0.5">Current state across all 8 areas</p>
+                </div>
+                <div className="text-right">
+                  <span className="text-3xl font-black text-[#0C1629]">{overallAverage}</span>
+                  <span className="text-sm text-[#727A84]">/10</span>
+                </div>
+              </div>
+              <ResponsiveContainer width="100%" height={340}>
+                <RadarChart data={radarData} margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
+                  <PolarGrid stroke="#F0F3F3" />
+                  <PolarAngleAxis
+                    dataKey="area"
+                    tick={{ fontSize: 11, fill: '#727A84', fontWeight: 600 }}
+                  />
+                  <Radar
+                    dataKey="score"
+                    fill="#0C1629"
+                    fillOpacity={0.12}
+                    stroke="#0C1629"
+                    strokeWidth={2}
+                  />
+                  <Tooltip
+                    formatter={(val: number, _: string, props: { payload?: { fullName?: string } }) =>
+                      [val, props.payload?.fullName ?? '']
+                    }
+                    contentStyle={{ borderRadius: 10, border: '1px solid #F0F3F3', fontSize: 12 }}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Summary sidebar */}
+            <div className="space-y-4">
+              {/* Overall donut */}
+              <div className="bg-white card p-5 flex flex-col items-center gap-3">
+                <p className="text-xs font-bold text-[#727A84] uppercase tracking-wider">Overall Score</p>
+                <ScoreDonut score={overallAverage} size={110} />
+                <p className="text-xs text-[#727A84] text-center">
+                  {overallAverage >= 8 ? 'Excellent balance' : overallAverage >= 6 ? 'Good progress' : overallAverage >= 4 ? 'Room to grow' : 'Needs attention'}
+                </p>
+              </div>
+
+              {/* Top & lowest area */}
+              {(() => {
+                const sorted = [...CHECK_IN_DOMAINS].sort((a, b) => (scores[b.name] ?? 5) - (scores[a.name] ?? 5))
+                const top = sorted[0]
+                const low = sorted[sorted.length - 1]
+                return (
+                  <div className="bg-white card p-5 space-y-3">
+                    <p className="text-xs font-bold text-[#727A84] uppercase tracking-wider">Highlights</p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: top.color + '20' }}>
+                        <top.icon size={15} style={{ color: top.color }} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[11px] font-semibold text-[#0C1629] truncate">{top.name}</p>
+                        <p className="text-[10px] text-[#727A84]">Strongest area</p>
+                      </div>
+                      <span className="text-sm font-black" style={{ color: top.color }}>{scores[top.name] ?? 5}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: low.color + '20' }}>
+                        <low.icon size={15} style={{ color: low.color }} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[11px] font-semibold text-[#0C1629] truncate">{low.name}</p>
+                        <p className="text-[10px] text-[#727A84]">Needs attention</p>
+                      </div>
+                      <span className="text-sm font-black" style={{ color: low.color }}>{scores[low.name] ?? 5}</span>
+                    </div>
+                  </div>
+                )
+              })()}
+
+              {/* Last check-in */}
+              {checkins.length > 0 && (
+                <div className="bg-white card p-5">
+                  <p className="text-xs font-bold text-[#727A84] uppercase tracking-wider mb-2">Last Check-in</p>
+                  <p className="text-sm font-semibold text-[#0C1629]">
+                    {format(new Date(checkins[checkins.length - 1].date), 'MMM d, yyyy')}
+                  </p>
+                  <p className="text-xs text-[#727A84] mt-0.5">{checkins.length} total check-ins</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Area development grid */}
+          <div>
+            <h2 className="text-sm font-bold text-[#727A84] uppercase tracking-wider mb-4">Area Development</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {CHECK_IN_DOMAINS.map(domain => {
+                const score = scores[domain.name] ?? 5
+                const history = domainHistory(domain.name)
+                const prev = history.length >= 2 ? history[history.length - 2].v : null
+                const delta = prev !== null ? +(score - prev).toFixed(1) : null
+                const hasHistory = history.some(h => h.v > 0)
+                return (
+                  <div key={domain.id} className="bg-white card p-4 flex flex-col gap-3">
+                    {/* Header */}
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: domain.color + '18' }}>
+                        <domain.icon size={15} style={{ color: domain.color }} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[11px] font-bold text-[#0C1629] truncate leading-tight">{domain.name}</p>
+                      </div>
+                    </div>
+
+                    {/* Score + delta */}
+                    <div className="flex items-end justify-between">
+                      <span className="text-2xl font-black" style={{ color: domain.color }}>{score}</span>
+                      {delta !== null && (
+                        <span className={cn('text-xs font-semibold px-1.5 py-0.5 rounded-md',
+                          delta > 0 ? 'bg-green-50 text-green-700' : delta < 0 ? 'bg-red-50 text-red-600' : 'bg-[#F0F3F3] text-[#727A84]')}>
+                          {delta > 0 ? '+' : ''}{delta}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Sparkline */}
+                    {hasHistory ? (
+                      <ResponsiveContainer width="100%" height={40}>
+                        <LineChart data={history} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
+                          <YAxis domain={[0, 10]} hide />
+                          <Line
+                            type="monotone"
+                            dataKey="v"
+                            stroke={domain.color}
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="h-10 flex items-center">
+                        <p className="text-[10px] text-[#B5C1C8]">No history yet</p>
+                      </div>
+                    )}
+
+                    {/* Score bar */}
+                    <div className="h-1 bg-[#F0F3F3] rounded-full overflow-hidden">
+                      <div className="h-full rounded-full transition-all" style={{ width: `${(score / 10) * 100}%`, backgroundColor: domain.color }} />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+        </div>
+      )}
 
       {/* ── CHECK-IN TAB ── */}
       {tab === 'checkin' && (

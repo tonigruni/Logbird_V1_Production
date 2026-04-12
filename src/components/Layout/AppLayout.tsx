@@ -42,13 +42,14 @@ function useSectionConfig(pathname: string, search: string, navigate: ReturnType
   if (pathname === '/account')  return { title: 'Account', tabs: null }
   if (pathname === '/settings') return { title: 'Settings', tabs: null }
   if (pathname === '/wheel') {
-    const wheelTab = new URLSearchParams(search).get('tab') || 'checkin'
+    const wheelTab = new URLSearchParams(search).get('tab') || 'dashboard'
     return {
       title: 'Wheel of Life',
       pillTabs: [
-        { label: 'Check-in', active: wheelTab === 'checkin', path: '/wheel?tab=checkin' },
-        { label: 'Goals',    active: wheelTab === 'goals',   path: '/wheel?tab=goals'   },
-        { label: 'History',  active: wheelTab === 'history', path: '/wheel?tab=history' },
+        { label: 'Dashboard', active: wheelTab === 'dashboard', path: '/wheel?tab=dashboard' },
+        { label: 'Check-in',  active: wheelTab === 'checkin',   path: '/wheel?tab=checkin'   },
+        { label: 'Goals',     active: wheelTab === 'goals',     path: '/wheel?tab=goals'     },
+        { label: 'History',   active: wheelTab === 'history',   path: '/wheel?tab=history'   },
       ] as TabConfig[],
       tabs: null,
     }
