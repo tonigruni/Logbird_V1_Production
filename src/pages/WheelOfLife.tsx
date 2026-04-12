@@ -3,7 +3,7 @@ import {
   Plus, Target, Trash2, ChevronDown, ChevronRight, ChevronLeft,
   Download, ArrowRight, Heart, Briefcase, DollarSign, Users,
   TrendingUp, Smile, UserCheck, Lightbulb, CheckCircle2, Circle,
-  Frown, Meh,
+  Frown, Meh, MapPin, Cloud, Moon, Zap, Wine, Dumbbell, X,
 } from 'lucide-react'
 import { LogbirdDatePicker } from '../components/ui/date-range-picker'
 import {
@@ -275,6 +275,12 @@ export default function WheelOfLife() {
     return init
   })
   const [moodScore, setMoodScore] = useState<number | null>(null)
+  const [location, setLocation] = useState('')
+  const [weather, setWeather] = useState('')
+  const [sleepQuality, setSleepQuality] = useState<number | null>(null)
+  const [energyLevel, setEnergyLevel] = useState<'low' | 'medium' | 'high' | null>(null)
+  const [hadAlcohol, setHadAlcohol] = useState<boolean | null>(null)
+  const [exercised, setExercised] = useState<boolean | null>(null)
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [activeDomainId, setActiveDomainId] = useState(CHECK_IN_DOMAINS[0].id)
@@ -507,8 +513,10 @@ export default function WheelOfLife() {
             {/* Sidebar */}
             <div className="space-y-4">
 
-              {/* Mood */}
+              {/* Context card */}
               <div className="bg-white card overflow-hidden">
+
+                {/* Mood */}
                 <div className="p-5 border-b border-[#F0F3F3]">
                   <h3 className="text-xs font-bold text-[#0C1629] uppercase tracking-wider mb-4">Current Mood</h3>
                   <div className="grid grid-cols-5 gap-2">
@@ -538,6 +546,103 @@ export default function WheelOfLife() {
                     </p>
                   )}
                 </div>
+
+                {/* Quick Context */}
+                <div className="p-5 border-b border-[#F0F3F3]">
+                  <h3 className="text-xs font-bold text-[#0C1629] uppercase tracking-wider mb-4">Quick Context</h3>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-widest block mb-1.5">Location</label>
+                      <div className="flex items-center gap-2.5 rounded-[15px] border border-[#D6DCE0] bg-white px-3 py-2.5 shadow-sm transition-shadow focus-within:border-[#0C1629]/30 focus-within:ring-[3px] focus-within:ring-[#0C1629]/10">
+                        <MapPin size={14} className="text-[#B5C1C8] shrink-0"/>
+                        <input value={location} onChange={e => setLocation(e.target.value)}
+                          placeholder="e.g. Home, Coffee shop…"
+                          className="flex-1 bg-transparent text-sm text-[#0C1629] placeholder:text-[#B5C1C8] focus:outline-none min-w-0"/>
+                        {location && <button type="button" onClick={() => setLocation('')} className="text-[#B5C1C8] hover:text-[#727A84] cursor-pointer"><X size={12}/></button>}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-widest block mb-1.5">Weather</label>
+                      <div className="flex items-center gap-2.5 rounded-[15px] border border-[#D6DCE0] bg-white px-3 py-2.5 shadow-sm transition-shadow focus-within:border-[#0C1629]/30 focus-within:ring-[3px] focus-within:ring-[#0C1629]/10">
+                        <Cloud size={14} className="text-[#B5C1C8] shrink-0"/>
+                        <input value={weather} onChange={e => setWeather(e.target.value)}
+                          placeholder="e.g. Sunny, 22°C…"
+                          className="flex-1 bg-transparent text-sm text-[#0C1629] placeholder:text-[#B5C1C8] focus:outline-none min-w-0"/>
+                        {weather && <button type="button" onClick={() => setWeather('')} className="text-[#B5C1C8] hover:text-[#727A84] cursor-pointer"><X size={12}/></button>}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Wellness */}
+                <div className="p-5">
+                  <h3 className="text-xs font-bold text-[#0C1629] uppercase tracking-wider mb-4">Wellness</h3>
+                  <div className="space-y-4">
+
+                    {/* Sleep */}
+                    <div>
+                      <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-widest flex items-center gap-1.5 mb-2">
+                        <Moon size={11}/> Sleep Quality
+                      </label>
+                      <div className="flex gap-1.5">
+                        {[1,2,3,4,5].map(v => (
+                          <button key={v} type="button"
+                            onClick={() => setSleepQuality(sleepQuality === v ? null : v)}
+                            className={cn('flex-1 h-7 rounded-lg text-xs font-bold transition-all cursor-pointer border',
+                              sleepQuality === v
+                                ? 'bg-[#0C1629] text-white border-[#0C1629]'
+                                : 'bg-[#F0F3F3] text-[#727A84] border-transparent hover:bg-[#E4E9EC]')}>
+                            {v}
+                          </button>
+                        ))}
+                      </div>
+                      {sleepQuality && (
+                        <p className="text-[10px] text-[#B5C1C8] mt-1">{['','Very poor','Poor','Okay','Good','Great'][sleepQuality]}</p>
+                      )}
+                    </div>
+
+                    {/* Energy */}
+                    <div>
+                      <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-widest flex items-center gap-1.5 mb-2">
+                        <Zap size={11}/> Energy Level
+                      </label>
+                      <div className="flex gap-1.5">
+                        {(['low','medium','high'] as const).map(lvl => (
+                          <button key={lvl} type="button"
+                            onClick={() => setEnergyLevel(energyLevel === lvl ? null : lvl)}
+                            className={cn('flex-1 h-7 rounded-lg text-xs font-semibold capitalize transition-all cursor-pointer border',
+                              energyLevel === lvl
+                                ? 'bg-[#0C1629] text-white border-[#0C1629]'
+                                : 'bg-[#F0F3F3] text-[#727A84] border-transparent hover:bg-[#E4E9EC]')}>
+                            {lvl}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Toggles */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <button type="button" onClick={() => setHadAlcohol(hadAlcohol === true ? null : true)}
+                        className={cn('flex flex-col items-center gap-1 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border',
+                          hadAlcohol === true
+                            ? 'bg-orange-50 text-orange-700 border-orange-200'
+                            : 'bg-[#F0F3F3] text-[#727A84] border-transparent hover:bg-[#E4E9EC]')}>
+                        <Wine size={15} className={hadAlcohol === true ? 'text-orange-500' : 'text-[#B5C1C8]'}/>
+                        <span>Drank last night</span>
+                      </button>
+                      <button type="button" onClick={() => setExercised(exercised === true ? null : true)}
+                        className={cn('flex flex-col items-center gap-1 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border',
+                          exercised === true
+                            ? 'bg-green-50 text-green-700 border-green-200'
+                            : 'bg-[#F0F3F3] text-[#727A84] border-transparent hover:bg-[#E4E9EC]')}>
+                        <Dumbbell size={15} className={exercised === true ? 'text-green-500' : 'text-[#B5C1C8]'}/>
+                        <span>Exercised</span>
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+
               </div>
 
               {/* Overall */}
