@@ -3,7 +3,10 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 
 function ScrollToTop() {
   const { pathname, search } = useLocation()
-  useEffect(() => { window.scrollTo(0, 0) }, [pathname, search])
+  useEffect(() => {
+    window.scrollTo(0, 0)
+    document.querySelector('main')?.scrollTo(0, 0)
+  }, [pathname, search])
   return null
 }
 import { supabase } from './lib/supabase'
