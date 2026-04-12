@@ -10,12 +10,26 @@ export interface WheelCategory {
   is_active: boolean
 }
 
+export interface CheckinContext {
+  moodScore: number | null
+  sleepQuality: number | null
+  energyLevel: 'low' | 'unstable' | 'good' | 'high' | null
+  stressLevel: 'very_low' | 'low' | 'moderate' | 'high' | 'overwhelming' | null
+  hadAlcohol: boolean | null
+  poorSleep: boolean | null
+  highScreenTime: boolean | null
+  exercised: boolean | null
+  location: string
+  weather: string
+}
+
 export interface WheelCheckin {
   id: string
   user_id: string
   date: string
   scores: Record<string, number>
   notes: string | null
+  context: CheckinContext | null
   created_at: string
 }
 
