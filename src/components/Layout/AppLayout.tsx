@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom'
-import { Search, LayoutDashboard, BookOpen, Circle, User, Settings, LogOut, Plus, FileText } from 'lucide-react'
+import { Search, LayoutDashboard, BookOpen, Circle, User, Settings, LogOut, Plus, FileText, CheckSquare, Target, Folder, Clock, MoreHorizontal, X } from 'lucide-react'
 import { SquaresFour, ListBullets, Columns, PencilSimpleLine } from '@phosphor-icons/react'
 import Sidebar from './Sidebar'
 import { useAuthStore } from '../../stores/authStore'
@@ -8,10 +8,17 @@ import { cn } from '../../lib/utils'
 import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverTitle, PopoverDescription, PopoverBody, PopoverFooter } from '../ui/popover'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 
-const mobileNav = [
+const mobileNavPrimary = [
   { to: '/', icon: LayoutDashboard, label: 'Home' },
   { to: '/journal', icon: BookOpen, label: 'Journal' },
-  { to: '/wheel', icon: Circle, label: 'Wheel' },
+  { to: '/tasks', icon: CheckSquare, label: 'Tasks' },
+  { to: '/goals', icon: Target, label: 'Goals' },
+]
+
+const mobileNavMore = [
+  { to: '/wheel', icon: Circle, label: 'Wheel of Life' },
+  { to: '/projects', icon: Folder, label: 'Projects' },
+  { to: '/timeboxing', icon: Clock, label: 'Timeboxing' },
   { to: '/account', icon: User, label: 'Account' },
   { to: '/settings', icon: Settings, label: 'Settings' },
 ]
@@ -115,6 +122,7 @@ export default function AppLayout() {
   const location = useLocation()
   const { user } = useAuthStore()
   const [searchQuery, setSearchQuery] = useState('')
+  const [moreOpen, setMoreOpen] = useState(false)
 
   const { title, tabs, pillTabs } = useSectionConfig(location.pathname, location.search, navigate) as { title: string; tabs: TabConfig[] | null; pillTabs?: TabConfig[] }
   const isJournalContext = ['/journal', '/insights'].includes(location.pathname)
@@ -303,7 +311,7 @@ export default function AppLayout() {
 
       {/* Mobile bottom navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-[#F0F3F3] flex items-center justify-around px-2 py-2">
-        {mobileNav.map(({ to, icon: Icon, label }) => (
+        {mobileNavPrimary.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
             to={to}
@@ -319,7 +327,58 @@ export default function AppLayout() {
             <span className="text-[10px] font-semibold">{label}</span>
           </NavLink>
         ))}
+        <button
+          onClick={() => setMoreOpen(true)}
+          className={cn(
+            'flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all',
+            mobileNavMore.some(({ to }) => location.pathname === to || location.pathname.startsWith(to + '/'))
+              ? 'text-[#0C1629]'
+              : 'text-[#B5C1C8]'
+          )}
+        >
+          <MoreHorizontal size={20} strokeWidth={1.5} />
+          <span className="text-[10px] font-semibold">More</span>
+        </button>
       </nav>
+
+      {/* More drawer */}
+      {moreOpen && (
+        <>
+          <div
+            className="md:hidden fixed inset-0 z-50 bg-black/20 backdrop-blur-sm"
+            onClick={() => setMoreOpen(false)}
+          />
+          <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl border-t border-[#F0F3F3] pb-safe">
+            <div className="flex items-center justify-between px-5 pt-4 pb-2">
+              <span className="text-sm font-bold text-[#0C1629]">More</span>
+              <button
+                onClick={() => setMoreOpen(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-[#F0F3F3] text-[#727A84]"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="grid grid-cols-4 gap-1 px-4 pb-6 pt-2">
+              {mobileNavMore.map(({ to, icon: Icon, label }) => {
+                const isActive = location.pathname === to || location.pathname.startsWith(to + '/')
+                return (
+                  <button
+                    key={to}
+                    onClick={() => { navigate(to); setMoreOpen(false) }}
+                    className={cn(
+                      'flex flex-col items-center gap-1.5 px-2 py-3 rounded-xl transition-all',
+                      isActive ? 'bg-[#F0F3F3] text-[#0C1629]' : 'text-[#727A84]'
+                    )}
+                  >
+                    <Icon size={22} strokeWidth={1.5} />
+                    <span className="text-[10px] font-semibold text-center leading-tight">{label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
