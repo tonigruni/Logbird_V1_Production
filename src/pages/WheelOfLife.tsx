@@ -14,7 +14,7 @@ import { useAuthStore } from '../stores/authStore'
 import { useWheelStore } from '../stores/wheelStore'
 import type { Goal } from '../stores/wheelStore'
 import GoalDetailView from '../components/GoalDetailView'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { cn } from '../lib/utils'
 
@@ -266,6 +266,7 @@ export default function WheelOfLife() {
   } = useWheelStore()
 
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
   const tab = (searchParams.get('tab') as Tab) || 'checkin'
 
   // Check-in state
@@ -364,8 +365,31 @@ export default function WheelOfLife() {
     return <GoalDetailView goal={selectedGoal} onClose={() => setSelectedGoal(null)} />
   }
 
+  const TAB_META: Record<Tab, { title: string; sub: string }> = {
+    checkin: { title: 'Check-in',       sub: 'Rate and reflect on each area of your life' },
+    goals:   { title: 'Goals & Tasks',  sub: 'Track your goals and milestones' },
+    history: { title: 'History',        sub: 'Your past check-ins over time' },
+  }
+
   return (
     <div className="pb-24">
+
+      {/* ── Page header ── */}
+      <div className="flex items-start justify-between mb-8 gap-4">
+        <div>
+          <h1 className="text-2xl font-extrabold text-[#0C1629] tracking-tight">{TAB_META[tab].title}</h1>
+          <p className="text-sm text-[#727A84] mt-1">{TAB_META[tab].sub}</p>
+        </div>
+        <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[10px] shrink-0">
+          {([['checkin','Check-in'],['goals','Goals'],['history','History']] as const).map(([value, label]) => (
+            <button key={value} type="button" onClick={() => navigate(`/wheel?tab=${value}`)}
+              className={cn('px-4 py-1.5 text-xs font-semibold rounded-[7px] transition-all cursor-pointer whitespace-nowrap',
+                tab === value ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]')}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* ── CHECK-IN TAB ── */}
       {tab === 'checkin' && (
