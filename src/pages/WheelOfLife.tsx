@@ -897,7 +897,7 @@ export default function WheelOfLife() {
                 <div className="bg-white card p-5">
                   <p className="text-xs font-bold text-[#727A84] uppercase tracking-wider mb-2">Last Check-in</p>
                   <p className="text-sm font-semibold text-[#0C1629]">
-                    {format(new Date(checkins[checkins.length - 1].date), 'MMM d, yyyy')}
+                    {format(new Date(checkins[checkins.length - 1].date + 'T00:00:00'), 'MMM d, yyyy')}
                   </p>
                   <p className="text-xs text-[#727A84] mt-0.5">{checkins.length} total check-ins</p>
                 </div>
@@ -1607,7 +1607,7 @@ export default function WheelOfLife() {
                       <p className="text-[#727A84] max-w-lg mt-2">What your scores mean, how your dimensions connect, and where to focus next.</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-3 shrink-0">
-                      <p className="text-sm text-[#727A84]">Based on <span className="font-semibold text-[#0C1629]">{format(new Date(checkins[0].date), 'MMMM d, yyyy')}</span></p>
+                      <p className="text-sm text-[#727A84]">Based on <span className="font-semibold text-[#0C1629]">{format(new Date(checkins[0].date + 'T00:00:00'), 'MMMM d, yyyy')}</span></p>
                       <button type="button" onClick={() => navigate('/wheel?tab=checkin')} className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-4 py-2 rounded-[10px] text-sm font-semibold transition-colors">
                         New Check-in
                       </button>
@@ -2114,10 +2114,10 @@ export default function WheelOfLife() {
                       <div className="flex items-center gap-3">
                         <div>
                           <p className="text-sm font-bold text-[#0C1629]">
-                            {format(new Date(checkin.date), 'MMMM d, yyyy')}
+                            {format(new Date(checkin.date + 'T00:00:00'), 'MMMM d, yyyy')}
                           </p>
                           <p className="text-[11px] text-[#727A84] mt-0.5">
-                            {format(new Date(checkin.date), 'EEEE')}
+                            {format(new Date(checkin.date + 'T00:00:00'), 'EEEE')}
                           </p>
                         </div>
                         {isFirst && (
