@@ -19,7 +19,7 @@ import { cn } from '../lib/utils'
 
 type Tab = 'checkin' | 'goals' | 'history'
 
-// Fixed 8 check-in domains with questions
+// Fixed 8 check-in domains with sub-areas and reflection questions
 const CHECK_IN_DOMAINS = [
   {
     id: 'finances',
@@ -27,6 +27,13 @@ const CHECK_IN_DOMAINS = [
     icon: DollarSign,
     color: '#f59e0b',
     description: 'Financial security & freedom',
+    subAreas: [
+      { key: 'savings', title: 'Savings & Budgeting', description: 'How well are you saving and managing your budget?' },
+      { key: 'debt', title: 'Debt Management', description: 'How well are you managing any existing debt?' },
+      { key: 'income', title: 'Income Growth', description: 'Is your income growing over time?' },
+      { key: 'literacy', title: 'Financial Literacy', description: 'How confident are you with financial decisions?' },
+      { key: 'goals', title: 'Financial Goals', description: 'Are you on track with your financial targets?' },
+    ],
     questions: [
       'What is your relationship with money? Are you happy with how you currently manage it or spend it?',
       'What are your long-term financial goals, and how on track are you to reach them?',
@@ -38,6 +45,13 @@ const CHECK_IN_DOMAINS = [
     icon: Heart,
     color: '#22c55e',
     description: 'Physical & mental wellbeing',
+    subAreas: [
+      { key: 'fitness', title: 'Physical Fitness', description: 'How satisfied are you with your current fitness level?' },
+      { key: 'nutrition', title: 'Nutrition', description: 'How well are you eating and maintaining a healthy diet?' },
+      { key: 'sleep', title: 'Sleep Quality', description: 'How restorative and consistent is your sleep?' },
+      { key: 'mental', title: 'Mental Health', description: 'How well are you managing stress and emotions?' },
+      { key: 'energy', title: 'Energy Levels', description: 'How energized do you feel throughout the day?' },
+    ],
     questions: [
       'How do you feel about your current level of overall health and well-being?',
       'Do you have any fitness goals, and do you feel like you are making progress towards those?',
@@ -50,6 +64,13 @@ const CHECK_IN_DOMAINS = [
     icon: UserCheck,
     color: '#f97316',
     description: 'Close relationships & community',
+    subAreas: [
+      { key: 'family', title: 'Family Bonds', description: 'How strong are your family relationships?' },
+      { key: 'friends', title: 'Friendships', description: 'Do you have deep, meaningful friendships?' },
+      { key: 'support', title: 'Support System', description: 'Do you feel supported by those around you?' },
+      { key: 'time', title: 'Quality Time', description: 'Are you spending enough quality time with loved ones?' },
+      { key: 'comm', title: 'Communication', description: 'How well do you stay connected with family and friends?' },
+    ],
     questions: [
       'Are you satisfied with the current dynamics within your family and friend circles?',
       'How do you prioritize and spend quality time with your family and friends?',
@@ -61,6 +82,13 @@ const CHECK_IN_DOMAINS = [
     icon: Lightbulb,
     color: '#8b5cf6',
     description: 'Beliefs, purpose & meaning',
+    subAreas: [
+      { key: 'purpose', title: 'Sense of Purpose', description: 'Do you feel like you are living out your purpose?' },
+      { key: 'peace', title: 'Inner Peace', description: 'How much inner peace and calm do you experience?' },
+      { key: 'values', title: 'Beliefs & Values', description: 'How aligned are you with your core beliefs and values?' },
+      { key: 'mindful', title: 'Mindfulness', description: 'How present and mindful are you in daily life?' },
+      { key: 'community', title: 'Spiritual Community', description: 'How connected do you feel to a faith or values community?' },
+    ],
     questions: [
       'How would you describe your personal beliefs and spirituality?',
       'What role, if any, does religion play in your life?',
@@ -73,6 +101,13 @@ const CHECK_IN_DOMAINS = [
     icon: Smile,
     color: '#ec4899',
     description: 'Joy, relaxation & balance',
+    subAreas: [
+      { key: 'hobbies', title: 'Hobbies & Interests', description: 'Are you regularly enjoying hobbies and interests?' },
+      { key: 'balance', title: 'Work-Life Balance', description: 'How well do you balance work with personal life?' },
+      { key: 'digital', title: 'Digital Balance', description: 'How satisfied are you with your screen/device usage?' },
+      { key: 'outdoor', title: 'Outdoor & Travel', description: 'Are you getting enough outdoor activity and travel?' },
+      { key: 'social', title: 'Social Activity', description: 'How satisfied are you with your social interactions?' },
+    ],
     questions: [
       'What activities bring you joy and relaxation in your leisure time?',
       'How do you currently balance work and recreation in your lifestyle?',
@@ -85,6 +120,13 @@ const CHECK_IN_DOMAINS = [
     icon: Heart,
     color: '#ef4444',
     description: 'Romantic connections & intimacy',
+    subAreas: [
+      { key: 'emotional', title: 'Emotional Intimacy', description: 'How emotionally connected do you feel in your romantic life?' },
+      { key: 'comm', title: 'Communication', description: 'How well do you communicate needs, desires, and boundaries?' },
+      { key: 'physical', title: 'Physical Intimacy', description: 'How satisfied are you with physical closeness and affection?' },
+      { key: 'conflict', title: 'Conflict Resolution', description: 'How well do you navigate and resolve conflict?' },
+      { key: 'balance', title: 'Relationship Balance', description: 'How well does romance fit with the rest of your life?' },
+    ],
     questions: [
       'How do you envision a fulfilling romantic relationship in your life?',
       'Do you feel like you adequately communicate your needs, desires, and boundaries in a romantic relationship?',
@@ -98,6 +140,13 @@ const CHECK_IN_DOMAINS = [
     icon: Briefcase,
     color: '#0ea5e9',
     description: 'Professional growth & satisfaction',
+    subAreas: [
+      { key: 'satisfaction', title: 'Role Satisfaction', description: 'How satisfied are you with your current role?' },
+      { key: 'growth', title: 'Learning & Development', description: 'Are you growing your skills and knowledge?' },
+      { key: 'comp', title: 'Compensation', description: 'How satisfied are you with your income and compensation?' },
+      { key: 'balance', title: 'Work-Life Balance', description: 'How well do you balance work with personal life?' },
+      { key: 'direction', title: 'Career Direction', description: 'Are you heading in the right professional direction?' },
+    ],
     questions: [
       'How satisfied are you with your current job or career path?',
       'What are your key skills and strengths, and how do they align with your current job or desired career? Do you wish to develop additional skills?',
@@ -110,6 +159,13 @@ const CHECK_IN_DOMAINS = [
     icon: TrendingUp,
     color: '#6b63f5',
     description: 'Personal development & lifelong learning',
+    subAreas: [
+      { key: 'awareness', title: 'Self-Awareness', description: 'How well do you understand your strengths and weaknesses?' },
+      { key: 'learning', title: 'Learning Habits', description: 'Are you consistently learning new things?' },
+      { key: 'goals', title: 'Goal Progress', description: 'Are you making progress on personal goals?' },
+      { key: 'resilience', title: 'Resilience', description: 'How well do you bounce back from setbacks?' },
+      { key: 'mindful', title: 'Mindfulness', description: 'How present and self-reflective are you day-to-day?' },
+    ],
     questions: [
       'What does success in personal growth look like to you?',
       'How do you approach the concept of lifelong learning?',
@@ -204,9 +260,9 @@ export default function WheelOfLife() {
   const tab = (searchParams.get('tab') as Tab) || 'checkin'
 
   // Check-in state
-  const [scores, setScores] = useState<Record<string, number>>(() => {
+  const [subScores, setSubScores] = useState<Record<string, number>>(() => {
     const init: Record<string, number> = {}
-    CHECK_IN_DOMAINS.forEach(d => { init[d.name] = 5 })
+    CHECK_IN_DOMAINS.forEach(d => d.subAreas.forEach(sa => { init[`${d.id}.${sa.key}`] = 5 }))
     return init
   })
   const [notes, setNotes] = useState('')
@@ -224,6 +280,16 @@ export default function WheelOfLife() {
   useEffect(() => {
     if (user) fetchAll(user.id)
   }, [user])
+
+  // Compute per-domain score as average of its sub-area scores
+  const scores = useMemo(() => {
+    const result: Record<string, number> = {}
+    CHECK_IN_DOMAINS.forEach(d => {
+      const vals = d.subAreas.map(sa => subScores[`${d.id}.${sa.key}`] ?? 5)
+      result[d.name] = Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10
+    })
+    return result
+  }, [subScores])
 
   const overallAverage = useMemo(() => {
     const vals = CHECK_IN_DOMAINS.map(d => scores[d.name] ?? 5)
@@ -290,7 +356,7 @@ export default function WheelOfLife() {
         <div className="space-y-5">
 
           {/* Domain tab bar */}
-          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1">
+          <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[10px] overflow-x-auto scrollbar-hide">
             {CHECK_IN_DOMAINS.map((domain) => {
               const isActive = domain.id === activeDomainId
               return (
@@ -299,14 +365,11 @@ export default function WheelOfLife() {
                   type="button"
                   onClick={() => setActiveDomainId(domain.id)}
                   className={cn(
-                    'flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 border',
-                    isActive
-                      ? 'text-white border-transparent shadow-sm'
-                      : 'text-[#727A84] bg-white border-[#F0F3F3] hover:border-[#D6DCE0]'
+                    'flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-[7px] whitespace-nowrap shrink-0 transition-all cursor-pointer',
+                    isActive ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
                   )}
-                  style={isActive ? { backgroundColor: domain.color, borderColor: domain.color } : {}}
                 >
-                  <domain.icon size={13} />
+                  <domain.icon size={12} style={{ color: isActive ? domain.color : undefined }} />
                   {domain.name}
                 </button>
               )
@@ -339,15 +402,30 @@ export default function WheelOfLife() {
                 </div>
               </div>
 
-              {/* Score */}
-              <div className="mb-8">
-                <p className="text-xs font-semibold text-[#727A84] uppercase tracking-wide mb-3">
-                  Rate this area of your life
+              {/* Sub-area ratings */}
+              <div className="mb-8 space-y-5">
+                <p className="text-xs font-semibold text-[#727A84] uppercase tracking-wide">
+                  Rate each area
                 </p>
-                <PointSelector
-                  value={scores[activeDomain.name] ?? 5}
-                  onChange={(v) => setScores(prev => ({ ...prev, [activeDomain.name]: v }))}
-                />
+                {activeDomain.subAreas.map((sa) => {
+                  const key = `${activeDomain.id}.${sa.key}`
+                  const val = subScores[key] ?? 5
+                  return (
+                    <div key={sa.key}>
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <p className="text-sm font-semibold text-[#0C1629]">{sa.title}</p>
+                          <p className="text-xs text-[#727A84] mt-0.5">{sa.description}</p>
+                        </div>
+                        <span className="text-sm font-bold ml-3 shrink-0" style={{ color: activeDomain.color }}>{val}</span>
+                      </div>
+                      <PointSelector
+                        value={val}
+                        onChange={(v) => setSubScores(prev => ({ ...prev, [key]: v }))}
+                      />
+                    </div>
+                  )
+                })}
               </div>
 
               {/* Reflection questions */}
@@ -369,6 +447,20 @@ export default function WheelOfLife() {
                     />
                   </div>
                 ))}
+              </div>
+
+              {/* Notes */}
+              <div className="mt-6">
+                <p className="text-xs font-semibold text-[#727A84] uppercase tracking-wide mb-3">
+                  Additional Notes
+                </p>
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Any additional thoughts for this check-in (optional)..."
+                  rows={3}
+                  className="w-full rounded-[15px] border border-[#D6DCE0] bg-[#FAFBFC] px-4 py-3 text-sm text-[#0C1629] shadow-sm transition-shadow placeholder:text-[#B5C1C8] focus-visible:border-[#0C1629]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0C1629]/10 resize-none"
+                />
               </div>
 
               {/* Prev / Next */}
@@ -449,16 +541,9 @@ export default function WheelOfLife() {
             </div>
           </div>
 
-          {/* Notes + Submit */}
+          {/* Submit */}
           <div className="bg-white card p-6">
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Any additional notes for this check-in (optional)..."
-              rows={3}
-              className="w-full rounded-[15px] border border-[#D6DCE0] bg-white px-4 py-3 text-sm text-[#0C1629] shadow-sm transition-shadow placeholder:text-[#727A84]/50 focus-visible:border-[#0C1629]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0C1629]/10 resize-none"
-            />
-            <div className="flex items-center gap-3 mt-4">
+            <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => {
