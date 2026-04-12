@@ -375,20 +375,9 @@ export default function WheelOfLife() {
     <div className="pb-24">
 
       {/* ── Page header ── */}
-      <div className="flex items-start justify-between mb-8 gap-4">
-        <div>
-          <h1 className="text-2xl font-extrabold text-[#0C1629] tracking-tight">{TAB_META[tab].title}</h1>
-          <p className="text-sm text-[#727A84] mt-1">{TAB_META[tab].sub}</p>
-        </div>
-        <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[10px] shrink-0">
-          {([['checkin','Check-in'],['goals','Goals'],['history','History']] as const).map(([value, label]) => (
-            <button key={value} type="button" onClick={() => navigate(`/wheel?tab=${value}`)}
-              className={cn('px-4 py-1.5 text-xs font-semibold rounded-[7px] transition-all cursor-pointer whitespace-nowrap',
-                tab === value ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]')}>
-              {label}
-            </button>
-          ))}
-        </div>
+      <div className="mb-8">
+        <h1 className="text-2xl font-extrabold text-[#0C1629] tracking-tight">{TAB_META[tab].title}</h1>
+        <p className="text-sm text-[#727A84] mt-1">{TAB_META[tab].sub}</p>
       </div>
 
       {/* ── CHECK-IN TAB ── */}

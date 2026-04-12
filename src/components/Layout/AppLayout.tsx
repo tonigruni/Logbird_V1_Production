@@ -45,11 +45,12 @@ function useSectionConfig(pathname: string, search: string, navigate: ReturnType
     const wheelTab = new URLSearchParams(search).get('tab') || 'checkin'
     return {
       title: 'Wheel of Life',
-      tabs: [
+      pillTabs: [
         { label: 'Check-in', active: wheelTab === 'checkin', path: '/wheel?tab=checkin' },
         { label: 'Goals',    active: wheelTab === 'goals',   path: '/wheel?tab=goals'   },
         { label: 'History',  active: wheelTab === 'history', path: '/wheel?tab=history' },
       ] as TabConfig[],
+      tabs: null,
     }
   }
   if (pathname === '/tasks' || pathname.startsWith('/tasks/')) {
