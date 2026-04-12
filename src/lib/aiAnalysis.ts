@@ -190,14 +190,19 @@ async function callAnthropic(systemPrompt: string, userPrompt: string): Promise<
     }),
   })
 
-  const data = await res.json()
+  let data: Record<string, unknown> = {}
+  try {
+    data = await res.json()
+  } catch {
+    throw new Error(`AI analysis request failed (${res.status})`)
+  }
 
   if (!res.ok) {
-    const errMsg: string = data?.error ?? ''
-    console.error('[AI Analysis] Proxy error:', errMsg || res.status)
-    if (errMsg.startsWith('NO_API_KEY')) throw new Error('NO_API_KEY')
+    const errMsg: string = (data?.error as string) ?? ''
+    console.error('[AI Analysis] Proxy error:', res.status, errMsg)
+    if (errMsg.includes('NO_API_KEY')) throw new Error('NO_API_KEY')
     if (errMsg.startsWith('API_ERROR:')) throw new Error(errMsg)
-    throw new Error('AI analysis request failed. Please try again.')
+    throw new Error(errMsg || `AI analysis request failed (${res.status})`)
   }
 
   const block = data.content?.[0]
