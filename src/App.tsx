@@ -1,5 +1,11 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+
+function ScrollToTop() {
+  const { pathname, search } = useLocation()
+  useEffect(() => { window.scrollTo(0, 0) }, [pathname, search])
+  return null
+}
 import { supabase } from './lib/supabase'
 import { useAuthStore } from './stores/authStore'
 import { DEMO_MODE, DEMO_USER } from './lib/demo'
@@ -56,6 +62,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
