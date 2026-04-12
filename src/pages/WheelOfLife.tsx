@@ -342,6 +342,8 @@ export default function WheelOfLife() {
   const [aiLoading, setAiLoading] = useState(false)
   const [aiError, setAiError] = useState('')
   const [aiMode, setAiMode] = useState<'quick' | 'deep'>('quick')
+  const [insightSubTab, setInsightSubTab] = useState<'dimensions' | 'ai' | 'breakdown'>('dimensions')
+  const [expandedBreakdown, setExpandedBreakdown] = useState<string | null>(null)
 
   useEffect(() => {
     if (user) fetchAll(user.id)
@@ -788,8 +790,12 @@ export default function WheelOfLife() {
 
       {/* ── Page header ── */}
       <div className="mb-8">
-        <h1 className="text-2xl font-extrabold text-[#0C1629] tracking-tight">{TAB_META[tab].title}</h1>
-        <p className="text-sm text-[#727A84] mt-1">{TAB_META[tab].sub}</p>
+        {tab !== 'insights' && (
+          <>
+            <h1 className="text-2xl font-extrabold text-[#0C1629] tracking-tight">{TAB_META[tab].title}</h1>
+            <p className="text-sm text-[#727A84] mt-1">{TAB_META[tab].sub}</p>
+          </>
+        )}
       </div>
 
       {/* ── DASHBOARD TAB ── */}
@@ -1584,56 +1590,37 @@ export default function WheelOfLife() {
                 <header className="flex flex-col gap-4 pt-4">
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
-                      <p className="text-[#0C1629] font-bold text-sm tracking-widest uppercase mb-2">Life Intelligence</p>
-                      <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-[#0C1629]">Life System Insights</h1>
-                      <p className="text-[#727A84] max-w-lg mt-2">
-                        What your scores mean, how your dimensions connect, and where to focus next.
-                      </p>
+                      <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-[#0C1629]">Wheel of Life Insights</h1>
+                      <p className="text-[#727A84] max-w-lg mt-2">What your scores mean, how your dimensions connect, and where to focus next.</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-3 shrink-0">
                       <p className="text-sm text-[#727A84]">Based on <span className="font-semibold text-[#0C1629]">{format(new Date(checkins[0].date), 'MMMM d, yyyy')}</span></p>
                       <button type="button" onClick={() => navigate('/wheel?tab=checkin')} className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-4 py-2 rounded-[10px] text-sm font-semibold transition-colors">
                         New Check-in
                       </button>
-                      <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[12px]">
-                        {(['quick', 'deep'] as const).map((m) => (
-                          <button
-                            key={m}
-                            type="button"
-                            onClick={() => setAiMode(m)}
-                            className={`px-4 py-1.5 rounded-[10px] text-sm font-semibold transition-all cursor-pointer ${
-                              aiMode === m ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
-                            }`}
-                          >
-                            {m === 'quick' ? 'Quick Insight' : 'Deep Strategy'}
-                          </button>
-                        ))}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={runWheelInsights}
-                        disabled={aiLoading}
-                        className="bg-[#0C1629] hover:opacity-90 text-white px-5 py-2.5 rounded-[10px] text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 shadow-lg shadow-[#0C1629]/20 disabled:opacity-50"
-                      >
-                        <RefreshCw size={14} className={aiLoading ? 'animate-spin' : ''} />
-                        {aiLoading ? 'Generating...' : wheelInsights ? 'Refresh' : 'AI Insights'}
-                      </button>
                     </div>
                   </div>
                 </header>
 
-                {/* AI error banner */}
-                {aiError && (
-                  <div className="bg-[#9f403d]/10 border border-[#9f403d]/20 rounded-[15px] p-4 flex items-center gap-3">
-                    <AlertCircle size={18} className="text-[#9f403d] shrink-0" />
-                    <p className="text-sm text-[#0C1629] flex-1">{aiError}</p>
-                    {aiError.includes('Settings') && (
-                      <button type="button" onClick={() => navigate('/settings')} className="text-sm text-[#0C1629] font-semibold hover:underline cursor-pointer shrink-0">
-                        Go to Settings
-                      </button>
-                    )}
-                  </div>
-                )}
+                {/* Sub-tab nav */}
+                <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[12px] w-fit">
+                  {(['dimensions', 'ai', 'breakdown'] as const).map((st) => (
+                    <button
+                      key={st}
+                      type="button"
+                      onClick={() => setInsightSubTab(st)}
+                      className={`px-4 py-2 rounded-[10px] text-sm font-semibold transition-all cursor-pointer ${
+                        insightSubTab === st ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
+                      }`}
+                    >
+                      {st === 'dimensions' ? 'Life Dimensions' : st === 'ai' ? 'AI Insights' : 'Full Breakdown'}
+                    </button>
+                  ))}
+                </div>
+
+                {/* ── DIMENSIONS SUB-TAB ── */}
+                {insightSubTab === 'dimensions' && (
+                <div className="space-y-6 md:space-y-8">
 
                 {/* Confidence banner from saved context */}
                 {(() => {
@@ -1874,66 +1861,152 @@ export default function WheelOfLife() {
                   </div>
                 </div>
 
-                {/* ── AI INSIGHTS ── */}
-                {wheelInsights && (
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <h3 className="text-lg font-bold text-[#0C1629]">AI Insights</h3>
-                      <span className="text-xs text-[#727A84]">
-                        {wheelInsights.mode === 'quick' ? 'Quick Insight' : 'Deep Strategy'} · {format(new Date(wheelInsights.generatedAt), 'MMM d, yyyy')}
-                      </span>
+                </div>
+                )}
+
+                {/* ── AI INSIGHTS SUB-TAB ── */}
+                {insightSubTab === 'ai' && (
+                  <div className="space-y-6">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[12px]">
+                        {(['quick', 'deep'] as const).map((m) => (
+                          <button
+                            key={m}
+                            type="button"
+                            onClick={() => setAiMode(m)}
+                            className={`px-4 py-1.5 rounded-[10px] text-sm font-semibold transition-all cursor-pointer ${
+                              aiMode === m ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
+                            }`}
+                          >
+                            {m === 'quick' ? 'Quick Insight' : 'Deep Strategy'}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={runWheelInsights}
+                        disabled={aiLoading}
+                        className="bg-[#0C1629] hover:opacity-90 text-white px-5 py-2.5 rounded-[10px] text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 shadow-lg shadow-[#0C1629]/20 disabled:opacity-50"
+                      >
+                        <RefreshCw size={14} className={aiLoading ? 'animate-spin' : ''} />
+                        {aiLoading ? 'Generating...' : wheelInsights ? 'Refresh' : 'Generate AI Insights'}
+                      </button>
                     </div>
-                    <p className="text-sm text-[#727A84] mb-6">AI-generated analysis of your life system based on your latest check-in scores.</p>
-                    <div className="space-y-4">
-                      {wheelInsights.sections.map((section, i) => (
-                        <div key={i} className="bg-white card p-5 md:p-8">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="w-8 h-8 bg-[#0C1629]/10 rounded-xl flex items-center justify-center shrink-0">
-                              <Brain size={14} className="text-[#0C1629]" />
+                    {aiError && (
+                      <div className="bg-[#9f403d]/10 border border-[#9f403d]/20 rounded-[15px] p-4 flex items-center gap-3">
+                        <AlertCircle size={18} className="text-[#9f403d] shrink-0" />
+                        <p className="text-sm text-[#0C1629] flex-1">{aiError}</p>
+                        {aiError.includes('Settings') && (
+                          <button type="button" onClick={() => navigate('/settings')} className="text-sm text-[#0C1629] font-semibold hover:underline cursor-pointer shrink-0">
+                            Go to Settings
+                          </button>
+                        )}
+                      </div>
+                    )}
+                    {wheelInsights ? (
+                      <>
+                        <p className="text-sm text-[#727A84]">
+                          {wheelInsights.mode === 'quick' ? 'Quick Insight' : 'Deep Strategy'} · Generated {format(new Date(wheelInsights.generatedAt), 'MMM d, yyyy')}
+                        </p>
+                        <div className="space-y-4">
+                          {wheelInsights.sections.map((section, i) => (
+                            <div key={i} className="bg-white card p-5 md:p-8">
+                              <div className="flex items-center gap-3 mb-3">
+                                <div className="w-8 h-8 bg-[#0C1629]/10 rounded-xl flex items-center justify-center shrink-0">
+                                  <Brain size={14} className="text-[#0C1629]" />
+                                </div>
+                                <h4 className="text-base font-bold text-[#0C1629]">{section.title}</h4>
+                              </div>
+                              <p className="text-sm text-[#727A84] leading-relaxed whitespace-pre-wrap">{section.content}</p>
                             </div>
-                            <h4 className="text-base font-bold text-[#0C1629]">{section.title}</h4>
-                          </div>
-                          <p className="text-sm text-[#727A84] leading-relaxed whitespace-pre-wrap">{section.content}</p>
+                          ))}
                         </div>
-                      ))}
-                    </div>
+                      </>
+                    ) : (
+                      <div className="bg-white card p-12 text-center">
+                        <div className="w-14 h-14 bg-[#0C1629]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <Brain size={24} className="text-[#0C1629] opacity-40" />
+                        </div>
+                        <p className="text-sm font-semibold text-[#0C1629] mb-1">No AI insights yet</p>
+                        <p className="text-sm text-[#727A84]">Select Quick Insight or Deep Strategy above and click Generate AI Insights.</p>
+                      </div>
+                    )}
                   </div>
                 )}
 
-                {/* ── FULL BREAKDOWN ── */}
-                <div>
-                  <h3 className="text-lg font-bold text-[#0C1629] mb-1">Full Breakdown</h3>
-                  <p className="text-sm text-[#727A84] mb-6">All 9 areas from your latest check-in, each scored 1–10 across multiple sub-dimensions.</p>
-                  <div className="bg-white card p-5 md:p-8 space-y-6">
-                    {CHECK_IN_DOMAINS.map(domain => {
-                      const s = latestCheckinScores[domain.name] ?? 5
-                      const status = s >= 7 ? 'Strong' : s >= 5 ? 'Moderate' : 'Needs Work'
-                      const statusCls = s >= 7 ? 'bg-[#22c55e]/10 text-[#16a34a]' : s >= 5 ? 'bg-[#f59e0b]/10 text-[#d97706]' : 'bg-[#9f403d]/10 text-[#9f403d]'
-                      return (
-                        <div key={domain.id}>
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: domain.color + '18' }}>
-                              <domain.icon size={16} style={{ color: domain.color }} />
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex items-center justify-between">
-                                <span className="text-base font-semibold text-[#0C1629]">{domain.name}</span>
-                                <div className="flex items-center gap-2 ml-3 shrink-0">
-                                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${statusCls}`}>{status}</span>
-                                  <span className="text-base font-bold" style={{ color: domain.color }}>{s}</span>
-                                </div>
+                {/* ── FULL BREAKDOWN SUB-TAB ── */}
+                {insightSubTab === 'breakdown' && (
+                  <div className="space-y-4">
+                    {checkins[0].notes && (
+                      <div className="bg-white card p-5 md:p-8">
+                        <p className="text-xs font-bold uppercase tracking-widest text-[#727A84] mb-2">Check-in Notes</p>
+                        <p className="text-[#0C1629] leading-relaxed">{checkins[0].notes}</p>
+                      </div>
+                    )}
+                    <p className="text-sm text-[#727A84]">All 9 areas from your latest check-in. Click any area to expand sub-dimensions.</p>
+                    <div className="bg-white card divide-y divide-[#F0F3F3] overflow-hidden">
+                      {CHECK_IN_DOMAINS.map(domain => {
+                        const s = latestCheckinScores[domain.name] ?? 5
+                        const isOpen = expandedBreakdown === domain.id
+                        const status = s >= 7 ? 'Strong' : s >= 5 ? 'Moderate' : 'Needs Work'
+                        const statusCls = s >= 7 ? 'bg-[#22c55e]/10 text-[#16a34a]' : s >= 5 ? 'bg-[#f59e0b]/10 text-[#d97706]' : 'bg-[#9f403d]/10 text-[#9f403d]'
+                        return (
+                          <div key={domain.id}>
+                            <button
+                              type="button"
+                              onClick={() => setExpandedBreakdown(isOpen ? null : domain.id)}
+                              className="w-full flex items-center gap-3 p-5 text-left hover:bg-[#F0F3F3]/50 transition-colors"
+                            >
+                              <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: domain.color + '18' }}>
+                                <domain.icon size={16} style={{ color: domain.color }} />
                               </div>
-                              <p className="text-sm text-[#727A84]">{domain.description}</p>
-                            </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between gap-3">
+                                  <span className="text-base font-semibold text-[#0C1629]">{domain.name}</span>
+                                  <div className="flex items-center gap-2 shrink-0">
+                                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${statusCls}`}>{status}</span>
+                                    <span className="text-base font-bold" style={{ color: domain.color }}>{s}</span>
+                                    <ChevronDown size={16} className={`text-[#727A84] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                                  </div>
+                                </div>
+                                <p className="text-sm text-[#727A84]">{domain.description}</p>
+                              </div>
+                            </button>
+                            {isOpen && (
+                              <div className="pb-5 px-5 ml-12 space-y-4 border-t border-[#F0F3F3] pt-4">
+                                <div className="h-2 bg-[#F0F3F3] rounded-full overflow-hidden">
+                                  <div className="h-full rounded-full" style={{ width: `${(s / 10) * 100}%`, backgroundColor: domain.color }} />
+                                </div>
+                                <p className="text-xs font-bold uppercase tracking-widest text-[#B5C1C8]">Sub-areas</p>
+                                <div className="space-y-4">
+                                  {domain.subAreas.map(area => (
+                                    <div key={area.key} className="flex items-start gap-3">
+                                      <div className="w-2 h-2 rounded-full shrink-0 mt-2" style={{ backgroundColor: domain.color }} />
+                                      <div>
+                                        <p className="text-sm font-semibold text-[#0C1629]">{area.title}</p>
+                                        <p className="text-xs text-[#727A84]">{area.description}</p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                                {domain.questions.length > 0 && (
+                                  <div className="pt-4 border-t border-[#F0F3F3]">
+                                    <p className="text-xs font-bold uppercase tracking-widest text-[#B5C1C8] mb-3">Reflection Prompts</p>
+                                    <div className="space-y-1.5">
+                                      {domain.questions.map((q, qi) => (
+                                        <p key={qi} className="text-xs text-[#727A84]">· {q}</p>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
-                          <div className="h-2 bg-[#F0F3F3] rounded-full overflow-hidden ml-12">
-                            <div className="h-full rounded-full transition-all" style={{ width: `${(s / 10) * 100}%`, backgroundColor: domain.color }} />
-                          </div>
-                        </div>
-                      )
-                    })}
+                        )
+                      })}
+                    </div>
                   </div>
-                </div>
+                )}
               </>
             )
           })()}
