@@ -342,7 +342,7 @@ export default function WheelOfLife() {
   const [aiLoading, setAiLoading] = useState(false)
   const [aiError, setAiError] = useState('')
   const [aiMode, setAiMode] = useState<'quick' | 'deep'>('quick')
-  const [insightSubTab, setInsightSubTab] = useState<'dimensions' | 'ai' | 'breakdown'>('dimensions')
+  const [insightSubTab, setInsightSubTab] = useState<'keyinsights' | 'dimensions' | 'ai' | 'breakdown'>('keyinsights')
   const [expandedBreakdown, setExpandedBreakdown] = useState<string | null>(null)
 
   useEffect(() => {
@@ -706,7 +706,20 @@ export default function WheelOfLife() {
       hadAlcohol, poorSleep, highScreenTime, exercised,
       location, weather,
     }
-    await createCheckin({ user_id: user.id, date: format(new Date(), 'yyyy-MM-dd'), scores: scores as Record<string, number>, notes, context })
+    const sub_scores: Record<string, number> = {}
+    CHECK_IN_DOMAINS.forEach(d => {
+      d.subAreas.forEach(sa => {
+        const v = subScores[`${d.id}.${sa.key}`]
+        if (v != null) sub_scores[`${d.id}.${sa.key}`] = v
+      })
+    })
+    const reflection_answers: Record<string, string[]> = {}
+    CHECK_IN_DOMAINS.forEach(d => {
+      if (reflectionAnswers[d.id]?.some(a => a.trim())) {
+        reflection_answers[d.id] = reflectionAnswers[d.id]
+      }
+    })
+    await createCheckin({ user_id: user.id, date: format(new Date(), 'yyyy-MM-dd'), scores: scores as Record<string, number>, sub_scores, reflection_answers, notes, context })
     // Clear draft and reset all check-in state
     localStorage.removeItem('wol_draft')
     setSubScores({})
@@ -1603,23 +1616,23 @@ export default function WheelOfLife() {
                 </header>
 
                 {/* Sub-tab nav */}
-                <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[12px] w-fit">
-                  {(['dimensions', 'ai', 'breakdown'] as const).map((st) => (
+                <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[12px] w-fit overflow-x-auto scrollbar-hide">
+                  {(['keyinsights', 'dimensions', 'ai', 'breakdown'] as const).map((st) => (
                     <button
                       key={st}
                       type="button"
                       onClick={() => setInsightSubTab(st)}
-                      className={`px-4 py-2 rounded-[10px] text-sm font-semibold transition-all cursor-pointer ${
+                      className={`px-4 py-2 rounded-[10px] text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
                         insightSubTab === st ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
                       }`}
                     >
-                      {st === 'dimensions' ? 'Life Dimensions' : st === 'ai' ? 'AI Insights' : 'Full Breakdown'}
+                      {st === 'keyinsights' ? 'Key Insights' : st === 'dimensions' ? 'Life Dimensions' : st === 'ai' ? 'AI Insights' : 'Full Breakdown'}
                     </button>
                   ))}
                 </div>
 
-                {/* ── DIMENSIONS SUB-TAB ── */}
-                {insightSubTab === 'dimensions' && (
+                {/* ── KEY INSIGHTS SUB-TAB ── */}
+                {insightSubTab === 'keyinsights' && (
                 <div className="space-y-6 md:space-y-8">
 
                 {/* Confidence banner from saved context */}
@@ -1786,57 +1799,6 @@ export default function WheelOfLife() {
                   </div>
                 )}
 
-                {/* ── LIFE DIMENSIONS ── */}
-                <div>
-                  <h3 className="text-lg font-bold text-[#0C1629] mb-1">Life Dimensions</h3>
-                  <p className="text-sm text-[#727A84] mb-6">Four composite views built from your 9 areas. Each captures a different layer of how your life is functioning right now.</p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    {dimScores.map(dim => {
-                      const status = dim.score >= 7 ? 'Strong' : dim.score >= 5 ? 'Moderate' : 'Needs Work'
-                      const statusCls = dim.score >= 7 ? 'bg-[#22c55e]/10 text-[#16a34a]' : dim.score >= 5 ? 'bg-[#f59e0b]/10 text-[#d97706]' : 'bg-[#9f403d]/10 text-[#9f403d]'
-                      const dimDomains = CHECK_IN_DOMAINS.filter(d => dim.domains.includes(d.name))
-                      return (
-                        <div key={dim.key} className="bg-white card p-5 md:p-8">
-                          <div className="flex items-start justify-between mb-4">
-                            <div>
-                              <div className="flex items-center gap-2 mb-1">
-                                <p className="text-lg font-bold text-[#0C1629]">{dim.label}</p>
-                                <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${statusCls}`}>{status}</span>
-                              </div>
-                              <p className="text-sm text-[#727A84]">{dim.description}</p>
-                            </div>
-                            <span className="text-3xl font-black ml-4 shrink-0" style={{ color: dim.color }}>{dim.score}</span>
-                          </div>
-                          <div className="h-2 bg-[#F0F3F3] rounded-full overflow-hidden mb-4">
-                            <div className="h-full rounded-full transition-all" style={{ width: `${(dim.score / 10) * 100}%`, backgroundColor: dim.color }} />
-                          </div>
-                          <p className="text-[#727A84] mb-6">{dimInterp(dim.key, dim.score)}</p>
-                          <div className="space-y-3 pt-4 border-t border-[#F0F3F3]">
-                            <p className="text-xs font-bold uppercase tracking-widest text-[#B5C1C8]">Contributing Areas</p>
-                            {dimDomains.map(domain => {
-                              const s = latestCheckinScores[domain.name] ?? 5
-                              return (
-                                <div key={domain.id} className="flex items-center gap-3">
-                                  <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: domain.color + '18' }}>
-                                    <domain.icon size={13} style={{ color: domain.color }} />
-                                  </div>
-                                  <span className="text-sm text-[#727A84] flex-1">{domain.name}</span>
-                                  <div className="flex items-center gap-2 shrink-0">
-                                    <div className="w-24 h-2 bg-[#F0F3F3] rounded-full overflow-hidden">
-                                      <div className="h-full rounded-full" style={{ width: `${(s / 10) * 100}%`, backgroundColor: dim.color + 'cc' }} />
-                                    </div>
-                                    <span className="text-sm font-bold text-[#0C1629] w-5 text-right">{s}</span>
-                                  </div>
-                                </div>
-                              )
-                            })}
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-
                 {/* ── PRIORITY ORDER ── */}
                 <div>
                   <h3 className="text-lg font-bold text-[#0C1629] mb-1">Priority Order</h3>
@@ -1861,6 +1823,61 @@ export default function WheelOfLife() {
                   </div>
                 </div>
 
+                </div>
+                )}
+
+                {/* ── DIMENSIONS SUB-TAB ── */}
+                {insightSubTab === 'dimensions' && (
+                <div className="space-y-6 md:space-y-8">
+                  <div>
+                    <h3 className="text-lg font-bold text-[#0C1629] mb-1">Life Dimensions</h3>
+                    <p className="text-sm text-[#727A84] mb-6">Four composite views built from your 9 areas. Each captures a different layer of how your life is functioning right now.</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                      {dimScores.map(dim => {
+                        const status = dim.score >= 7 ? 'Strong' : dim.score >= 5 ? 'Moderate' : 'Needs Work'
+                        const statusCls = dim.score >= 7 ? 'bg-[#22c55e]/10 text-[#16a34a]' : dim.score >= 5 ? 'bg-[#f59e0b]/10 text-[#d97706]' : 'bg-[#9f403d]/10 text-[#9f403d]'
+                        const dimDomains = CHECK_IN_DOMAINS.filter(d => dim.domains.includes(d.name))
+                        return (
+                          <div key={dim.key} className="bg-white card p-5 md:p-8">
+                            <div className="flex items-start justify-between mb-4">
+                              <div>
+                                <div className="flex items-center gap-2 mb-1">
+                                  <p className="text-lg font-bold text-[#0C1629]">{dim.label}</p>
+                                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${statusCls}`}>{status}</span>
+                                </div>
+                                <p className="text-sm text-[#727A84]">{dim.description}</p>
+                              </div>
+                              <span className="text-3xl font-black ml-4 shrink-0" style={{ color: dim.color }}>{dim.score}</span>
+                            </div>
+                            <div className="h-2 bg-[#F0F3F3] rounded-full overflow-hidden mb-4">
+                              <div className="h-full rounded-full transition-all" style={{ width: `${(dim.score / 10) * 100}%`, backgroundColor: dim.color }} />
+                            </div>
+                            <p className="text-[#727A84] mb-6">{dimInterp(dim.key, dim.score)}</p>
+                            <div className="space-y-3 pt-4 border-t border-[#F0F3F3]">
+                              <p className="text-xs font-bold uppercase tracking-widest text-[#B5C1C8]">Contributing Areas</p>
+                              {dimDomains.map(domain => {
+                                const s = latestCheckinScores[domain.name] ?? 5
+                                return (
+                                  <div key={domain.id} className="flex items-center gap-3">
+                                    <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: domain.color + '18' }}>
+                                      <domain.icon size={13} style={{ color: domain.color }} />
+                                    </div>
+                                    <span className="text-sm text-[#727A84] flex-1">{domain.name}</span>
+                                    <div className="flex items-center gap-2 shrink-0">
+                                      <div className="w-24 h-2 bg-[#F0F3F3] rounded-full overflow-hidden">
+                                        <div className="h-full rounded-full" style={{ width: `${(s / 10) * 100}%`, backgroundColor: dim.color + 'cc' }} />
+                                      </div>
+                                      <span className="text-sm font-bold text-[#0C1629] w-5 text-right">{s}</span>
+                                    </div>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
                 </div>
                 )}
 
@@ -1977,28 +1994,49 @@ export default function WheelOfLife() {
                                 <div className="h-2 bg-[#F0F3F3] rounded-full overflow-hidden">
                                   <div className="h-full rounded-full" style={{ width: `${(s / 10) * 100}%`, backgroundColor: domain.color }} />
                                 </div>
-                                <p className="text-xs font-bold uppercase tracking-widest text-[#B5C1C8]">Sub-areas</p>
-                                <div className="space-y-4">
-                                  {domain.subAreas.map(area => (
-                                    <div key={area.key} className="flex items-start gap-3">
-                                      <div className="w-2 h-2 rounded-full shrink-0 mt-2" style={{ backgroundColor: domain.color }} />
-                                      <div>
-                                        <p className="text-sm font-semibold text-[#0C1629]">{area.title}</p>
-                                        <p className="text-xs text-[#727A84]">{area.description}</p>
+                                <p className="text-xs font-bold uppercase tracking-widest text-[#B5C1C8]">Sub-area Ratings</p>
+                                <div className="space-y-3">
+                                  {domain.subAreas.map(area => {
+                                    const subScore = checkins[0].sub_scores?.[`${domain.id}.${area.key}`]
+                                    return (
+                                      <div key={area.key} className="flex items-start gap-3">
+                                        <div className="w-2 h-2 rounded-full shrink-0 mt-2" style={{ backgroundColor: domain.color }} />
+                                        <div className="flex-1">
+                                          <div className="flex items-center justify-between gap-2">
+                                            <p className="text-sm font-semibold text-[#0C1629]">{area.title}</p>
+                                            {subScore != null ? (
+                                              <span className="text-sm font-bold shrink-0" style={{ color: domain.color }}>{subScore}/10</span>
+                                            ) : (
+                                              <span className="text-xs text-[#B5C1C8] shrink-0">—</span>
+                                            )}
+                                          </div>
+                                          <p className="text-xs text-[#727A84]">{area.description}</p>
+                                        </div>
+                                      </div>
+                                    )
+                                  })}
+                                </div>
+                                {(() => {
+                                  const answers = checkins[0].reflection_answers?.[domain.id]
+                                  if (!answers?.some(a => a.trim())) return null
+                                  return (
+                                    <div className="pt-4 border-t border-[#F0F3F3]">
+                                      <p className="text-xs font-bold uppercase tracking-widest text-[#B5C1C8] mb-3">Your Reflections</p>
+                                      <div className="space-y-3">
+                                        {domain.questions.map((q, qi) => {
+                                          const answer = answers[qi]
+                                          if (!answer?.trim()) return null
+                                          return (
+                                            <div key={qi}>
+                                              <p className="text-xs font-semibold text-[#727A84] mb-1">· {q}</p>
+                                              <p className="text-sm text-[#0C1629] leading-relaxed pl-3">{answer}</p>
+                                            </div>
+                                          )
+                                        })}
                                       </div>
                                     </div>
-                                  ))}
-                                </div>
-                                {domain.questions.length > 0 && (
-                                  <div className="pt-4 border-t border-[#F0F3F3]">
-                                    <p className="text-xs font-bold uppercase tracking-widest text-[#B5C1C8] mb-3">Reflection Prompts</p>
-                                    <div className="space-y-1.5">
-                                      {domain.questions.map((q, qi) => (
-                                        <p key={qi} className="text-xs text-[#727A84]">· {q}</p>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
+                                  )
+                                })()}
                               </div>
                             )}
                           </div>
