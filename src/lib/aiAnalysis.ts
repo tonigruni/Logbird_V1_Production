@@ -378,10 +378,108 @@ function getEmptyInsights(): InsightsData {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Wheel of Life AI Insights                                         */
+/* ------------------------------------------------------------------ */
+
+export interface WheelAIInsightsData {
+  mode: 'quick' | 'deep'
+  sections: { title: string; content: string }[]
+  generatedAt: string
+}
+
+let wheelInsightsCache: CacheEntry<WheelAIInsightsData> | null = null
+
+export async function loadSavedWheelInsights(userId: string): Promise<WheelAIInsightsData | null> {
+  if (wheelInsightsCache) return wheelInsightsCache.data
+  try {
+    const { data, error } = await supabase
+      .from('ai_insights')
+      .select('data')
+      .eq('user_id', userId)
+      .eq('type', 'wheel_insights')
+      .single()
+    if (error || !data) return null
+    const result = data.data as unknown as WheelAIInsightsData
+    wheelInsightsCache = { data: result, timestamp: Date.now(), entryCount: -1 }
+    return result
+  } catch {
+    return null
+  }
+}
+
+export async function fetchWheelInsights(
+  payload: { overall_score: number; dimensions: Record<string, number>; areas: Record<string, number> },
+  userId: string,
+  mode: 'quick' | 'deep'
+): Promise<WheelAIInsightsData> {
+  const systemPrompt = `You are a high-performance life strategist.
+
+Your job is NOT to summarize the user's data. Your job is to analyze it as a system and identify what is actually holding the user back.
+
+Follow this exact process:
+1. Diagnose the system: identify weakest/strongest areas and imbalances
+2. Find contradictions: high in one area but weak in a dependent area
+3. Identify the primary constraint: the ONE thing that if improved would have the biggest positive ripple effect
+4. Explain WHY: specific to the user's data — no generic advice
+5. Set a clear priority: one main focus, max two
+6. Create a practical 7-day action plan: 3–5 specific, doable actions
+
+Rules:
+- Be direct, specific, and diagnostic
+- Avoid generic self-help language
+- Do not list everything — prioritize leverage over completeness
+- Output must feel like a diagnosis, not a motivational blog post
+${mode === 'quick' ? '- This is a QUICK INSIGHT — keep it punchy and under 250 words total.' : '- This is a DEEP STRATEGY — be thorough and fully developed.'}
+
+Use EXACTLY these section headers (nothing else):
+
+## Your Focus Right Now
+[1–2 sentences: the main constraint]
+
+## What's Actually Going On
+[Diagnosis: patterns, contradictions, specific to the data]
+
+## Why This Matters
+[Consequence if unchanged — be specific]
+
+## What To Focus On
+[Clear priority, not a list]
+
+## Action Plan (Next 7 Days)
+1. ...
+2. ...
+3. ...${mode === 'deep' ? `
+
+## Strategic Note
+[One insight about the longer-term pattern this data reveals]` : ''}`
+
+  const userPrompt = `Analyze this life system data (scores are 1–10):\n\n${JSON.stringify(payload, null, 2)}\n\nProvide a ${mode === 'quick' ? 'concise quick insight' : 'full deep strategy'}.`
+
+  const raw = await callAnthropic(systemPrompt, userPrompt)
+
+  const sections = raw
+    .split(/^## /m)
+    .filter(s => s.trim())
+    .map(s => {
+      const lines = s.trim().split('\n')
+      return { title: lines[0].trim(), content: lines.slice(1).join('\n').trim() }
+    })
+
+  const result: WheelAIInsightsData = { mode, sections, generatedAt: new Date().toISOString() }
+  wheelInsightsCache = { data: result, timestamp: Date.now(), entryCount: -1 }
+  await supabase.from('ai_insights').upsert(
+    { user_id: userId, type: 'wheel_insights', data: result as unknown as Record<string, unknown>, updated_at: new Date().toISOString() },
+    { onConflict: 'user_id,type' }
+  )
+  return result
+}
+
+/* ------------------------------------------------------------------ */
 /*  Clear cache                                                        */
 /* ------------------------------------------------------------------ */
 
 export function clearAnalysisCache() {
   analysisCache = null
   insightsCacheMap = {}
+  wheelInsightsCache = null
 }

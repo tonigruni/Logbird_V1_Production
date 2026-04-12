@@ -47,6 +47,7 @@ function useSectionConfig(pathname: string, search: string, navigate: ReturnType
       title: 'Wheel of Life',
       tabs: [
         { label: 'Dashboard', active: wheelTab === 'dashboard', path: '/wheel?tab=dashboard' },
+        { label: 'Insights',  active: wheelTab === 'insights',  path: '/wheel?tab=insights'  },
         { label: 'Check-in',  active: wheelTab === 'checkin',   path: '/wheel?tab=checkin'   },
         { label: 'Goals',     active: wheelTab === 'goals',     path: '/wheel?tab=goals'     },
         { label: 'History',   active: wheelTab === 'history',   path: '/wheel?tab=history'   },
