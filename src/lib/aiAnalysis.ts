@@ -193,7 +193,10 @@ async function callAnthropic(systemPrompt: string, userPrompt: string): Promise<
   const data = await res.json()
 
   if (!res.ok) {
-    console.error('[AI Analysis] AI analysis failed:', res.ok ? '' : 'proxy returned an error')
+    const errMsg: string = data?.error ?? ''
+    console.error('[AI Analysis] Proxy error:', errMsg || res.status)
+    if (errMsg.startsWith('NO_API_KEY')) throw new Error('NO_API_KEY')
+    if (errMsg.startsWith('API_ERROR:')) throw new Error(errMsg)
     throw new Error('AI analysis request failed. Please try again.')
   }
 
