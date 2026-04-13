@@ -124,6 +124,7 @@ export default function AppLayout() {
   const { user } = useAuthStore()
   const [searchQuery, setSearchQuery] = useState('')
   const [moreOpen, setMoreOpen] = useState(false)
+  const isTauri = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window
 
   const { title, tabs, pillTabs } = useSectionConfig(location.pathname, location.search, navigate) as { title: string; tabs: TabConfig[] | null; pillTabs?: TabConfig[] }
   const isJournalContext = ['/journal', '/insights'].includes(location.pathname)
@@ -158,6 +159,14 @@ export default function AppLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
+      {/* Invisible drag strip for Tauri overlay titlebar — sits above all content, skips traffic lights area */}
+      {isTauri && (
+        <div
+          data-tauri-drag-region
+          className="fixed top-0 right-0 h-7 z-[9999]"
+          style={{ left: 80, WebkitAppRegion: 'drag' } as React.CSSProperties}
+        />
+      )}
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Top App Bar */}
