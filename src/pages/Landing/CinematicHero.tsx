@@ -19,6 +19,49 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
   const mockupRef     = useRef<HTMLDivElement>(null);
   const requestRef    = useRef<number>(0);
 
+  // Wheel-based section snap (hero → features → footer)
+  useEffect(() => {
+    // Scroll positions for each section within the 7000px pin
+    const SNAPS = [0, Math.round(7000 * 0.46), 7100];
+    let snapping = false;
+
+    const easeInOut = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+
+    const scrollTo = (target: number) => {
+      const start = window.scrollY;
+      const startTime = performance.now();
+      const duration = 750;
+      snapping = true;
+      const tick = (now: number) => {
+        const t = Math.min((now - startTime) / duration, 1);
+        window.scrollTo(0, start + (target - start) * easeInOut(t));
+        if (t < 1) requestAnimationFrame(tick);
+        else snapping = false;
+      };
+      requestAnimationFrame(tick);
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      const y = window.scrollY;
+      // Outside pin range — let footer scroll normally
+      if (y > 7200) return;
+      e.preventDefault();
+      if (snapping) return;
+
+      const dir = e.deltaY > 0 ? 1 : -1;
+      // Find which snap section we're in
+      let current = 0;
+      for (let i = SNAPS.length - 1; i >= 0; i--) {
+        if (y >= SNAPS[i] - 150) { current = i; break; }
+      }
+      const next = Math.max(0, Math.min(SNAPS.length - 1, current + dir));
+      if (next !== current) scrollTo(SNAPS[next]);
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    return () => window.removeEventListener("wheel", onWheel);
+  }, []);
+
   // Mouse parallax + card sheen
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -74,13 +117,6 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
           pin: true,
           scrub: 1,
           anticipatePin: 1,
-          snap: {
-            snapTo: [0, 0.46, 1],
-            directional: true,
-            duration: { min: 0.4, max: 0.8 },
-            delay: 0.1,
-            ease: "power2.inOut",
-          },
         },
       })
         .to([".hero-text-wrapper", ".bg-grid-theme"], { scale: 1.15, filter: "blur(20px)", opacity: 0.2, ease: "power2.inOut", duration: 2 }, 0)
