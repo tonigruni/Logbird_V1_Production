@@ -100,9 +100,12 @@ export default function LandingPage() {
   const headingRef    = useRef<HTMLHeadingElement>(null);
   const linksRef      = useRef<HTMLDivElement>(null);
 
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showLoginCard, setShowLoginCard] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [waitlistName, setWaitlistName] = useState("");
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistDone, setWaitlistDone] = useState(false);
 
   useEffect(() => {
     if (!wrapperRef.current) return;
@@ -199,33 +202,105 @@ export default function LandingPage() {
             Ready to begin?
           </h2>
 
-          <div ref={linksRef} className="flex flex-wrap justify-center gap-6 w-full mb-12">
-            <a
-              href="#waitlist"
-              className="btn-modern-light flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none"
-            >
-              <svg className="w-5 h-5 transition-transform group-hover:scale-105" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <div className="text-left">
-                <div className="text-[10px] font-bold tracking-wider opacity-50 uppercase mb-[-2px]">Early access</div>
-                <div className="text-xl font-bold leading-none tracking-tight">Join the waitlist</div>
+          <div ref={linksRef} className="flex flex-col items-center gap-4 w-full max-w-xl mb-12">
+
+            {/* Buttons row */}
+            <div className="flex flex-wrap justify-center gap-4 w-full">
+              {/* Login button with inline popover card above */}
+              <div className="relative">
+                {showLoginCard && (
+                  <div
+                    className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-72 rounded-2xl p-5 shadow-2xl z-20"
+                    style={{ backgroundColor: "var(--color-bg)", border: "1px solid rgba(255,255,255,0.1)" }}
+                  >
+                    <p className="text-[10px] font-bold tracking-widest uppercase mb-3" style={{ color: "var(--color-text-muted)" }}>Early access only</p>
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        if (password === "early_user") {
+                          window.location.href = "https://app.logbird.me";
+                        } else {
+                          setError(true);
+                          setPassword("");
+                        }
+                      }}
+                      className="flex gap-2"
+                    >
+                      <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => { setPassword(e.target.value); setError(false); }}
+                        placeholder="Access code"
+                        autoFocus
+                        className="flex-1 rounded-xl px-3 py-2 text-sm font-medium outline-none"
+                        style={{
+                          backgroundColor: "rgba(255,255,255,0.06)",
+                          border: error ? "1px solid rgba(239,68,68,0.5)" : "1px solid rgba(255,255,255,0.1)",
+                          color: "var(--color-text)",
+                        }}
+                      />
+                      <button type="submit" className="btn-modern-dark px-4 py-2 rounded-xl text-sm font-bold">Go</button>
+                    </form>
+                    {error && <p className="text-xs text-red-400 mt-2">Incorrect code.</p>}
+                  </div>
+                )}
+                <button
+                  onClick={() => { setShowLoginCard(!showLoginCard); setPassword(""); setError(false); }}
+                  className="btn-modern-dark flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none cursor-pointer"
+                >
+                  <svg className="w-5 h-5 transition-transform group-hover:scale-105" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                  </svg>
+                  <div className="text-left">
+                    <div className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-[-2px]">Already a member</div>
+                    <div className="text-xl font-bold leading-none tracking-tight">Login</div>
+                  </div>
+                </button>
               </div>
-            </a>
-            <button
-              onClick={() => { setShowLoginModal(true); setPassword(""); setError(false); }}
-              className="btn-modern-dark flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none cursor-pointer"
+            </div>
+
+            {/* Waitlist card */}
+            <div
+              className="w-full rounded-2xl px-6 py-5"
+              style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
             >
-              <svg className="w-5 h-5 transition-transform group-hover:scale-105" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-              </svg>
-              <div className="text-left">
-                <div className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-[-2px]">Already a member</div>
-                <div className="text-xl font-bold leading-none tracking-tight">Login</div>
-              </div>
-            </button>
+              <p className="text-[10px] font-bold tracking-widest uppercase mb-4" style={{ color: "var(--color-text-muted)" }}>Early access — join the waitlist</p>
+              {waitlistDone ? (
+                <p className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>You're on the list. We'll be in touch.</p>
+              ) : (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (waitlistName && waitlistEmail) setWaitlistDone(true);
+                  }}
+                  className="flex flex-col sm:flex-row gap-3"
+                >
+                  <input
+                    type="text"
+                    value={waitlistName}
+                    onChange={(e) => setWaitlistName(e.target.value)}
+                    placeholder="Your name"
+                    required
+                    className="flex-1 rounded-xl px-4 py-3 text-sm font-medium outline-none"
+                    style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--color-text)" }}
+                  />
+                  <input
+                    type="email"
+                    value={waitlistEmail}
+                    onChange={(e) => setWaitlistEmail(e.target.value)}
+                    placeholder="Email address"
+                    required
+                    className="flex-1 rounded-xl px-4 py-3 text-sm font-medium outline-none"
+                    style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--color-text)" }}
+                  />
+                  <button type="submit" className="btn-modern-light px-6 py-3 rounded-xl text-sm font-bold whitespace-nowrap">
+                    Join the waitlist
+                  </button>
+                </form>
+              )}
+            </div>
+
           </div>
         </div>
 
@@ -257,71 +332,6 @@ export default function LandingPage() {
       </footer>
     </div>
 
-    {/* Early access password modal */}
-    {showLoginModal && (
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center px-4"
-        style={{ backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)" }}
-        onClick={(e) => { if (e.target === e.currentTarget) setShowLoginModal(false); }}
-      >
-        <div
-          className="relative w-full max-w-sm rounded-2xl p-8 shadow-2xl"
-          style={{ backgroundColor: "var(--color-bg)", border: "1px solid rgba(255,255,255,0.08)" }}
-        >
-          <button
-            onClick={() => setShowLoginModal(false)}
-            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full opacity-40 hover:opacity-100 transition-opacity"
-            style={{ color: "var(--color-text)" }}
-            aria-label="Close"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-          </button>
-
-          <div className="mb-6">
-            <div className="text-[10px] font-bold tracking-widest uppercase mb-2" style={{ color: "var(--color-text-muted)" }}>Early access</div>
-            <h3 className="text-2xl font-black tracking-tight" style={{ color: "var(--color-text)" }}>Enter your access code</h3>
-          </div>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (password === "early_user") {
-                window.location.href = "https://app.logbird.me";
-              } else {
-                setError(true);
-                setPassword("");
-              }
-            }}
-          >
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => { setPassword(e.target.value); setError(false); }}
-              placeholder="Access code"
-              autoFocus
-              className="w-full rounded-xl px-4 py-3 text-sm font-medium outline-none transition-all mb-2"
-              style={{
-                backgroundColor: "rgba(255,255,255,0.06)",
-                border: error ? "1px solid rgba(239,68,68,0.6)" : "1px solid rgba(255,255,255,0.1)",
-                color: "var(--color-text)",
-              }}
-            />
-            {error && (
-              <p className="text-xs text-red-400 mb-4 px-1">Incorrect code. Try again.</p>
-            )}
-            {!error && <div className="mb-4" />}
-            <button
-              type="submit"
-              className="btn-modern-dark w-full py-3 rounded-xl text-sm font-bold tracking-wide"
-            >
-              Continue
-            </button>
-          </form>
-        </div>
-      </div>
-    )}
-    </>
+</>
   );
 }
