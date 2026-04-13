@@ -18,18 +18,21 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
   const mainCardRef   = useRef<HTMLDivElement>(null);
   const mockupRef     = useRef<HTMLDivElement>(null);
   const requestRef    = useRef<number>(0);
+  const snapsRef      = useRef<number[]>([0, Math.round(7000 * 0.46), 99999]);
 
   // Wheel-based section snap (hero → features → footer)
   useEffect(() => {
-    // Scroll positions for each section within the 7000px pin
-    const pinEnd = 7000;
-    const footerStart = window.innerHeight + pinEnd;
-    const SNAPS = [0, Math.round(pinEnd * 0.46), footerStart];
+    // Measure actual max scroll after GSAP pin spacer is injected
+    const t = setTimeout(() => {
+      const maxScroll = document.body.scrollHeight - window.innerHeight;
+      snapsRef.current = [0, Math.round(7000 * 0.46), maxScroll];
+    }, 400);
+
     let snapping = false;
 
     const easeInOut = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
 
-    const scrollTo = (target: number) => {
+    const animateTo = (target: number) => {
       const start = window.scrollY;
       const startTime = performance.now();
       const duration = 1800;
@@ -44,24 +47,23 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
     };
 
     const onWheel = (e: WheelEvent) => {
+      const snaps = snapsRef.current; // always read latest measured values
       const y = window.scrollY;
-      // At or past last snap — let footer scroll normally
-      if (y >= SNAPS[SNAPS.length - 1]) return;
+      if (y >= snaps[snaps.length - 1]) return;
       e.preventDefault();
       if (snapping) return;
 
       const dir = e.deltaY > 0 ? 1 : -1;
-      // Find which snap section we're in
       let current = 0;
-      for (let i = SNAPS.length - 1; i >= 0; i--) {
-        if (y >= SNAPS[i] - 150) { current = i; break; }
+      for (let i = snaps.length - 1; i >= 0; i--) {
+        if (y >= snaps[i] - 150) { current = i; break; }
       }
-      const next = Math.max(0, Math.min(SNAPS.length - 1, current + dir));
-      if (next !== current) scrollTo(SNAPS[next]);
+      const next = Math.max(0, Math.min(snaps.length - 1, current + dir));
+      if (next !== current) animateTo(snaps[next]);
     };
 
     window.addEventListener("wheel", onWheel, { passive: false });
-    return () => window.removeEventListener("wheel", onWheel);
+    return () => { clearTimeout(t); window.removeEventListener("wheel", onWheel); };
   }, []);
 
   // Mouse parallax + card sheen
