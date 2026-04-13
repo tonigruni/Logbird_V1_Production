@@ -46,24 +46,61 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
       requestAnimationFrame(tick);
     };
 
-    const onWheel = (e: WheelEvent) => {
-      const snaps = snapsRef.current; // always read latest measured values
-      const y = window.scrollY;
-      if (y >= snaps[snaps.length - 1]) return;
-      e.preventDefault();
-      if (snapping) return;
-
-      const dir = e.deltaY > 0 ? 1 : -1;
+    const getSection = (y: number) => {
+      const snaps = snapsRef.current;
       let current = 0;
       for (let i = snaps.length - 1; i >= 0; i--) {
         if (y >= snaps[i] - 150) { current = i; break; }
       }
+      return current;
+    };
+
+    const snapTo = (dir: number) => {
+      const snaps = snapsRef.current;
+      const y = window.scrollY;
+      if (y >= snaps[snaps.length - 1]) return;
+      if (snapping) return;
+      const current = getSection(y);
       const next = Math.max(0, Math.min(snaps.length - 1, current + dir));
       if (next !== current) animateTo(snaps[next]);
     };
 
+    // Desktop — wheel
+    const onWheel = (e: WheelEvent) => {
+      const y = window.scrollY;
+      if (y >= snapsRef.current[snapsRef.current.length - 1]) return;
+      e.preventDefault();
+      snapTo(e.deltaY > 0 ? 1 : -1);
+    };
+
+    // Mobile/tablet — touch swipe
+    let touchStartY = 0;
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      const y = window.scrollY;
+      if (y >= snapsRef.current[snapsRef.current.length - 1]) return;
+      const delta = touchStartY - e.changedTouches[0].clientY;
+      if (Math.abs(delta) < 30) return; // ignore tiny taps
+      snapTo(delta > 0 ? 1 : -1);
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      const y = window.scrollY;
+      if (y < snapsRef.current[snapsRef.current.length - 1]) e.preventDefault();
+    };
+
     window.addEventListener("wheel", onWheel, { passive: false });
-    return () => { clearTimeout(t); window.removeEventListener("wheel", onWheel); };
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchmove", onTouchMove);
+    };
   }, []);
 
   // Mouse parallax + card sheen
