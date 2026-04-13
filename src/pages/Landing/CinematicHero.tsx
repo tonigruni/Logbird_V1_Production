@@ -74,6 +74,13 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
           pin: true,
           scrub: 1,
           anticipatePin: 1,
+          snap: {
+            snapTo: [0, 0.46, 1],
+            directional: true,
+            duration: { min: 0.4, max: 0.8 },
+            delay: 0.1,
+            ease: "power2.inOut",
+          },
         },
       })
         .to([".hero-text-wrapper", ".bg-grid-theme"], { scale: 1.15, filter: "blur(20px)", opacity: 0.2, ease: "power2.inOut", duration: 2 }, 0)
