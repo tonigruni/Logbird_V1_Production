@@ -5,6 +5,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Tauri desktop drag regions ──────────────────────────────
+   Makes [data-tauri-drag-region] elements draggable for moving
+   the window. Interactive children remain clickable.
+   ─────────────────────────────────────────────────────────── */
+[data-tauri-drag-region] {
+  -webkit-app-region: drag;
+}
+[data-tauri-drag-region] button,
+[data-tauri-drag-region] a,
+[data-tauri-drag-region] input,
+[data-tauri-drag-region] label,
+[data-tauri-drag-region] [role="button"] {
+  -webkit-app-region: no-drag;
+}
+
 /* ── Card component ──────────────────────────────────────────
    Unlayered CSS (below @tailwind utilities) always wins over
    any @layer utilities classes — no !important needed.
