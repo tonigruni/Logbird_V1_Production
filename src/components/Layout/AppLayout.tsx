@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom'
 import { Search, LayoutDashboard, BookOpen, Circle, User, Settings, LogOut, Plus, FileText, CheckSquare, Target, Folder, Clock, MoreHorizontal, X } from 'lucide-react'
 import { SquaresFour, ListBullets, Columns, PencilSimpleLine } from '@phosphor-icons/react'
@@ -126,6 +126,13 @@ export default function AppLayout() {
   const [moreOpen, setMoreOpen] = useState(false)
   const isTauri = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window
 
+  const handleDragMouseDown = useCallback(async (e: React.MouseEvent) => {
+    if (!isTauri || e.button !== 0) return
+    e.preventDefault()
+    const { getCurrentWindow } = await import('@tauri-apps/api/window')
+    await getCurrentWindow().startDragging()
+  }, [isTauri])
+
   const { title, tabs, pillTabs } = useSectionConfig(location.pathname, location.search, navigate) as { title: string; tabs: TabConfig[] | null; pillTabs?: TabConfig[] }
   const isJournalContext = ['/journal', '/insights'].includes(location.pathname)
   const { avatarUrl } = useAuthStore()
@@ -159,10 +166,11 @@ export default function AppLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      {/* Invisible drag strip for Tauri overlay titlebar — sits above all content, skips traffic lights area */}
+      {/* Invisible drag strip for Tauri overlay titlebar — uses startDragging() API */}
       {isTauri && (
         <div
-          className="tauri-drag fixed top-0 right-0 h-[52px] z-[9999]"
+          onMouseDown={handleDragMouseDown}
+          className="fixed top-0 right-0 h-[52px] z-[9999] cursor-grab"
           style={{ left: '80px' }}
         />
       )}
