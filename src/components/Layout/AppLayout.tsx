@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom'
 import { Search, LayoutDashboard, BookOpen, Circle, User, Settings, LogOut, Plus, FileText, CheckSquare, Target, Folder, Clock, MoreHorizontal, X } from 'lucide-react'
 import { SquaresFour, ListBullets, Columns, PencilSimpleLine } from '@phosphor-icons/react'
@@ -126,11 +126,24 @@ export default function AppLayout() {
   const [moreOpen, setMoreOpen] = useState(false)
   const isTauri = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window
 
-  const handleDragMouseDown = useCallback(async (e: React.MouseEvent) => {
-    if (!isTauri || e.button !== 0) return
+  // Pre-load the Tauri window API so startDragging() is synchronous on mousedown
+  const tauriWindowRef = useRef<Awaited<typeof import('@tauri-apps/api/window')> | null>(null)
+  useEffect(() => {
+    if (!isTauri) return
+    import('@tauri-apps/api/window').then(m => { tauriWindowRef.current = m })
+  }, [isTauri])
+
+  const handleDragMouseDown = useCallback((e: React.MouseEvent) => {
+    if (!isTauri || e.button !== 0 || !tauriWindowRef.current) return
     e.preventDefault()
-    const { getCurrentWindow } = await import('@tauri-apps/api/window')
-    await getCurrentWindow().startDragging()
+    tauriWindowRef.current.getCurrentWindow().startDragging()
+  }, [isTauri])
+
+  const handleDragDoubleClick = useCallback(async () => {
+    if (!isTauri || !tauriWindowRef.current) return
+    const win = tauriWindowRef.current.getCurrentWindow()
+    const isMax = await win.isMaximized()
+    isMax ? win.unmaximize() : win.maximize()
   }, [isTauri])
 
   const { title, tabs, pillTabs } = useSectionConfig(location.pathname, location.search, navigate) as { title: string; tabs: TabConfig[] | null; pillTabs?: TabConfig[] }
@@ -166,11 +179,12 @@ export default function AppLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      {/* Invisible drag strip for Tauri overlay titlebar — uses startDragging() API */}
+      {/* Invisible drag strip for Tauri overlay titlebar */}
       {isTauri && (
         <div
           onMouseDown={handleDragMouseDown}
-          className="fixed top-0 right-0 h-[52px] z-[9999] cursor-grab"
+          onDoubleClick={handleDragDoubleClick}
+          className="fixed top-0 right-0 h-[52px] z-[9999]"
           style={{ left: '80px' }}
         />
       )}
