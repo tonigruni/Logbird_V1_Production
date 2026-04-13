@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "../../lib/utils";
@@ -99,6 +99,10 @@ export default function LandingPage() {
   const giantTextRef  = useRef<HTMLDivElement>(null);
   const headingRef    = useRef<HTMLHeadingElement>(null);
   const linksRef      = useRef<HTMLDivElement>(null);
+
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (!wrapperRef.current) return;
@@ -209,9 +213,9 @@ export default function LandingPage() {
                 <div className="text-xl font-bold leading-none tracking-tight">Join the waitlist</div>
               </div>
             </a>
-            <a
-              href="/login"
-              className="btn-modern-dark flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none"
+            <button
+              onClick={() => { setShowLoginModal(true); setPassword(""); setError(false); }}
+              className="btn-modern-dark flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none cursor-pointer"
             >
               <svg className="w-5 h-5 transition-transform group-hover:scale-105" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
@@ -221,7 +225,7 @@ export default function LandingPage() {
                 <div className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-[-2px]">Already a member</div>
                 <div className="text-xl font-bold leading-none tracking-tight">Login</div>
               </div>
-            </a>
+            </button>
           </div>
         </div>
 
@@ -252,6 +256,72 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
+
+    {/* Early access password modal */}
+    {showLoginModal && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center px-4"
+        style={{ backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)" }}
+        onClick={(e) => { if (e.target === e.currentTarget) setShowLoginModal(false); }}
+      >
+        <div
+          className="relative w-full max-w-sm rounded-2xl p-8 shadow-2xl"
+          style={{ backgroundColor: "var(--color-bg)", border: "1px solid rgba(255,255,255,0.08)" }}
+        >
+          <button
+            onClick={() => setShowLoginModal(false)}
+            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full opacity-40 hover:opacity-100 transition-opacity"
+            style={{ color: "var(--color-text)" }}
+            aria-label="Close"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </button>
+
+          <div className="mb-6">
+            <div className="text-[10px] font-bold tracking-widest uppercase mb-2" style={{ color: "var(--color-text-muted)" }}>Early access</div>
+            <h3 className="text-2xl font-black tracking-tight" style={{ color: "var(--color-text)" }}>Enter your access code</h3>
+          </div>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (password === "early_user") {
+                window.location.href = "https://app.logbird.me";
+              } else {
+                setError(true);
+                setPassword("");
+              }
+            }}
+          >
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => { setPassword(e.target.value); setError(false); }}
+              placeholder="Access code"
+              autoFocus
+              className="w-full rounded-xl px-4 py-3 text-sm font-medium outline-none transition-all mb-2"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.06)",
+                border: error ? "1px solid rgba(239,68,68,0.6)" : "1px solid rgba(255,255,255,0.1)",
+                color: "var(--color-text)",
+              }}
+            />
+            {error && (
+              <p className="text-xs text-red-400 mb-4 px-1">Incorrect code. Try again.</p>
+            )}
+            {!error && <div className="mb-4" />}
+            <button
+              type="submit"
+              className="btn-modern-dark w-full py-3 rounded-xl text-sm font-bold tracking-wide"
+            >
+              Continue
+            </button>
+          </form>
+        </div>
+      </div>
+    )}
     </>
   );
 }
