@@ -22,7 +22,9 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
   // Wheel-based section snap (hero → features → footer)
   useEffect(() => {
     // Scroll positions for each section within the 7000px pin
-    const SNAPS = [0, Math.round(7000 * 0.46), 7000];
+    const pinEnd = 7000;
+    const footerStart = window.innerHeight + pinEnd;
+    const SNAPS = [0, Math.round(pinEnd * 0.46), footerStart];
     let snapping = false;
 
     const easeInOut = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
@@ -30,7 +32,7 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
     const scrollTo = (target: number) => {
       const start = window.scrollY;
       const startTime = performance.now();
-      const duration = 1200;
+      const duration = 1800;
       snapping = true;
       const tick = (now: number) => {
         const t = Math.min((now - startTime) / duration, 1);
