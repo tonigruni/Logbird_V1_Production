@@ -6,18 +6,22 @@
 @tailwind utilities;
 
 /* ── Tauri desktop drag regions ──────────────────────────────
-   Makes [data-tauri-drag-region] elements draggable for moving
-   the window. Interactive children remain clickable.
+   .tauri-drag — makes the element a window drag handle.
+   Interactive children are explicitly excluded.
    ─────────────────────────────────────────────────────────── */
-[data-tauri-drag-region] {
+.tauri-drag {
   -webkit-app-region: drag;
+  app-region: drag;
+  cursor: default;
 }
-[data-tauri-drag-region] button,
-[data-tauri-drag-region] a,
-[data-tauri-drag-region] input,
-[data-tauri-drag-region] label,
-[data-tauri-drag-region] [role="button"] {
+.tauri-drag button,
+.tauri-drag a,
+.tauri-drag input,
+.tauri-drag label,
+.tauri-drag [role="button"],
+.tauri-drag select {
   -webkit-app-region: no-drag;
+  app-region: no-drag;
 }
 
 /* ── Card component ──────────────────────────────────────────

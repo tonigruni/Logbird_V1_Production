@@ -162,9 +162,8 @@ export default function AppLayout() {
       {/* Invisible drag strip for Tauri overlay titlebar — sits above all content, skips traffic lights area */}
       {isTauri && (
         <div
-          data-tauri-drag-region
-          className="fixed top-0 right-0 h-7 z-[9999]"
-          style={{ left: 80, WebkitAppRegion: 'drag' } as React.CSSProperties}
+          className="tauri-drag fixed top-0 right-0 h-[52px] z-[9999]"
+          style={{ left: '80px' }}
         />
       )}
       <Sidebar />
