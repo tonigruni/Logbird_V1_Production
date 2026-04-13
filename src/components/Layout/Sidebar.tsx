@@ -59,8 +59,8 @@ export default function Sidebar() {
 
   return (
     <aside className={cn('hidden md:flex shrink-0 flex-col h-screen bg-background border-r border-sidebar-border pt-8 pb-0 px-4 sticky top-0 z-50', isTauri && 'pt-[30px]')} style={{ width: 'var(--sidebar-width)' }}>
-      {/* Logo */}
-      <div className="mb-10 px-4">
+      {/* Logo — also drag region for Tauri overlay titlebar */}
+      <div className="mb-10 px-4" data-tauri-drag-region>
         <img src="/Logo complete dark semibold.png" alt="Logbird" className="h-12 w-auto" />
       </div>
 
