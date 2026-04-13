@@ -243,7 +243,7 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
           <div className="card-sheen" aria-hidden="true" />
 
           {/* Dashboard-style gradient bars background */}
-          <GradientBarsBackground barCount={14} barColor="rgba(255,255,255,0.10)" animate />
+          <GradientBarsBackground barCount={typeof window !== "undefined" && window.innerWidth < 768 ? 7 : 14} barColor="rgba(255,255,255,0.10)" animate />
 
           {/* Radial glow overlays matching dashboard card */}
           <div className="absolute inset-0 opacity-[0.07] pointer-events-none z-0" aria-hidden="true">
