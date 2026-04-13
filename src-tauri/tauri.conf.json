@@ -1,8 +1,7 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Logbird",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "com.logbird.app",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
@@ -13,10 +12,11 @@
     "windows": [
       {
         "title": "Logbird",
-        "width": 800,
-        "height": 600,
-        "resizable": true,
-        "fullscreen": false
+        "width": 1200,
+        "height": 800,
+        "minWidth": 800,
+        "minHeight": 600,
+        "titleBarStyle": "Overlay"
       }
     ],
     "security": {
