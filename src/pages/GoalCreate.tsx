@@ -10,7 +10,10 @@ import {
   Kanban,
   Flag,
   CalendarBlank,
+  Image,
+  Trash,
 } from '@phosphor-icons/react'
+import ImagePickerModal from '../components/ui/ImagePickerModal'
 import { LogbirdDatePicker } from '../components/ui/date-range-picker'
 import { cn } from '../lib/utils'
 import { useWheelStore } from '../stores/wheelStore'
@@ -123,6 +126,10 @@ export default function GoalCreate() {
   const [values, setValues] = useState<string[]>([])
   const [notes, setNotes]   = useState('')
 
+  // ── Cover image ──
+  const [coverUrl, setCoverUrl]           = useState<string | null>(null)
+  const [showImagePicker, setShowImagePicker] = useState(false)
+
   // ── UI state ──
   const [saving, setSaving] = useState(false)
   const [errors, setErrors] = useState<{ title?: string; category?: string }>({})
@@ -175,6 +182,19 @@ export default function GoalCreate() {
     }
   }
 
+  async function fetchAutocover(q: string): Promise<string | null> {
+    const apiKey = import.meta.env.VITE_PEXELS_API_KEY as string | undefined
+    if (!apiKey || !q.trim()) return null
+    try {
+      const res = await fetch(
+        `https://api.pexels.com/v1/search?query=${encodeURIComponent(q)}&per_page=1&orientation=landscape`,
+        { headers: { Authorization: apiKey } }
+      )
+      const data = await res.json()
+      return data.photos?.[0]?.src?.large ?? null
+    } catch { return null }
+  }
+
   // ── Save ──
   async function handleSave() {
     const errs: typeof errors = {}
@@ -186,10 +206,11 @@ export default function GoalCreate() {
     try {
       const days = TIMELINE_OPTIONS.find(t => t.value === timeline)?.days ?? 90
       const target_date = new Date(Date.now() + days * 86400000).toISOString().split('T')[0]
+      const resolvedCover = coverUrl ?? await fetchAutocover(title.trim())
 
       const { data: goal, error } = await supabase
         .from('goals')
-        .insert({ user_id: user!.id, category_id: categoryId, title: title.trim(), description: why.trim() || null, project_id: linkedProjectId, status: 'active', target_date })
+        .insert({ user_id: user!.id, category_id: categoryId, title: title.trim(), description: why.trim() || null, project_id: linkedProjectId, status: 'active', target_date, cover_url: resolvedCover })
         .select()
         .single()
 
@@ -253,6 +274,35 @@ export default function GoalCreate() {
           </button>
         </div>
       </div>
+
+      <ImagePickerModal
+        open={showImagePicker}
+        onClose={() => setShowImagePicker(false)}
+        onSelect={url => setCoverUrl(url)}
+      />
+
+      {/* Cover image */}
+      {coverUrl ? (
+        <div className="relative rounded-[15px] overflow-hidden h-40 group">
+          <img src={coverUrl} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+            <button onClick={() => setShowImagePicker(true)} className="flex items-center gap-1.5 px-3 py-2 bg-white/90 rounded-[8px] text-xs font-semibold text-[#0C1629] cursor-pointer">
+              <Image size={13} /> Change
+            </button>
+            <button onClick={() => setCoverUrl(null)} className="flex items-center gap-1.5 px-3 py-2 bg-white/90 rounded-[8px] text-xs font-semibold text-[#dc2626] cursor-pointer">
+              <Trash size={13} /> Remove
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          onClick={() => setShowImagePicker(true)}
+          className="w-full h-14 flex items-center justify-center gap-2 bg-white/60 card !border-dashed !border-[#B5C1C8]/30 hover:bg-white hover:!border-[#0C1629]/20 transition-all rounded-[15px] cursor-pointer group"
+        >
+          <Image size={14} className="text-[#B5C1C8] group-hover:text-[#727A84] transition-colors" />
+          <span className="text-xs font-semibold text-[#B5C1C8] group-hover:text-[#727A84] transition-colors">Add cover image · auto-selected from title if skipped</span>
+        </button>
+      )}
 
       {/* ── Two-column grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

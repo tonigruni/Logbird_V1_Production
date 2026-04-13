@@ -579,6 +579,167 @@ function DesignSystemTab() {
 }
 
 // ---------------------------------------------------------------------------
+// What is Logbird Tab
+// ---------------------------------------------------------------------------
+
+function AboutFeatureCard({ icon: Icon, title, desc }: { icon: React.ElementType; title: string; desc: string }) {
+  return (
+    <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-5 flex gap-4">
+      <div className="w-9 h-9 rounded-[10px] bg-[#0C1629]/8 flex items-center justify-center shrink-0 mt-0.5">
+        <Icon size={17} weight="bold" className="text-[#0C1629]" />
+      </div>
+      <div>
+        <p className="text-sm font-bold text-[#0C1629]">{title}</p>
+        <p className="text-sm text-[#727A84] mt-1 leading-relaxed">{desc}</p>
+      </div>
+    </div>
+  )
+}
+
+function AboutPrinciple({ number, title, desc }: { number: string; title: string; desc: string }) {
+  return (
+    <div className="flex gap-5">
+      <div className="w-9 h-9 rounded-full border-2 border-[#D6DCE0] flex items-center justify-center shrink-0 mt-0.5">
+        <span className="text-xs font-black text-[#B5C1C8]">{number}</span>
+      </div>
+      <div className="pb-8 border-b border-[#D6DCE0] flex-1 last:border-0 last:pb-0">
+        <p className="text-sm font-bold text-[#0C1629]">{title}</p>
+        <p className="text-sm text-[#727A84] mt-1.5 leading-relaxed">{desc}</p>
+      </div>
+    </div>
+  )
+}
+
+function WhatIsLogbirdTab() {
+  return (
+    <div className="space-y-6 max-w-4xl">
+
+      {/* Hero statement */}
+      <div className="bg-[#0C1629] rounded-[15px] p-8 md:p-10">
+        <p className="text-xs font-black uppercase tracking-widest text-white/40 mb-4">The idea</p>
+        <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-snug tracking-tight mb-5">
+          You are the most important<br />metric in your life.
+        </h2>
+        <p className="text-sm text-white/60 leading-relaxed max-w-xl">
+          Most productivity tools are built around tasks and deadlines. Logbird is built around <em className="text-white/80 not-italic font-semibold">you</em> — your energy, your values, your long-term direction. It's a personal operating system that connects everything you do back to who you're trying to become.
+        </p>
+      </div>
+
+      {/* The problem */}
+      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+        <SectionHeader
+          icon={Lightbulb}
+          title="The problem it solves"
+          description="Why Logbird exists and what gap it fills."
+        />
+        <div className="space-y-5 text-sm text-[#727A84] leading-relaxed">
+          <p>
+            People use a dozen different apps — a notes app for journalling, a task manager for to-dos, a spreadsheet for goals, a habit tracker for routines. None of them talk to each other. You can't see how your daily tasks connect to your life goals. You can't see which areas of your life are thriving and which are neglected. You have data everywhere and clarity nowhere.
+          </p>
+          <p>
+            Logbird puts everything in one place and builds the connections between them. A task belongs to a project belongs to a goal belongs to a life category. When you check in on your Wheel of Life, you can see exactly which projects and goals are (or aren't) serving each dimension. Nothing lives in isolation.
+          </p>
+          <p className="font-semibold text-[#0C1629]">
+            The result: you stop managing information and start managing your life.
+          </p>
+        </div>
+      </div>
+
+      {/* Features grid */}
+      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+        <SectionHeader
+          icon={SquaresFour}
+          title="What's inside"
+          description="Seven interconnected modules — each useful alone, powerful together."
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <AboutFeatureCard
+            icon={BookOpen}
+            title="Journal"
+            desc="A rich daily writing space. Log thoughts, mood, and reflections. Every entry is timestamped and searchable, and you can send any note directly into a goal."
+          />
+          <AboutFeatureCard
+            icon={Target}
+            title="Goals"
+            desc="Define what you're working toward — big or small. Goals live in portfolio, list, or board view and each has its own detail page with tasks, time tracking, and an activity log."
+          />
+          <AboutFeatureCard
+            icon={Kanban}
+            title="Projects"
+            desc="The operational layer. Projects sit between goals and tasks — they're how you organise the actual work. Each project links to a goal and owns a set of tasks."
+          />
+          <AboutFeatureCard
+            icon={CheckSquare}
+            title="Tasks"
+            desc="Not just a to-do list. Tasks carry priority, energy cost, time allocation, and links to both a goal and a project. They're the atomic unit of progress."
+          />
+          <AboutFeatureCard
+            icon={ChartDonut}
+            title="Wheel of Life"
+            desc="A periodic check-in across 8 life categories: career, health, relationships, finances, personal growth, creativity, environment, and fun. Track how balanced your life actually is."
+          />
+          <AboutFeatureCard
+            icon={Timer}
+            title="Timeboxing"
+            desc="Schedule your day by dragging tasks into time blocks. Designed around energy-aware planning — match your hardest work to your sharpest hours."
+          />
+          <AboutFeatureCard
+            icon={SquaresFour}
+            title="Dashboard"
+            desc="Your daily starting point. Active goals, recent journal entries, your Wheel of Life score, and upcoming tasks — all at a glance, without any configuration."
+          />
+          <AboutFeatureCard
+            icon={Sparkle}
+            title="Insights (coming)"
+            desc="Pattern detection across your journal, tasks, and check-ins. Mood trends, energy patterns, topic clusters. The app learns your rhythms so you can work with them."
+          />
+        </div>
+      </div>
+
+      {/* Design principles */}
+      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+        <SectionHeader
+          icon={Rocket}
+          title="How it's designed"
+          description="The principles behind every decision in the product."
+        />
+        <div className="space-y-0">
+          <AboutPrinciple
+            number="01"
+            title="Everything is connected"
+            desc="Goals link to projects. Projects own tasks. Tasks appear in your time blocks. Journal entries tie to goals. Wheel of Life scores reflect your active work. Nothing is a silo."
+          />
+          <AboutPrinciple
+            number="02"
+            title="You are the metric"
+            desc="There are no streaks, no gamification, no leaderboards. The only benchmark is you — how aligned your days are with the life you said you want. The app measures that, not arbitrary activity."
+          />
+          <AboutPrinciple
+            number="03"
+            title="Calm and clean by default"
+            desc="White canvas. Thin borders. No clutter. Logbird is intentionally quiet so your thinking can be loud. Every piece of UI earns its place by helping you think more clearly, not by demanding attention."
+          />
+          <AboutPrinciple
+            number="04"
+            title="Built for one person first"
+            desc="Logbird started as a tool for one founder who couldn't find what they needed anywhere else. Every feature was needed before it was built. No bloat, no feature theatre — only what genuinely makes your life easier."
+          />
+        </div>
+      </div>
+
+      {/* Who it's for */}
+      <div className="bg-[#F0F3F3] rounded-[15px] p-8">
+        <p className="text-xs font-black uppercase tracking-widest text-[#B5C1C8] mb-3">Who it's for</p>
+        <p className="text-sm text-[#727A84] leading-relaxed max-w-2xl">
+          Logbird is for people who think seriously about how they spend their time — founders, creators, anyone in a self-directed role who needs to align daily execution with long-term direction. If you've ever felt like you're busy but not making real progress, Logbird is the missing layer between your tasks and your goals.
+        </p>
+      </div>
+
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Roadmap Tab
 // ---------------------------------------------------------------------------
 
@@ -717,11 +878,166 @@ function RoadmapTab() {
 }
 
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Visual Tab
+// ---------------------------------------------------------------------------
+
+const PRIMARY_SCALE   = ['#020508','#050c12','#08121b','#0C1629','#1E2A3A','#2e4260','#5a7499','#96b0c8','#c8d5e1','#edf1f5']
+const NEUTRAL_SCALE   = ['#13181a','#222829','#363d3e','#4a5253','#727A84','#8e9499','#adb3b8','#c9cdd0','#e2e5e7','#f4f5f6']
+const SURFACE_SCALE   = ['#8fa0aa','#a3b0b8','#b8c2c8','#c8d1d7','#D6DCE0','#dfe5e9','#e8edf0','#eff3f5','#f5f8f9','#fafbfc']
+const STATUS_SCALE    = ['#7a302e','#9f403d','#c05754','#f59e0b','#fbbf24','#fde68a','#22c55e','#4ade80','#86efac','#dcfce7']
+
+function VisualColorCard({ name, hex, scale, light = false, gradient }: {
+  name: string; hex: string; scale: string[]; light?: boolean; gradient?: string
+}) {
+  const fg = light ? '#0C1629' : 'white'
+  return (
+    <div className="rounded-[15px] border border-[#D6DCE0] overflow-hidden flex flex-col flex-1 bg-white">
+      <div className="px-4 py-3 flex justify-between items-center" style={{ background: gradient ?? hex }}>
+        <span className="text-xs font-bold" style={{ color: fg }}>{name}</span>
+        <span className="text-[10px] font-mono opacity-80" style={{ color: fg }}>{hex}</span>
+      </div>
+      <div className="h-14" style={{ background: gradient ?? hex }} />
+      <div className="flex h-5">
+        {scale.map((c, i) => <div key={i} style={{ flex: 1, background: c }} />)}
+      </div>
+    </div>
+  )
+}
+
+function VisualCompCard({ label, sub, children, span2 }: {
+  label: string; sub?: string; children: React.ReactNode; span2?: boolean
+}) {
+  return (
+    <div className={`bg-white rounded-[15px] border border-[#D6DCE0] p-5 flex flex-col gap-4 ${span2 ? 'col-span-2' : ''}`}>
+      <div className="flex justify-between items-center">
+        <span className="text-[10px] font-black uppercase tracking-widest text-[#B5C1C8]">{label}</span>
+        {sub && <span className="text-[10px] font-mono text-[#B5C1C8]">{sub}</span>}
+      </div>
+      <div className="flex items-center justify-center flex-1">
+        {children}
+      </div>
+    </div>
+  )
+}
+
+function VisualTab() {
+  return (
+    <div className="flex gap-3.5 items-stretch">
+
+      {/* ── Color column ── */}
+      <div className="flex flex-col gap-3.5 w-[190px] shrink-0">
+        <VisualColorCard name="Primary" hex="#0C1629" scale={PRIMARY_SCALE} />
+        <VisualColorCard name="Neutral" hex="#727A84" scale={NEUTRAL_SCALE} />
+        <VisualColorCard name="Surface" hex="#D6DCE0" scale={SURFACE_SCALE} light />
+        <VisualColorCard
+          name="Status"
+          hex="Error · Warn · OK"
+          gradient="linear-gradient(90deg, #9f403d 33%, #f59e0b 66%, #22c55e 100%)"
+          scale={STATUS_SCALE}
+        />
+      </div>
+
+      {/* ── Component grid ── */}
+      <div className="flex-1 grid grid-cols-3 gap-3.5">
+
+        {/* Row 1 */}
+        <VisualCompCard label="Headline" sub="Satoshi">
+          <span className="text-7xl font-bold text-[#0C1629] leading-none" style={{ fontFamily: 'Satoshi, system-ui' }}>Aa</span>
+        </VisualCompCard>
+
+        <VisualCompCard label="Buttons">
+          <div className="grid grid-cols-2 gap-2 w-full">
+            <button className="text-xs font-bold px-3 py-2 rounded-[12px] bg-[#0C1629] text-white cursor-default">Primary</button>
+            <button className="text-xs font-bold px-3 py-2 rounded-[12px] bg-[#F0F3F3] text-[#0C1629] cursor-default">Secondary</button>
+            <button className="text-xs font-bold px-3 py-2 rounded-[12px] bg-[#0C1629]/90 text-white cursor-default">Inverted</button>
+            <button className="text-xs font-bold px-3 py-2 rounded-[12px] border border-[#D6DCE0] bg-white text-[#0C1629] cursor-default">Outlined</button>
+          </div>
+        </VisualCompCard>
+
+        <VisualCompCard label="Search Input">
+          <div className="flex items-center gap-2 w-full bg-[#F0F3F3] border border-[#D6DCE0] rounded-[12px] px-4 py-2.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B5C1C8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <span className="text-sm text-[#B5C1C8]">Search</span>
+          </div>
+        </VisualCompCard>
+
+        {/* Row 2 */}
+        <VisualCompCard label="Body" sub="DM Sans">
+          <span className="text-7xl font-normal text-[#0C1629] leading-none">Aa</span>
+        </VisualCompCard>
+
+        <VisualCompCard label="Progress">
+          <div className="flex flex-col gap-2.5 w-full">
+            {[
+              { w: '72%', bg: '#0C1629' },
+              { w: '48%', bg: '#727A84' },
+              { w: '30%', bg: '#f59e0b' },
+            ].map((bar, i) => (
+              <div key={i} className="h-1.5 rounded-full bg-[#F0F3F3] overflow-hidden">
+                <div className="h-full rounded-full" style={{ width: bar.w, background: bar.bg }} />
+              </div>
+            ))}
+          </div>
+        </VisualCompCard>
+
+        <VisualCompCard label="Navigation">
+          <div className="flex items-center justify-evenly w-full">
+            <div className="w-10 h-10 rounded-[12px] bg-[#0C1629] flex items-center justify-center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </div>
+            <div className="w-10 h-10 flex items-center justify-center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B5C1C8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+            </div>
+            <div className="w-10 h-10 flex items-center justify-center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B5C1C8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+          </div>
+        </VisualCompCard>
+
+        {/* Row 3 */}
+        <VisualCompCard label="Label" sub="DM Sans">
+          <span className="text-6xl font-medium text-[#727A84] leading-none">Aa</span>
+        </VisualCompCard>
+
+        <VisualCompCard label="Icon Buttons" span2>
+          <div className="flex gap-3">
+            {[
+              { bg: '#0C1629', icon: <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>, icon2: <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/> },
+              { bg: '#727A84', icon: <><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></> },
+              { bg: '#2e4260', icon: <polyline points="20 6 9 17 4 12"/> },
+              { bg: '#9f403d', icon: <><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></> },
+            ].map((btn, i) => (
+              <div key={i} className="w-10 h-10 rounded-[12px] flex items-center justify-center cursor-default" style={{ background: btn.bg }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  {btn.icon}{btn.icon2}
+                </svg>
+              </div>
+            ))}
+          </div>
+        </VisualCompCard>
+
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Main Page
 // ---------------------------------------------------------------------------
 
 const TABS = [
   { id: 'design', label: 'Design System' },
+  { id: 'visual', label: 'Visual' },
+  { id: 'about', label: 'What is Logbird' },
   { id: 'roadmap', label: 'Roadmap' },
 ] as const
 
@@ -739,6 +1055,10 @@ export default function Docs() {
           <p className="text-sm text-[#727A84] mt-1">
             {tab === 'design'
               ? 'Living design system — tokens, components, and usage examples straight from the codebase.'
+              : tab === 'visual'
+              ? 'Colour palette, typography, and core components at a glance.'
+              : tab === 'about'
+              ? 'The idea behind Logbird — what it is, why it exists, and how it works.'
               : "What\u2019s shipped, what\u2019s in progress, and what\u2019s coming next."}
           </p>
         </div>
@@ -763,7 +1083,7 @@ export default function Docs() {
       </div>
 
       {/* Content */}
-      {tab === 'design' ? <DesignSystemTab /> : <RoadmapTab />}
+      {tab === 'design' ? <DesignSystemTab /> : tab === 'visual' ? <VisualTab /> : tab === 'about' ? <WhatIsLogbirdTab /> : <RoadmapTab />}
     </div>
   )
 }

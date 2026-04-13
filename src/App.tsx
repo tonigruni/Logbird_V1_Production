@@ -33,6 +33,7 @@ import GoalDetailPage from './pages/GoalDetailPage'
 import GoalCreate from './pages/GoalCreate'
 import Timeboxing from './pages/Timeboxing'
 import Docs from './pages/Docs'
+import LandingPage from './pages/Landing/LandingPage'
 
 export default function App() {
   const { setSession, setLoading, setUser, loadProfile } = useAuthStore()
@@ -67,6 +68,7 @@ export default function App() {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
+        <Route path="/home" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route

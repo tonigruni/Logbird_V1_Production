@@ -7,7 +7,10 @@ import {
   Plus,
   X,
   Clock,
+  Image,
+  Trash,
 } from '@phosphor-icons/react'
+import ImagePickerModal from '../components/ui/ImagePickerModal'
 import { LogbirdDateRangePicker } from '../components/ui/date-range-picker'
 import { cn } from '../lib/utils'
 import { useProjectStore } from '../stores/projectStore'
@@ -37,6 +40,8 @@ export default function ProjectCreate() {
   const [objectives, setObjectives] = useState<string[]>([])
   const [newObjective, setNewObjective] = useState('')
   const [saving, setSaving] = useState(false)
+  const [coverUrl, setCoverUrl] = useState<string | null>(null)
+  const [showImagePicker, setShowImagePicker] = useState(false)
 
   // Calculate duration
   const duration = (() => {
@@ -57,10 +62,26 @@ export default function ProjectCreate() {
     setObjectives(prev => prev.filter((_, i) => i !== index))
   }
 
+  async function fetchAutocover(title: string): Promise<string | null> {
+    const apiKey = import.meta.env.VITE_PEXELS_API_KEY as string | undefined
+    if (!apiKey || !title.trim()) return null
+    try {
+      const res = await fetch(
+        `https://api.pexels.com/v1/search?query=${encodeURIComponent(title)}&per_page=1&orientation=landscape`,
+        { headers: { Authorization: apiKey } }
+      )
+      const data = await res.json()
+      return data.photos?.[0]?.src?.large ?? null
+    } catch {
+      return null
+    }
+  }
+
   async function handleCreate() {
     if (!user || !name.trim()) return
     setSaving(true)
     try {
+      const resolvedCover = coverUrl ?? await fetchAutocover(name.trim())
       const project = await createProject({
         user_id: user.id,
         title: name.trim(),
@@ -68,7 +89,7 @@ export default function ProjectCreate() {
         status: 'active',
         goal_id: null,
         color: '#0C1629',
-        cover_url: null,
+        cover_url: resolvedCover,
         target_date: endDate || null,
         start_date: startDate || null,
         end_date: endDate || null,
@@ -104,8 +125,50 @@ export default function ProjectCreate() {
         <p className="text-sm text-[#727A84] mt-1">Define the structural foundations and objectives for your next endeavor.</p>
       </div>
 
+      <ImagePickerModal
+        open={showImagePicker}
+        onClose={() => setShowImagePicker(false)}
+        onSelect={url => setCoverUrl(url)}
+      />
+
       {/* Form */}
       <div className="space-y-6">
+        {/* Cover Image */}
+        <div className="space-y-2">
+          <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+            Cover Image
+          </label>
+          {coverUrl ? (
+            <div className="relative rounded-[12px] overflow-hidden h-40 group">
+              <img src={coverUrl} alt="" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                <button
+                  onClick={() => setShowImagePicker(true)}
+                  className="flex items-center gap-1.5 px-3 py-2 bg-white/90 rounded-[8px] text-xs font-semibold text-[#0C1629] cursor-pointer"
+                >
+                  <Image size={13} /> Change
+                </button>
+                <button
+                  onClick={() => setCoverUrl(null)}
+                  className="flex items-center gap-1.5 px-3 py-2 bg-white/90 rounded-[8px] text-xs font-semibold text-[#dc2626] cursor-pointer"
+                >
+                  <Trash size={13} /> Remove
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowImagePicker(true)}
+              className="w-full h-32 flex flex-col items-center justify-center gap-2 bg-white card !border-2 !border-dashed !border-[#B5C1C8]/30 hover:!border-[#0C1629]/20 hover:bg-[#F7F8F9] transition-all rounded-[12px] cursor-pointer group"
+            >
+              <Image size={20} className="text-[#B5C1C8] group-hover:text-[#727A84] transition-colors" />
+              <span className="text-xs font-semibold text-[#B5C1C8] group-hover:text-[#727A84] transition-colors">
+                Add cover image
+              </span>
+            </button>
+          )}
+        </div>
+
         {/* Project Name */}
         <div className="space-y-2">
           <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">

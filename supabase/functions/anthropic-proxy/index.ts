@@ -97,7 +97,7 @@ Deno.serve(async (req: Request) => {
     const anthropicApiKey = profile.anthropic_api_key;
     // Use the model from the request, fall back to profile setting, then default
     const anthropicModel =
-      model || profile.anthropic_model || "claude-sonnet-4-5";
+      model || profile.anthropic_model || "claude-sonnet-4-6";
 
     // Forward the request to the Anthropic API
     const anthropicResponse = await fetch(

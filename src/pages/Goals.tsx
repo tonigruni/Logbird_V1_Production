@@ -53,10 +53,21 @@ function GoalCard({ goal, categoryName, taskCount, completedCount, onClick }: {
   onClick?: () => void
 }) {
   const progress = taskCount > 0 ? Math.round(completedCount / taskCount * 100) : 0
-  const bg = paletteColor(goal.id)
+  const bg = goal.cover_url ? '#ffffff' : paletteColor(goal.id)
 
   return (
     <article onClick={onClick} className="card overflow-hidden hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 group cursor-pointer" style={{ backgroundColor: bg }}>
+      {/* Cover image */}
+      {goal.cover_url && (
+        <div className="relative h-36 overflow-hidden">
+          <img
+            src={goal.cover_url}
+            alt=""
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        </div>
+      )}
       <div className="p-5 space-y-3">
         {/* Icon + status row */}
         <div className="flex items-start justify-between">

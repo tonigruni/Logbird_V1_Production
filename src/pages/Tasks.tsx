@@ -434,7 +434,7 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
       {/* Slide-in panel */}
       <div
         className={cn(
-          'fixed right-0 top-0 h-full w-[340px] z-50 bg-white shadow-[-4px_0_24px_rgba(12,22,41,0.10)] flex flex-col transition-transform duration-300 ease-in-out',
+          'fixed right-0 top-0 h-full w-full sm:w-[340px] z-50 bg-white shadow-[-4px_0_24px_rgba(12,22,41,0.10)] flex flex-col transition-transform duration-300 ease-in-out',
           open ? 'translate-x-0' : 'translate-x-full'
         )}
       >

@@ -1,0 +1,331 @@
+/* =========================================================
+   Logbird Landing Page — Hero + Footer
+   All CSS vars map to Logbird design tokens in design-system.css
+   ========================================================= */
+
+/* ── Utility classes missing from Tailwind v3 ───────────── */
+.transform-style-3d { transform-style: preserve-3d; }
+
+/* ── Hero: hidden until GSAP reveals ───────────────────── */
+.gsap-reveal { visibility: hidden; }
+
+/* ── Film grain overlay ─────────────────────────────────── */
+.film-grain {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 50; opacity: 0.05;
+  mix-blend-mode: overlay;
+  background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%25" height="100%25" filter="url(%23n)"/></svg>');
+}
+
+/* ── Hero background grid ───────────────────────────────── */
+.bg-grid-theme {
+  background-size: 60px 60px;
+  background-image:
+    linear-gradient(to right,  rgba(12, 22, 41, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(12, 22, 41, 0.05) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+}
+
+/* ── Hero text effects ──────────────────────────────────── */
+.text-3d-matte {
+  color: var(--color-text);
+  text-shadow:
+    0 10px 30px rgba(12, 22, 41, 0.20),
+    0 2px 4px   rgba(12, 22, 41, 0.10);
+}
+
+.text-silver-matte {
+  background: linear-gradient(180deg, var(--color-text) 0%, rgba(12, 22, 41, 0.40) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform: translateZ(0);
+  filter:
+    drop-shadow(0px 10px 20px rgba(12, 22, 41, 0.15))
+    drop-shadow(0px 2px  4px  rgba(12, 22, 41, 0.10));
+}
+
+/* ── Card: hardcoded dark for contrast ──────────────────── */
+.text-card-silver-matte {
+  background: linear-gradient(180deg, #FFFFFF 0%, #A1A1AA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform: translateZ(0);
+  filter:
+    drop-shadow(0px 12px 24px rgba(0,0,0,0.8))
+    drop-shadow(0px 4px  8px  rgba(0,0,0,0.6));
+}
+
+.premium-depth-card {
+  /* Matches Logbird dashboard top card — var(--color-primary) = #0C1629 */
+  background: var(--color-primary);
+  box-shadow:
+    0 40px 100px -20px rgba(0,0,0,0.9),
+    0 20px  40px -20px rgba(0,0,0,0.8),
+    inset 0  1px 2px rgba(255,255,255,0.10),
+    inset 0 -2px 4px rgba(0,0,0,0.60);
+  border: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+}
+
+/* ── Laptop mockup ──────────────────────────────────────── */
+.laptop-outer { position: relative; }
+
+.laptop-screen-frame {
+  background: linear-gradient(180deg, #2E2E32 0%, #1C1C1F 100%);
+  border-radius: 12px 12px 0 0;
+  padding: 10px 10px 0;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 40px 80px rgba(0,0,0,0.8);
+}
+
+.laptop-camera-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #333;
+  margin: 0 auto 6px;
+  box-shadow: inset 0 0 2px rgba(0,0,0,0.8);
+}
+
+.laptop-screen {
+  background: #080f1e;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  aspect-ratio: 16/10;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+}
+
+.laptop-hinge {
+  height: 5px;
+  background: linear-gradient(180deg, #1a1a1e 0%, #111114 100%);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+}
+
+.laptop-keyboard-base {
+  background: linear-gradient(180deg, #2A2A2E 0%, #202023 100%);
+  height: 18px;
+  border-radius: 0 0 10px 10px;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(255,255,255,0.04);
+  position: relative;
+}
+
+.laptop-trackpad {
+  position: absolute;
+  bottom: 4px; left: 50%; transform: translateX(-50%);
+  width: 70px; height: 7px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.card-sheen {
+  position: absolute; inset: 0; border-radius: inherit;
+  pointer-events: none; z-index: 50;
+  background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.06) 0%, transparent 40%);
+  mix-blend-mode: screen;
+  transition: opacity 0.3s ease;
+}
+
+/* ── iPhone mockup ──────────────────────────────────────── */
+.iphone-bezel {
+  background-color: #111;
+  box-shadow:
+    inset 0 0 0 2px #52525B,
+    inset 0 0 0 7px #000,
+    0 40px 80px -15px rgba(0,0,0,0.9),
+    0 15px 25px -5px  rgba(0,0,0,0.7);
+  transform-style: preserve-3d;
+}
+
+.hardware-btn {
+  background: linear-gradient(90deg, #404040 0%, #171717 100%);
+  box-shadow:
+    -2px 0 5px rgba(0,0,0,0.8),
+    inset -1px 0 1px rgba(255,255,255,0.15),
+    inset  1px 0 2px rgba(0,0,0,0.80);
+  border-left: 1px solid rgba(255,255,255,0.05);
+}
+
+.screen-glare {
+  background: linear-gradient(110deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 45%);
+}
+
+.widget-depth {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+  box-shadow:
+    0 10px 20px rgba(0,0,0,0.3),
+    inset 0  1px 1px rgba(255,255,255,0.05),
+    inset 0 -1px 1px rgba(0,0,0,0.50);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.floating-ui-badge {
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.01) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.10),
+    0 25px 50px -12px rgba(0,0,0,0.80),
+    inset 0  1px 1px rgba(255,255,255,0.20),
+    inset 0 -1px 1px rgba(0,0,0,0.50);
+}
+
+/* ── Physical tactile buttons ───────────────────────────── */
+.btn-modern-light,
+.btn-modern-dark { transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+
+.btn-modern-light {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
+  color: #0F172A;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.10), 0 12px 24px -4px rgba(0,0,0,0.30), inset 0 1px 1px #fff, inset 0 -3px 6px rgba(0,0,0,0.06);
+}
+.btn-modern-light:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 6px 12px -2px rgba(0,0,0,0.15), 0 20px 32px -6px rgba(0,0,0,0.40), inset 0 1px 1px #fff, inset 0 -3px 6px rgba(0,0,0,0.06);
+}
+.btn-modern-light:active {
+  transform: translateY(1px);
+  background: linear-gradient(180deg, #F1F5F9 0%, #E2E8F0 100%);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.10), inset 0 3px 6px rgba(0,0,0,0.10);
+}
+
+.btn-modern-dark {
+  background: linear-gradient(180deg, #27272A 0%, #18181B 100%);
+  color: #FFFFFF;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.10), 0 2px 4px rgba(0,0,0,0.60), 0 12px 24px -4px rgba(0,0,0,0.90), inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -3px 6px rgba(0,0,0,0.80);
+}
+.btn-modern-dark:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(180deg, #3F3F46 0%, #27272A 100%);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.15), 0 6px 12px -2px rgba(0,0,0,0.70), 0 20px 32px -6px rgba(0,0,0,1), inset 0 1px 1px rgba(255,255,255,0.20), inset 0 -3px 6px rgba(0,0,0,0.80);
+}
+.btn-modern-dark:active {
+  transform: translateY(1px);
+  background: #18181B;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05), inset 0 3px 8px rgba(0,0,0,0.90);
+}
+
+/* ── Progress ring animation ────────────────────────────── */
+.progress-ring {
+  transform: rotate(-90deg);
+  transform-origin: center;
+  stroke-dasharray: 402;
+  stroke-dashoffset: 402;
+  stroke-linecap: round;
+}
+
+.cinematic-footer-wrapper {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+
+  /* Glass pill vars */
+  --pill-bg-1:         rgba(12, 22, 41, 0.03);
+  --pill-bg-2:         rgba(12, 22, 41, 0.01);
+  --pill-shadow:       rgba(254, 254, 254, 0.50);
+  --pill-highlight:    rgba(12, 22, 41, 0.10);
+  --pill-inset-shadow: rgba(254, 254, 254, 0.80);
+  --pill-border:       rgba(12, 22, 41, 0.08);
+
+  --pill-bg-1-hover:      rgba(12, 22, 41, 0.08);
+  --pill-bg-2-hover:      rgba(12, 22, 41, 0.02);
+  --pill-border-hover:    rgba(12, 22, 41, 0.20);
+  --pill-shadow-hover:    rgba(254, 254, 254, 0.70);
+  --pill-highlight-hover: rgba(12, 22, 41, 0.20);
+}
+
+/* ── Animations ─────────────────────────────────────────── */
+
+@keyframes footer-breathe {
+  0%   { transform: translate(-50%, -50%) scale(1);   opacity: 0.4; }
+  100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.7; }
+}
+
+@keyframes footer-scroll-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes footer-heartbeat {
+  0%, 100% { transform: scale(1);   filter: drop-shadow(0 0 5px  rgba(159, 64, 61, 0.50)); }
+  15%, 45% { transform: scale(1.2); filter: drop-shadow(0 0 10px rgba(159, 64, 61, 0.80)); }
+  30%      { transform: scale(1); }
+}
+
+.animate-footer-breathe        { animation: footer-breathe        8s ease-in-out infinite alternate; }
+.animate-footer-scroll-marquee { animation: footer-scroll-marquee 40s linear infinite; }
+.animate-footer-heartbeat      { animation: footer-heartbeat       2s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
+
+/* ── Background grid ────────────────────────────────────── */
+
+.footer-bg-grid {
+  background-size: 60px 60px;
+  background-image:
+    linear-gradient(to right,  rgba(12, 22, 41, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(12, 22, 41, 0.04) 1px, transparent 1px);
+  mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+}
+
+/* ── Ambient aurora glow ────────────────────────────────── */
+
+.footer-aurora {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(12, 22, 41, 0.06)  0%,
+    rgba(114, 122, 132, 0.05) 40%,
+    transparent 70%
+  );
+}
+
+/* ── Glass pill ─────────────────────────────────────────── */
+
+.footer-glass-pill {
+  background: linear-gradient(145deg, var(--pill-bg-1) 0%, var(--pill-bg-2) 100%);
+  box-shadow:
+    0 10px 30px -10px var(--pill-shadow),
+    inset 0  1px 1px   var(--pill-highlight),
+    inset 0 -1px 2px   var(--pill-inset-shadow);
+  border: 1px solid var(--pill-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footer-glass-pill:hover {
+  background: linear-gradient(145deg, var(--pill-bg-1-hover) 0%, var(--pill-bg-2-hover) 100%);
+  border-color: var(--pill-border-hover);
+  box-shadow:
+    0 20px 40px -10px var(--pill-shadow-hover),
+    inset 0 1px 1px   var(--pill-highlight-hover);
+  color: var(--color-text);
+}
+
+/* ── Giant background text ──────────────────────────────── */
+
+.footer-giant-bg-text {
+  font-size: 26vw;
+  line-height: 0.75;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  font-family: var(--font-heading);
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(12, 22, 41, 0.05);
+  background: linear-gradient(180deg, rgba(12, 22, 41, 0.10) 0%, transparent 60%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* ── Heading glow ───────────────────────────────────────── */
+
+.footer-text-glow {
+  font-family: var(--font-heading);
+  background: linear-gradient(180deg, var(--color-text) 0%, rgba(12, 22, 41, 0.40) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0px 0px 20px rgba(12, 22, 41, 0.15));
+}

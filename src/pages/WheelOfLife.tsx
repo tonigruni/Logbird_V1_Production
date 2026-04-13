@@ -283,14 +283,14 @@ function loadWolDraft(): Record<string, unknown> {
 // Fixed PointSelector — type="button" prevents form submit; value is always direct state
 function PointSelector({ value, onChange }: { value: number | null; onChange: (v: number) => void }) {
   return (
-    <div className="flex items-center gap-1.5 flex-wrap">
+    <div className="grid grid-cols-5 sm:flex sm:flex-wrap gap-1.5">
       {Array.from({ length: 10 }, (_, i) => i + 1).map((point) => (
         <button
           key={point}
           type="button"
           onClick={() => onChange(point)}
           className={cn(
-            'w-9 h-9 rounded-xl text-sm font-semibold transition-all cursor-pointer select-none',
+            'h-9 sm:w-9 rounded-xl text-sm font-semibold transition-all cursor-pointer select-none',
             value !== null && point <= value
               ? 'bg-[#0C1629] text-white shadow-sm'
               : 'bg-[#F0F3F3] text-[#727A84] hover:bg-[#E4E9EC]'

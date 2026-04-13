@@ -97,7 +97,7 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
   goalTitle: string | null
   onClick: () => void
 }) {
-  const bg = project.card_color || paletteColor(project.id)
+  const bg = project.cover_url ? '#ffffff' : (project.card_color || paletteColor(project.id))
   const CardIcon = ICON_MAP[project.card_icon || ''] || Kanban
 
   return (
@@ -106,6 +106,18 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
       className="card overflow-hidden hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 group cursor-pointer"
       style={{ backgroundColor: bg }}
     >
+      {/* Cover image */}
+      {project.cover_url && (
+        <div className="relative h-40 overflow-hidden">
+          <img
+            src={project.cover_url}
+            alt=""
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        </div>
+      )}
+
       {/* Body */}
       <div className="p-5 space-y-3">
         {/* Icon row + status */}

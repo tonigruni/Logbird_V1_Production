@@ -12,7 +12,10 @@ import {
   PaperPlaneTilt,
   Plus,
   PaintBrush,
+  Image,
+  Trash,
 } from '@phosphor-icons/react'
+import ImagePickerModal from '../components/ui/ImagePickerModal'
 import { cn } from '../lib/utils'
 import { useWheelStore } from '../stores/wheelStore'
 import { useProjectStore } from '../stores/projectStore'
@@ -226,6 +229,7 @@ export default function ProjectDetail() {
   const [editTitle, setEditTitle] = useState('')
   const [editingDesc, setEditingDesc] = useState(false)
   const [editDesc, setEditDesc] = useState('')
+  const [showImagePicker, setShowImagePicker] = useState(false)
 
   function handleAddTask(title: string, goalId: string | null) {
     if (!user || !project) return
@@ -271,20 +275,63 @@ export default function ProjectDetail() {
         Back to Projects
       </button>
 
+      {/* Image picker modal */}
+      <ImagePickerModal
+        open={showImagePicker}
+        onClose={() => setShowImagePicker(false)}
+        onSelect={url => updateProject(project.id, { cover_url: url })}
+        initialQuery={project.title}
+      />
+
       {/* Hero card */}
-      <div className="card overflow-hidden relative" style={{ backgroundColor: project.card_color || paletteColor(project.id) }}>
+      <div
+        className="card overflow-hidden relative"
+        style={{ backgroundColor: project.cover_url ? '#ffffff' : (project.card_color || paletteColor(project.id)) }}
+      >
+        {/* Cover image */}
+        {project.cover_url && (
+          <div className="relative h-48 overflow-hidden">
+            <img src={project.cover_url} alt="" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+          </div>
+        )}
 
         {/* Customise picker — top right */}
-        <div className="absolute top-4 right-4 z-10">
+        <div className={cn('absolute right-4 z-10', project.cover_url ? 'top-4' : 'top-4')}>
           <Popover>
             <PopoverTrigger asChild>
-              <button className="w-8 h-8 flex items-center justify-center rounded-[10px] bg-[#0C1629]/[0.06] hover:bg-[#0C1629]/10 text-[#727A84] transition-colors cursor-pointer" aria-label="Customise card">
+              <button
+                className={cn(
+                  'w-8 h-8 flex items-center justify-center rounded-[10px] transition-colors cursor-pointer',
+                  project.cover_url ? 'bg-black/30 hover:bg-black/50 text-white' : 'bg-[#0C1629]/[0.06] hover:bg-[#0C1629]/10 text-[#727A84]'
+                )}
+                aria-label="Customise card"
+              >
                 <PaintBrush size={14} />
               </button>
             </PopoverTrigger>
             <PopoverContent align="end" className="w-64 p-0">
               <PopoverBody className="p-3 space-y-3">
-                <p className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Card Color</p>
+                <p className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Cover Image</p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setShowImagePicker(true)}
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-[8px] bg-[#0C1629]/[0.06] hover:bg-[#0C1629]/10 text-[#727A84] hover:text-[#0C1629] text-xs font-semibold transition-colors cursor-pointer"
+                  >
+                    <Image size={13} />
+                    {project.cover_url ? 'Change' : 'Add Photo'}
+                  </button>
+                  {project.cover_url && (
+                    <button
+                      onClick={() => updateProject(project.id, { cover_url: null })}
+                      className="w-8 h-8 flex items-center justify-center rounded-[8px] bg-[#dc2626]/10 hover:bg-[#dc2626]/20 text-[#dc2626] transition-colors cursor-pointer"
+                      title="Remove cover image"
+                    >
+                      <Trash size={13} />
+                    </button>
+                  )}
+                </div>
+                <p className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider pt-1">Card Color</p>
                 <div className="grid grid-cols-5 gap-2">
                   {CARD_PALETTE_OPTIONS.map(c => (
                     <button

@@ -27,7 +27,10 @@ import {
   Tag,
   Kanban,
   X,
+  Image,
+  Trash,
 } from 'lucide-react'
+import ImagePickerModal from './ui/ImagePickerModal'
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 import { useAuthStore } from '../stores/authStore'
 import { useWheelStore } from '../stores/wheelStore'
@@ -121,6 +124,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
   const [commentText, setCommentText]       = useState('')
   const [goalComments, setGoalComments]     = useState<{ id: string; text: string; createdAt: Date }[]>([])
   const [newTaskTitle, setNewTaskTitle]     = useState('')
+  const [showImagePicker, setShowImagePicker] = useState(false)
 
   useEffect(() => {
     if (timerRunning) {
@@ -254,6 +258,43 @@ export default function GoalDetailView({ goal, onClose }: Props) {
         </div>
       </div>
 
+      <ImagePickerModal
+        open={showImagePicker}
+        onClose={() => setShowImagePicker(false)}
+        onSelect={url => updateGoal(goal.id, { cover_url: url })}
+        initialQuery={goal.title}
+      />
+
+      {/* Cover image card */}
+      {goal.cover_url ? (
+        <div className="relative rounded-[15px] overflow-hidden h-44 group mb-5">
+          <img src={goal.cover_url} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          <div className="absolute bottom-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button
+              onClick={() => setShowImagePicker(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-black/50 hover:bg-black/70 text-white rounded-[8px] text-xs font-semibold cursor-pointer backdrop-blur-sm transition-colors"
+            >
+              <Image size={12} /> Change
+            </button>
+            <button
+              onClick={() => updateGoal(goal.id, { cover_url: null })}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-black/50 hover:bg-[#dc2626]/80 text-white rounded-[8px] text-xs font-semibold cursor-pointer backdrop-blur-sm transition-colors"
+            >
+              <Trash size={12} /> Remove
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          onClick={() => setShowImagePicker(true)}
+          className="w-full h-14 flex items-center justify-center gap-2 bg-white/60 card !border-dashed !border-[#B5C1C8]/30 hover:bg-white hover:!border-[#0C1629]/20 transition-all rounded-[15px] cursor-pointer group mb-5"
+        >
+          <Image size={14} className="text-[#B5C1C8] group-hover:text-[#727A84] transition-colors" />
+          <span className="text-xs font-semibold text-[#B5C1C8] group-hover:text-[#727A84] transition-colors">Add cover image</span>
+        </button>
+      )}
+
       {/* Main bento grid */}
       <div className="grid grid-cols-12 gap-5">
 
@@ -306,7 +347,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
 
             {goalTasks.length > 0 && (
               <div className="mb-5">
-                <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center justify-between mb-5.5">
                   <span className="text-xs text-on-surface-variant">{progressPercent}% complete</span>
                   <span className="text-xs text-on-surface-variant">{completedCount} of {goalTasks.length} done</span>
                 </div>
@@ -404,7 +445,7 @@ export default function GoalDetailView({ goal, onClose }: Props) {
                       <User size={14} />
                     </div>
                     <div className="flex-1">
-                      <div className="flex items-baseline gap-2 mb-1">
+                      <div className="flex items-baseline gap-2 mb-5">
                         <span className="text-sm font-semibold text-on-surface">You</span>
                         <span className="text-xs text-on-surface-variant/40">{format(c.createdAt, 'MMM d, h:mm a')}</span>
                       </div>
@@ -536,8 +577,8 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               <Timer size={15} className="text-primary" />
               <h3 className="text-sm font-bold text-on-surface">Time Tracking</h3>
             </div>
-            <div className="bg-[#F0F3F3] rounded-2xl p-5 mb-4 text-center">
-              <div className="text-3xl font-mono font-bold text-on-surface tracking-tight mb-1">{fmtTime(timerSeconds)}</div>
+            <div className="bg-[#F0F3F3] rounded-[15px] p-5 mb-4 text-center">
+              <div className="text-3xl font-mono font-bold text-on-surface tracking-tight mb-5">{fmtTime(timerSeconds)}</div>
               <div className="text-xs text-on-surface-variant/50">{timerRunning ? 'Running...' : timerSeconds > 0 ? 'Paused' : 'Ready'}</div>
             </div>
             <div className="flex gap-2 mb-4">

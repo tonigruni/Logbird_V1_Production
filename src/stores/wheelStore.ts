@@ -28,6 +28,8 @@ export interface WheelCheckin {
   user_id: string
   date: string
   scores: Record<string, number>
+  sub_scores: Record<string, number> | null
+  reflection_answers: Record<string, string[]> | null
   notes: string | null
   context: CheckinContext | null
   created_at: string
@@ -42,6 +44,7 @@ export interface Goal {
   description: string | null
   status: string
   target_date: string | null
+  cover_url: string | null
   created_at: string
 }
 
