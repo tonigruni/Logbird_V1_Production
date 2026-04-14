@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useLocation, useSearchParams } from 'react-router-dom'
 import {
   Plus, Calendar, FileText, Trash2, Save,
@@ -625,6 +625,28 @@ export default function Journal() {
     setSaving(false); setSaveStatus('saved')
     setTimeout(() => setSaveStatus('idle'), 2500)
   }
+
+  // ── Autosave: debounce 1.5s after last change to title or content ──────────
+  const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const isFirstRender = useRef(true)
+  useEffect(() => {
+    if (isFirstRender.current) { isFirstRender.current = false; return }
+    if (!user || !title.trim() || activeTemplateDetail) return
+    if (autosaveTimer.current) clearTimeout(autosaveTimer.current)
+    autosaveTimer.current = setTimeout(async () => {
+      setSaving(true)
+      const payload = { title, content, mood_score: moodScore, category: entryCategory.length ? entryCategory.join(',') : null, location: entryLocation || null, weather: entryWeather || null, sleep_quality: sleepQuality, had_alcohol: hadAlcohol, exercised, energy_level: energyLevel }
+      if (selected) {
+        await updateEntry(selected.id, payload)
+      } else {
+        const entry = await createEntry({ user_id: user.id, template_id: null, ...payload })
+        if (entry) setSelected(entry)
+      }
+      setSaving(false); setSaveStatus('saved')
+      setTimeout(() => setSaveStatus('idle'), 2500)
+    }, 1500)
+    return () => { if (autosaveTimer.current) clearTimeout(autosaveTimer.current) }
+  }, [title, content])
 
   const remove = async (id: string) => {
     await deleteEntry(id)
