@@ -135,9 +135,6 @@ export default function AppLayout() {
 
   const handleDragMouseDown = useCallback((e: React.MouseEvent) => {
     if (!isTauri || e.button !== 0 || !tauriWindowRef.current) return
-    // Only drag when clicking the header background, not interactive children
-    const target = e.target as HTMLElement
-    if (target.closest('button, a, input, select, textarea, nav, [role="button"]')) return
     e.preventDefault()
     tauriWindowRef.current.getCurrentWindow().startDragging()
   }, [isTauri])
@@ -182,14 +179,19 @@ export default function AppLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
+      {/* Narrow drag strip — only covers the ~40px traffic light zone, nothing below */}
+      {isTauri && (
+        <div
+          onMouseDown={handleDragMouseDown}
+          onDoubleClick={handleDragDoubleClick}
+          className="fixed top-0 right-0 h-[40px] z-[39]"
+          style={{ left: '80px' }}
+        />
+      )}
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Top App Bar */}
-        <header
-          className="w-full bg-background/80 backdrop-blur-xl sticky top-0 z-40 shrink-0 border-b border-[#F0F3F3]"
-          onMouseDown={isTauri ? handleDragMouseDown : undefined}
-          onDoubleClick={isTauri ? handleDragDoubleClick : undefined}
-        >
+        <header className="w-full bg-background/80 backdrop-blur-xl sticky top-0 z-40 shrink-0 border-b border-[#F0F3F3]">
           <div className="max-w-[1400px] mx-auto px-4 md:px-12 py-4 md:py-5 flex justify-between items-center gap-3">
 
             <div className="flex items-center gap-4 md:gap-10 min-w-0 flex-1">
