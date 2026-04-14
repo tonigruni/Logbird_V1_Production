@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "notes": "Initial release",
+  "pub_date": "2026-04-14T00:00:00Z",
+  "platforms": {
+    "darwin-aarch64": {
+      "url": "https://app.logbird.me/downloads/Logbird_0.1.0_aarch64.dmg",
+      "signature": ""
+    },
+    "darwin-x86_64": {
+      "url": "https://app.logbird.me/downloads/Logbird_0.1.0_x64.dmg",
+      "signature": ""
+    }
+  }
+}

@@ -6,6 +6,7 @@ import { cn } from '../../lib/utils'
 import { useAuthStore } from '../../stores/authStore'
 import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverTitle, PopoverDescription, PopoverBody, PopoverFooter } from '../ui/popover'
 import { Avatar, AvatarFallback } from '../ui/avatar'
+import { UpdateCard } from '../UpdateCard'
 
 const topNav = [
   { to: '/', icon: SquaresFour, label: 'Dashboard' },
@@ -121,6 +122,9 @@ export default function Sidebar() {
       <div className={cn('flex justify-center py-3 transition-opacity duration-200 pointer-events-none', canScrollDown ? 'opacity-100' : 'opacity-0')}>
         <CaretDown size={14} className="text-[#B5C1C8]" />
       </div>
+
+      {/* Update card — only shown in Tauri desktop app when update is available */}
+      <UpdateCard />
 
       {/* Bottom bar: settings + profile name */}
       <div className="py-3 border-t border-[#F0F3F3] px-1">
