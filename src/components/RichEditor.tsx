@@ -244,10 +244,17 @@ function SlashMenu({ state, editor, onClose }: {
     onClose()
   }
 
+  // Flip upward if menu would be cut off at the bottom
+  const MENU_HEIGHT = Math.min(filtered.length * 48 + 40, 320)
+  const TOOLBAR_CLEARANCE = 90
+  const spaceBelow = window.innerHeight - state.y - TOOLBAR_CLEARANCE
+  const showAbove = spaceBelow < MENU_HEIGHT
+  const top = showAbove ? state.y - MENU_HEIGHT - 8 : state.y
+
   return createPortal(
     <div
-      className="fixed z-[9999] w-64 overflow-hidden rounded-[15px] border border-[#D6DCE0] bg-white p-1 shadow-[0_8px_24px_rgba(12,22,41,0.14)]"
-      style={{ top: state.y, left: state.x }}
+      className="fixed z-[9999] w-64 rounded-[15px] border border-[#D6DCE0] bg-white p-1 shadow-[0_8px_24px_rgba(12,22,41,0.14)] overflow-y-auto"
+      style={{ top, left: state.x, maxHeight: Math.min(MENU_HEIGHT, window.innerHeight - 120) }}
       onMouseDown={e => e.preventDefault()}
     >
       <div className="px-2 py-1.5 text-xs font-semibold text-[#727A84]">Blocks</div>
@@ -414,6 +421,32 @@ export default function RichEditor({ content, onChange, editable, placeholder, c
     return () => {
       editor.off('selectionUpdate', updateBubble)
       editor.off('blur', clearBubble)
+    }
+  }, [editor])
+
+  // ── Auto-scroll: keep cursor above the floating toolbar ───────────────────
+  useEffect(() => {
+    if (!editor) return
+    const TOOLBAR_HEIGHT = 80 // floating toolbar + some breathing room
+
+    const scrollIfNeeded = () => {
+      const { state, view } = editor
+      const { from } = state.selection
+      try {
+        const coords = view.coordsAtPos(from)
+        const threshold = window.innerHeight - TOOLBAR_HEIGHT
+        if (coords.bottom > threshold) {
+          const overflow = coords.bottom - threshold + 16
+          window.scrollBy({ top: overflow, behavior: 'smooth' })
+        }
+      } catch { /* ignore */ }
+    }
+
+    editor.on('selectionUpdate', scrollIfNeeded)
+    editor.on('update', scrollIfNeeded)
+    return () => {
+      editor.off('selectionUpdate', scrollIfNeeded)
+      editor.off('update', scrollIfNeeded)
     }
   }, [editor])
 
