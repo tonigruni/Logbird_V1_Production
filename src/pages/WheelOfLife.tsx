@@ -393,19 +393,22 @@ export default function WheelOfLife() {
     setAiLoading(false)
   }
 
-  // Compute per-domain score as average of its sub-area scores
+  // Compute per-domain score as average of its sub-area scores,
+  // falling back to the latest checkin's top-level scores when no sub-area
+  // ratings are in progress (i.e. the check-in form is empty).
   const scores = useMemo(() => {
     const result: Record<string, number> = {}
+    const topLevel = (checkins[0]?.scores ?? {}) as Record<string, number>
     CHECK_IN_DOMAINS.forEach(d => {
       const vals = d.subAreas
         .map(sa => subScores[`${d.id}.${sa.key}`])
         .filter((v): v is number => v != null)
       result[d.name] = vals.length > 0
         ? Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10
-        : 0
+        : topLevel[d.name] ?? 0
     })
     return result
-  }, [subScores])
+  }, [subScores, checkins])
 
   const overallAverage = useMemo(() => {
     const ratedDomains = CHECK_IN_DOMAINS.filter(d =>
@@ -897,7 +900,7 @@ export default function WheelOfLife() {
                 <div className="bg-white card p-5">
                   <p className="text-xs font-bold text-[#727A84] uppercase tracking-wider mb-2">Last Check-in</p>
                   <p className="text-sm font-semibold text-[#0C1629]">
-                    {format(new Date(checkins[checkins.length - 1].date + 'T00:00:00'), 'MMM d, yyyy')}
+                    {format(new Date(checkins[0].date + 'T00:00:00'), 'MMM d, yyyy')}
                   </p>
                   <p className="text-xs text-[#727A84] mt-0.5">{checkins.length} total check-ins</p>
                 </div>
