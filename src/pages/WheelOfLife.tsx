@@ -414,8 +414,11 @@ export default function WheelOfLife() {
     const ratedDomains = CHECK_IN_DOMAINS.filter(d =>
       d.subAreas.some(sa => subScores[`${d.id}.${sa.key}`] != null)
     )
-    if (ratedDomains.length === 0) return 0
-    const vals = ratedDomains.map(d => scores[d.name])
+    // When no sub-area check-in is in progress, average all domain scores
+    // (which already fall back to the latest checkin's top-level scores)
+    const domainsToUse = ratedDomains.length > 0 ? ratedDomains : CHECK_IN_DOMAINS
+    const vals = domainsToUse.map(d => scores[d.name]).filter(v => v > 0)
+    if (vals.length === 0) return 0
     return Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10
   }, [subScores, scores])
 
