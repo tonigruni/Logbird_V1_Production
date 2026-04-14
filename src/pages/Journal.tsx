@@ -574,17 +574,20 @@ export default function Journal() {
   /*  Handlers                                                         */
   /* ---------------------------------------------------------------- */
 
+  // ── Autosave: only fire when user has actually typed ────────────────────────
+  const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const isDirty = useRef(false) // true only when user has typed since last load/save
+
   const openNew = (templateContent = '') => {
-    isLoadingEntry.current = true
+    isDirty.current = false
     setSelected(null); setTitle(''); setContent(templateContent)
     setMoodScore(null); setEntryCategory([]); setEntryLocation(''); setEntryWeather('')
     setSleepQuality(null); setHadAlcohol(null); setExercised(null); setEnergyLevel(null)
     setSaveStatus('idle'); setActiveTemplateDetail(null); setPromptResponses([]); setExtraThoughts('')
-    setTimeout(() => { isLoadingEntry.current = false }, 100)
   }
 
   const openEntry = (entry: JournalEntry) => {
-    isLoadingEntry.current = true
+    isDirty.current = false
     setSelected(entry); setTitle(entry.title); setContent(entry.content)
     setMoodScore(entry.mood_score); setEntryCategory(parseCategories(entry.category))
     setEntryLocation(entry.location ?? ''); setEntryWeather(entry.weather ?? '')
@@ -593,11 +596,10 @@ export default function Journal() {
     setExercised(entry.exercised ?? null)
     setEnergyLevel(entry.energy_level ?? null)
     setSaveStatus('idle'); setActiveTemplateDetail(null); setPromptResponses([])
-    setTimeout(() => { isLoadingEntry.current = false }, 100)
   }
 
   const applyBuiltIn = (tpl: BuiltInTemplate) => {
-    isLoadingEntry.current = true
+    isDirty.current = false
     setSelected(null)
     setTitle(tpl.name)
     setContent('')
@@ -612,12 +614,12 @@ export default function Journal() {
     setExtraThoughts('')
     setView('editor')
     window.scrollTo({ top: 0, behavior: 'instant' })
-    setTimeout(() => { isLoadingEntry.current = false }, 100)
   }
 
   const save = async () => {
     if (!user || !title.trim()) return
     setSaving(true)
+    isDirty.current = false
     const finalContent = activeTemplateDetail && promptResponses.length > 0
       ? buildEntryContent(activeTemplateDetail, promptResponses) + (extraThoughts.trim() ? `\n\n### Additional Thoughts\n\n${extraThoughts.trim()}` : '')
       : content
@@ -632,15 +634,12 @@ export default function Journal() {
     setTimeout(() => setSaveStatus('idle'), 2500)
   }
 
-  // ── Autosave: debounce 1.5s after last real user edit ───────────────────────
-  const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const isLoadingEntry = useRef(false) // true while we're programmatically setting content
-
   useEffect(() => {
-    if (isLoadingEntry.current) return // skip autosave when loading/switching entries
+    if (!isDirty.current) return // only autosave after real user edits
     if (!user || !title.trim() || activeTemplateDetail) return
     if (autosaveTimer.current) clearTimeout(autosaveTimer.current)
     autosaveTimer.current = setTimeout(async () => {
+      isDirty.current = false
       setSaving(true)
       const payload = { title, content, mood_score: moodScore, category: entryCategory.length ? entryCategory.join(',') : null, location: entryLocation || null, weather: entryWeather || null, sleep_quality: sleepQuality, had_alcohol: hadAlcohol, exercised, energy_level: energyLevel }
       if (selected) {
@@ -1188,7 +1187,7 @@ export default function Journal() {
                 <div className="flex items-start gap-3">
                   <input
                     value={title}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={e => { isDirty.current = true; setTitle(e.target.value) }}
                     placeholder="Title your reflection..."
                     className="flex-1 min-w-0 bg-transparent text-2xl md:text-3xl font-extrabold text-[#0C1629] placeholder:text-[#B5C1C8] focus:outline-none tracking-tight leading-tight"
                   />
@@ -1308,7 +1307,7 @@ export default function Journal() {
                   <RichEditor
                     key={selected?.id ?? 'new'}
                     content={content}
-                    onChange={setContent}
+                    onChange={(val) => { isDirty.current = true; setContent(val) }}
                     editable={true}
                     placeholder="Begin your story here…"
                   />
