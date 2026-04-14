@@ -133,7 +133,7 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
       gsap.set(".text-days",          { autoAlpha: 1, clipPath: "inset(0 100% 0 0)" });
       gsap.set(".main-card",          { y: window.innerHeight + 200, autoAlpha: 1 });
       gsap.set(".scroll-hint",        { autoAlpha: 0, y: 24, scale: 0.85, filter: "blur(8px)" });
-      gsap.set([".card-left-text", ".card-right-text", ".mockup-scroll-wrapper", ".floating-badge", ".phone-widget"], { autoAlpha: 0 });
+      gsap.set([".card-left-text", ".card-right-text", ".card-title-desktop", ".card-logbird-desktop", ".mockup-scroll-wrapper", ".floating-badge", ".phone-widget"], { autoAlpha: 0 });
 
       // Intro reveal (no scroll)
       gsap.timeline({ delay: 0.3 })
@@ -171,11 +171,11 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
         .to(".progress-ring",     { strokeDashoffset: 60, duration: 2, ease: "power3.inOut" }, "-=1.2")
         .to(".counter-val",       { innerHTML: metricValue, snap: { innerHTML: 1 }, duration: 2, ease: "expo.out" }, "-=2.0")
         .fromTo(".floating-badge", { y: 100, autoAlpha: 0, scale: 0.7, rotationZ: -10 }, { y: 0, autoAlpha: 1, scale: 1, rotationZ: 0, ease: "back.out(1.5)", duration: 1.5, stagger: 0.2 }, "-=2.0")
-        .fromTo(".card-left-text",  { x: -50, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "power4.out", duration: 1.5 }, "-=1.5")
-        .fromTo(".card-right-text", { x:  50, autoAlpha: 0, scale: 0.8 }, { x: 0, autoAlpha: 1, scale: 1, ease: "expo.out", duration: 1.5 }, "<")
+        .fromTo([".card-left-text", ".card-title-desktop"],  { x: -50, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "power4.out", duration: 1.5 }, "-=1.5")
+        .fromTo([".card-right-text", ".card-logbird-desktop"], { x:  50, autoAlpha: 0, scale: 0.8 }, { x: 0, autoAlpha: 1, scale: 1, ease: "expo.out", duration: 1.5 }, "<")
         .to({}, { duration: 2.5 })
         .set(".hero-text-wrapper", { autoAlpha: 0 })
-        .to([".mockup-scroll-wrapper", ".floating-badge", ".card-left-text", ".card-right-text"], {
+        .to([".mockup-scroll-wrapper", ".floating-badge", ".card-left-text", ".card-right-text", ".card-title-desktop", ".card-logbird-desktop"], {
           scale: 0.9, y: -40, z: -200, autoAlpha: 0, ease: "power3.in", duration: 1.2, stagger: 0.05,
         })
         .to(".main-card", {
@@ -258,46 +258,63 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
             </svg>
           </div>
 
-          <div className="relative w-full h-full max-w-7xl mx-auto px-4 lg:px-12 flex flex-col justify-evenly lg:grid lg:grid-cols-3 items-center lg:gap-8 z-10 py-6 lg:py-0">
+          <div className="relative w-full h-full max-w-7xl mx-auto px-4 lg:px-12 flex flex-col items-center justify-evenly lg:justify-center z-10 py-6 lg:py-0">
 
-            {/* Brand name — top on mobile, right on desktop */}
-            <div className="card-right-text gsap-reveal order-1 lg:order-3 flex justify-center lg:justify-end z-20 w-full">
-              <h2 className="text-6xl md:text-[6rem] lg:text-[8rem] font-black uppercase tracking-tighter text-card-silver-matte">
+            {/* Mobile-only: brand name (lg:hidden keeps it out of desktop layout entirely) */}
+            <div className="card-right-text gsap-reveal lg:hidden flex justify-center z-20 w-full">
+              <h2 className="text-6xl font-black uppercase tracking-tighter text-card-silver-matte">
                 Logbird
               </h2>
             </div>
 
-            {/* Laptop mockup — center */}
-            <div className="mockup-scroll-wrapper order-2 lg:order-2 relative w-full h-[300px] lg:h-[500px] flex items-center justify-center z-10" style={{ perspective: "1000px" }}>
+            {/* Laptop mockup — flex-col so title/logbird stack naturally above/below */}
+            <div className="mockup-scroll-wrapper relative w-full flex flex-col items-center justify-center z-10 overflow-visible" style={{ perspective: "1000px" }}>
+
+              {/* Desktop title: above laptop */}
+              <div className="card-title-desktop hidden lg:flex items-center justify-center z-20 pointer-events-none mb-6 whitespace-nowrap">
+                <h3 className="text-white text-4xl font-bold tracking-tight text-center">Do more. Grow faster.</h3>
+              </div>
+
+              {/* Laptop + floating badges */}
               <div className="relative flex items-center justify-center transform scale-[0.60] md:scale-[0.75] lg:scale-100">
 
-                {/* Floating badges */}
-                <div className="floating-badge absolute flex top-0 left-[-20px] lg:left-[-100px] floating-ui-badge rounded-xl lg:rounded-2xl p-3 lg:p-4 items-center gap-3 z-30">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-blue-500/20 to-blue-900/10 flex items-center justify-center border border-blue-400/30 shadow-inner">
-                    <span className="text-base lg:text-xl drop-shadow-lg" aria-hidden="true">🔥</span>
+                {/* Top-left: 21-Day Streak */}
+                <div className="floating-badge absolute flex top-10 left-[-20px] lg:left-[-200px] floating-ui-badge rounded-2xl p-4 lg:p-5 items-center gap-4 z-30">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-b from-blue-500/20 to-blue-900/10 flex items-center justify-center border border-blue-400/30 shadow-inner shrink-0">
+                    <span className="text-2xl drop-shadow-lg" aria-hidden="true">🔥</span>
                   </div>
                   <div>
-                    <p className="text-white text-xs lg:text-sm font-bold tracking-tight">21-Day Streak</p>
-                    <p className="text-blue-200/50 text-[10px] lg:text-xs font-medium">Keep it going!</p>
+                    <p className="text-white text-sm lg:text-base font-bold tracking-tight">21-Day Streak</p>
+                    <p className="text-blue-200/50 text-xs font-medium">Keep it going!</p>
                   </div>
                 </div>
 
-                <div className="floating-badge absolute flex bottom-8 right-[-20px] lg:right-[-100px] floating-ui-badge rounded-xl lg:rounded-2xl p-3 lg:p-4 items-center gap-3 z-30">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-green-500/20 to-green-900/10 flex items-center justify-center border border-green-400/30 shadow-inner">
-                    <span className="text-base lg:text-lg drop-shadow-lg" aria-hidden="true">✅</span>
+                {/* Bottom-right: 8 Tasks Done */}
+                <div className="floating-badge absolute flex bottom-24 right-[-20px] lg:right-[-200px] floating-ui-badge rounded-2xl p-4 lg:p-5 items-center gap-4 z-30">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-b from-green-500/20 to-green-900/10 flex items-center justify-center border border-green-400/30 shadow-inner shrink-0">
+                    <span className="text-xl drop-shadow-lg" aria-hidden="true">✅</span>
                   </div>
                   <div>
-                    <p className="text-white text-xs lg:text-sm font-bold tracking-tight">8 Tasks Done</p>
-                    <p className="text-blue-200/50 text-[10px] lg:text-xs font-medium">Deep Focus · 2h 14m</p>
+                    <p className="text-white text-sm lg:text-base font-bold tracking-tight">8 Tasks Done</p>
+                    <p className="text-blue-200/50 text-xs font-medium">Deep Focus · 2h 14m</p>
                   </div>
                 </div>
 
-                {/* MacBook-style laptop */}
-                <div ref={mockupRef} className="laptop-outer will-change-transform transform-style-3d" style={{ width: "clamp(320px, 30vw, 520px)" }}>
-                  {/* Screen frame */}
+                {/* Top-right: 32% more productive */}
+                <div className="floating-badge absolute flex top-10 right-[-20px] lg:right-[-200px] floating-ui-badge rounded-2xl p-4 lg:p-5 items-center gap-4 z-30">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-b from-purple-500/20 to-purple-900/10 flex items-center justify-center border border-purple-400/30 shadow-inner shrink-0">
+                    <span className="text-2xl drop-shadow-lg" aria-hidden="true">📈</span>
+                  </div>
+                  <div>
+                    <p className="text-white text-sm lg:text-base font-bold tracking-tight">32% more productive</p>
+                    <p className="text-blue-200/50 text-xs font-medium">vs. last month</p>
+                  </div>
+                </div>
+
+                {/* MacBook-style laptop — dark theme, 2× size */}
+                <div ref={mockupRef} className="laptop-outer will-change-transform transform-style-3d" style={{ width: "clamp(560px, 55vw, 900px)" }}>
                   <div className="laptop-screen-frame">
                     <div className="laptop-camera-dot" aria-hidden="true" />
-                    {/* Screen content */}
                     <div className="laptop-screen text-white" style={{ fontSize: "10px" }}>
                       <div className="flex h-full">
                         {/* Narrow sidebar */}
@@ -311,18 +328,12 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
 
                         {/* Main content */}
                         <div className="flex-1 flex flex-col overflow-hidden">
-                          {/* Top bar */}
                           <div className="flex items-center justify-between px-4 shrink-0" style={{ height: "32px", background: "rgba(0,0,0,0.2)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                             <span style={{ fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.9)" }}>Dashboard</span>
-                            <div className="flex items-center gap-2">
-                              <div style={{ width: "18px", height: "18px", borderRadius: "50%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", fontSize: "6px", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.6)", fontWeight: 700 }}>LB</div>
-                            </div>
+                            <div style={{ width: "18px", height: "18px", borderRadius: "50%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", fontSize: "6px", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.6)", fontWeight: 700 }}>LB</div>
                           </div>
-
-                          {/* Dashboard body */}
                           <div className="flex-1 p-3 overflow-hidden flex flex-col gap-2">
-                            {/* Hero banner with gradient bars — matches actual dashboard */}
-                            <div className="phone-widget relative overflow-hidden rounded-lg shrink-0" style={{ height: "68px", background: "rgba(255,255,255,0.07)", padding: "10px 12px" }}>
+                            <div className="phone-widget relative overflow-hidden shrink-0" style={{ height: "68px", background: "rgba(255,255,255,0.07)", borderRadius: "15px", padding: "10px 12px" }}>
                               <GradientBarsBackground barCount={14} barColor="rgba(255,255,255,0.18)" animate />
                               <div style={{ position: "relative", zIndex: 10 }}>
                                 <div style={{ fontSize: "7px", color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "3px" }}>Journal Streak</div>
@@ -332,15 +343,13 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
                                 </div>
                               </div>
                             </div>
-
-                            {/* Three stat cards */}
                             <div className="grid grid-cols-3 gap-2 shrink-0">
                               {[
                                 { label: "Tasks", value: "8/12", pct: "67%", color: "#22c55e" },
                                 { label: "Goals", value: "7/10", pct: "70%", color: "#a78bfa" },
                                 { label: "Focus", value: "2h 14m", pct: "75%", color: "#f59e0b" },
                               ].map((card) => (
-                                <div key={card.label} className="phone-widget rounded-md p-2" style={{ background: "rgba(255,255,255,0.05)" }}>
+                                <div key={card.label} className="phone-widget p-2" style={{ background: "rgba(255,255,255,0.05)", borderRadius: "15px" }}>
                                   <div style={{ fontSize: "6px", color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "4px" }}>{card.label}</div>
                                   <div style={{ height: "3px", background: "rgba(255,255,255,0.08)", borderRadius: "2px", marginBottom: "4px" }}>
                                     <div style={{ width: card.pct, height: "100%", background: card.color, borderRadius: "2px" }} />
@@ -349,14 +358,12 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
                                 </div>
                               ))}
                             </div>
-
-                            {/* Task items */}
                             {[
                               { done: true,  w1: "58%", w2: "72%" },
                               { done: true,  w1: "42%", w2: "55%" },
                               { done: false, w1: "65%", w2: "80%" },
                             ].map((task, i) => (
-                              <div key={i} className="phone-widget flex items-center gap-2 rounded-md p-2 shrink-0" style={{ background: "rgba(255,255,255,0.04)" }}>
+                              <div key={i} className="phone-widget flex items-center gap-2 p-2 shrink-0" style={{ background: "rgba(255,255,255,0.04)", borderRadius: "15px" }}>
                                 <div style={{ width: "12px", height: "12px", borderRadius: "50%", flexShrink: 0, background: task.done ? "#22c55e" : "rgba(255,255,255,0.08)", border: task.done ? "none" : "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                   {task.done && <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "white" }} />}
                                 </div>
@@ -372,23 +379,32 @@ export function CinematicHero({ metricValue = 21, className, ...props }: Cinemat
                       <div className="absolute inset-0 screen-glare pointer-events-none z-40" aria-hidden="true" />
                     </div>
                   </div>
-                  {/* Hinge */}
                   <div className="laptop-hinge" />
-                  {/* Keyboard base */}
                   <div className="laptop-keyboard-base">
                     <div className="laptop-trackpad" />
                   </div>
                 </div>
 
-              </div>
-            </div>
+              </div>{/* end laptop+badges */}
 
-            {/* Description text — bottom on mobile, left on desktop */}
-            <div className="card-left-text gsap-reveal order-3 lg:order-1 flex flex-col justify-center text-center lg:text-left z-20 w-full px-4 lg:px-0">
-              <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-bold mb-0 lg:mb-5 tracking-tight">
+              {/* Desktop LOGBIRD + paragraph — below laptop, slightly overlapping keyboard */}
+              <div className="card-logbird-desktop hidden lg:flex flex-col items-center z-20 pointer-events-none" style={{ marginTop: "-28px" }}>
+                <h2 className="text-[7rem] xl:text-[9rem] font-black uppercase tracking-tighter text-card-silver-matte leading-none text-center">
+                  Logbird
+                </h2>
+                <p className="text-blue-100/70 text-base font-normal leading-relaxed text-center max-w-md mt-2">
+                  <span className="text-white font-semibold">Logbird</span> is your personal OS — manage tasks, track goals, journal daily, and use AI-powered focus sessions to build momentum that compounds.
+                </p>
+              </div>
+
+            </div>{/* end mockup-scroll-wrapper */}
+
+            {/* Mobile-only: description text */}
+            <div className="card-left-text gsap-reveal lg:hidden flex flex-col text-center z-20 w-full px-4">
+              <h3 className="text-white text-2xl md:text-3xl font-bold mb-3 tracking-tight">
                 Do more. Grow faster.
               </h3>
-              <p className="hidden md:block text-blue-100/70 text-sm md:text-base lg:text-lg font-normal leading-relaxed mx-auto lg:mx-0 max-w-sm lg:max-w-none">
+              <p className="text-blue-100/70 text-sm font-normal leading-relaxed mx-auto max-w-sm">
                 <span className="text-white font-semibold">Logbird</span> is your personal OS — manage tasks, track goals, journal daily, and use AI-powered focus sessions to build momentum that compounds.
               </p>
             </div>

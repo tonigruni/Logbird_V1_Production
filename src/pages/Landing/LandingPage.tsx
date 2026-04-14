@@ -100,12 +100,39 @@ export default function LandingPage() {
   const headingRef    = useRef<HTMLHeadingElement>(null);
   const linksRef      = useRef<HTMLDivElement>(null);
 
-  const [showLoginCard, setShowLoginCard] = useState(false);
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
   const [waitlistName, setWaitlistName] = useState("");
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [waitlistDone, setWaitlistDone] = useState(false);
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
+  const [waitlistError, setWaitlistError] = useState(false);
+
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!waitlistName || !waitlistEmail) return;
+    setWaitlistLoading(true);
+    setWaitlistError(false);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/waitlist-notify`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: waitlistName, email: waitlistEmail }),
+        }
+      );
+      if (!res.ok) {
+        const detail = await res.json().catch(() => ({}));
+        console.error("Waitlist error:", detail);
+        throw new Error("Failed");
+      }
+      setWaitlistDone(true);
+    } catch (err) {
+      console.error("Waitlist submit error:", err);
+      setWaitlistError(true);
+    } finally {
+      setWaitlistLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!wrapperRef.current) return;
@@ -204,62 +231,6 @@ export default function LandingPage() {
 
           <div ref={linksRef} className="flex flex-col items-center gap-4 w-full max-w-xl mb-12">
 
-            {/* Buttons row */}
-            <div className="flex flex-wrap justify-center gap-4 w-full">
-              {/* Login button with inline popover card above */}
-              <div className="relative">
-                {showLoginCard && (
-                  <div
-                    className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-72 rounded-2xl p-5 shadow-2xl z-20"
-                    style={{ backgroundColor: "var(--color-bg)", border: "1px solid rgba(255,255,255,0.1)" }}
-                  >
-                    <p className="text-[10px] font-bold tracking-widest uppercase mb-3" style={{ color: "var(--color-text-muted)" }}>Early access only</p>
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        if (password === "early_user") {
-                          window.location.href = "https://app.logbird.me";
-                        } else {
-                          setError(true);
-                          setPassword("");
-                        }
-                      }}
-                      className="flex gap-2"
-                    >
-                      <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => { setPassword(e.target.value); setError(false); }}
-                        placeholder="Access code"
-                        autoFocus
-                        className="flex-1 rounded-xl px-3 py-2 text-sm font-medium outline-none"
-                        style={{
-                          backgroundColor: "rgba(255,255,255,0.06)",
-                          border: error ? "1px solid rgba(239,68,68,0.5)" : "1px solid rgba(255,255,255,0.1)",
-                          color: "var(--color-text)",
-                        }}
-                      />
-                      <button type="submit" className="btn-modern-dark px-4 py-2 rounded-xl text-sm font-bold">Go</button>
-                    </form>
-                    {error && <p className="text-xs text-red-400 mt-2">Incorrect code.</p>}
-                  </div>
-                )}
-                <button
-                  onClick={() => { setShowLoginCard(!showLoginCard); setPassword(""); setError(false); }}
-                  className="btn-modern-dark flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none cursor-pointer"
-                >
-                  <svg className="w-5 h-5 transition-transform group-hover:scale-105" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                  </svg>
-                  <div className="text-left">
-                    <div className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-[-2px]">Already a member</div>
-                    <div className="text-xl font-bold leading-none tracking-tight">Login</div>
-                  </div>
-                </button>
-              </div>
-            </div>
-
             {/* Waitlist card */}
             <div
               className="w-full rounded-2xl px-6 py-5"
@@ -267,23 +238,18 @@ export default function LandingPage() {
             >
               <p className="text-[10px] font-bold tracking-widest uppercase mb-4" style={{ color: "var(--color-text-muted)" }}>Early access — join the waitlist</p>
               {waitlistDone ? (
-                <p className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>You're on the list. We'll be in touch.</p>
+                <p className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>You're on the list. We'll be in touch! 🎉</p>
               ) : (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (waitlistName && waitlistEmail) setWaitlistDone(true);
-                  }}
-                  className="flex flex-col sm:flex-row gap-3"
-                >
+                <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row gap-3">
                   <input
                     type="text"
                     value={waitlistName}
                     onChange={(e) => setWaitlistName(e.target.value)}
                     placeholder="Your name"
                     required
+                    disabled={waitlistLoading}
                     className="flex-1 rounded-xl px-4 py-3 text-sm font-medium outline-none"
-                    style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--color-text)" }}
+                    style={{ backgroundColor: "#ffffff", border: "1px solid rgba(0,0,0,0.1)", color: "#111" }}
                   />
                   <input
                     type="email"
@@ -291,13 +257,21 @@ export default function LandingPage() {
                     onChange={(e) => setWaitlistEmail(e.target.value)}
                     placeholder="Email address"
                     required
+                    disabled={waitlistLoading}
                     className="flex-1 rounded-xl px-4 py-3 text-sm font-medium outline-none"
-                    style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--color-text)" }}
+                    style={{ backgroundColor: "#ffffff", border: "1px solid rgba(0,0,0,0.1)", color: "#111" }}
                   />
-                  <button type="submit" className="btn-modern-light px-6 py-3 rounded-xl text-sm font-bold whitespace-nowrap">
-                    Join the waitlist
+                  <button
+                    type="submit"
+                    disabled={waitlistLoading}
+                    className="btn-modern-light px-6 py-3 rounded-xl text-sm font-bold whitespace-nowrap disabled:opacity-60"
+                  >
+                    {waitlistLoading ? "Sending…" : "Join the waitlist"}
                   </button>
                 </form>
+              )}
+              {waitlistError && (
+                <p className="text-xs text-red-400 mt-2">Something went wrong. Please try again.</p>
               )}
             </div>
 
