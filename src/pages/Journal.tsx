@@ -575,13 +575,16 @@ export default function Journal() {
   /* ---------------------------------------------------------------- */
 
   const openNew = (templateContent = '') => {
+    isLoadingEntry.current = true
     setSelected(null); setTitle(''); setContent(templateContent)
     setMoodScore(null); setEntryCategory([]); setEntryLocation(''); setEntryWeather('')
     setSleepQuality(null); setHadAlcohol(null); setExercised(null); setEnergyLevel(null)
     setSaveStatus('idle'); setActiveTemplateDetail(null); setPromptResponses([]); setExtraThoughts('')
+    setTimeout(() => { isLoadingEntry.current = false }, 100)
   }
 
   const openEntry = (entry: JournalEntry) => {
+    isLoadingEntry.current = true
     setSelected(entry); setTitle(entry.title); setContent(entry.content)
     setMoodScore(entry.mood_score); setEntryCategory(parseCategories(entry.category))
     setEntryLocation(entry.location ?? ''); setEntryWeather(entry.weather ?? '')
@@ -590,9 +593,11 @@ export default function Journal() {
     setExercised(entry.exercised ?? null)
     setEnergyLevel(entry.energy_level ?? null)
     setSaveStatus('idle'); setActiveTemplateDetail(null); setPromptResponses([])
+    setTimeout(() => { isLoadingEntry.current = false }, 100)
   }
 
   const applyBuiltIn = (tpl: BuiltInTemplate) => {
+    isLoadingEntry.current = true
     setSelected(null)
     setTitle(tpl.name)
     setContent('')
@@ -607,6 +612,7 @@ export default function Journal() {
     setExtraThoughts('')
     setView('editor')
     window.scrollTo({ top: 0, behavior: 'instant' })
+    setTimeout(() => { isLoadingEntry.current = false }, 100)
   }
 
   const save = async () => {
@@ -626,11 +632,12 @@ export default function Journal() {
     setTimeout(() => setSaveStatus('idle'), 2500)
   }
 
-  // ── Autosave: debounce 1.5s after last change to title or content ──────────
+  // ── Autosave: debounce 1.5s after last real user edit ───────────────────────
   const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const isFirstRender = useRef(true)
+  const isLoadingEntry = useRef(false) // true while we're programmatically setting content
+
   useEffect(() => {
-    if (isFirstRender.current) { isFirstRender.current = false; return }
+    if (isLoadingEntry.current) return // skip autosave when loading/switching entries
     if (!user || !title.trim() || activeTemplateDetail) return
     if (autosaveTimer.current) clearTimeout(autosaveTimer.current)
     autosaveTimer.current = setTimeout(async () => {
