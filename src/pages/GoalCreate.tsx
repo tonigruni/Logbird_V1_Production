@@ -19,7 +19,6 @@ import { cn } from '../lib/utils'
 import { useWheelStore } from '../stores/wheelStore'
 import { useProjectStore } from '../stores/projectStore'
 import { useAuthStore } from '../stores/authStore'
-import { supabase } from '../lib/supabase'
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -92,7 +91,7 @@ function Label({ children }: { children: React.ReactNode }) {
 // ---------------------------------------------------------------------------
 export default function GoalCreate() {
   const navigate = useNavigate()
-  const { categories, createTask, fetchAll } = useWheelStore()
+  const { categories, createTask, fetchAll, createGoal } = useWheelStore()
   const { projects, createProject, updateProject, fetchProjects } = useProjectStore()
   const { user } = useAuthStore()
 
@@ -132,11 +131,15 @@ export default function GoalCreate() {
 
   // ── UI state ──
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [errors, setErrors] = useState<{ title?: string; category?: string }>({})
 
-  // Bug fix 3: load projects on mount so dropdown is populated on direct nav
+  // Load all data on mount so categories/projects are available on direct navigation
   useEffect(() => {
-    if (user) fetchProjects(user.id)
+    if (user) {
+      fetchAll(user.id)
+      fetchProjects(user.id)
+    }
   }, [user?.id])
 
   const activeCategories = categories.filter(c => c.is_active)
@@ -203,20 +206,25 @@ export default function GoalCreate() {
     if (Object.keys(errs).length) { setErrors(errs); return }
 
     setSaving(true)
+    setSaveError(null)
     try {
       const days = TIMELINE_OPTIONS.find(t => t.value === timeline)?.days ?? 90
       const target_date = new Date(Date.now() + days * 86400000).toISOString().split('T')[0]
       const resolvedCover = coverUrl ?? await fetchAutocover(title.trim())
 
-      const { data: goal, error } = await supabase
-        .from('goals')
-        .insert({ user_id: user!.id, category_id: categoryId, title: title.trim(), description: why.trim() || null, project_id: linkedProjectId, status: 'active', target_date, cover_url: resolvedCover })
-        .select()
-        .single()
+      // Use store's createGoal so DEMO_MODE is handled correctly
+      const goal = await createGoal({
+        user_id: user!.id,
+        category_id: categoryId,
+        title: title.trim(),
+        description: why.trim() || null,
+        project_id: linkedProjectId,
+        status: 'active',
+        target_date,
+        cover_url: resolvedCover,
+      })
 
-      if (error || !goal) throw error
-
-      // Bug fix 4: keep project.goal_id in sync with goal.project_id
+      // Keep project.goal_id in sync
       if (linkedProjectId) {
         await updateProject(linkedProjectId, { goal_id: goal.id })
       }
@@ -225,11 +233,11 @@ export default function GoalCreate() {
         await createTask({ user_id: user!.id, goal_id: goal.id, category_id: categoryId, project_id: linkedProjectId, title: t.title, completed: false, priority: t.priority as any, energy: 2, estimated_minutes: t.estimated_minutes, due_date: null })
       }
 
-      await fetchAll(user!.id)
       await fetchProjects(user!.id)
       navigate(`/goals/${goal.id}`)
     } catch (e) {
       console.error(e)
+      setSaveError(e instanceof Error ? e.message : 'Failed to save goal. Please try again.')
       setSaving(false)
     }
   }
@@ -258,6 +266,9 @@ export default function GoalCreate() {
           <p className="text-sm text-[#727A84] mt-1">Define what you want to achieve and how you'll get there.</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          {saveError && (
+            <p className="text-xs font-semibold text-[#dc2626] max-w-[200px] text-right">{saveError}</p>
+          )}
           <button
             onClick={() => navigate('/goals')}
             className="text-sm font-semibold text-[#727A84] bg-white card px-4 py-2.5 hover:bg-[#F0F3F3] transition-colors cursor-pointer"

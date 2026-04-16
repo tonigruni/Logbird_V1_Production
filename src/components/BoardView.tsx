@@ -348,6 +348,11 @@ export default function BoardView({ columns, onAddCard, onMoveCard, onCardClick,
   const [activeCard, setActiveCard] = useState<BoardCard | null>(null)
   const [sourceColumnId, setSourceColumnId] = useState<string | null>(null)
 
+  // Refs that always hold the latest values — avoid stale closure bugs in DnD handlers
+  const internalColumnsRef = useRef<BoardColumn[]>(columns)
+  const sourceColRef = useRef<string | null>(null)
+  const destColRef = useRef<string | null>(null)
+
   // Scroll indicators
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
@@ -375,27 +380,31 @@ export default function BoardView({ columns, onAddCard, onMoveCard, onCardClick,
   // Sync internal state when parent columns change (store updates)
   useEffect(() => {
     setInternalColumns(columns)
+    internalColumnsRef.current = columns
   }, [columns])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
   )
 
-  // Find which column a card currently belongs to
+  // Reads from ref — always current, no stale closure risk
   const findColumnOfCard = useCallback((cardId: UniqueIdentifier): string | null => {
-    for (const col of internalColumns) {
+    const cols = internalColumnsRef.current
+    for (const col of cols) {
       if (col.cards.some(c => c.id === String(cardId))) return col.id
     }
-    // cardId might be a column id (when dragging over empty column)
-    if (internalColumns.some(c => c.id === String(cardId))) return String(cardId)
+    if (cols.some(c => c.id === String(cardId))) return String(cardId)
     return null
-  }, [internalColumns])
+  }, [])
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
-    const card = internalColumns.flatMap(c => c.cards).find(c => c.id === String(event.active.id))
+    const card = internalColumnsRef.current.flatMap(c => c.cards).find(c => c.id === String(event.active.id))
     setActiveCard(card || null)
-    setSourceColumnId(findColumnOfCard(event.active.id))
-  }, [internalColumns, findColumnOfCard])
+    const colId = findColumnOfCard(event.active.id)
+    setSourceColumnId(colId)
+    sourceColRef.current = colId
+    destColRef.current = null
+  }, [findColumnOfCard])
 
   const handleDragOver = useCallback((event: DragOverEvent) => {
     const { active, over } = event
@@ -405,11 +414,14 @@ export default function BoardView({ columns, onAddCard, onMoveCard, onCardClick,
     let overColId = findColumnOfCard(over.id)
 
     // If hovering over a column container itself (not a card)
-    if (internalColumns.some(c => c.id === String(over.id))) {
+    if (internalColumnsRef.current.some(c => c.id === String(over.id))) {
       overColId = String(over.id)
     }
 
     if (!activeColId || !overColId || activeColId === overColId) return
+
+    // Track latest destination via ref so handleDragEnd always sees correct value
+    destColRef.current = overColId
 
     setInternalColumns(prev => {
       const next = prev.map(col => ({ ...col, cards: [...col.cards] }))
@@ -427,23 +439,28 @@ export default function BoardView({ columns, onAddCard, onMoveCard, onCardClick,
         dstCol.cards.push(card)
       }
 
+      // Keep ref in sync immediately so the next handleDragOver sees correct state
+      internalColumnsRef.current = next
       return next
     })
-  }, [findColumnOfCard, internalColumns])
+  }, [findColumnOfCard])
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active } = event
     setActiveCard(null)
 
-    // Determine final column
-    const destColId = findColumnOfCard(active.id)
+    // Read from refs — guaranteed to be the values set during the drag
+    const srcColId = sourceColRef.current
+    const dstColId = destColRef.current
+    sourceColRef.current = null
+    destColRef.current = null
 
-    if (sourceColumnId && destColId && sourceColumnId !== destColId && onMoveCard) {
-      onMoveCard(String(active.id), sourceColumnId, destColId)
+    if (srcColId && dstColId && srcColId !== dstColId && onMoveCard) {
+      onMoveCard(String(active.id), srcColId, dstColId)
     }
 
     setSourceColumnId(null)
-  }, [findColumnOfCard, sourceColumnId, onMoveCard])
+  }, [onMoveCard])
 
   return (
     <DndContext

@@ -14,6 +14,7 @@ import {
   PaintBrush,
   Image,
   Trash,
+  Kanban,
 } from '@phosphor-icons/react'
 import ImagePickerModal from '../components/ui/ImagePickerModal'
 import { cn } from '../lib/utils'

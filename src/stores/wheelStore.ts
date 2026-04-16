@@ -85,7 +85,7 @@ interface WheelState {
   loading: boolean
   fetchAll: (userId: string) => Promise<void>
   createCheckin: (checkin: Omit<WheelCheckin, 'id' | 'created_at'>) => Promise<void>
-  createGoal: (goal: Omit<Goal, 'id' | 'created_at'>) => Promise<void>
+  createGoal: (goal: Omit<Goal, 'id' | 'created_at'>) => Promise<Goal>
   updateGoal: (id: string, updates: Partial<Goal>) => Promise<void>
   deleteGoal: (id: string) => Promise<void>
   createTask: (task: Omit<Task, 'id' | 'created_at'>) => Promise<void>
@@ -133,11 +133,14 @@ export const useWheelStore = create<WheelState>((set) => ({
   createGoal: async (goal) => {
     if (goal.title && goal.title.length > 500) throw new Error('Goal title must be 500 characters or fewer')
     if (DEMO_MODE) {
-      const data = { ...goal, id: crypto.randomUUID(), created_at: new Date().toISOString() }
-      set((state) => ({ goals: [data, ...state.goals] })); return
+      const data: Goal = { ...goal, id: crypto.randomUUID(), created_at: new Date().toISOString() }
+      set((state) => ({ goals: [data, ...state.goals] }))
+      return data
     }
-    const { data } = await supabase.from('goals').insert(goal).select().single()
+    const { data, error } = await supabase.from('goals').insert(goal).select().single()
+    if (error) throw error
     if (data) set((state) => ({ goals: [data, ...state.goals] }))
+    return data as Goal
   },
   updateGoal: async (id, updates) => {
     if (updates.title && updates.title.length > 500) throw new Error('Goal title must be 500 characters or fewer')
