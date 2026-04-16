@@ -34,7 +34,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       .from('user_profiles')
       .select('anthropic_api_key, anthropic_model, avatar_url')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle()
     if (data) {
       if (data.avatar_url) set({ avatarUrl: data.avatar_url })
     }
