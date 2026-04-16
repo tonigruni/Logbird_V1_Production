@@ -196,7 +196,8 @@ export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { user } = useAuthStore()
-  const { projects, fetchProjects, updateProject } = useProjectStore()
+  const { projects, fetchProjects, updateProject, deleteProject } = useProjectStore()
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const { tasks, goals, fetchAll, createTask, toggleTask } = useWheelStore()
 
   useEffect(() => {
@@ -267,14 +268,45 @@ export default function ProjectDetail() {
 
   return (
     <div className="space-y-8 pb-24">
-      {/* Back button */}
-      <button
-        onClick={() => navigate('/projects')}
-        className="inline-flex items-center gap-2 text-sm font-semibold text-[#727A84] hover:text-[#0C1629] transition-colors cursor-pointer"
-      >
-        <ArrowLeft size={16} />
-        Back to Projects
-      </button>
+      {/* Back button + delete */}
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => navigate('/projects')}
+          className="inline-flex items-center gap-2 text-sm font-semibold text-[#727A84] hover:text-[#0C1629] transition-colors cursor-pointer"
+        >
+          <ArrowLeft size={16} />
+          Back to Projects
+        </button>
+
+        {confirmDelete ? (
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[#727A84]">Delete this project?</span>
+            <button
+              onClick={async () => {
+                await deleteProject(project.id)
+                navigate('/projects')
+              }}
+              className="text-xs font-semibold text-white bg-[#dc2626] px-3 py-1.5 rounded-[8px] hover:bg-[#b91c1c] transition-colors cursor-pointer"
+            >
+              Yes, delete
+            </button>
+            <button
+              onClick={() => setConfirmDelete(false)}
+              className="text-xs font-semibold text-[#727A84] bg-[#F0F3F3] px-3 py-1.5 rounded-[8px] hover:bg-[#D6DCE0] transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#727A84] hover:text-[#dc2626] hover:bg-[#fce8e8] px-3 py-1.5 rounded-[8px] transition-colors cursor-pointer"
+          >
+            <Trash size={13} />
+            Delete Project
+          </button>
+        )}
+      </div>
 
       {/* Image picker modal */}
       <ImagePickerModal

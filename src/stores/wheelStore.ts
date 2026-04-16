@@ -35,16 +35,29 @@ export interface WheelCheckin {
   created_at: string
 }
 
+export interface GoalMilestone {
+  title: string
+  description: string
+  date: string
+  completed: boolean
+}
+
 export interface Goal {
   id: string
   user_id: string
   category_id: string | null
+  category_ids: string[] | null
   project_id: string | null
   title: string
   description: string | null
   status: string
   target_date: string | null
   cover_url: string | null
+  outcome_metric: string | null
+  success_criteria: string | null
+  effort_frequency: string | null
+  effort_minutes_per_session: number | null
+  milestones: GoalMilestone[] | null
   created_at: string
 }
 

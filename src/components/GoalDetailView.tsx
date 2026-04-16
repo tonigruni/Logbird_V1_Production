@@ -135,13 +135,35 @@ export default function GoalDetailView({ goal, onClose }: Props) {
     return () => { if (timerRef.current) clearInterval(timerRef.current) }
   }, [timerRunning])
 
-  const cat            = categories.find((c) => c.id === goal.category_id)
-  const goalTasks      = tasks.filter((t) => t.goal_id === goal.id)
-  const completedCount = goalTasks.filter((t) => t.completed).length
-  const pendingTasks   = goalTasks.filter((t) => !t.completed)
-  const doneTasks      = goalTasks.filter((t) => t.completed)
+  const goalCategoryIds = goal.category_ids?.length ? goal.category_ids : (goal.category_id ? [goal.category_id] : [])
+  const goalCats        = categories.filter(c => goalCategoryIds.includes(c.id))
+  const cat             = goalCats[0] ?? categories.find(c => c.id === goal.category_id)
+  const goalTasks       = tasks.filter((t) => t.goal_id === goal.id)
+  const completedCount  = goalTasks.filter((t) => t.completed).length
+  const pendingTasks    = goalTasks.filter((t) => !t.completed)
+  const doneTasks       = goalTasks.filter((t) => t.completed)
   const progressPercent = goalTasks.length > 0 ? Math.round((completedCount / goalTasks.length) * 100) : 0
-  const meta           = getCategoryMeta(cat?.name ?? '')
+  const meta            = getCategoryMeta(cat?.name ?? '')
+
+  const milestonesData  = (goal.milestones ?? []) as Array<{ title: string; description: string; date: string; completed: boolean }>
+  const milestoneDone   = milestonesData.filter(m => m.completed).length
+
+  const timeElapsedPercent = (() => {
+    if (!goal.target_date) return null
+    const start = new Date(goal.created_at).getTime()
+    const end   = new Date(goal.target_date).getTime()
+    const now   = Date.now()
+    if (end <= start) return null
+    return Math.min(100, Math.round(((now - start) / (end - start)) * 100))
+  })()
+
+  async function toggleMilestone(i: number) {
+    if (!milestonesData.length) return
+    const updated = milestonesData.map((m, idx) =>
+      idx === i ? { ...m, completed: !m.completed } : m
+    )
+    await updateGoal(goal.id, { milestones: updated })
+  }
 
   const fmtTime = (s: number) => {
     const h = Math.floor(s / 3600)
@@ -215,12 +237,18 @@ export default function GoalDetailView({ goal, onClose }: Props) {
           )}
           {/* Badges */}
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            <span
-              className="px-3 py-1 rounded-full text-xs font-bold"
-              style={{ backgroundColor: `${meta.color}18`, color: meta.color }}
-            >
-              {cat?.name ?? 'General'}
-            </span>
+            {goalCats.length > 0 ? goalCats.map(c => {
+              const m = getCategoryMeta(c.name)
+              return (
+                <span key={c.id} className="px-3 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: `${m.color}18`, color: m.color }}>
+                  {c.name}
+                </span>
+              )
+            }) : (
+              <span className="px-3 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: `${meta.color}18`, color: meta.color }}>
+                General
+              </span>
+            )}
             <button
               onClick={() => updateGoal(goal.id, { status: goal.status === 'completed' ? 'active' : 'completed' })}
               className={cn(
@@ -246,6 +274,13 @@ export default function GoalDetailView({ goal, onClose }: Props) {
           >
             <Trash2 size={13} />
             Delete
+          </button>
+          <button
+            onClick={() => navigate(`/goals/${goal.id}/edit`)}
+            className="flex items-center gap-1.5 bg-[#F0F3F3] hover:bg-[#0C1629]/10 text-on-surface-variant px-4 py-2 text-sm font-semibold rounded-[12px] transition-colors cursor-pointer"
+          >
+            <Pencil size={13} />
+            Edit
           </button>
           <button
             onClick={() => updateGoal(goal.id, { status: 'completed' })}
@@ -335,6 +370,31 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               </div>
             )}
           </section>
+
+          {/* SMART Fields — visible in main flow */}
+          {(goal.outcome_metric || goal.success_criteria || goal.effort_minutes_per_session != null) && (
+            <section className="bg-surface card p-6 md:p-8 space-y-5">
+              <h3 className="text-base font-bold text-on-surface">Goal Definition</h3>
+              {goal.outcome_metric && (
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 mb-1.5">Outcome Metric</p>
+                  <p className="text-sm text-on-surface leading-relaxed">{goal.outcome_metric}</p>
+                </div>
+              )}
+              {goal.success_criteria && (
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 mb-1.5">Success Criteria</p>
+                  <p className="text-sm text-on-surface leading-relaxed">{goal.success_criteria}</p>
+                </div>
+              )}
+              {goal.effort_minutes_per_session != null && (
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 mb-1.5">Weekly Effort</p>
+                  <p className="text-sm text-on-surface">{goal.effort_minutes_per_session} hrs / week</p>
+                </div>
+              )}
+            </section>
+          )}
 
           {/* Focus Objectives */}
           <section className="bg-surface card p-6 md:p-8">
@@ -433,6 +493,52 @@ export default function GoalDetailView({ goal, onClose }: Props) {
             </div>
           </section>
 
+          {/* Milestones */}
+          {milestonesData.length > 0 && (
+            <section className="bg-surface card p-6 md:p-8">
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-3">
+                  <h3 className="text-base font-bold text-on-surface">Milestones</h3>
+                  <span className="bg-[#F0F3F3] text-on-surface-variant px-2 py-0.5 rounded-md text-xs font-bold">{milestoneDone}/{milestonesData.length}</span>
+                </div>
+              </div>
+              {milestonesData.length > 0 && (
+                <div className="mb-5">
+                  <div className="w-full bg-[#0C1629]/10 rounded-full h-2 mb-4">
+                    <div
+                      className="h-2 rounded-full bg-[#0C1629] transition-all duration-500"
+                      style={{ width: `${milestonesData.length > 0 ? Math.round((milestoneDone / milestonesData.length) * 100) : 0}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+              <div className="space-y-2">
+                {milestonesData.map((m, i) => (
+                  <div key={i} className="flex items-start gap-3 px-3 py-2.5 hover:bg-[#F0F3F3] rounded-xl transition-colors">
+                    <button onClick={() => toggleMilestone(i)} className="cursor-pointer shrink-0 mt-0.5">
+                      {m.completed
+                        ? <CheckCircle2 size={17} className="text-[#22c55e]" />
+                        : <Circle size={17} className="text-[#B5C1C8] hover:text-primary transition-colors" />
+                      }
+                    </button>
+                    <div className="flex-1 min-w-0">
+                      <p className={cn('text-sm font-medium', m.completed ? 'line-through text-on-surface-variant/40' : 'text-on-surface')}>{m.title || `Phase ${i + 1}`}</p>
+                      {m.date && (
+                        <p className="text-[10px] text-on-surface-variant/40 mt-0.5 flex items-center gap-1">
+                          <Calendar size={9} />
+                          {format(new Date(m.date), 'MMM d, yyyy')}
+                        </p>
+                      )}
+                    </div>
+                    <div className="w-6 h-6 rounded-full bg-[#F0F3F3] flex items-center justify-center shrink-0">
+                      <span className="text-[9px] font-black text-[#727A84]">{String(i + 1).padStart(2, '0')}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* Activity & Discussion */}
           <section className="bg-surface card p-6 md:p-8">
             <h3 className="text-base font-bold text-on-surface mb-5">Activity & Discussion</h3>
@@ -521,14 +627,25 @@ export default function GoalDetailView({ goal, onClose }: Props) {
                   <span className="text-xs font-semibold text-on-surface">You</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
-                <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+              <div className="flex items-start justify-between py-3 border-b border-[#D6DCE0]">
+                <div className="flex items-center gap-2 text-xs text-on-surface-variant shrink-0 mt-0.5">
                   <Target size={13} className="text-on-surface-variant/50" />
                   Category
                 </div>
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: `${meta.color}15`, color: meta.color }}>
-                  {cat?.name ?? 'General'}
-                </span>
+                <div className="flex flex-wrap gap-1 justify-end">
+                  {goalCats.length > 0 ? goalCats.map(c => {
+                    const m = getCategoryMeta(c.name)
+                    return (
+                      <span key={c.id} className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: `${m.color}15`, color: m.color }}>
+                        {c.name}
+                      </span>
+                    )
+                  }) : (
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: `${meta.color}15`, color: meta.color }}>
+                      General
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="flex items-center justify-between py-3 border-b border-[#D6DCE0]">
                 <div className="flex items-center gap-2 text-xs text-on-surface-variant">
@@ -712,6 +829,72 @@ export default function GoalDetailView({ goal, onClose }: Props) {
               <p className="text-xs text-on-surface-variant mt-3">{completedCount} of {goalTasks.length} tasks done</p>
             </div>
           </section>
+
+          {/* Time vs Progress */}
+          {timeElapsedPercent !== null && (
+            <section className="bg-surface card p-6">
+              <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 mb-4">Time vs Progress</p>
+              <div className="space-y-3">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-semibold text-on-surface-variant">Time elapsed</span>
+                    <span className="text-[10px] font-bold text-on-surface">{timeElapsedPercent}%</span>
+                  </div>
+                  <div className="w-full bg-[#0C1629]/8 rounded-full h-2">
+                    <div
+                      className="h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${timeElapsedPercent}%`, backgroundColor: timeElapsedPercent > progressPercent + 15 ? '#ef4444' : '#f59e0b' }}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-semibold text-on-surface-variant">Task progress</span>
+                    <span className="text-[10px] font-bold text-on-surface">{progressPercent}%</span>
+                  </div>
+                  <div className="w-full bg-[#0C1629]/8 rounded-full h-2">
+                    <div
+                      className="h-2 rounded-full bg-[#22c55e] transition-all duration-500"
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+                </div>
+                {timeElapsedPercent > progressPercent + 15 && (
+                  <p className="text-[10px] text-[#ef4444] font-semibold pt-1">Behind schedule — time is outpacing progress.</p>
+                )}
+                {progressPercent >= timeElapsedPercent && (
+                  <p className="text-[10px] text-[#22c55e] font-semibold pt-1">Ahead of schedule — keep going.</p>
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* SMART Details */}
+          {(goal.outcome_metric || goal.success_criteria || goal.effort_frequency) && (
+            <section className="bg-surface card p-6">
+              <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 mb-4">SMART Details</p>
+              <div className="space-y-4">
+                {goal.outcome_metric && (
+                  <div>
+                    <p className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-wider mb-1">Outcome Metric</p>
+                    <p className="text-xs text-on-surface leading-relaxed">{goal.outcome_metric}</p>
+                  </div>
+                )}
+                {goal.success_criteria && (
+                  <div>
+                    <p className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-wider mb-1">Success Criteria</p>
+                    <p className="text-xs text-on-surface leading-relaxed">{goal.success_criteria}</p>
+                  </div>
+                )}
+                {goal.effort_minutes_per_session != null && (
+                  <div>
+                    <p className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-wider mb-1">Effort</p>
+                    <p className="text-xs text-on-surface">{goal.effort_minutes_per_session} hrs / week</p>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
 
         </div>
       </div>

@@ -89,6 +89,7 @@ export default function App() {
           <Route path="goals" element={<Goals />} />
           <Route path="goals/new" element={<GoalCreate />} />
           <Route path="goals/:id" element={<GoalDetailPage />} />
+          <Route path="goals/:id/edit" element={<GoalCreate />} />
           <Route path="timeboxing" element={<Timeboxing />} />
           <Route path="projects" element={<ProjectsOverview />} />
           <Route path="projects/new" element={<ProjectCreate />} />

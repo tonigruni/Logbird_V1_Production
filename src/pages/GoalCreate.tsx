@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   ArrowLeft,
   Target,
@@ -36,11 +36,12 @@ const CATEGORY_COLORS: Record<string, string> = {
 }
 
 const TIMELINE_OPTIONS = [
+  { label: 'Monthly',   sub: '30 days',   value: 'monthly',    days: 30  },
   { label: 'Quarterly', sub: '90 days',   value: 'quarterly',  days: 90  },
   { label: 'Annual',    sub: '365 days',  value: 'annual',     days: 365 },
   { label: 'Multi-Year',sub: '2–5 years', value: 'multi_year', days: 730 },
-] as const
-type TimelineValue = typeof TIMELINE_OPTIONS[number]['value']
+]
+type TimelineValue = 'monthly' | 'quarterly' | 'annual' | 'multi_year'
 
 const PRIORITY_OPTIONS = [
   { label: 'High Impact', color: '#3b82f6' },
@@ -89,17 +90,35 @@ function Label({ children }: { children: React.ReactNode }) {
 // ---------------------------------------------------------------------------
 // Main page
 // ---------------------------------------------------------------------------
+function inferTimeline(targetDate: string, createdAt: string): TimelineValue {
+  const days = Math.round((new Date(targetDate).getTime() - new Date(createdAt).getTime()) / 86400000)
+  if (days <= 45)  return 'monthly'
+  if (days <= 180) return 'quarterly'
+  if (days <= 500) return 'annual'
+  return 'multi_year'
+}
+
 export default function GoalCreate() {
   const navigate = useNavigate()
-  const { categories, createTask, fetchAll, createGoal } = useWheelStore()
+  const { id: editId } = useParams<{ id?: string }>()
+  const isEditing = Boolean(editId)
+
+  const { categories, goals, createTask, fetchAll, createGoal, updateGoal } = useWheelStore()
   const { projects, createProject, updateProject, fetchProjects } = useProjectStore()
   const { user } = useAuthStore()
 
   // ── Core Identity ──
-  const [title, setTitle]           = useState('')
-  const [categoryId, setCategoryId] = useState('')
-  const [timeline, setTimeline]     = useState<TimelineValue>('quarterly')
-  const [why, setWhy]               = useState('')
+  const [title, setTitle]             = useState('')
+  const [categoryIds, setCategoryIds] = useState<string[]>([])
+  const [timeline, setTimeline]       = useState<TimelineValue>('quarterly')
+  const [why, setWhy]                 = useState('')
+
+  // ── SMART fields ──
+  const [outcomeMetric, setOutcomeMetric]     = useState('')
+  const [successCriteria, setSuccessCriteria] = useState('')
+
+  // ── Effort ──
+  const [effortHoursPerWeek, setEffortHoursPerWeek] = useState<number | ''>(5)
 
   // ── Milestones ──
   const [milestones, setMilestones] = useState<Milestone[]>([
@@ -142,8 +161,35 @@ export default function GoalCreate() {
     }
   }, [user?.id])
 
+  // Pre-fill form when editing an existing goal
+  useEffect(() => {
+    if (!isEditing || !editId) return
+    const goal = goals.find(g => g.id === editId)
+    if (!goal) return
+
+    setTitle(goal.title)
+    setCategoryIds(goal.category_ids?.length ? goal.category_ids : (goal.category_id ? [goal.category_id] : []))
+    if (goal.target_date && goal.created_at) setTimeline(inferTimeline(goal.target_date, goal.created_at))
+    setWhy(goal.description ?? '')
+    setOutcomeMetric(goal.outcome_metric ?? '')
+    setSuccessCriteria(goal.success_criteria ?? '')
+    setEffortHoursPerWeek(goal.effort_minutes_per_session ?? '')
+    setCoverUrl(goal.cover_url ?? null)
+    setLinkedProjectId(goal.project_id ?? null)
+    if (goal.milestones?.length) {
+      setMilestones(goal.milestones.map(m => ({ title: m.title, description: m.description, date: m.date })))
+    }
+  }, [isEditing, editId, goals])
+
   const activeCategories = categories.filter(c => c.is_active)
   const linkedProject    = projects.find(p => p.id === linkedProjectId)
+
+  function toggleCategory(catId: string) {
+    setCategoryIds(prev =>
+      prev.includes(catId) ? prev.filter(id => id !== catId) : [...prev, catId]
+    )
+    setErrors(prev => ({ ...prev, category: undefined }))
+  }
 
   // ── Milestones helpers ──
   function updateMilestone(i: number, field: keyof Milestone, val: string) {
@@ -201,8 +247,8 @@ export default function GoalCreate() {
   // ── Save ──
   async function handleSave() {
     const errs: typeof errors = {}
-    if (!title.trim()) errs.title = 'Goal name is required'
-    if (!categoryId)   errs.category = 'Please select a category'
+    if (!title.trim())         errs.title    = 'Goal name is required'
+    if (!categoryIds.length)   errs.category = 'Please select at least one category'
     if (Object.keys(errs).length) { setErrors(errs); return }
 
     setSaving(true)
@@ -210,31 +256,42 @@ export default function GoalCreate() {
     try {
       const days = TIMELINE_OPTIONS.find(t => t.value === timeline)?.days ?? 90
       const target_date = new Date(Date.now() + days * 86400000).toISOString().split('T')[0]
-      const resolvedCover = coverUrl ?? await fetchAutocover(title.trim())
 
-      // Use store's createGoal so DEMO_MODE is handled correctly
-      const goal = await createGoal({
-        user_id: user!.id,
-        category_id: categoryId,
-        title: title.trim(),
-        description: why.trim() || null,
-        project_id: linkedProjectId,
-        status: 'active',
+      const savedMilestones = milestones
+        .filter(m => m.title.trim())
+        .map(m => ({ ...m, completed: false }))
+
+      const fields = {
+        category_id:              categoryIds[0] ?? null,
+        category_ids:             categoryIds.length ? categoryIds : null,
+        title:                    title.trim(),
+        description:              why.trim() || null,
+        project_id:               linkedProjectId,
         target_date,
-        cover_url: resolvedCover,
-      })
-
-      // Keep project.goal_id in sync
-      if (linkedProjectId) {
-        await updateProject(linkedProjectId, { goal_id: goal.id })
+        outcome_metric:           outcomeMetric.trim() || null,
+        success_criteria:         successCriteria.trim() || null,
+        effort_frequency:         'weekly',
+        effort_minutes_per_session: effortHoursPerWeek ? Number(effortHoursPerWeek) : null,
+        milestones:               savedMilestones.length ? savedMilestones : null,
       }
 
-      for (const t of tasks) {
-        await createTask({ user_id: user!.id, goal_id: goal.id, category_id: categoryId, project_id: linkedProjectId, title: t.title, completed: false, priority: t.priority as any, energy: 2, estimated_minutes: t.estimated_minutes, due_date: null })
+      if (isEditing && editId) {
+        await updateGoal(editId, { ...fields, cover_url: coverUrl })
+        if (linkedProjectId) await updateProject(linkedProjectId, { goal_id: editId })
+        for (const t of tasks) {
+          await createTask({ user_id: user!.id, goal_id: editId, category_id: categoryIds[0] ?? null, project_id: linkedProjectId, title: t.title, completed: false, priority: t.priority as any, energy: 2, estimated_minutes: t.estimated_minutes, due_date: null })
+        }
+        navigate(`/goals/${editId}`)
+      } else {
+        const resolvedCover = coverUrl ?? await fetchAutocover(title.trim())
+        const goal = await createGoal({ user_id: user!.id, status: 'active', cover_url: resolvedCover, ...fields })
+        if (linkedProjectId) await updateProject(linkedProjectId, { goal_id: goal.id })
+        for (const t of tasks) {
+          await createTask({ user_id: user!.id, goal_id: goal.id, category_id: categoryIds[0] ?? null, project_id: linkedProjectId, title: t.title, completed: false, priority: t.priority as any, energy: 2, estimated_minutes: t.estimated_minutes, due_date: null })
+        }
+        await fetchProjects(user!.id)
+        navigate(`/goals/${goal.id}`)
       }
-
-      await fetchProjects(user!.id)
-      navigate(`/goals/${goal.id}`)
     } catch (e) {
       console.error(e)
       setSaveError(e instanceof Error ? e.message : 'Failed to save goal. Please try again.')
@@ -249,11 +306,11 @@ export default function GoalCreate() {
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">
         <button
-          onClick={() => navigate('/goals')}
+          onClick={() => navigate(isEditing ? `/goals/${editId}` : '/goals')}
           className="inline-flex items-center gap-2 font-semibold text-[#727A84] hover:text-[#0C1629] transition-colors cursor-pointer"
         >
           <ArrowLeft size={16} />
-          Goals
+          {isEditing ? 'Back to Goal' : 'Goals'}
         </button>
         <span className="text-[#D6DCE0]">/</span>
         <span className="font-semibold text-[#0C1629]">New Goal</span>
@@ -262,8 +319,8 @@ export default function GoalCreate() {
       {/* Page header — title + actions inline */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-black text-[#0C1629] tracking-tight">Create Goal Blueprint</h1>
-          <p className="text-sm text-[#727A84] mt-1">Define what you want to achieve and how you'll get there.</p>
+          <h1 className="text-xl font-black text-[#0C1629] tracking-tight">{isEditing ? 'Edit Goal Blueprint' : 'Create Goal Blueprint'}</h1>
+          <p className="text-sm text-[#727A84] mt-1">{isEditing ? 'Update your goal details and save.' : "Define what you want to achieve and how you'll get there."}</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {saveError && (
@@ -281,7 +338,7 @@ export default function GoalCreate() {
             className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-[#0C1629] px-5 py-2.5 rounded-[10px] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
           >
             <RocketLaunch size={15} weight="fill" />
-            {saving ? 'Saving…' : 'Activate Blueprint'}
+            {saving ? 'Saving…' : isEditing ? 'Save Changes' : 'Activate Blueprint'}
           </button>
         </div>
       </div>
@@ -338,18 +395,21 @@ export default function GoalCreate() {
 
           <div className="border-t border-[#F0F3F3]" />
 
-          {/* Category */}
+          {/* Category — multi-select */}
           <div className="space-y-3">
-            <Label>Category</Label>
+            <div className="flex items-center gap-2">
+              <Label>Category</Label>
+              <span className="text-[10px] text-[#B5C1C8] font-medium">Select all that apply</span>
+            </div>
             {errors.category && <p className="text-xs text-red-500">{errors.category}</p>}
             <div className="flex flex-wrap gap-2">
               {activeCategories.map(cat => {
                 const color = CATEGORY_COLORS[cat.name] ?? '#727A84'
-                const active = categoryId === cat.id
+                const active = categoryIds.includes(cat.id)
                 return (
                   <button
                     key={cat.id}
-                    onClick={() => { setCategoryId(cat.id); setErrors(prev => ({ ...prev, category: undefined })) }}
+                    onClick={() => toggleCategory(cat.id)}
                     className={cn(
                       'px-3.5 py-2 text-xs font-semibold rounded-[10px] transition-all cursor-pointer border',
                       active ? 'text-white border-transparent' : 'bg-white text-[#727A84] border-[#D6DCE0] hover:bg-[#F0F3F3]'
@@ -368,7 +428,7 @@ export default function GoalCreate() {
           {/* Timeline */}
           <div className="space-y-3">
             <Label>Timeline</Label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-4 gap-3">
               {TIMELINE_OPTIONS.map(opt => (
                 <button
                   key={opt.value}
@@ -399,6 +459,52 @@ export default function GoalCreate() {
               rows={3}
               className="w-full text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow resize-none"
             />
+          </div>
+
+          <div className="border-t border-[#F0F3F3]" />
+
+          {/* SMART — Outcome Metrics & Success Criteria */}
+          <div className="space-y-4">
+            <div>
+              <Label>Outcome Metric</Label>
+              <p className="text-[10px] text-[#B5C1C8] mt-0.5 mb-2">What will you measure to know you're on track?</p>
+              <input
+                value={outcomeMetric}
+                onChange={e => setOutcomeMetric(e.target.value)}
+                placeholder="e.g. Run 5 km without stopping, Save €500/month, Read 12 books"
+                className="w-full text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow"
+              />
+            </div>
+            <div>
+              <Label>Success Criteria</Label>
+              <p className="text-[10px] text-[#B5C1C8] mt-0.5 mb-2">What does "done" look like? Be specific.</p>
+              <textarea
+                value={successCriteria}
+                onChange={e => setSuccessCriteria(e.target.value)}
+                placeholder="e.g. I will have completed a 5K race, accumulated €6,000 in savings, and read all 12 books by year-end"
+                rows={3}
+                className="w-full text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow resize-none"
+              />
+            </div>
+          </div>
+
+          <div className="border-t border-[#F0F3F3]" />
+
+          {/* Effort Expectations */}
+          <div className="space-y-3">
+            <Label>Effort Expectations</Label>
+            <div className="flex items-center gap-3">
+              <input
+                type="number"
+                min={1}
+                max={168}
+                value={effortHoursPerWeek}
+                onChange={e => setEffortHoursPerWeek(e.target.value === '' ? '' : Number(e.target.value))}
+                placeholder="e.g. 5"
+                className="w-24 text-sm font-semibold text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow"
+              />
+              <span className="text-sm text-[#727A84]">hours per week</span>
+            </div>
           </div>
 
           <div className="border-t border-[#F0F3F3]" />
