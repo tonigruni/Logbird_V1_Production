@@ -20,6 +20,18 @@ import {
   Kanban,
   Timer,
   SquaresFour,
+  ArrowsClockwise,
+  Brain,
+  Lightning,
+  ShieldCheck,
+  ChartLineUp,
+  ArrowRight,
+  Database,
+  House,
+  Prohibit,
+  Sun,
+  Moon,
+  Star,
 } from '@phosphor-icons/react'
 
 // ---------------------------------------------------------------------------
@@ -614,15 +626,24 @@ function WhatIsLogbirdTab() {
   return (
     <div className="space-y-6 max-w-4xl">
 
-      {/* Hero statement */}
+      {/* Hero */}
       <div className="bg-[#0C1629] rounded-[15px] p-8 md:p-10">
         <p className="text-xs font-black uppercase tracking-widest text-white/40 mb-4">The idea</p>
         <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-snug tracking-tight mb-5">
-          You are the most important<br />metric in your life.
+          A closed-loop personal<br />operating system.
         </h2>
-        <p className="text-sm text-white/60 leading-relaxed max-w-xl">
-          Most productivity tools are built around tasks and deadlines. Logbird is built around <em className="text-white/80 not-italic font-semibold">you</em> — your energy, your values, your long-term direction. It's a personal operating system that connects everything you do back to who you're trying to become.
+        <p className="text-sm text-white/60 leading-relaxed max-w-xl mb-8">
+          Most tools are built around tasks and deadlines. Logbird is built around the full cycle of human performance — from reflection and insight, through to goals, actions, and back to reflection again.
         </p>
+        <div className="flex items-center gap-2 flex-wrap">
+          {['Reflection', 'Insight', 'Goals', 'Actions', 'Feedback'].map((s, i, arr) => (
+            <span key={s} className="flex items-center gap-2">
+              <span className="text-xs font-bold text-white bg-white/10 px-3 py-1.5 rounded-full">{s}</span>
+              {i < arr.length - 1 && <ArrowRight size={12} className="text-white/30" />}
+            </span>
+          ))}
+          <span className="text-xs text-white/30 ml-1">↩ repeat</span>
+        </div>
       </div>
 
       {/* The problem */}
@@ -632,98 +653,110 @@ function WhatIsLogbirdTab() {
           title="The problem it solves"
           description="Why Logbird exists and what gap it fills."
         />
-        <div className="space-y-5 text-sm text-[#727A84] leading-relaxed">
+        <div className="space-y-4 text-sm text-[#727A84] leading-relaxed">
           <p>
-            People use a dozen different apps — a notes app for journalling, a task manager for to-dos, a spreadsheet for goals, a habit tracker for routines. None of them talk to each other. You can't see how your daily tasks connect to your life goals. You can't see which areas of your life are thriving and which are neglected. You have data everywhere and clarity nowhere.
+            People use a dozen different apps — a notes app for journalling, a task manager for to-dos, a spreadsheet for goals, a habit tracker for routines. None of them talk to each other. You have data everywhere and clarity nowhere.
           </p>
           <p>
-            Logbird puts everything in one place and builds the connections between them. A task belongs to a project belongs to a goal belongs to a life category. When you check in on your Wheel of Life, you can see exactly which projects and goals are (or aren't) serving each dimension. Nothing lives in isolation.
+            The deeper problem: even with the right tools, there's no feedback loop. You journal but never connect it to your goals. You complete tasks but never know if they moved the needle. You set goals but never review whether your days are actually serving them.
           </p>
           <p className="font-semibold text-[#0C1629]">
-            The result: you stop managing information and start managing your life.
+            Logbird closes the loop. Everything connects. Every feature feeds the next.
           </p>
         </div>
       </div>
 
-      {/* Features grid */}
+      {/* 3 Sections */}
       <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
         <SectionHeader
           icon={SquaresFour}
-          title="What's inside"
-          description="Seven interconnected modules — each useful alone, powerful together."
+          title="Three sections. One system."
+          description="Not three separate apps — three lenses on the same closed loop."
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <AboutFeatureCard
-            icon={BookOpen}
-            title="Journal"
-            desc="A rich daily writing space. Log thoughts, mood, and reflections. Every entry is timestamped and searchable, and you can send any note directly into a goal."
-          />
-          <AboutFeatureCard
-            icon={Target}
-            title="Goals"
-            desc="Define what you're working toward — big or small. Goals live in portfolio, list, or board view and each has its own detail page with tasks, time tracking, and an activity log."
-          />
-          <AboutFeatureCard
-            icon={Kanban}
-            title="Projects"
-            desc="The operational layer. Projects sit between goals and tasks — they're how you organise the actual work. Each project links to a goal and owns a set of tasks."
-          />
-          <AboutFeatureCard
-            icon={CheckSquare}
-            title="Tasks"
-            desc="Not just a to-do list. Tasks carry priority, energy cost, time allocation, and links to both a goal and a project. They're the atomic unit of progress."
-          />
-          <AboutFeatureCard
-            icon={ChartDonut}
-            title="Wheel of Life"
-            desc="A periodic check-in across 8 life categories: career, health, relationships, finances, personal growth, creativity, environment, and fun. Track how balanced your life actually is."
-          />
-          <AboutFeatureCard
-            icon={Timer}
-            title="Timeboxing"
-            desc="Schedule your day by dragging tasks into time blocks. Designed around energy-aware planning — match your hardest work to your sharpest hours."
-          />
-          <AboutFeatureCard
-            icon={SquaresFour}
-            title="Dashboard"
-            desc="Your daily starting point. Active goals, recent journal entries, your Wheel of Life score, and upcoming tasks — all at a glance, without any configuration."
-          />
-          <AboutFeatureCard
-            icon={Sparkle}
-            title="Insights (coming)"
-            desc="Pattern detection across your journal, tasks, and check-ins. Mood trends, energy patterns, topic clusters. The app learns your rhythms so you can work with them."
-          />
+        <div className="space-y-3">
+          {[
+            {
+              dot: '#8b5cf6',
+              label: 'Reflection',
+              desc: 'The input layer. Understand your current state, surface patterns, generate insight. Everything else feeds from here.',
+              features: ['Journal', 'Wheel of Life', 'Daily Check-in (coming)', 'Insights (coming)'],
+            },
+            {
+              dot: '#f59e0b',
+              label: 'Accountability',
+              desc: 'The alignment layer. Goals sit above all tabs and are managed here. Reviews and habits keep you from drifting.',
+              features: ['Goals', 'Habits (coming)', 'Weekly Review (coming)', 'Drift Detection (coming)'],
+            },
+            {
+              dot: '#22c55e',
+              label: 'Productivity',
+              desc: 'The execution layer. Tasks, projects, and timeboxing — all linked to goals. Energy-aware planning driven by your Reflection state.',
+              features: ['Tasks', 'Projects', 'Timeboxing', 'Weekly Planning (coming)'],
+            },
+          ].map(({ dot, label, desc, features }) => (
+            <div key={label} className="flex gap-4 p-5 rounded-[12px] border border-[#D6DCE0]">
+              <div className="w-1.5 rounded-full shrink-0 self-stretch" style={{ backgroundColor: dot }} />
+              <div className="flex-1">
+                <p className="text-sm font-extrabold text-[#0C1629] mb-1">{label}</p>
+                <p className="text-sm text-[#727A84] leading-relaxed mb-3">{desc}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {features.map(f => (
+                    <span
+                      key={f}
+                      className={cn(
+                        'text-[10px] font-bold px-2.5 py-1 rounded-full',
+                        f.includes('coming') ? 'bg-[#F0F3F3] text-[#B5C1C8]' : 'text-white'
+                      )}
+                      style={f.includes('coming') ? {} : { backgroundColor: dot }}
+                    >
+                      {f}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Design principles */}
+      {/* Connection rule */}
       <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
         <SectionHeader
           icon={Rocket}
-          title="How it's designed"
-          description="The principles behind every decision in the product."
+          title="The connection rule"
+          description="The principle that makes everything else work."
         />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          {[
+            ['Journal', 'Goals'],
+            ['Goals', 'Tasks'],
+            ['Tasks', 'Time'],
+            ['Habits', 'Goals'],
+          ].map(([a, b], i) => (
+            <div key={i} className="bg-[#F0F3F3] rounded-[12px] p-3 text-center">
+              <p className="text-xs font-bold text-[#0C1629]">{a}</p>
+              <p className="text-base text-[#B5C1C8] my-0.5">↔</p>
+              <p className="text-xs font-bold text-[#0C1629]">{b}</p>
+            </div>
+          ))}
+        </div>
         <div className="space-y-0">
-          <AboutPrinciple
-            number="01"
-            title="Everything is connected"
-            desc="Goals link to projects. Projects own tasks. Tasks appear in your time blocks. Journal entries tie to goals. Wheel of Life scores reflect your active work. Nothing is a silo."
-          />
-          <AboutPrinciple
-            number="02"
-            title="You are the metric"
-            desc="There are no streaks, no gamification, no leaderboards. The only benchmark is you — how aligned your days are with the life you said you want. The app measures that, not arbitrary activity."
-          />
-          <AboutPrinciple
-            number="03"
-            title="Calm and clean by default"
-            desc="White canvas. Thin borders. No clutter. Logbird is intentionally quiet so your thinking can be loud. Every piece of UI earns its place by helping you think more clearly, not by demanding attention."
-          />
-          <AboutPrinciple
-            number="04"
-            title="Built for one person first"
-            desc="Logbird started as a tool for one founder who couldn't find what they needed anywhere else. Every feature was needed before it was built. No bloat, no feature theatre — only what genuinely makes your life easier."
-          />
+          {[
+            { number: '01', title: 'Everything is connected', desc: 'Goals link to projects. Projects own tasks. Tasks appear in time blocks. Journal entries tie to goals. Wheel of Life scores reflect active work. Nothing is a silo.' },
+            { number: '02', title: 'You are the metric', desc: 'No streaks, no gamification, no leaderboards. The only benchmark is you — how aligned your days are with the life you said you want.' },
+            { number: '03', title: 'Calm and clean by default', desc: 'White canvas. Thin borders. No clutter. Every piece of UI earns its place by helping you think more clearly, not by demanding attention.' },
+            { number: '04', title: 'Built for one person first', desc: 'Started as a tool for one founder who couldn\'t find what they needed anywhere else. Every feature was needed before it was built. No bloat, no feature theatre.' },
+          ].map(({ number, title, desc }) => (
+            <div key={number} className="flex gap-5">
+              <div className="w-9 h-9 rounded-full border-2 border-[#D6DCE0] flex items-center justify-center shrink-0 mt-0.5">
+                <span className="text-xs font-black text-[#B5C1C8]">{number}</span>
+              </div>
+              <div className="pb-6 border-b border-[#D6DCE0] flex-1 last:border-0 last:pb-0">
+                <p className="text-sm font-bold text-[#0C1629]">{title}</p>
+                <p className="text-sm text-[#727A84] mt-1 leading-relaxed">{desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -731,7 +764,7 @@ function WhatIsLogbirdTab() {
       <div className="bg-[#F0F3F3] rounded-[15px] p-8">
         <p className="text-xs font-black uppercase tracking-widest text-[#B5C1C8] mb-3">Who it's for</p>
         <p className="text-sm text-[#727A84] leading-relaxed max-w-2xl">
-          Logbird is for people who think seriously about how they spend their time — founders, creators, anyone in a self-directed role who needs to align daily execution with long-term direction. If you've ever felt like you're busy but not making real progress, Logbird is the missing layer between your tasks and your goals.
+          Logbird is for people who think seriously about how they spend their time — founders, creators, anyone in a self-directed role who needs to align daily execution with long-term direction. If you've ever felt busy but not making real progress, Logbird is the missing feedback loop.
         </p>
       </div>
 
@@ -743,69 +776,39 @@ function WhatIsLogbirdTab() {
 // Roadmap Tab
 // ---------------------------------------------------------------------------
 
-const SHIPPED = [
-  { icon: SquaresFour, title: 'Dashboard', desc: 'Central hub showing active goals, recent journal entries, wheel of life score overview, and upcoming tasks.', tag: 'Live' },
-  { icon: BookOpen, title: 'Journal', desc: 'Rich text editor with mood tracking, templates, entry calendar, and Send to Journal from any goal. ProseMirror-powered.', tag: 'Live' },
-  { icon: ChartDonut, title: 'Wheel of Life', desc: 'Score 8 life categories, track check-ins over time, visualise score changes with a radial chart.', tag: 'Live' },
-  { icon: Target, title: 'Goals', desc: 'Portfolio, list, and board views. Each goal has a full detail page: description, tasks, time tracker, activity log, and project link.', tag: 'Live' },
-  { icon: Kanban, title: 'Projects', desc: 'Project overview grid + detail page. Real tasks per project, linked goal, progress bar, status and metadata.', tag: 'Live' },
-  { icon: CheckSquare, title: 'Tasks', desc: 'Full task edit with priority matrix, energy cost, time allocation, goal alignment, and project linking.', tag: 'Live' },
-  { icon: Timer, title: 'Timeboxing', desc: 'Drag-and-drop time blocks linked to tasks. Daily schedule planning with energy-aware scheduling.', tag: 'Live' },
-  { icon: Sparkle, title: 'Goal ↔ Project ↔ Task Graph', desc: 'Every entity is connected. Goals link to projects and tasks. Projects link to goals and tasks. Tasks inherit project_id from their parent goal.', tag: 'Live' },
+// ---------------------------------------------------------------------------
+// Changelog Tab
+// ---------------------------------------------------------------------------
+
+const CHANGELOG_ENTRIES = [
+  {
+    version: 'April 2026',
+    label: 'Initial Build — v0.1',
+    items: [
+      { icon: SquaresFour, title: 'Dashboard', desc: 'Central hub with active goals, recent journal entries, Wheel of Life score, and upcoming tasks.' },
+      { icon: BookOpen, title: 'Journal', desc: 'Rich text editor (ProseMirror) with mood tracking, templates, entry calendar, and Send to Journal from any goal.' },
+      { icon: ChartDonut, title: 'Wheel of Life', desc: 'Score 9 life areas, track check-ins over time, visualise score changes with a radial chart.' },
+      { icon: Target, title: 'Goals', desc: 'Portfolio, list, and board views. Each goal has a full detail page: tasks, time tracker, activity log, and project link.' },
+      { icon: Kanban, title: 'Projects', desc: 'Grid overview + detail page. Real tasks per project, linked goal, progress bar, status, and metadata.' },
+      { icon: CheckSquare, title: 'Tasks', desc: 'Full task edit with priority matrix, energy cost, time allocation, goal alignment, and project linking.' },
+      { icon: Timer, title: 'Timeboxing', desc: 'Drag-and-drop time blocks linked to tasks. Daily schedule planning with energy-aware scheduling.' },
+      { icon: Sparkle, title: 'Goal ↔ Project ↔ Task Graph', desc: 'Every entity is connected. Goals link to projects and tasks. Tasks inherit project_id from their parent goal.' },
+      { icon: BookOpen, title: 'Docs', desc: 'Living design system, visual reference, product overview, changelog, roadmap, and strategic outlook — inside the app itself.' },
+    ],
+  },
 ]
 
-const IN_PROGRESS = [
-  { title: 'Docs (this page)', desc: 'Design system reference and product roadmap, living inside the app itself.' },
-  { title: 'Supabase seed data', desc: 'Realistic demo entries across all three life themes: fitness, Logbird startup, and attachment work.' },
-]
-
-const NEXT_UP = [
-  { title: 'Recurring Tasks', desc: 'Daily / weekly / monthly repeating tasks that auto-generate on their schedule.' },
-  { title: 'Goal Progress Graph', desc: 'Line chart on the goal detail page tracking task completion rate over time.' },
-  { title: 'Journal Insights', desc: 'Pattern detection across entries: mood trends, keyword frequency, topic clusters.' },
-  { title: 'Weekly Review', desc: 'Structured end-of-week template: wins, misses, energy, and goal progress summary.' },
-  { title: 'Push / In-App Notifications', desc: 'Due date reminders, check-in prompts, and milestone alerts.' },
-  { title: 'Project Create Flow', desc: 'Functional project creation form wired to Supabase (currently stubs to a placeholder).' },
-]
-
-const FUTURE = [
-  { title: 'AI Journaling Assistant', desc: 'Ask questions about your own journal. Surface patterns, suggest reflections, generate prompts.' },
-  { title: 'Habit Tracker', desc: 'Daily streaks linked to goals and wheel of life categories. Visual heatmap calendar.' },
-  { title: 'Sharing & Accountability Partner', desc: 'Invite one person to see your goals and leave comments — not full collab, just one trusted mirror.' },
-  { title: 'Native Mobile App', desc: 'iOS and Android. Quick journal entry, check-in, and task tick without opening a browser.' },
-  { title: 'Calendar Integration', desc: 'Sync timeboxed blocks to Google/Apple Calendar. Pull in events to see real schedule density.' },
-  { title: 'Logbird API', desc: 'Public API so power users can pipe data into their own tools, dashboards, or automations.' },
-]
-
-function RoadmapCard({ item, variant }: {
-  item: { title: string; desc: string; icon?: React.ElementType; tag?: string }
-  variant: 'shipped' | 'in-progress' | 'next' | 'future'
-}) {
-  const styles = {
-    shipped:     { dot: 'bg-[#22c55e]', ring: 'ring-[#22c55e]/20', text: 'text-[#22c55e]', bg: 'bg-[#22c55e]/8' },
-    'in-progress': { dot: 'bg-[#f59e0b]', ring: 'ring-[#f59e0b]/20', text: 'text-[#f59e0b]', bg: 'bg-[#f59e0b]/8' },
-    next:        { dot: 'bg-[#0C1629]', ring: 'ring-[#0C1629]/20', text: 'text-[#0C1629]', bg: 'bg-[#0C1629]/8' },
-    future:      { dot: 'bg-[#B5C1C8]', ring: 'ring-[#B5C1C8]/20', text: 'text-[#B5C1C8]', bg: 'bg-[#B5C1C8]/8' },
-  }[variant]
-
+function ChangelogCard({ item }: { item: { title: string; desc: string; icon?: React.ElementType } }) {
   const Icon = item.icon
-
   return (
     <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-5 flex items-start gap-4 hover:shadow-[0_10px_40px_rgba(12,22,41,0.06)] transition-shadow">
-      <div className={cn('w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0', styles.bg)}>
-        {Icon
-          ? <Icon size={16} weight="bold" className={styles.text} />
-          : <div className={cn('w-2.5 h-2.5 rounded-full', styles.dot)} />
-        }
+      <div className="w-9 h-9 rounded-[10px] bg-[#22c55e]/8 flex items-center justify-center shrink-0">
+        {Icon && <Icon size={16} weight="bold" className="text-[#22c55e]" />}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           <h4 className="text-sm font-bold text-[#0C1629]">{item.title}</h4>
-          {item.tag && (
-            <span className={cn('text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full', styles.bg, styles.text)}>
-              {item.tag}
-            </span>
-          )}
+          <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#22c55e]/8 text-[#22c55e]">Live</span>
         </div>
         <p className="text-xs text-[#727A84] leading-relaxed">{item.desc}</p>
       </div>
@@ -813,63 +816,180 @@ function RoadmapCard({ item, variant }: {
   )
 }
 
+function ChangelogTab() {
+  return (
+    <div className="space-y-10">
+      {CHANGELOG_ENTRIES.map(group => (
+        <div key={group.version}>
+          <div className="flex items-center gap-4 mb-6">
+            <CheckCircle size={20} weight="fill" className="text-[#22c55e]" />
+            <div className="flex-1">
+              <h2 className="text-base font-extrabold text-[#0C1629]">{group.label}</h2>
+              <p className="text-xs text-[#727A84]">{group.version}</p>
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-[#22c55e]/10 text-[#22c55e]">
+              {group.items.length} features
+            </span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {group.items.map(item => (
+              <ChangelogCard key={item.title} item={item} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Roadmap Tab (future-focused)
+// ---------------------------------------------------------------------------
+
+const PHASES = [
+  {
+    number: '01',
+    label: 'Phase 1 — Foundation',
+    sub: 'Build this first. No phase 2 until this is solid.',
+    color: '#0C1629',
+    items: [
+      {
+        title: 'Workspaces',
+        desc: 'Separate contexts of life (Private / Work / Relationship). Workspace entity with name, icon, color. All data — journal entries, goals, tasks — linked to a workspace. User always knows: "Which life area am I operating in right now?"',
+        priority: 'Critical',
+      },
+      {
+        title: 'Goals System Upgrade',
+        desc: 'Add Outcome (measurable) vs Identity (behavioral) goal types, workspace_id linking, and target dates. Goals are already built — this makes them the true centre of the system.',
+        priority: 'Critical',
+      },
+      {
+        title: 'Task System Refinement',
+        desc: 'Streamline to: title, due date, workspace, goal link, status. Add Today View (tasks due today) and This Week view. Principle: fast capture over complexity.',
+        priority: 'High',
+      },
+      {
+        title: 'Journal Goal Linking',
+        desc: 'Add "Linked Goal" field and basic tags to journal entries. Turns reflection from private writing into a structured insight engine connected to your goals.',
+        priority: 'Critical',
+      },
+    ],
+  },
+  {
+    number: '02',
+    label: 'Phase 2 — Productivity',
+    sub: 'Only after Phase 1 is solid.',
+    color: '#22c55e',
+    items: [
+      {
+        title: 'Timeboxing Upgrade',
+        desc: 'Full daily calendar view. Drag tasks into time slots and create time blocks (task_id, start_time, end_time). The moment planning becomes real: task → time → commitment.',
+        priority: 'High',
+      },
+      {
+        title: 'Projects Upgrade',
+        desc: 'Add workspace_id and goal_id linking to projects. Keeps projects meaningful rather than just task buckets — a project always serves a goal.',
+        priority: 'Normal',
+      },
+      {
+        title: 'Weekly Planning System',
+        desc: 'Structured weekly planning page: goals for the week, tasks to focus on, time allocation. Weekly review: what worked, what didn\'t, what to adjust. Feeds directly back into the journal.',
+        priority: 'High',
+      },
+    ],
+  },
+  {
+    number: '03',
+    label: 'Phase 3 — Accountability',
+    sub: 'Where most apps fail. Where Logbird wins.',
+    color: '#f59e0b',
+    items: [
+      {
+        title: 'Habits',
+        desc: 'Habit object: name, frequency (daily/weekly), linked_goal. UI: daily checklist + streak tracking. Critical rule: habits must connect to goals. Otherwise it\'s just pointless tracking.',
+        priority: 'High',
+      },
+      {
+        title: 'Daily Check-In',
+        desc: 'Simple daily prompt: How do you feel (mood)? Did you do what mattered? What was the highlight? Complements journalling — doesn\'t replace it.',
+        priority: 'High',
+      },
+      {
+        title: 'Weekly Review (Structured)',
+        desc: 'Structured template: What moved me forward? What blocked me? Where did I drift? This is the self-correction engine.',
+        priority: 'High',
+      },
+      {
+        title: 'Drift Detection',
+        desc: 'Logic: no activity on goal X → alert. Mood drop patterns → insight. Becomes the life awareness system — the feature that makes Logbird feel like it\'s paying attention.',
+        priority: 'Normal',
+      },
+    ],
+  },
+]
+
+const NOT_BUILDING = [
+  { title: 'AI features', desc: 'Not yet. Build the data structure first.' },
+  { title: 'Collaboration', desc: 'Single-player tool. Sharing comes much later.' },
+  { title: 'Complex analytics', desc: 'No fancy dashboards. Signal over noise.' },
+  { title: 'Gamification', desc: 'No streaks for the sake of streaks. Only metrics that reflect truth.' },
+]
+
 function RoadmapTab() {
   return (
     <div className="space-y-12">
 
-      {/* Shipped */}
-      <div>
-        <div className="flex items-center gap-3 mb-5">
-          <CheckCircle size={20} weight="fill" className="text-[#22c55e]" />
-          <div>
-            <h2 className="text-base font-extrabold text-[#0C1629]">Shipped</h2>
-            <p className="text-xs text-[#727A84]">Features live in the current build</p>
+      {PHASES.map(phase => (
+        <div key={phase.number}>
+          <div className="flex items-start gap-4 mb-6">
+            <div className="w-10 h-10 rounded-full border-2 flex items-center justify-center shrink-0" style={{ borderColor: phase.color }}>
+              <span className="text-xs font-black" style={{ color: phase.color }}>{phase.number}</span>
+            </div>
+            <div>
+              <h2 className="text-base font-extrabold text-[#0C1629]">{phase.label}</h2>
+              <p className="text-xs text-[#727A84]">{phase.sub}</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {phase.items.map(item => (
+              <div key={item.title} className="bg-white rounded-[15px] border border-[#D6DCE0] p-5 hover:shadow-[0_10px_40px_rgba(12,22,41,0.06)] transition-shadow">
+                <div className="flex items-center gap-2 mb-2">
+                  <h4 className="text-sm font-bold text-[#0C1629] flex-1">{item.title}</h4>
+                  <span className={cn(
+                    'text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0',
+                    item.priority === 'Critical' ? 'bg-[#9f403d]/10 text-[#9f403d]' :
+                    item.priority === 'High' ? 'bg-[#f59e0b]/10 text-[#f59e0b]' :
+                    'bg-[#F0F3F3] text-[#727A84]'
+                  )}>
+                    {item.priority}
+                  </span>
+                </div>
+                <p className="text-xs text-[#727A84] leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {SHIPPED.map(item => <RoadmapCard key={item.title} item={item} variant="shipped" />)}
-        </div>
-      </div>
+      ))}
 
-      {/* In Progress */}
+      {/* Not Building */}
       <div>
         <div className="flex items-center gap-3 mb-5">
-          <Clock size={20} weight="fill" className="text-[#f59e0b]" />
+          <Prohibit size={20} weight="bold" className="text-[#9f403d]" />
           <div>
-            <h2 className="text-base font-extrabold text-[#0C1629]">In Progress</h2>
-            <p className="text-xs text-[#727A84]">Being built right now</p>
+            <h2 className="text-base font-extrabold text-[#0C1629]">What we don't build (for now)</h2>
+            <p className="text-xs text-[#727A84]">Discipline is a feature. These are explicit non-priorities.</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {IN_PROGRESS.map(item => <RoadmapCard key={item.title} item={item} variant="in-progress" />)}
-        </div>
-      </div>
-
-      {/* Next Up */}
-      <div>
-        <div className="flex items-center gap-3 mb-5">
-          <Rocket size={20} weight="fill" className="text-[#0C1629]" />
-          <div>
-            <h2 className="text-base font-extrabold text-[#0C1629]">Next Up</h2>
-            <p className="text-xs text-[#727A84]">Planned for the near-term — roughly in priority order</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {NEXT_UP.map(item => <RoadmapCard key={item.title} item={item} variant="next" />)}
-        </div>
-      </div>
-
-      {/* Future */}
-      <div>
-        <div className="flex items-center gap-3 mb-5">
-          <Lightbulb size={20} weight="fill" className="text-[#B5C1C8]" />
-          <div>
-            <h2 className="text-base font-extrabold text-[#0C1629]">Future Ideas</h2>
-            <p className="text-xs text-[#727A84]">Directionally committed, not yet scoped</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {FUTURE.map(item => <RoadmapCard key={item.title} item={item} variant="future" />)}
+          {NOT_BUILDING.map(item => (
+            <div key={item.title} className="bg-[#F0F3F3] rounded-[15px] p-5 flex items-start gap-3">
+              <span className="text-[#9f403d] font-black text-sm mt-0.5">✕</span>
+              <div>
+                <p className="text-sm font-bold text-[#0C1629]">{item.title}</p>
+                <p className="text-xs text-[#727A84] mt-0.5 leading-relaxed">{item.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -1031,6 +1151,324 @@ function VisualTab() {
 }
 
 // ---------------------------------------------------------------------------
+// Strategic Outlook Tab
+// ---------------------------------------------------------------------------
+
+const LOOP_STEPS = [
+  { label: 'Reflect', color: '#8b5cf6', desc: 'Understand your current state' },
+  { label: 'Decide', color: '#0C1629', desc: 'Choose your next direction' },
+  { label: 'Execute', color: '#22c55e', desc: 'Do the actual work' },
+  { label: 'Review', color: '#f59e0b', desc: 'Measure what happened' },
+  { label: 'Adjust', color: '#ec4899', desc: 'Correct course if needed' },
+  { label: 'Repeat', color: '#727A84', desc: 'The loop never ends' },
+]
+
+const BACKBONE = [
+  { label: 'Life Areas', sub: 'Wheel of Life · 9 categories', icon: ChartDonut },
+  { label: 'Goals', sub: 'Derived from Life Areas', icon: Target },
+  { label: 'Projects', sub: 'Derived from Goals', icon: Kanban },
+  { label: 'Tasks', sub: 'Derived from Projects', icon: CheckSquare },
+  { label: 'Check-ins', sub: 'State · energy · mood', icon: ChartLineUp },
+  { label: 'Reflections', sub: 'Journal · insights', icon: BookOpen },
+]
+
+function PillarSection({ color, dot, number, title, purpose, items }: {
+  color: string
+  dot: string
+  number: string
+  title: string
+  purpose: string
+  items: { title: string; desc: string; key?: boolean }[]
+}) {
+  return (
+    <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+      <div className="flex items-start gap-5 mb-8">
+        <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ backgroundColor: dot + '18' }}>
+          <span className="text-xs font-black" style={{ color: dot }}>{number}</span>
+        </div>
+        <div>
+          <div className="flex items-center gap-3 mb-1">
+            <h3 className="text-lg font-extrabold text-[#0C1629] tracking-tight">{title}</h3>
+            <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full" style={{ backgroundColor: dot + '15', color: dot }}>{color}</span>
+          </div>
+          <p className="text-sm text-[#727A84]">{purpose}</p>
+        </div>
+      </div>
+      <div className="space-y-3">
+        {items.map((item, i) => (
+          <div key={i} className={cn(
+            'rounded-[12px] border p-4 flex items-start gap-3',
+            item.key ? 'border-[#0C1629]/15 bg-[#0C1629]/[0.03]' : 'border-[#D6DCE0] bg-[#F0F3F3]/40'
+          )}>
+            <div className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5" style={{ backgroundColor: item.key ? dot : '#D6DCE0' }} />
+            <div>
+              <p className={cn('text-sm font-bold', item.key ? 'text-[#0C1629]' : 'text-[#727A84]')}>{item.title}</p>
+              <p className="text-xs text-[#727A84] mt-0.5 leading-relaxed">{item.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function StrategicOutlookTab() {
+  return (
+    <div className="space-y-6 max-w-4xl">
+
+      {/* ── The Loop ──────────────────────────────────────────────────── */}
+      <div className="bg-[#0C1629] rounded-[15px] p-8 md:p-10">
+        <div className="flex items-center gap-3 mb-6">
+          <ArrowsClockwise size={18} weight="bold" className="text-white/40" />
+          <p className="text-xs font-black uppercase tracking-widest text-white/40">First Principle</p>
+        </div>
+        <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-snug tracking-tight mb-3">
+          This is not 3 tabs.<br />It's 1 loop.
+        </h2>
+        <p className="text-sm text-white/60 leading-relaxed max-w-xl mb-10">
+          Reflection, Productivity, and Accountability are not separate apps. They are different lenses on the same system — three phases of a single continuous loop.
+        </p>
+
+        {/* Loop steps */}
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
+          {LOOP_STEPS.map((step, i) => (
+            <div key={step.label} className="flex flex-col items-center gap-2">
+              <div className="w-full rounded-[10px] p-3 flex flex-col items-center gap-1.5" style={{ backgroundColor: step.color + '20' }}>
+                <span className="text-base font-extrabold" style={{ color: step.color }}>{step.label}</span>
+                <span className="text-[10px] text-white/40 text-center leading-tight">{step.desc}</span>
+              </div>
+              {i < LOOP_STEPS.length - 1 && (
+                <ArrowRight size={12} className="text-white/20 hidden md:block rotate-0" />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Core Backbone ──────────────────────────────────────────────── */}
+      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+        <SectionHeader
+          icon={Database}
+          title="Core Data Backbone"
+          description="Six objects that hold the entire system together. Every feature must connect to one of these — if it doesn't, the system breaks."
+        />
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {BACKBONE.map((obj, i) => {
+            const Icon = obj.icon
+            const isLast = i === BACKBONE.length - 1
+            return (
+              <div key={obj.label} className="flex items-center gap-3 bg-[#F0F3F3] rounded-[12px] p-4">
+                <div className="w-8 h-8 rounded-[8px] bg-white border border-[#D6DCE0] flex items-center justify-center shrink-0">
+                  <Icon size={14} weight="bold" className="text-[#0C1629]" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#0C1629]">{obj.label}</p>
+                  <p className="text-[10px] text-[#727A84]">{obj.sub}</p>
+                </div>
+                {!isLast && i !== 2 && (
+                  <ArrowRight size={12} className="text-[#B5C1C8] ml-auto hidden md:block" />
+                )}
+              </div>
+            )
+          })}
+        </div>
+        <div className="mt-4 bg-[#0C1629]/[0.03] border border-[#0C1629]/10 rounded-[12px] px-5 py-3">
+          <p className="text-xs text-[#727A84] leading-relaxed">
+            <span className="font-bold text-[#0C1629]">Rule: </span>Goals exist once and are referenced everywhere. They don't live "in" a tab — they belong to the backbone. Tabs are just views into the same data.
+          </p>
+        </div>
+      </div>
+
+      {/* ── Three Pillars ──────────────────────────────────────────────── */}
+      <PillarSection
+        number="1"
+        color="Reflection"
+        dot="#8b5cf6"
+        title="Reflection"
+        purpose="Input layer — understand your current state and surface patterns."
+        items={[
+          { title: 'Daily Check-in (fast, mandatory)', desc: 'Energy (1–5), mood (1–5), focus, stress, short note. This is your state signal that feeds every other layer.', key: true },
+          { title: 'Journal (deep reflection)', desc: 'Rich writing space — but every entry should optionally connect to a Life Area, Goal, or Project. Otherwise insights stay abstract.' },
+          { title: 'Wheel of Life (weekly)', desc: '9 areas with scores. Highlights imbalance and feeds goal adjustments over time.' },
+          { title: 'Insights layer (critical missing piece)', desc: 'Pattern detection: "You are low energy on Mondays." "Work is rising, health is declining." Without this, Reflection is just journalling — not intelligence.', key: true },
+        ]}
+      />
+
+      <PillarSection
+        number="2"
+        color="Productivity"
+        dot="#22c55e"
+        title="Productivity"
+        purpose="Execution layer — turn awareness into action."
+        items={[
+          { title: 'Today View (this is the main screen)', desc: 'Not a task list. Shows your energy from today\'s check-in + recommended task intensity. High energy → deep work. Low energy → admin. This is the unfair advantage.', key: true },
+          { title: 'Tasks', desc: 'Linked to Projects. Carry priority, energy requirement, and time estimate.' },
+          { title: 'Projects', desc: 'Linked to Goals. Progress tracking and milestones.' },
+          { title: 'Calendar / Timeboxing', desc: 'Drag tasks into time blocks. The differentiation is context-aware execution — scheduling driven by your Reflection state, not by arbitrary time slots.' },
+          { title: 'Focus Tools', desc: 'Pomodoro, deep work mode. Distraction blocker is a later feature.' },
+        ]}
+      />
+
+      <PillarSection
+        number="3"
+        color="Accountability"
+        dot="#f59e0b"
+        title="Accountability"
+        purpose="Alignment layer — make sure you don't drift from your direction."
+        items={[
+          { title: 'Goals System (sits above all tabs)', desc: 'Vision → Life Areas → Goals → Projects → Tasks. Goals are managed here but referenced everywhere. One source of truth.', key: true },
+          { title: 'Weekly Review', desc: 'What did I plan vs do? Why did I fail? Adjust next week.' },
+          { title: 'Monthly / Quarterly Reviews', desc: 'Progress vs goals, Wheel of Life changes, big direction shifts.' },
+          { title: 'Score System', desc: 'Execution score, consistency score, alignment score. Without a clear signal you "feel productive" without truth.', key: true },
+          { title: 'Accountability Layer (later)', desc: 'Accountability partners, shared goals, progress visibility.' },
+        ]}
+      />
+
+      {/* ── The Real Problem ──────────────────────────────────────────── */}
+      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+        <SectionHeader
+          icon={Brain}
+          title="The design error to avoid"
+          description="The most common mistake when building this kind of system."
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-[#9f403d]/[0.06] border border-[#9f403d]/15 rounded-[12px] p-5">
+            <p className="text-[10px] font-black uppercase tracking-widest text-[#9f403d] mb-3">Wrong</p>
+            <p className="text-sm font-bold text-[#0C1629] mb-2">"Goals go in all sections"</p>
+            <p className="text-sm text-[#727A84] leading-relaxed">
+              Mixing where things <em>live</em> with how they <em>flow</em> creates duplicate state, inconsistency, and a broken mental model.
+            </p>
+          </div>
+          <div className="bg-[#22c55e]/[0.06] border border-[#22c55e]/15 rounded-[12px] p-5">
+            <p className="text-[10px] font-black uppercase tracking-widest text-[#22c55e] mb-3">Right</p>
+            <p className="text-sm font-bold text-[#0C1629] mb-2">Goals exist once, referenced everywhere</p>
+            <p className="text-sm text-[#727A84] leading-relaxed">
+              One source of truth in the backbone. Tabs are views — they display and interact with the same object, they don't own it.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Connection Rules ──────────────────────────────────────────── */}
+      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+        <SectionHeader
+          icon={Lightning}
+          title="Connection rules"
+          description="The most important part. If something doesn't connect, it becomes noise."
+        />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          {[
+            ['Journal', 'Goals'],
+            ['Goals', 'Tasks'],
+            ['Tasks', 'Time'],
+            ['Habits', 'Goals'],
+          ].map(([a, b], i) => (
+            <div key={i} className="bg-[#F0F3F3] rounded-[12px] p-4 text-center">
+              <p className="text-xs font-bold text-[#0C1629]">{a}</p>
+              <p className="text-xl text-[#B5C1C8] my-1">↔</p>
+              <p className="text-xs font-bold text-[#0C1629]">{b}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-[#727A84] bg-[#0C1629]/[0.03] border border-[#0C1629]/10 rounded-[12px] px-5 py-3 leading-relaxed">
+          <span className="font-bold text-[#0C1629]">Rule: </span>Every feature must strengthen one of these connections. If it doesn't — don't build it.
+        </p>
+      </div>
+
+      {/* ── Daily User Flow ───────────────────────────────────────────── */}
+      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+        <SectionHeader
+          icon={Star}
+          title="The north star: daily user flow"
+          description="This is the experience the entire system is designed to enable."
+        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[
+            {
+              icon: Sun,
+              label: 'Morning',
+              time: '5 min',
+              dot: '#f59e0b',
+              steps: ['Open Logbird', 'See goals + today\'s tasks', 'Assign time blocks to tasks'],
+            },
+            {
+              icon: Lightning,
+              label: 'During the Day',
+              time: 'Ongoing',
+              dot: '#22c55e',
+              steps: ['Execute tasks', 'Mark complete', 'Stay in the system'],
+            },
+            {
+              icon: Moon,
+              label: 'Evening',
+              time: '5–10 min',
+              dot: '#8b5cf6',
+              steps: ['Write a journal entry', 'Link it to a goal', 'Quick reflection on the day'],
+            },
+          ].map(({ icon: Icon, label, time, dot, steps }) => (
+            <div key={label} className="rounded-[12px] border border-[#D6DCE0] p-5">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 rounded-[8px] flex items-center justify-center shrink-0" style={{ backgroundColor: dot + '18' }}>
+                  <Icon size={15} weight="bold" style={{ color: dot }} />
+                </div>
+                <div>
+                  <p className="text-sm font-extrabold text-[#0C1629]">{label}</p>
+                  <p className="text-[10px] text-[#B5C1C8]">{time}</p>
+                </div>
+              </div>
+              <ol className="space-y-2">
+                {steps.map((step, i) => (
+                  <li key={i} className="flex items-start gap-2.5">
+                    <span className="text-[10px] font-black text-[#B5C1C8] mt-0.5 shrink-0">{i + 1}.</span>
+                    <span className="text-xs text-[#727A84] leading-relaxed">{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-[#727A84] mt-5 leading-relaxed">
+          <span className="font-bold text-[#0C1629]">Result: </span>User always knows what matters, what they did, and where they stand.
+        </p>
+      </div>
+
+      {/* ── Ideal UI Vision ───────────────────────────────────────────── */}
+      <div className="bg-[#F0F3F3] rounded-[15px] p-8">
+        <div className="flex items-center gap-3 mb-6">
+          <House size={16} weight="bold" className="text-[#727A84]" />
+          <p className="text-xs font-black uppercase tracking-widest text-[#B5C1C8]">The ideal home screen</p>
+        </div>
+        <p className="text-sm font-bold text-[#0C1629] mb-2">Not: "Now I go to Reflection. Now I go to Productivity."</p>
+        <p className="text-sm text-[#727A84] leading-relaxed mb-6">
+          Instead: you open your system and see your life.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {[
+            { icon: Brain, label: 'Today\'s State', sub: 'From Reflection', dot: '#8b5cf6' },
+            { icon: Lightning, label: 'Today\'s Plan', sub: 'From Productivity', dot: '#22c55e' },
+            { icon: ShieldCheck, label: 'Goal Progress', sub: 'From Accountability', dot: '#f59e0b' },
+          ].map(({ icon: Icon, label, sub, dot }) => (
+            <div key={label} className="bg-white rounded-[12px] border border-[#D6DCE0] p-4 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0" style={{ backgroundColor: dot + '15' }}>
+                <Icon size={16} weight="bold" style={{ color: dot }} />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-[#0C1629]">{label}</p>
+                <p className="text-[10px] text-[#B5C1C8]">{sub}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-[#B5C1C8] mt-5 leading-relaxed">
+          Dashboard OS view — not a navigation choice, but a unified daily starting point where all three layers surface at once.
+        </p>
+      </div>
+
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Main Page
 // ---------------------------------------------------------------------------
 
@@ -1038,10 +1476,21 @@ const TABS = [
   { id: 'design', label: 'Design System' },
   { id: 'visual', label: 'Visual' },
   { id: 'about', label: 'What is Logbird' },
+  { id: 'changelog', label: 'Changelog' },
   { id: 'roadmap', label: 'Roadmap' },
+  { id: 'strategy', label: 'Strategic Outlook' },
 ] as const
 
 type TabId = typeof TABS[number]['id']
+
+const TAB_SUBTITLES: Record<TabId, string> = {
+  design: 'Living design system — tokens, components, and usage examples straight from the codebase.',
+  visual: 'Colour palette, typography, and core components at a glance.',
+  about: 'The closed-loop philosophy behind Logbird — what it is, why it exists, and how it works.',
+  changelog: 'Every feature shipped so far. The foundation the future is built on.',
+  roadmap: 'Three phases of future work. Build order is strict — no skipping ahead.',
+  strategy: 'System architecture, connection rules, daily flow, and the principles behind every product decision.',
+}
 
 export default function Docs() {
   const [tab, setTab] = useState<TabId>('design')
@@ -1052,25 +1501,17 @@ export default function Docs() {
       <div className="flex items-start justify-between gap-6 flex-wrap">
         <div>
           <h1 className="text-2xl md:text-3xl font-extrabold text-[#0C1629] tracking-tight">Docs</h1>
-          <p className="text-sm text-[#727A84] mt-1">
-            {tab === 'design'
-              ? 'Living design system — tokens, components, and usage examples straight from the codebase.'
-              : tab === 'visual'
-              ? 'Colour palette, typography, and core components at a glance.'
-              : tab === 'about'
-              ? 'The idea behind Logbird — what it is, why it exists, and how it works.'
-              : "What\u2019s shipped, what\u2019s in progress, and what\u2019s coming next."}
-          </p>
+          <p className="text-sm text-[#727A84] mt-1">{TAB_SUBTITLES[tab]}</p>
         </div>
 
         {/* Tab switcher */}
-        <div className="flex items-center bg-[#F0F3F3] rounded-[12px] p-1 shrink-0">
+        <div className="flex items-center bg-[#F0F3F3] rounded-[12px] p-1 shrink-0 flex-wrap gap-1">
           {TABS.map(t => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
               className={cn(
-                'px-5 py-2 text-sm font-bold rounded-[10px] transition-all cursor-pointer',
+                'px-4 py-2 text-sm font-bold rounded-[10px] transition-all cursor-pointer',
                 tab === t.id
                   ? 'bg-white text-[#0C1629] shadow-sm'
                   : 'text-[#727A84] hover:text-[#0C1629]'
@@ -1083,7 +1524,12 @@ export default function Docs() {
       </div>
 
       {/* Content */}
-      {tab === 'design' ? <DesignSystemTab /> : tab === 'visual' ? <VisualTab /> : tab === 'about' ? <WhatIsLogbirdTab /> : <RoadmapTab />}
+      {tab === 'design' ? <DesignSystemTab />
+        : tab === 'visual' ? <VisualTab />
+        : tab === 'about' ? <WhatIsLogbirdTab />
+        : tab === 'changelog' ? <ChangelogTab />
+        : tab === 'roadmap' ? <RoadmapTab />
+        : <StrategicOutlookTab />}
     </div>
   )
 }
