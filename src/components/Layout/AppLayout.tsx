@@ -4,6 +4,8 @@ import { Search, LayoutDashboard, BookOpen, Circle, User, Settings, LogOut, Plus
 import { SquaresFour, ListBullets, Columns, PencilSimpleLine } from '@phosphor-icons/react'
 import Sidebar from './Sidebar'
 import { useAuthStore } from '../../stores/authStore'
+import { CheckinProvider } from '../../context/CheckinContext'
+import CheckinModal from '../CheckinModal/CheckinModal'
 import { cn } from '../../lib/utils'
 import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverTitle, PopoverDescription, PopoverBody, PopoverFooter } from '../ui/popover'
 import { Avatar, AvatarFallback } from '../ui/avatar'
@@ -178,7 +180,9 @@ export default function AppLayout() {
     )
 
   return (
+    <CheckinProvider>
     <div className="flex h-screen overflow-hidden bg-background">
+      <CheckinModal />
       {/* Narrow drag strip — only covers the ~40px traffic light zone, nothing below */}
       {isTauri && (
         <div
@@ -411,5 +415,6 @@ export default function AppLayout() {
         </>
       )}
     </div>
+    </CheckinProvider>
   )
 }

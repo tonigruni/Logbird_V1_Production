@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { SquaresFour, BookOpen, ChartDonut, CheckSquare, Target, Kanban, Timer, CaretDown, Gear, SignOut, UserCircle, Files } from '@phosphor-icons/react'
+import { SquaresFour, BookOpen, ChartDonut, CheckSquare, Target, Kanban, Timer, CaretDown, Gear, SignOut, UserCircle, Files, SunHorizon } from '@phosphor-icons/react'
 import { User } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { useAuthStore } from '../../stores/authStore'
+import { useCheckin } from '../../context/CheckinContext'
 import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverTitle, PopoverDescription, PopoverBody, PopoverFooter } from '../ui/popover'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import { UpdateCard } from '../UpdateCard'
@@ -29,6 +30,7 @@ export default function Sidebar() {
   const location = useLocation()
   const navigate = useNavigate()
   const { signOut, user } = useAuthStore()
+  const { openCheckin } = useCheckin()
   const navRef = useRef<HTMLDivElement>(null)
   const [canScrollDown, setCanScrollDown] = useState(false)
 
@@ -121,6 +123,17 @@ export default function Sidebar() {
       {/* Faint scroll-down indicator */}
       <div className={cn('flex justify-center py-3 transition-opacity duration-200 pointer-events-none', canScrollDown ? 'opacity-100' : 'opacity-0')}>
         <CaretDown size={14} className="text-[#B5C1C8]" />
+      </div>
+
+      {/* Daily Check-in button */}
+      <div className="px-1 pb-1">
+        <button
+          onClick={openCheckin}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-[15px] text-base tracking-tight transition-all duration-200 cursor-pointer text-[#727A84] hover:bg-[#0C1629]/[0.03] font-semibold"
+        >
+          <SunHorizon size={20} weight="regular" className="shrink-0" />
+          Daily Check-in
+        </button>
       </div>
 
       {/* Update card — only shown in Tauri desktop app when update is available */}
