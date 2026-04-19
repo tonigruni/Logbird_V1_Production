@@ -1,3 +1,4 @@
+import './checkin.css'
 import { useEffect, useState, useCallback } from 'react'
 import { X } from '@phosphor-icons/react'
 import { useCheckin } from '../../context/CheckinContext'
