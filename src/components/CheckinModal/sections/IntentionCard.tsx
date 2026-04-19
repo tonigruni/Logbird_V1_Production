@@ -11,9 +11,10 @@ const QUICK_FILLS = [
 interface IntentionCardProps {
   value: string
   onChange: (v: string) => void
+  onBlur?: () => void
 }
 
-export default function IntentionCard({ value, onChange }: IntentionCardProps) {
+export default function IntentionCard({ value, onChange, onBlur }: IntentionCardProps) {
   return (
     <div className="rounded-2xl border border-[#ECEFF2] bg-white p-6 relative overflow-hidden">
       <div className="absolute right-4 top-4 opacity-[0.04] pointer-events-none">
@@ -28,6 +29,7 @@ export default function IntentionCard({ value, onChange }: IntentionCardProps) {
           placeholder="Today I want to…"
           value={value}
           onChange={e => onChange(e.target.value)}
+          onBlur={onBlur}
           className="w-full resize-none rounded-xl border border-[#ECEFF2] bg-[#fafbfb] px-4 py-3 text-[14px] text-[#2d3435] leading-relaxed outline-none focus:border-[#1F3649]/30 focus:ring-2 focus:ring-[#1F3649]/10 transition-all"
         />
         <div className="mt-3 flex flex-wrap gap-2">
