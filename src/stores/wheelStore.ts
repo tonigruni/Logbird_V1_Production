@@ -33,6 +33,12 @@ export interface WheelCheckin {
   notes: string | null
   context: CheckinContext | null
   created_at: string
+  // Daily check-in popup fields (added 2026-04-19)
+  energy_level?: number | null       // 1–5
+  mood_words?: string[] | null       // selected mood word strings
+  intention?: string | null
+  gratitude?: string[] | null        // array of up to 3 strings
+  meditation_completed?: boolean | null
 }
 
 export interface GoalMilestone {
