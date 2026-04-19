@@ -623,11 +623,6 @@ export default function CheckinModal() {
 
         {/* Titlebar */}
         <div className="modal-titlebar">
-          <div className="traffic-lights" aria-hidden="true">
-            <span className="tl-close" onClick={confirmClose} style={{ cursor: 'pointer' }}/>
-            <span className="tl-min"/>
-            <span className="tl-max"/>
-          </div>
           <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }}>
             {Stepper}
           </div>
