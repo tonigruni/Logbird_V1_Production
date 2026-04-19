@@ -1,7 +1,7 @@
 // src/components/CheckinModal/pages/PageGoals.tsx
 import { useNavigate } from 'react-router-dom'
 import { Target, Plus } from '@phosphor-icons/react'
-import { useWheelStore } from '../../../store/wheelStore'
+import { useWheelStore } from '../../../stores/wheelStore'
 
 interface PageGoalsProps {
   onClose: () => void
