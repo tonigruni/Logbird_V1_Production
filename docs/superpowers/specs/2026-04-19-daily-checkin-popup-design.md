@@ -131,16 +131,70 @@ The current `wheelStore.createCheckin` call uses a hardcoded/default category se
 
 ---
 
-## Sections NOT wired (placeholder only)
+## Database Changes (migration created this sprint)
 
-| Section | Status | Future work |
+All new columns and tables are created via a single migration file. UI sections become fully wirable even if the frontend logic is completed in a later sprint.
+
+### `wheel_checkins` — new columns
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `energy_level` | `SMALLINT` | 1–5 energy bar value |
+| `mood_words` | `TEXT[]` | Array of selected mood word strings |
+| `intention` | `TEXT` | User's daily intention freetext |
+| `gratitude` | `JSONB` | Array of 3 strings `["...", "...", "..."]` |
+| `meditation_completed` | `BOOLEAN DEFAULT FALSE` | Whether 1-min breath session was finished |
+
+### New table: `habits`
+
+```sql
+CREATE TABLE habits (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id       UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  name          TEXT NOT NULL,
+  icon          TEXT,
+  color         TEXT,
+  sort_order    INTEGER DEFAULT 0,
+  created_at    TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE habits ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "user_habits" ON habits USING (auth.uid() = user_id);
+```
+
+### New table: `habit_logs`
+
+```sql
+CREATE TABLE habit_logs (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  habit_id    UUID NOT NULL REFERENCES habits(id) ON DELETE CASCADE,
+  logged_date DATE NOT NULL,
+  created_at  TIMESTAMPTZ DEFAULT now(),
+  UNIQUE (habit_id, logged_date)
+);
+ALTER TABLE habit_logs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "user_habit_logs" ON habit_logs USING (auth.uid() = user_id);
+```
+
+### `user_profiles` — new columns
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `purpose_statement` | `TEXT` | North star statement |
+| `purpose_pillars` | `JSONB` | Array of `{label, text, color}` objects |
+
+### Sections status after migration
+
+| Section | Status | Persists to |
 |---------|--------|-------------|
-| Intention | Placeholder | Needs `intention` column on `wheel_checkins` |
-| Gratitude | Placeholder | Needs `gratitude_entries` table or column |
-| Habits | Placeholder | Needs `habits` + `habit_logs` tables |
-| Meditation log | Client-only | Optional: `meditation_logs` table |
-| Purpose/Pillars | Not included in V1 | Needs columns on `user_profiles` |
-| Daily quote | Static hardcoded | Optional: quotes API or table |
+| Mood words | ✅ Wired | `wheel_checkins.mood_words` |
+| Energy level | ✅ Wired | `wheel_checkins.energy_level` |
+| Intention | ✅ DB ready, wired in this sprint | `wheel_checkins.intention` |
+| Gratitude | ✅ DB ready, wired in this sprint | `wheel_checkins.gratitude` |
+| Meditation | ✅ DB ready, wired in this sprint | `wheel_checkins.meditation_completed` |
+| Habits | ✅ DB ready, placeholder UI (no default habits seeded) | `habits` + `habit_logs` |
+| Purpose | ✅ DB ready, placeholder UI | `user_profiles.purpose_statement/pillars` |
+| Daily quote | Static hardcoded | None needed |
 
 ---
 
@@ -151,3 +205,5 @@ The current `wheelStore.createCheckin` call uses a hardcoded/default category se
 - Affirmation — future sprint
 - Weather API integration in Hero
 - Hero treatment selector (stays navy for now)
+- Default habits seeding (user creates their own habits later)
+- Habit management UI (add/edit/delete habits — separate settings page)
