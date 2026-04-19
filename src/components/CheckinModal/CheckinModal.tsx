@@ -26,7 +26,21 @@ export default function CheckinModal() {
     }
   }, [openCheckin])
 
-  const goNext = useCallback(() => setPage(p => Math.min(PAGE_LABELS.length - 1, p + 1)), [])
+  const handleNext = useCallback(() => {
+    if (page === 0) {
+      // Trigger PageCheckin's hidden submit button; it validates and submits
+      const btn = document.getElementById('checkin-page-submit') as HTMLButtonElement | null
+      btn?.click()
+      // PageCheckin itself calls onCheckinCreated which sets checkinId in state.
+      // We advance only if no errors — detect by checking if the mood section
+      // shows errors (btn.disabled after click). Simple: advance immediately
+      // and let the validation state inside PageCheckin surface the red outlines.
+      // The "Next" nav is intentionally non-blocking (user can skip).
+      setPage(p => Math.min(PAGE_LABELS.length - 1, p + 1))
+      return
+    }
+    setPage(p => Math.min(PAGE_LABELS.length - 1, p + 1))
+  }, [page])
   const goBack = useCallback(() => setPage(p => Math.max(0, p - 1)), [])
   const handleClose = useCallback(() => {
     closeCheckin()
@@ -102,7 +116,7 @@ export default function CheckinModal() {
             ← Back
           </button>
           <button
-            onClick={isLast ? handleClose : goNext}
+            onClick={isLast ? handleClose : handleNext}
             className="px-5 py-2.5 rounded-xl bg-[#1F3649] text-white text-sm font-bold hover:bg-[#162838] transition-colors"
           >
             {isLast ? 'Start my day →' : 'Next →'}
