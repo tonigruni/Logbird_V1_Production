@@ -1,10 +1,19 @@
 import './checkin.css'
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useCheckin } from '../../context/CheckinContext'
 import { useAuthStore } from '../../stores/authStore'
 import { useWheelStore } from '../../stores/wheelStore'
 import { useJournalStore } from '../../stores/journalStore'
+
+// ─── Tiny inline debounce hook (no extra dep needed) ─────────
+function useDebounced<T extends (...a: any[]) => any>(fn: T, ms: number) {
+  const tRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const fnRef = useRef(fn); fnRef.current = fn
+  return useCallback((...args: any[]) => {
+    if (tRef.current) clearTimeout(tRef.current)
+    tRef.current = setTimeout(() => fnRef.current(...args), ms)
+  }, [ms])
+}
 
 // Sections
 import { Hero, MoodSection, IntentionCard, Priorities, TasksGrouped, Timebox, Gratitude, WheelNudge, Yesterday, Habits, JournalQuick, QuoteCard } from './sections/sections'
@@ -58,9 +67,8 @@ const PAGES = [
 export default function CheckinModal() {
   const { isOpen, openCheckin, closeCheckin } = useCheckin()
   const { user } = useAuthStore()
-  const { createCheckin, goals } = useWheelStore()
-  const { createEntry } = useJournalStore()
-  const navigate = useNavigate()
+  const { upsertTodayCheckin, goals } = useWheelStore()
+  const { upsertTodayMorningPages } = useJournalStore()
 
   // Auto-open once per day
   useEffect(() => {
@@ -83,7 +91,6 @@ export default function CheckinModal() {
   // ── Checkin page state ──
   const [moodState, setMoodState] = useState<any>({ words: [], emoji: null, slider: null, weather: null })
   const [energy, setEnergy] = useState<number | null>(null)
-  const [moodCommitted, setMoodCommitted] = useState(false)
   const [bodyValid, setBodyValid] = useState(false)
   const [moodValid, setMoodValid] = useState(false)
   const [showCheckinErrors, setShowCheckinErrors] = useState(false)
@@ -92,7 +99,9 @@ export default function CheckinModal() {
   const [intention, setIntention] = useState('')
   const [gratitude, setGratitude] = useState(['', '', ''])
   const [journal, setJournal] = useState('')
-  const [journalSaved, setJournalSaved] = useState(false)
+
+  // ── Autosave indicator ──
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
 
   // ── Checkin page extra ──
   const [affIdx, setAffIdx] = useState(() => Math.floor(Math.random() * 5))
@@ -106,59 +115,60 @@ export default function CheckinModal() {
   const toggleDone = (id: string) => setDone(d => ({ ...d, [id]: !d[id] }))
   const promote = (c: any) => setTasks((t: any) => ({ ...t, normal: [{ id: 'carry-' + c.id, title: c.title, project: null, time: null }, ...t.normal] }))
 
-  // ── Mood commit guard ──
-  const hasCommittedRef = useRef(false)
+  // ── Autosave helpers ──
+  const persistCheckin = useCallback(async (patch: Record<string, any>) => {
+    if (!user) return
+    setSaveStatus('saving')
+    try {
+      await upsertTodayCheckin(patch)
+      setSaveStatus('saved')
+    } catch (_) {
+      setSaveStatus('idle')
+    }
+  }, [user, upsertTodayCheckin])
 
-  const commitMood = useCallback(async () => {
-    if (hasCommittedRef.current || !user) return
-    hasCommittedRef.current = true
+  const persistJournal = useCallback(async (text: string) => {
+    if (!user) return
+    setSaveStatus('saving')
+    try {
+      await upsertTodayMorningPages(text)
+      setSaveStatus('saved')
+    } catch (_) {
+      setSaveStatus('idle')
+    }
+  }, [user, upsertTodayMorningPages])
+
+  // Debounced versions
+  const debouncedPersistCheckin = useDebounced(persistCheckin, 400)
+  const debouncedPersistJournal = useDebounced(persistJournal, 800)
+
+  // ── Mood state: kept for MoodSection UI only ──
+  const [moodCommitted, setMoodCommitted] = useState(false)
+
+  const commitMood = useCallback(() => {
+    if (moodCommitted) return
     setMoodCommitted(true)
-    const today = new Date().toISOString().split('T')[0]
-    try {
-      await createCheckin({
-        user_id:   user.id,
-        date:      today,
-        scores:    {},
-        sub_scores: null,
-        reflection_answers: null,
-        notes:     null,
-        context:   null,
-        energy_level: energy,
-        mood_words:   moodState.words,
-        intention:    null,
-        gratitude:    null,
-        meditation_completed: null,
-      })
-    } catch (_) {
-      // non-blocking — modal continues regardless
-    }
-  }, [user, energy, moodState.words, createCheckin])
+    debouncedPersistCheckin({ energy_level: energy, mood_words: moodState.words })
+  }, [moodCommitted, energy, moodState.words, debouncedPersistCheckin])
 
-  // ── Journal save ──
-  const saveJournal = useCallback(async () => {
-    if (journalSaved || !journal.trim() || !user) return
-    setJournalSaved(true)
-    const today = new Date().toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' })
-    try {
-      await createEntry({
-        user_id:       user.id,
-        title:         `Morning Pages — ${today}`,
-        content:       journal.trim(),
-        mood_score:    null,
-        template_id:   null,
-        category:      'morning-pages',
-        location:      null,
-        weather:       null,
-        is_favorite:   false,
-        sleep_quality: null,
-        had_alcohol:   null,
-        exercised:     null,
-        energy_level:  null,
-      })
-    } catch (_) {
-      // non-blocking
-    }
-  }, [journalSaved, journal, user, createEntry])
+  // ── Autosave: checkin fields ──
+  useEffect(() => {
+    if (!user) return
+    debouncedPersistCheckin({
+      energy_level:         energy,
+      mood_words:           moodState.words,
+      intention:            intention || null,
+      gratitude:            gratitude.some(g => g.trim()) ? gratitude : null,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [energy, moodState.words, intention, gratitude])
+
+  // ── Autosave: journal ──
+  useEffect(() => {
+    if (!user || !journal.trim()) return
+    debouncedPersistJournal(journal)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [journal])
 
   // ── ESC handler ──
   useEffect(() => {
@@ -311,14 +321,17 @@ export default function CheckinModal() {
           ))}
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <Btn variant="ghost" onClick={doClose} title="Saves your progress and closes — you can finish later">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 4 }}>
-              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-              <polyline points="17 21 17 13 7 13 7 21"/>
-              <polyline points="7 3 7 8 15 8"/>
-            </svg>
-            Save draft
-          </Btn>
+          {saveStatus !== 'idle' && (
+            <span style={{
+              fontSize: 11.5, fontWeight: 600, color: saveStatus === 'saved' ? '#22c55e' : '#adb3b4',
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+              transition: 'color 200ms ease',
+            }}>
+              {saveStatus === 'saved'
+                ? <><CheckIcon size={11} color="#22c55e" stroke={3}/> Saved</>
+                : 'Saving…'}
+            </span>
+          )}
           {page < PAGES.length - 1 ? (
             <Btn variant="primary" onClick={goNext}>
               Next: {PAGES[page + 1].label} <ArrowRight size={14}/>
@@ -455,19 +468,6 @@ export default function CheckinModal() {
           {tweaks.secJournal && (
             <Section id="journal" title="Morning pages" defaultOpen>
               <JournalQuick value={journal} setValue={setJournal}/>
-              {journal.trim() && !journalSaved && (
-                <button
-                  onClick={saveJournal}
-                  style={{ marginTop: 8, background: 'transparent', border: 0, color: '#1F3649', fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: 0 }}
-                >
-                  Save to journal →
-                </button>
-              )}
-              {journalSaved && (
-                <span style={{ marginTop: 8, display: 'inline-flex', alignItems: 'center', gap: 4, color: '#22c55e', fontSize: 12, fontWeight: 600 }}>
-                  <CheckIcon size={12} color="#22c55e" stroke={3}/> Saved to journal
-                </span>
-              )}
             </Section>
           )}
           {tweaks.secGrat && (
@@ -534,18 +534,14 @@ export default function CheckinModal() {
         activeGoals.length > 0 ? (
           <div style={{ display: 'grid', gap: 12 }}>
             {activeGoals.map((g: any) => (
-              <button
+              <div
                 key={g.id}
-                onClick={() => { doClose(); navigate(`/goals/${g.id}`) }}
                 style={{
-                  textAlign: 'left', cursor: 'pointer',
+                  textAlign: 'left',
                   padding: '16px 18px', borderRadius: 14,
                   border: '1px solid #ECEFF2', background: '#fff',
                   display: 'grid', gridTemplateColumns: '1fr auto', gap: 12, alignItems: 'center',
-                  transition: 'border-color 180ms ease, box-shadow 180ms ease',
                 }}
-                onMouseEnter={(e: any) => { e.currentTarget.style.borderColor = '#1F3649'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(31,54,73,0.10)' }}
-                onMouseLeave={(e: any) => { e.currentTarget.style.borderColor = '#ECEFF2'; e.currentTarget.style.boxShadow = 'none' }}
               >
                 <div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: '#2d3435', letterSpacing: '-0.01em' }}>{g.title}</div>
@@ -558,25 +554,17 @@ export default function CheckinModal() {
                 }}>
                   {g.status}
                 </span>
-              </button>
+              </div>
             ))}
-            <button
-              onClick={() => { doClose(); navigate('/goals/new') }}
-              style={{ padding: '14px 18px', borderRadius: 14, border: '1px dashed #ECEFF2', background: '#fafbfb', color: '#adb3b4', fontSize: 13.5, fontWeight: 600, cursor: 'pointer', textAlign: 'center' }}
-            >
-              + Set another goal
-            </button>
+            <p style={{ padding: '12px 18px', borderRadius: 14, border: '1px dashed #ECEFF2', background: '#fafbfb', color: '#adb3b4', fontSize: 12.5, fontWeight: 500, textAlign: 'center', margin: 0 }}>
+              You can add goals after your check-in.
+            </p>
           </div>
         ) : (
           <div style={{ padding: '40px 0', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
             <p style={{ fontSize: 15, fontWeight: 600, color: '#2d3435' }}>No active goals yet.</p>
             <p style={{ fontSize: 13, color: '#5a6061' }}>Set your first goal to start tracking the bigger arc.</p>
-            <button
-              onClick={() => { doClose(); navigate('/goals/new') }}
-              style={{ padding: '10px 20px', borderRadius: 12, background: '#1F3649', color: '#fff', fontSize: 13, fontWeight: 700, border: 0, cursor: 'pointer' }}
-            >
-              Set a goal →
-            </button>
+            <p style={{ fontSize: 12.5, color: '#adb3b4', fontWeight: 500 }}>You can add goals after your check-in.</p>
           </div>
         )
       )}

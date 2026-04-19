@@ -104,6 +104,8 @@ interface WheelState {
   loading: boolean
   fetchAll: (userId: string) => Promise<void>
   createCheckin: (checkin: Omit<WheelCheckin, 'id' | 'created_at'>) => Promise<void>
+  upsertTodayCheckin: (patch: Partial<WheelCheckin>) => Promise<void>
+  todaysCheckin: () => WheelCheckin | undefined
   createGoal: (goal: Omit<Goal, 'id' | 'created_at'>) => Promise<Goal>
   updateGoal: (id: string, updates: Partial<Goal>) => Promise<void>
   deleteGoal: (id: string) => Promise<void>
@@ -148,6 +150,57 @@ export const useWheelStore = create<WheelState>((set) => ({
     }
     const { data } = await supabase.from('wheel_checkins').insert(checkin).select().single()
     if (data) set((state) => ({ checkins: [data, ...state.checkins] }))
+  },
+  upsertTodayCheckin: async (patch) => {
+    const { useAuthStore } = await import('./authStore')
+    const currentUser = useAuthStore.getState().user
+    if (!currentUser) { console.warn('upsertTodayCheckin: no user, skipping'); return }
+    const today = new Date().toISOString().split('T')[0]
+    const existing = useWheelStore.getState().checkins.find(
+      (c) => c.date === today && c.user_id === currentUser.id
+    )
+    if (existing) {
+      // optimistic update
+      set((state) => ({
+        checkins: state.checkins.map((c) =>
+          c.id === existing.id ? { ...c, ...patch } : c
+        ),
+      }))
+      if (!DEMO_MODE) {
+        const { data } = await supabase
+          .from('wheel_checkins')
+          .update(patch)
+          .eq('id', existing.id)
+          .select()
+          .single()
+        if (data) {
+          set((state) => ({
+            checkins: state.checkins.map((c) => (c.id === existing.id ? data : c)),
+          }))
+        }
+      }
+    } else {
+      const newCheckin = {
+        user_id: currentUser.id,
+        date: today,
+        scores: {},
+        sub_scores: null,
+        reflection_answers: null,
+        notes: null,
+        context: null,
+        ...patch,
+      } as Omit<WheelCheckin, 'id' | 'created_at'>
+      if (DEMO_MODE) {
+        const data = { ...newCheckin, id: crypto.randomUUID(), created_at: new Date().toISOString() }
+        set((state) => ({ checkins: [data, ...state.checkins] })); return
+      }
+      const { data } = await supabase.from('wheel_checkins').insert(newCheckin).select().single()
+      if (data) set((state) => ({ checkins: [data, ...state.checkins] }))
+    }
+  },
+  todaysCheckin: () => {
+    const today = new Date().toISOString().split('T')[0]
+    return useWheelStore.getState().checkins.find((c) => c.date === today)
   },
   createGoal: async (goal) => {
     if (goal.title && goal.title.length > 500) throw new Error('Goal title must be 500 characters or fewer')

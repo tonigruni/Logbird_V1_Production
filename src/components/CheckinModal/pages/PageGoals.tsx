@@ -1,6 +1,7 @@
 // src/components/CheckinModal/pages/PageGoals.tsx
-import { useNavigate } from 'react-router-dom'
-import { Target, Plus } from '@phosphor-icons/react'
+// NOTE: This file is orphaned (not used by CheckinModal.tsx which renders goals inline).
+// Kept clean — navigate() removed. Goal cards are read-only during check-in.
+import { Target } from '@phosphor-icons/react'
 import { useWheelStore } from '../../../stores/wheelStore'
 
 interface PageGoalsProps {
@@ -13,21 +14,10 @@ const STATUS_COLORS: Record<string, string> = {
   archived:  'bg-[#f2f4f4] text-[#adb3b4]',
 }
 
-export default function PageGoals({ onClose }: PageGoalsProps) {
-  const navigate = useNavigate()
+export default function PageGoals({ onClose: _onClose }: PageGoalsProps) {
   const { goals } = useWheelStore()
 
   const activeGoals = goals.filter(g => g.status === 'active')
-
-  const openGoal = (id: string) => {
-    onClose()
-    navigate(`/goals/${id}`)
-  }
-
-  const createGoal = () => {
-    onClose()
-    navigate('/goals/new')
-  }
 
   return (
     <div>
@@ -38,12 +28,7 @@ export default function PageGoals({ onClose }: PageGoalsProps) {
             {activeGoals.length} active {activeGoals.length === 1 ? 'goal' : 'goals'}
           </p>
         </div>
-        <button
-          onClick={createGoal}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#ECEFF2] text-[13px] font-semibold text-[#5a6061] hover:bg-[#f7f9fa] transition-colors cursor-pointer"
-        >
-          <Plus size={14} /> New goal
-        </button>
+        <p className="text-[12px] text-[#adb3b4] font-medium">You can add goals after your check-in.</p>
       </div>
 
       {activeGoals.length === 0 ? (
@@ -55,20 +40,14 @@ export default function PageGoals({ onClose }: PageGoalsProps) {
             <p className="text-[15px] font-semibold text-[#2d3435]">No goals yet</p>
             <p className="text-[13px] text-[#5a6061] mt-1">Set your first goal to start tracking progress.</p>
           </div>
-          <button
-            onClick={createGoal}
-            className="px-5 py-2 rounded-xl bg-[#1F3649] text-white text-sm font-bold hover:bg-[#162838] transition-colors cursor-pointer"
-          >
-            Set a goal →
-          </button>
+          <p className="text-[12px] text-[#adb3b4] font-medium">You can add goals after your check-in.</p>
         </div>
       ) : (
         <div className="space-y-2.5">
           {activeGoals.map(goal => (
-            <button
+            <div
               key={goal.id}
-              onClick={() => openGoal(goal.id)}
-              className="w-full text-left rounded-2xl border border-[#ECEFF2] bg-white px-5 py-4 hover:border-[#1F3649]/20 hover:shadow-sm transition-all cursor-pointer"
+              className="w-full text-left rounded-2xl border border-[#ECEFF2] bg-white px-5 py-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
@@ -93,7 +72,7 @@ export default function PageGoals({ onClose }: PageGoalsProps) {
                   {goal.status}
                 </span>
               </div>
-            </button>
+            </div>
           ))}
         </div>
       )}

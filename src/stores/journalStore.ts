@@ -37,6 +37,7 @@ interface JournalState {
   fetchTemplates: (userId: string) => Promise<void>
   createEntry: (entry: Omit<JournalEntry, 'id' | 'created_at' | 'updated_at'>) => Promise<JournalEntry | null>
   updateEntry: (id: string, updates: Partial<JournalEntry>) => Promise<void>
+  upsertTodayMorningPages: (content: string) => Promise<void>
   deleteEntry: (id: string) => Promise<void>
   createTemplate: (template: Omit<JournalTemplate, 'id' | 'created_at'>) => Promise<void>
   deleteTemplate: (id: string) => Promise<void>
@@ -109,6 +110,36 @@ export const useJournalStore = create<JournalState>((set) => ({
       set((state) => ({
         entries: state.entries.map((e) => (e.id === id ? { ...e, ...data } : e)),
       }))
+    }
+  },
+  upsertTodayMorningPages: async (content) => {
+    if (!content.trim()) return
+    const { useAuthStore } = await import('./authStore')
+    const currentUser = useAuthStore.getState().user
+    if (!currentUser) { console.warn('upsertTodayMorningPages: no user, skipping'); return }
+    const today = new Date().toISOString().split('T')[0]
+    const title = `Morning pages — ${today}`
+    const existing = useJournalStore.getState().entries.find(
+      (e) => e.title === title && e.user_id === currentUser.id
+    )
+    if (existing) {
+      await useJournalStore.getState().updateEntry(existing.id, { content })
+    } else {
+      await useJournalStore.getState().createEntry({
+        user_id:       currentUser.id,
+        title,
+        content,
+        mood_score:    null,
+        template_id:   null,
+        category:      'morning-pages',
+        location:      null,
+        weather:       null,
+        is_favorite:   false,
+        sleep_quality: null,
+        had_alcohol:   null,
+        exercised:     null,
+        energy_level:  null,
+      })
     }
   },
   deleteEntry: async (id) => {
