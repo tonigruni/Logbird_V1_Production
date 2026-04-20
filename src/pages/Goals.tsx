@@ -19,15 +19,16 @@ import { useAuthStore } from '../stores/authStore'
 import BoardView from '../components/BoardView'
 import type { BoardColumn } from '../components/BoardView'
 import GradientBarsBackground from '../components/ui/GradientBarsBackground'
+import GoalHierarchyView from '../components/GoalHierarchyView'
 
 // ---------------------------------------------------------------------------
 // Project lookup (demo)
 // ---------------------------------------------------------------------------
 
 const PROJECT_MAP: Record<string, { title: string; slug: string; color: string }> = {
-  'proj-identity-redesign': { title: 'Identity Redesign', slug: 'identity-redesign', color: '#0C1629' },
+  'proj-identity-redesign': { title: 'Identity Redesign', slug: 'identity-redesign', color: '#1F3649' },
   'proj-focus-mastery': { title: 'Focus Mastery', slug: 'focus-mastery', color: '#22c55e' },
-  'proj-senior-track': { title: 'Senior Track Prep', slug: 'senior-track-prep', color: '#0C1629' },
+  'proj-senior-track': { title: 'Senior Track Prep', slug: 'senior-track-prep', color: '#1F3649' },
 }
 
 // ---------------------------------------------------------------------------
@@ -71,14 +72,14 @@ function GoalCard({ goal, categoryName, taskCount, completedCount, onClick }: {
       <div className="p-5 space-y-3">
         {/* Icon + status row */}
         <div className="flex items-start justify-between">
-          <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 bg-[#0C1629]/10">
-            <Target size={16} weight="bold" className="text-[#0C1629]" />
+          <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 bg-[#1F3649]/10">
+            <Target size={16} weight="bold" className="text-[#1F3649]" />
           </div>
           <span className={cn(
             'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider',
-            goal.status === 'active' ? 'bg-[#0C1629]/10 text-[#0C1629]' :
+            goal.status === 'active' ? 'bg-[#1F3649]/10 text-[#1F3649]' :
             goal.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' :
-            'bg-[#B5C1C8]/10 text-[#B5C1C8]'
+            'bg-[#adb3b4]/10 text-[#adb3b4]'
           )}>
             {goal.status}
           </span>
@@ -87,33 +88,33 @@ function GoalCard({ goal, categoryName, taskCount, completedCount, onClick }: {
         {/* Category + title + description */}
         <div>
           {categoryName && (
-            <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">{categoryName}</span>
+            <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">{categoryName}</span>
           )}
-          <h3 className="font-bold text-[#0C1629] text-sm leading-snug mt-0.5">{goal.title}</h3>
+          <h3 className="font-bold text-[#1F3649] text-sm leading-snug mt-0.5">{goal.title}</h3>
           {goal.description && (
-            <p className="text-xs text-[#727A84] leading-relaxed line-clamp-2 mt-1">{goal.description}</p>
+            <p className="text-xs text-[#5a6061] leading-relaxed line-clamp-2 mt-1">{goal.description}</p>
           )}
         </div>
 
         {/* Progress */}
         <div>
           <div className="flex justify-between text-[10px] font-bold mb-1.5">
-            <span className="text-[#B5C1C8] uppercase tracking-wider">Progress</span>
-            <span className="text-[#0C1629]">{progress}%</span>
+            <span className="text-[#adb3b4] uppercase tracking-wider">Progress</span>
+            <span className="text-[#1F3649]">{progress}%</span>
           </div>
-          <div className="w-full h-1.5 bg-[#0C1629]/10 rounded-full overflow-hidden">
-            <div className="h-full rounded-full bg-[#0C1629] transition-all duration-500" style={{ width: `${progress}%` }} />
+          <div className="w-full h-1.5 bg-[#1F3649]/10 rounded-full overflow-hidden">
+            <div className="h-full rounded-full bg-[#1F3649] transition-all duration-500" style={{ width: `${progress}%` }} />
           </div>
         </div>
 
         {/* Footer */}
         <div className="flex items-center justify-between">
-          <span className="flex items-center gap-1 text-[10px] text-[#B5C1C8]">
+          <span className="flex items-center gap-1 text-[10px] text-[#adb3b4]">
             <CheckSquare size={10} />
             {completedCount}/{taskCount} tasks
           </span>
           {goal.target_date && (
-            <span className="flex items-center gap-1 text-[10px] text-[#B5C1C8]">
+            <span className="flex items-center gap-1 text-[10px] text-[#adb3b4]">
               <Calendar size={10} />
               {new Date(goal.target_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
             </span>
@@ -127,14 +128,14 @@ function GoalCard({ goal, categoryName, taskCount, completedCount, onClick }: {
 function NewGoalCard() {
   const navigate = useNavigate()
   return (
-    <button onClick={() => navigate('/goals/new')} className="group flex flex-col items-center justify-center bg-white/60 card min-h-[220px] !border-2 !border-dashed !border-[#B5C1C8]/30 hover:bg-white hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 cursor-pointer w-full">
-      <div className="w-12 h-12 rounded-full bg-[#F0F3F3] flex items-center justify-center group-hover:bg-[#0C1629]/10 transition-colors mb-3">
-        <Plus size={22} weight="bold" className="text-[#727A84] group-hover:text-[#0C1629] transition-colors" />
+    <button onClick={() => navigate('/goals/new')} className="group flex flex-col items-center justify-center bg-white/60 card min-h-[220px] !border-2 !border-dashed !border-[#adb3b4]/30 hover:bg-white hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 cursor-pointer w-full">
+      <div className="w-12 h-12 rounded-full bg-[#f2f4f4] flex items-center justify-center group-hover:bg-[#1F3649]/10 transition-colors mb-3">
+        <Plus size={22} weight="bold" className="text-[#5a6061] group-hover:text-[#1F3649] transition-colors" />
       </div>
-      <span className="text-sm font-bold text-[#0C1629] group-hover:text-[#0C1629] transition-colors">
+      <span className="text-sm font-bold text-[#1F3649] group-hover:text-[#1F3649] transition-colors">
         Set a New Goal
       </span>
-      <p className="text-xs text-[#B5C1C8] mt-1 max-w-[180px] text-center">
+      <p className="text-xs text-[#adb3b4] mt-1 max-w-[180px] text-center">
         Define what you want to achieve and start making progress.
       </p>
     </button>
@@ -160,47 +161,47 @@ function GoalRow({ goal, categoryName, taskCount, completedCount, project, onCli
     <div onClick={onClick} className="flex items-center gap-4 px-5 py-4 bg-white card group hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 cursor-pointer">
       {/* Icon */}
       <div className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0"
-        style={{ backgroundColor: project ? project.color + '15' : '#0C1629' + '15' }}
+        style={{ backgroundColor: project ? project.color + '15' : '#1F3649' + '15' }}
       >
-        <Target size={18} weight="bold" style={{ color: project?.color || '#0C1629' }} />
+        <Target size={18} weight="bold" style={{ color: project?.color || '#1F3649' }} />
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <h4 className="text-sm font-bold text-[#0C1629] leading-snug">{goal.title}</h4>
+        <h4 className="text-sm font-bold text-[#1F3649] leading-snug">{goal.title}</h4>
         <div className="flex items-center gap-2 mt-0.5 flex-wrap">
           {categoryName && (
-            <span className="text-[10px] font-bold text-[#727A84] uppercase tracking-wider">{categoryName}</span>
+            <span className="text-[10px] font-bold text-[#5a6061] uppercase tracking-wider">{categoryName}</span>
           )}
           {goal.description && (
-            <span className="text-[10px] text-[#B5C1C8] truncate max-w-[200px]">{goal.description}</span>
+            <span className="text-[10px] text-[#adb3b4] truncate max-w-[200px]">{goal.description}</span>
           )}
         </div>
       </div>
 
       {/* Progress */}
       <div className="hidden sm:flex items-center gap-2 shrink-0 w-32">
-        <div className="flex-1 h-1.5 bg-[#F0F3F3] rounded-full overflow-hidden">
+        <div className="flex-1 h-1.5 bg-[#f2f4f4] rounded-full overflow-hidden">
           <div className="h-full rounded-full transition-all" style={{
             width: `${progress}%`,
-            backgroundColor: project?.color || '#0C1629',
+            backgroundColor: project?.color || '#1F3649',
           }} />
         </div>
-        <span className="text-[10px] font-bold text-[#B5C1C8] w-8 text-right">{progress}%</span>
+        <span className="text-[10px] font-bold text-[#adb3b4] w-8 text-right">{progress}%</span>
       </div>
 
       {/* Tasks count — clickable to view tasks */}
       <button
         onClick={() => navigate('/tasks')}
-        className="hidden md:flex items-center gap-1 shrink-0 hover:text-[#0C1629] transition-colors cursor-pointer"
+        className="hidden md:flex items-center gap-1 shrink-0 hover:text-[#1F3649] transition-colors cursor-pointer"
       >
-        <CheckSquare size={12} className="text-[#B5C1C8]" />
-        <span className="text-[10px] font-bold text-[#B5C1C8]">{completedCount}/{taskCount} tasks</span>
+        <CheckSquare size={12} className="text-[#adb3b4]" />
+        <span className="text-[10px] font-bold text-[#adb3b4]">{completedCount}/{taskCount} tasks</span>
       </button>
 
       {/* Due date */}
       {goal.target_date && (
-        <span className="hidden lg:flex items-center gap-1 text-[10px] font-semibold text-[#B5C1C8] shrink-0">
+        <span className="hidden lg:flex items-center gap-1 text-[10px] font-semibold text-[#adb3b4] shrink-0">
           <Calendar size={10} />
           {new Date(goal.target_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
         </span>
@@ -209,9 +210,9 @@ function GoalRow({ goal, categoryName, taskCount, completedCount, project, onCli
       {/* Status badge */}
       <span className={cn(
         'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shrink-0',
-        goal.status === 'active' ? 'bg-[#0C1629]/10 text-[#0C1629]' :
+        goal.status === 'active' ? 'bg-[#1F3649]/10 text-[#1F3649]' :
         goal.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' :
-        'bg-[#B5C1C8]/10 text-[#B5C1C8]'
+        'bg-[#adb3b4]/10 text-[#adb3b4]'
       )}>
         {goal.status}
       </span>
@@ -242,7 +243,7 @@ export default function Goals() {
   const { goals, tasks, categories, fetchAll, updateGoal } = useWheelStore()
 
   const [searchParams] = useSearchParams()
-  const view = (searchParams.get('view') as 'portfolio' | 'list' | 'board') || 'portfolio'
+  const view = (searchParams.get('view') as 'portfolio' | 'list' | 'board') || 'list'
 
   const [filterCategory, setFilterCategory] = useState('all')
   const [filterStatus, setFilterStatus]     = useState('all')
@@ -349,7 +350,7 @@ export default function Goals() {
           <select
             value={filterCategory}
             onChange={e => setFilterCategory(e.target.value)}
-            className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#F0F3F3] text-xs text-[#727A84] font-semibold outline-none cursor-pointer"
+            className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#f2f4f4] text-xs text-[#5a6061] font-semibold outline-none cursor-pointer"
           >
             <option value="all">All Categories</option>
             {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -358,7 +359,7 @@ export default function Goals() {
           <select
             value={filterStatus}
             onChange={e => setFilterStatus(e.target.value)}
-            className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#F0F3F3] text-xs text-[#727A84] font-semibold outline-none cursor-pointer"
+            className="flex items-center gap-1.5 h-7 pl-2.5 pr-6 rounded-[8px] bg-[#f2f4f4] text-xs text-[#5a6061] font-semibold outline-none cursor-pointer"
           >
             <option value="all">All Statuses</option>
             <option value="active">Active</option>
@@ -367,10 +368,10 @@ export default function Goals() {
           </select>
           <div className="flex-1" />
           {/* Sort */}
-          <div className="flex items-center gap-1 text-[10px] font-bold text-[#B5C1C8]">
+          <div className="flex items-center gap-1 text-[10px] font-bold text-[#adb3b4]">
             <CheckSquare size={13} />
             {(['recent', 'alpha', 'progress'] as const).map(s => (
-              <button key={s} onClick={() => setSortBy(s)} className={cn('px-2 py-1 rounded-md uppercase tracking-wider transition-colors cursor-pointer', sortBy === s ? 'text-[#0C1629] bg-[#0C1629]/10' : 'hover:text-[#0C1629]')}>
+              <button key={s} onClick={() => setSortBy(s)} className={cn('px-2 py-1 rounded-md uppercase tracking-wider transition-colors cursor-pointer', sortBy === s ? 'text-[#1F3649] bg-[#1F3649]/10' : 'hover:text-[#1F3649]')}>
                 {s === 'recent' ? 'Recent' : s === 'alpha' ? 'A–Z' : 'Progress'}
               </button>
             ))}
@@ -391,28 +392,7 @@ export default function Goals() {
       )}
 
       {view === 'list' && (
-        <div className="space-y-2">
-          {displayGoals.map(goal => {
-            const counts = goalTaskCounts[goal.id] || { total: 0, completed: 0 }
-            const project = goal.project_id ? PROJECT_MAP[goal.project_id] : null
-            return (
-              <GoalRow
-                key={goal.id}
-                goal={goal}
-                categoryName={categoryMap[goal.category_id]?.name ?? null}
-                taskCount={counts.total}
-                completedCount={counts.completed}
-                project={project}
-                onClick={() => navigate(`/goals/${goal.id}`)}
-              />
-            )
-          })}
-          {displayGoals.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-sm text-[#B5C1C8]">No goals yet. Create goals in Wheel of Life.</p>
-            </div>
-          )}
-        </div>
+        <GoalHierarchyView goals={goals} tasks={tasks} categories={categories} />
       )}
 
       {view === 'portfolio' && (

@@ -26,15 +26,15 @@ const PRIORITIES: { value: TaskPriority; label: string }[] = [
 ]
 
 const PRIORITY_STYLES: Record<TaskPriority, string> = {
-  low: 'bg-[#B5C1C8]/10 text-[#B5C1C8]',
-  normal: 'bg-[#0C1629]/10 text-[#0C1629]',
+  low: 'bg-[#adb3b4]/10 text-[#adb3b4]',
+  normal: 'bg-[#1F3649]/10 text-[#1F3649]',
   high: 'bg-[#f59e0b]/10 text-[#f59e0b]',
   urgent: 'bg-[#dc2626]/10 text-[#dc2626]',
 }
 
 const PRIORITY_ACTIVE: Record<TaskPriority, string> = {
-  low: 'bg-[#B5C1C8] text-white',
-  normal: 'bg-[#0C1629] text-white',
+  low: 'bg-[#adb3b4] text-white',
+  normal: 'bg-[#1F3649] text-white',
   high: 'bg-[#f59e0b] text-white',
   urgent: 'bg-[#dc2626] text-white',
 }
@@ -103,13 +103,13 @@ export default function TaskEdit() {
       <div className="space-y-8 pb-24 max-w-3xl">
         <button
           onClick={() => navigate('/tasks')}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-[#727A84] hover:text-[#0C1629] transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-[#5a6061] hover:text-[#1F3649] transition-colors cursor-pointer"
         >
           <ArrowLeft size={16} />
           Tasks
         </button>
         <div className="text-center py-16">
-          <p className="text-sm text-[#B5C1C8]">Task not found</p>
+          <p className="text-sm text-[#adb3b4]">Task not found</p>
         </div>
       </div>
     )
@@ -146,13 +146,13 @@ export default function TaskEdit() {
       <div className="flex items-center gap-2 text-sm">
         <button
           onClick={() => navigate('/tasks')}
-          className="inline-flex items-center gap-2 font-semibold text-[#727A84] hover:text-[#0C1629] transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 font-semibold text-[#5a6061] hover:text-[#1F3649] transition-colors cursor-pointer"
         >
           <ArrowLeft size={16} />
           Tasks
         </button>
         <span className="text-[#c3c7cd]">/</span>
-        <span className="font-semibold text-[#0C1629]">Edit Task</span>
+        <span className="font-semibold text-[#1F3649]">Edit Task</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -162,11 +162,11 @@ export default function TaskEdit() {
           <button onClick={handleToggleComplete} className="flex items-center gap-3 cursor-pointer group">
             {task.completed
               ? <CheckCircle size={28} weight="fill" className="text-[#22c55e]" />
-              : <Circle size={28} weight="regular" className="text-[#c3c7cd] group-hover:text-[#0C1629] transition-colors" />
+              : <Circle size={28} weight="regular" className="text-[#c3c7cd] group-hover:text-[#1F3649] transition-colors" />
             }
             <span className={cn(
               'text-lg font-black tracking-tight',
-              task.completed ? 'line-through text-[#B5C1C8]' : 'text-[#0C1629]'
+              task.completed ? 'line-through text-[#adb3b4]' : 'text-[#1F3649]'
             )}>
               {task.completed ? 'Completed' : 'Mark as Complete'}
             </span>
@@ -174,27 +174,27 @@ export default function TaskEdit() {
 
           {/* Title */}
           <div className="space-y-2">
-            <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+            <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
               Task Title
             </label>
             <input
               value={title}
               onChange={e => setTitle(e.target.value)}
               placeholder="What needs to be done?"
-              className="w-full text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-white card px-5 py-4 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow"
+              className="w-full text-sm text-[#1F3649] placeholder-[#adb3b4] bg-white card px-5 py-4 outline-none focus:ring-2 focus:ring-[#1F3649]/10 transition-shadow"
             />
           </div>
 
           {/* Category + Project + Goal */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+              <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
                 Category
               </label>
               <select
                 value={categoryId}
                 onChange={e => setCategoryId(e.target.value)}
-                className="w-full text-xs font-semibold text-[#0C1629] bg-white card px-4 py-3.5 border-none outline-none cursor-pointer focus:ring-2 focus:ring-[#0C1629]/10"
+                className="w-full text-xs font-semibold text-[#1F3649] bg-white card px-4 py-3.5 border-none outline-none cursor-pointer focus:ring-2 focus:ring-[#1F3649]/10"
               >
                 <option value="">No category</option>
                 {categories.map(c => (
@@ -203,13 +203,13 @@ export default function TaskEdit() {
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+              <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
                 Project
               </label>
               <select
                 value={projectId}
                 onChange={e => setProjectId(e.target.value)}
-                className="w-full text-xs font-semibold text-[#0C1629] bg-white card px-4 py-3.5 border-none outline-none cursor-pointer focus:ring-2 focus:ring-[#0C1629]/10"
+                className="w-full text-xs font-semibold text-[#1F3649] bg-white card px-4 py-3.5 border-none outline-none cursor-pointer focus:ring-2 focus:ring-[#1F3649]/10"
               >
                 <option value="">No project</option>
                 {projects.map(p => (
@@ -218,13 +218,13 @@ export default function TaskEdit() {
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+              <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
                 Goal Alignment
               </label>
               <select
                 value={goalId}
                 onChange={e => setGoalId(e.target.value)}
-                className="w-full text-xs font-semibold text-[#0C1629] bg-white card px-4 py-3.5 border-none outline-none cursor-pointer focus:ring-2 focus:ring-[#0C1629]/10"
+                className="w-full text-xs font-semibold text-[#1F3649] bg-white card px-4 py-3.5 border-none outline-none cursor-pointer focus:ring-2 focus:ring-[#1F3649]/10"
               >
                 <option value="">No goal</option>
                 {goals.map(g => (
@@ -236,7 +236,7 @@ export default function TaskEdit() {
 
           {/* Priority */}
           <div className="space-y-2">
-            <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+            <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
               Priority Matrix
             </label>
             <div className="flex items-center gap-2">
@@ -258,7 +258,7 @@ export default function TaskEdit() {
           {/* Energy + Time */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+              <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
                 Energy Cost
               </label>
               <div className="flex items-center gap-2 bg-white card px-5 py-3.5">
@@ -267,15 +267,15 @@ export default function TaskEdit() {
                     <Lightning
                       size={18}
                       weight="fill"
-                      className={cn('transition-colors', level <= energy ? 'text-[#f59e0b]' : 'text-[#D6DCE0]')}
+                      className={cn('transition-colors', level <= energy ? 'text-[#f59e0b]' : 'text-[#ebeeef]')}
                     />
                   </button>
                 ))}
-                <span className="ml-auto text-xs font-bold text-[#B5C1C8]">{energy}/3</span>
+                <span className="ml-auto text-xs font-bold text-[#adb3b4]">{energy}/3</span>
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+              <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
                 Time Allocation
               </label>
               <div className="flex items-center gap-1">
@@ -286,8 +286,8 @@ export default function TaskEdit() {
                     className={cn(
                       'flex-1 py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-[10px] transition-all cursor-pointer',
                       estimatedMinutes === opt.minutes
-                        ? 'bg-[#0C1629] text-white'
-                        : 'bg-white card text-[#727A84]'
+                        ? 'bg-[#1F3649] text-white'
+                        : 'bg-white card text-[#5a6061]'
                     )}
                   >
                     {opt.label}
@@ -307,13 +307,13 @@ export default function TaskEdit() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-3 pt-4 border-t border-[#F0F3F3]">
+          <div className="flex items-center gap-3 pt-4 border-t border-[#f2f4f4]">
             <button
               onClick={handleSave}
               disabled={!title.trim()}
               className={cn(
                 'inline-flex items-center gap-2 text-sm font-semibold text-white px-6 py-3 rounded-[10px] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed',
-                saved ? 'bg-[#22c55e]' : 'bg-[#0C1629] hover:opacity-90'
+                saved ? 'bg-[#22c55e]' : 'bg-[#1F3649] hover:opacity-90'
               )}
             >
               <FloppyDisk size={16} />
@@ -321,7 +321,7 @@ export default function TaskEdit() {
             </button>
             <button
               onClick={() => navigate('/tasks')}
-              className="text-sm font-semibold text-[#727A84] px-4 py-3 hover:text-[#0C1629] transition-colors cursor-pointer"
+              className="text-sm font-semibold text-[#5a6061] px-4 py-3 hover:text-[#1F3649] transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -337,7 +337,7 @@ export default function TaskEdit() {
                 </button>
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
-                  className="text-xs font-semibold text-[#727A84] px-3 py-2 cursor-pointer"
+                  className="text-xs font-semibold text-[#5a6061] px-3 py-2 cursor-pointer"
                 >
                   No
                 </button>
@@ -359,19 +359,19 @@ export default function TaskEdit() {
           {/* Linked Goal */}
           {linkedGoal && (
             <div className="bg-white card p-5 space-y-3">
-              <h3 className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Linked Goal</h3>
+              <h3 className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Linked Goal</h3>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-[10px] bg-[#0C1629]/10 flex items-center justify-center">
-                  <Target size={14} className="text-[#0C1629]" />
+                <div className="w-8 h-8 rounded-[10px] bg-[#1F3649]/10 flex items-center justify-center">
+                  <Target size={14} className="text-[#1F3649]" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-[#0C1629] truncate">{linkedGoal.title}</p>
-                  <p className="text-[10px] text-[#B5C1C8]">{linkedGoal.status}</p>
+                  <p className="text-sm font-bold text-[#1F3649] truncate">{linkedGoal.title}</p>
+                  <p className="text-[10px] text-[#adb3b4]">{linkedGoal.status}</p>
                 </div>
               </div>
               <button
                 onClick={() => navigate(`/goals/${linkedGoal.id}`)}
-                className="text-xs font-semibold flex items-center gap-1 hover:gap-2 transition-all cursor-pointer text-[#0C1629]"
+                className="text-xs font-semibold flex items-center gap-1 hover:gap-2 transition-all cursor-pointer text-[#1F3649]"
               >
                 <Target size={12} />
                 View Goal
@@ -383,20 +383,20 @@ export default function TaskEdit() {
           {/* Linked Project */}
           {linkedProject && (
             <div className="bg-white card p-5 space-y-3">
-              <h3 className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Linked Project</h3>
+              <h3 className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Linked Project</h3>
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded-[10px] flex items-center justify-center"
-                  style={{ backgroundColor: (linkedProject.color || '#0C1629') + '15' }}
+                  style={{ backgroundColor: (linkedProject.color || '#1F3649') + '15' }}
                 >
-                  <Kanban size={14} style={{ color: linkedProject.color || '#0C1629' }} />
+                  <Kanban size={14} style={{ color: linkedProject.color || '#1F3649' }} />
                 </div>
-                <p className="text-sm font-bold text-[#0C1629] truncate">{linkedProject.title}</p>
+                <p className="text-sm font-bold text-[#1F3649] truncate">{linkedProject.title}</p>
               </div>
               <button
                 onClick={() => navigate(`/projects/${linkedProject.id}`)}
                 className="text-xs font-semibold flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
-                style={{ color: linkedProject.color || '#0C1629' }}
+                style={{ color: linkedProject.color || '#1F3649' }}
               >
                 <Kanban size={12} />
                 View Project
@@ -407,10 +407,10 @@ export default function TaskEdit() {
 
           {/* Task Info summary */}
           <div className="bg-white card p-5 space-y-4">
-            <h3 className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Task Summary</h3>
+            <h3 className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Task Summary</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Priority</span>
+                <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Priority</span>
                 <span className={cn(
                   'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider',
                   PRIORITY_STYLES[priority]
@@ -419,22 +419,22 @@ export default function TaskEdit() {
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Energy</span>
+                <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Energy</span>
                 <div className="flex items-center gap-0.5">
                   {[1, 2, 3].map(i => (
                     <Lightning
                       key={i}
                       size={12}
                       weight="fill"
-                      className={i <= energy ? 'text-[#f59e0b]' : 'text-[#D6DCE0]'}
+                      className={i <= energy ? 'text-[#f59e0b]' : 'text-[#ebeeef]'}
                     />
                   ))}
                 </div>
               </div>
               {estimatedMinutes && (
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Time Est.</span>
-                  <span className="text-xs font-bold text-[#0C1629]">
+                  <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Time Est.</span>
+                  <span className="text-xs font-bold text-[#1F3649]">
                     {estimatedMinutes >= 60
                       ? `${Math.floor(estimatedMinutes / 60)}h${estimatedMinutes % 60 > 0 ? ` ${estimatedMinutes % 60}m` : ''}`
                       : `${estimatedMinutes}m`
@@ -444,17 +444,17 @@ export default function TaskEdit() {
               )}
               {dueDate && (
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Due</span>
-                  <span className="text-xs font-bold text-[#0C1629]">
+                  <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Due</span>
+                  <span className="text-xs font-bold text-[#1F3649]">
                     {new Date(dueDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </span>
                 </div>
               )}
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Status</span>
+                <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Status</span>
                 <span className={cn(
                   'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider',
-                  task.completed ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#0C1629]/10 text-[#0C1629]'
+                  task.completed ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#1F3649]/10 text-[#1F3649]'
                 )}>
                   {task.completed ? 'Completed' : 'Active'}
                 </span>

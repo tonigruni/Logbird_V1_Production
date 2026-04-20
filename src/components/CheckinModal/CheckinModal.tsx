@@ -254,7 +254,7 @@ export default function CheckinModal() {
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 12, fontWeight: 700, fontFamily: 'var(--font-heading)',
               background: active || completed ? '#1F3649' : '#f2f4f4',
-              color: active || completed ? '#fff' : '#727A84',
+              color: active || completed ? '#fff' : '#5a6061',
               transition: 'all 200ms ease',
               boxShadow: active ? '0 0 0 4px rgba(31,54,73,0.12)' : 'none',
             }}>
@@ -389,7 +389,7 @@ export default function CheckinModal() {
       <div style={{ marginTop: 14, display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 28, alignItems: 'baseline' }}>
         <div style={{ minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-            <span style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: '0.14em', color: '#a16207', textTransform: 'uppercase' }}>Today</span>
+            <span style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: '0.14em', color: '#adb3b4', textTransform: 'uppercase' }}>Today</span>
             <button onClick={() => setAffIdx(i => i + 1)} style={{ background: 'transparent', border: 0, color: '#adb3b4', fontSize: 10, fontWeight: 600, cursor: 'pointer', padding: 0 }} title="Another affirmation">↻</button>
           </div>
           <p style={{ margin: 0, color: '#5a6061', fontSize: 13.5, fontStyle: 'italic', lineHeight: 1.45 }}>"{aff}"</p>
@@ -398,7 +398,7 @@ export default function CheckinModal() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
             <span style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: '0.14em', color: '#1F3649', textTransform: 'uppercase' }}>Purpose</span>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-              {['#fde68a','#f4a3a0','#86efac'].map((c, i) => <span key={i} style={{ width: 5, height: 5, borderRadius: 9999, background: c }}/>)}
+              {['#dde4e5','#cdd4d7','#adb3b4'].map((c, i) => <span key={i} style={{ width: 5, height: 5, borderRadius: 9999, background: c }}/>)}
             </span>
             <button onClick={() => setPurposeEditing(v => !v)} style={{ marginLeft: 'auto', background: 'transparent', border: 0, color: '#adb3b4', fontSize: 10.5, fontWeight: 600, cursor: 'pointer', padding: 0 }}>
               {purposeEditing ? 'Done' : 'Edit'}
@@ -669,8 +669,8 @@ export default function CheckinModal() {
             style={{ position: 'absolute', inset: 0, zIndex: 200, background: 'rgba(15,25,35,0.45)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
           >
             <div onClick={e => e.stopPropagation()} className="fade-up" style={{ maxWidth: 420, width: '100%', background: '#fff', borderRadius: 18, boxShadow: '0 24px 72px rgba(12,22,41,0.28)', padding: 26, textAlign: 'left' }}>
-              <div style={{ width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(140deg,#fff7ed,#fed7aa)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c2410c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(140deg,#f2f4f4,#e4e9ea)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5a6061" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="9"/>
                   <path d="M12 8v4"/><path d="M12 16h.01"/>
                 </svg>

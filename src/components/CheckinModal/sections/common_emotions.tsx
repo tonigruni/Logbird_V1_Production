@@ -2,12 +2,12 @@
 // Ported 1:1 from /tmp/logbird_checkin/src/common_emotions.jsx
 
 const COMMON_EMOTION_GROUPS = [
-  { core: 'Happy',  color: '#E8A83A', words: ['Content', 'Grateful', 'Playful', 'Proud'] },
-  { core: 'Tender', color: '#C98AAB', words: ['Loving', 'Connected', 'Warm', 'Seen'] },
-  { core: 'Calm',   color: '#6FA3A9', words: ['Hopeful', 'Steady', 'Focused', 'Curious'] },
-  { core: 'Sad',    color: '#6B7FA3', words: ['Tired', 'Lonely', 'Heavy', 'Disappointed'] },
-  { core: 'Tense',  color: '#9F403D', words: ['Anxious', 'Overwhelmed', 'Restless', 'Frustrated'] },
-  { core: 'Angry',  color: '#B5574A', words: ['Irritated', 'Resentful', 'Critical', 'Annoyed'] },
+  { core: 'Happy',  color: '#B5A47A', words: ['Content', 'Grateful', 'Playful', 'Proud'] },
+  { core: 'Tender', color: '#9E8A98', words: ['Loving', 'Connected', 'Warm', 'Seen'] },
+  { core: 'Calm',   color: '#6A9298', words: ['Hopeful', 'Steady', 'Focused', 'Curious'] },
+  { core: 'Sad',    color: '#6A7A94', words: ['Tired', 'Lonely', 'Heavy', 'Disappointed'] },
+  { core: 'Tense',  color: '#7E5E5E', words: ['Anxious', 'Overwhelmed', 'Restless', 'Frustrated'] },
+  { core: 'Angry',  color: '#8A6A60', words: ['Irritated', 'Resentful', 'Critical', 'Annoyed'] },
 ];
 
 function lightenColor(hex: string, amt: number) {

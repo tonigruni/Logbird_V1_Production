@@ -215,7 +215,7 @@ const CHECK_IN_DOMAINS = [
 const CATEGORY_COLOR: Record<string, string> = {
   Health: '#22c55e',
   'Health & Fitness': '#22c55e',
-  Career: '#0C1629',
+  Career: '#1F3649',
   'Work & Career': '#0ea5e9',
   Finance: '#f59e0b',
   'Finances & Money': '#f59e0b',
@@ -245,7 +245,7 @@ const MOOD_META: Record<number, { label: string; color: string; bg: string; icon
 }
 
 // Donut chart component
-function ScoreDonut({ score, maxScore = 10, size = 100, color = '#0C1629' }: {
+function ScoreDonut({ score, maxScore = 10, size = 100, color = '#1F3649' }: {
   score: number; maxScore?: number; size?: number; color?: string
 }) {
   const pct = (score / maxScore) * 100
@@ -259,13 +259,13 @@ function ScoreDonut({ score, maxScore = 10, size = 100, color = '#0C1629' }: {
             startAngle={90} endAngle={-270} dataKey="value" stroke="none"
           >
             <Cell fill={color} />
-            <Cell fill="#F0F3F3" />
+            <Cell fill="#f2f4f4" />
           </Pie>
         </PieChart>
       </ResponsiveContainer>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-xl font-bold text-[#0C1629]">
-          {score}<span className="text-xs font-normal text-[#727A84] opacity-60">/{maxScore}</span>
+        <span className="text-xl font-bold text-[#1F3649]">
+          {score}<span className="text-xs font-normal text-[#5a6061] opacity-60">/{maxScore}</span>
         </span>
       </div>
     </div>
@@ -292,8 +292,8 @@ function PointSelector({ value, onChange }: { value: number | null; onChange: (v
           className={cn(
             'h-9 sm:w-9 rounded-xl text-sm font-semibold transition-all cursor-pointer select-none',
             value !== null && point <= value
-              ? 'bg-[#0C1629] text-white shadow-sm'
-              : 'bg-[#F0F3F3] text-[#727A84] hover:bg-[#E4E9EC]'
+              ? 'bg-[#1F3649] text-white shadow-sm'
+              : 'bg-[#f2f4f4] text-[#5a6061] hover:bg-[#E4E9EC]'
           )}
         >
           {point}
@@ -793,7 +793,7 @@ export default function WheelOfLife() {
   }))
 
   const chartConfig: ChartConfig = {
-    score: { label: 'Score', color: '#0C1629' },
+    score: { label: 'Score', color: '#1F3649' },
   }
 
   const overallScore = Math.round(
@@ -811,8 +811,8 @@ export default function WheelOfLife() {
       <div className="mb-8">
         {tab !== 'insights' && (
           <>
-            <h1 className="text-2xl font-extrabold text-[#0C1629] tracking-tight">{TAB_META[tab].title}</h1>
-            <p className="text-sm text-[#727A84] mt-1">{TAB_META[tab].sub}</p>
+            <h1 className="text-2xl font-extrabold text-[#1F3649] tracking-tight">{TAB_META[tab].title}</h1>
+            <p className="text-sm text-[#5a6061] mt-1">{TAB_META[tab].sub}</p>
           </>
         )}
       </div>
@@ -828,26 +828,26 @@ export default function WheelOfLife() {
             <div className="lg:col-span-2 bg-white card p-6 md:p-8">
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <h2 className="text-base font-bold text-[#0C1629]">Life Balance</h2>
-                  <p className="text-xs text-[#727A84] mt-0.5">Current state across all 8 areas</p>
+                  <h2 className="text-base font-bold text-[#1F3649]">Life Balance</h2>
+                  <p className="text-xs text-[#5a6061] mt-0.5">Current state across all 8 areas</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-3xl font-black text-[#0C1629]">{overallAverage}</span>
-                  <span className="text-sm text-[#727A84]">/10</span>
+                  <span className="text-3xl font-black text-[#1F3649]">{overallAverage}</span>
+                  <span className="text-sm text-[#5a6061]">/10</span>
                 </div>
               </div>
               <ChartContainer config={chartConfig} className="h-[340px] w-full">
                 <RadarChart data={radarData} margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
-                  <PolarGrid stroke="#F0F3F3" />
+                  <PolarGrid stroke="#f2f4f4" />
                   <PolarAngleAxis
                     dataKey="area"
-                    tick={{ fontSize: 11, fill: '#727A84', fontWeight: 600 }}
+                    tick={{ fontSize: 11, fill: '#5a6061', fontWeight: 600 }}
                   />
                   <Radar
                     dataKey="score"
-                    fill="#0C1629"
+                    fill="#1F3649"
                     fillOpacity={0.12}
-                    stroke="#0C1629"
+                    stroke="#1F3649"
                     strokeWidth={2}
                   />
                   <ChartTooltip content={<ChartTooltipContent />} />
@@ -859,9 +859,9 @@ export default function WheelOfLife() {
             <div className="space-y-4">
               {/* Overall donut */}
               <div className="bg-white card p-5 flex flex-col items-center gap-3">
-                <p className="text-xs font-bold text-[#727A84] uppercase tracking-wider">Overall Score</p>
+                <p className="text-xs font-bold text-[#5a6061] uppercase tracking-wider">Overall Score</p>
                 <ScoreDonut score={overallAverage} size={110} />
-                <p className="text-xs text-[#727A84] text-center">
+                <p className="text-xs text-[#5a6061] text-center">
                   {overallAverage >= 8 ? 'Excellent balance' : overallAverage >= 6 ? 'Good progress' : overallAverage >= 4 ? 'Room to grow' : 'Needs attention'}
                 </p>
               </div>
@@ -873,14 +873,14 @@ export default function WheelOfLife() {
                 const low = sorted[sorted.length - 1]
                 return (
                   <div className="bg-white card p-5 space-y-3">
-                    <p className="text-xs font-bold text-[#727A84] uppercase tracking-wider">Highlights</p>
+                    <p className="text-xs font-bold text-[#5a6061] uppercase tracking-wider">Highlights</p>
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: top.color + '20' }}>
                         <top.icon size={15} style={{ color: top.color }} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-[11px] font-semibold text-[#0C1629] truncate">{top.name}</p>
-                        <p className="text-[10px] text-[#727A84]">Strongest area</p>
+                        <p className="text-[11px] font-semibold text-[#1F3649] truncate">{top.name}</p>
+                        <p className="text-[10px] text-[#5a6061]">Strongest area</p>
                       </div>
                       <span className="text-sm font-black" style={{ color: top.color }}>{scores[top.name] ?? 5}</span>
                     </div>
@@ -889,8 +889,8 @@ export default function WheelOfLife() {
                         <low.icon size={15} style={{ color: low.color }} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-[11px] font-semibold text-[#0C1629] truncate">{low.name}</p>
-                        <p className="text-[10px] text-[#727A84]">Needs attention</p>
+                        <p className="text-[11px] font-semibold text-[#1F3649] truncate">{low.name}</p>
+                        <p className="text-[10px] text-[#5a6061]">Needs attention</p>
                       </div>
                       <span className="text-sm font-black" style={{ color: low.color }}>{scores[low.name] ?? 5}</span>
                     </div>
@@ -901,11 +901,11 @@ export default function WheelOfLife() {
               {/* Last check-in */}
               {checkins.length > 0 && (
                 <div className="bg-white card p-5">
-                  <p className="text-xs font-bold text-[#727A84] uppercase tracking-wider mb-2">Last Check-in</p>
-                  <p className="text-sm font-semibold text-[#0C1629]">
+                  <p className="text-xs font-bold text-[#5a6061] uppercase tracking-wider mb-2">Last Check-in</p>
+                  <p className="text-sm font-semibold text-[#1F3649]">
                     {format(new Date(checkins[0].date + 'T00:00:00'), 'MMM d, yyyy')}
                   </p>
-                  <p className="text-xs text-[#727A84] mt-0.5">{checkins.length} total check-ins</p>
+                  <p className="text-xs text-[#5a6061] mt-0.5">{checkins.length} total check-ins</p>
                 </div>
               )}
             </div>
@@ -914,7 +914,7 @@ export default function WheelOfLife() {
           {/* ── Insights panel ── */}
           {insights.length > 0 && (
             <div>
-              <h2 className="text-sm font-bold text-[#727A84] uppercase tracking-wider mb-4">Key Insights</h2>
+              <h2 className="text-sm font-bold text-[#5a6061] uppercase tracking-wider mb-4">Key Insights</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {insights.map((insight, i) => (
                   <div key={i} className={cn(
@@ -926,9 +926,9 @@ export default function WheelOfLife() {
                         size={15}
                         className={cn('mt-0.5 shrink-0', insight.level === 'critical' ? 'text-red-400' : 'text-amber-400')}
                       />
-                      <p className="text-xs font-bold text-[#0C1629] leading-snug">{insight.title}</p>
+                      <p className="text-xs font-bold text-[#1F3649] leading-snug">{insight.title}</p>
                     </div>
-                    <p className="text-[11px] text-[#727A84] leading-relaxed">{insight.body}</p>
+                    <p className="text-[11px] text-[#5a6061] leading-relaxed">{insight.body}</p>
                     <div className={cn(
                       'mt-auto text-[10px] font-semibold px-2.5 py-1.5 rounded-lg leading-snug',
                       insight.level === 'critical' ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700'
@@ -943,7 +943,7 @@ export default function WheelOfLife() {
 
           {/* Area development grid */}
           <div>
-            <h2 className="text-sm font-bold text-[#727A84] uppercase tracking-wider mb-4">Area Development</h2>
+            <h2 className="text-sm font-bold text-[#5a6061] uppercase tracking-wider mb-4">Area Development</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {CHECK_IN_DOMAINS.map(domain => {
                 const score = scores[domain.name] ?? 5
@@ -959,7 +959,7 @@ export default function WheelOfLife() {
                         <domain.icon size={15} style={{ color: domain.color }} />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-[11px] font-bold text-[#0C1629] truncate leading-tight">{domain.name}</p>
+                        <p className="text-[11px] font-bold text-[#1F3649] truncate leading-tight">{domain.name}</p>
                       </div>
                     </div>
 
@@ -968,7 +968,7 @@ export default function WheelOfLife() {
                       <span className="text-2xl font-black" style={{ color: domain.color }}>{score}</span>
                       {delta !== null && (
                         <span className={cn('text-xs font-semibold px-1.5 py-0.5 rounded-md',
-                          delta > 0 ? 'bg-green-50 text-green-700' : delta < 0 ? 'bg-red-50 text-red-600' : 'bg-[#F0F3F3] text-[#727A84]')}>
+                          delta > 0 ? 'bg-green-50 text-green-700' : delta < 0 ? 'bg-red-50 text-red-600' : 'bg-[#f2f4f4] text-[#5a6061]')}>
                           {delta > 0 ? '+' : ''}{delta}
                         </span>
                       )}
@@ -990,12 +990,12 @@ export default function WheelOfLife() {
                       </ResponsiveContainer>
                     ) : (
                       <div className="h-10 flex items-center">
-                        <p className="text-[10px] text-[#B5C1C8]">No history yet</p>
+                        <p className="text-[10px] text-[#adb3b4]">No history yet</p>
                       </div>
                     )}
 
                     {/* Score bar */}
-                    <div className="h-1 bg-[#F0F3F3] rounded-full overflow-hidden">
+                    <div className="h-1 bg-[#f2f4f4] rounded-full overflow-hidden">
                       <div className="h-full rounded-full transition-all" style={{ width: `${(score / 10) * 100}%`, backgroundColor: domain.color }} />
                     </div>
                   </div>
@@ -1024,7 +1024,7 @@ export default function WheelOfLife() {
                     'flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 border',
                     isActive
                       ? 'text-white border-transparent shadow-sm'
-                      : 'text-[#727A84] bg-white border-[#F0F3F3] hover:border-[#D6DCE0]'
+                      : 'text-[#5a6061] bg-white border-[#f2f4f4] hover:border-[#ebeeef]'
                   )}
                   style={isActive ? { backgroundColor: domain.color, borderColor: domain.color } : {}}
                 >
@@ -1051,20 +1051,20 @@ export default function WheelOfLife() {
                   <activeDomain.icon size={20} style={{ color: activeDomain.color }} />
                 </div>
                 <div className="min-w-0">
-                  <h2 className="text-base font-bold text-[#0C1629]">{activeDomain.name}</h2>
-                  <p className="text-xs text-[#727A84]">{activeDomain.description}</p>
+                  <h2 className="text-base font-bold text-[#1F3649]">{activeDomain.name}</h2>
+                  <p className="text-xs text-[#5a6061]">{activeDomain.description}</p>
                 </div>
                 <div className="ml-auto text-right shrink-0">
                   <span className="text-2xl font-black" style={{ color: activeDomain.color }}>
                     {activeDomain.subAreas.some(sa => subScores[`${activeDomain.id}.${sa.key}`] != null) ? scores[activeDomain.name] : '—'}
                   </span>
-                  <span className="text-sm text-[#727A84]">/10</span>
+                  <span className="text-sm text-[#5a6061]">/10</span>
                 </div>
               </div>
 
               {/* Sub-area ratings */}
               <div className="mb-8 space-y-5">
-                <p className="text-xs font-semibold text-[#727A84] uppercase tracking-wide">
+                <p className="text-xs font-semibold text-[#5a6061] uppercase tracking-wide">
                   Rate each area
                 </p>
                 {activeDomain.subAreas.map((sa) => {
@@ -1074,8 +1074,8 @@ export default function WheelOfLife() {
                     <div key={sa.key}>
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <p className="text-sm font-semibold text-[#0C1629]">{sa.title}</p>
-                          <p className="text-xs text-[#727A84] mt-0.5">{sa.description}</p>
+                          <p className="text-sm font-semibold text-[#1F3649]">{sa.title}</p>
+                          <p className="text-xs text-[#5a6061] mt-0.5">{sa.description}</p>
                         </div>
                         <span className="text-sm font-bold ml-3 shrink-0" style={{ color: activeDomain.color }}>{val ?? '—'}</span>
                       </div>
@@ -1090,12 +1090,12 @@ export default function WheelOfLife() {
 
               {/* Reflection questions */}
               <div className="space-y-5">
-                <p className="text-xs font-semibold text-[#727A84] uppercase tracking-wide">
+                <p className="text-xs font-semibold text-[#5a6061] uppercase tracking-wide">
                   Reflection
                 </p>
                 {activeDomain.questions.map((question, i) => (
                   <div key={i}>
-                    <label className="block text-sm font-medium text-[#0C1629] mb-2 leading-snug">
+                    <label className="block text-sm font-medium text-[#1F3649] mb-2 leading-snug">
                       {question}
                     </label>
                     <textarea
@@ -1103,7 +1103,7 @@ export default function WheelOfLife() {
                       onChange={(e) => updateAnswer(activeDomain.id, i, e.target.value)}
                       placeholder="Write your thoughts..."
                       rows={3}
-                      className="w-full rounded-[15px] border border-[#D6DCE0] bg-[#FAFBFC] px-4 py-3 text-sm text-[#0C1629] shadow-sm transition-shadow placeholder:text-[#B5C1C8] focus-visible:border-[#0C1629]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0C1629]/10 resize-none"
+                      className="w-full rounded-[15px] border border-[#ebeeef] bg-[#FAFBFC] px-4 py-3 text-sm text-[#1F3649] shadow-sm transition-shadow placeholder:text-[#adb3b4] focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10 resize-none"
                     />
                   </div>
                 ))}
@@ -1111,7 +1111,7 @@ export default function WheelOfLife() {
 
               {/* Notes */}
               <div className="mt-6">
-                <p className="text-xs font-semibold text-[#727A84] uppercase tracking-wide mb-3">
+                <p className="text-xs font-semibold text-[#5a6061] uppercase tracking-wide mb-3">
                   Additional Notes
                 </p>
                 <textarea
@@ -1119,17 +1119,17 @@ export default function WheelOfLife() {
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Any additional thoughts for this check-in (optional)..."
                   rows={3}
-                  className="w-full rounded-[15px] border border-[#D6DCE0] bg-[#FAFBFC] px-4 py-3 text-sm text-[#0C1629] shadow-sm transition-shadow placeholder:text-[#B5C1C8] focus-visible:border-[#0C1629]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0C1629]/10 resize-none"
+                  className="w-full rounded-[15px] border border-[#ebeeef] bg-[#FAFBFC] px-4 py-3 text-sm text-[#1F3649] shadow-sm transition-shadow placeholder:text-[#adb3b4] focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10 resize-none"
                 />
               </div>
 
               {/* Prev / Next */}
-              <div className="flex items-center justify-between mt-8 pt-5 border-t border-[#F0F3F3]">
+              <div className="flex items-center justify-between mt-8 pt-5 border-t border-[#f2f4f4]">
                 {prevDomain ? (
                   <button
                     type="button"
                     onClick={() => setActiveDomainId(prevDomain.id)}
-                    className="flex items-center gap-1.5 text-sm text-[#727A84] hover:text-[#0C1629] transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 text-sm text-[#5a6061] hover:text-[#1F3649] transition-colors cursor-pointer"
                   >
                     <ChevronLeft size={15} />
                     {prevDomain.name}
@@ -1139,7 +1139,7 @@ export default function WheelOfLife() {
                   <button
                     type="button"
                     onClick={() => setActiveDomainId(nextDomain.id)}
-                    className="flex items-center gap-1.5 text-sm font-semibold text-[#0C1629] hover:opacity-70 transition-opacity cursor-pointer"
+                    className="flex items-center gap-1.5 text-sm font-semibold text-[#1F3649] hover:opacity-70 transition-opacity cursor-pointer"
                   >
                     {nextDomain.name}
                     <ChevronRight size={15} />
@@ -1159,13 +1159,13 @@ export default function WheelOfLife() {
                   type="button"
                   onClick={submitCheckin}
                   disabled={submitting || !allRated}
-                  className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-[#0C1629] hover:bg-[#162838] disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-bold rounded-[15px] transition-all cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-[#1F3649] hover:bg-[#162838] disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-bold rounded-[15px] transition-all cursor-pointer"
                 >
                   {submitting ? 'Saving...' : 'Save Check-in'}
                   {!submitting && <ArrowRight size={14} />}
                 </button>
                 {!allRated && (
-                  <p className="text-xs text-[#727A84] text-center mt-3">
+                  <p className="text-xs text-[#5a6061] text-center mt-3">
                     Rate all sub-areas across every domain to save.
                   </p>
                 )}
@@ -1175,8 +1175,8 @@ export default function WheelOfLife() {
               <div className="bg-white card overflow-hidden">
 
                 {/* Mood */}
-                <div className="p-5 border-b border-[#F0F3F3]">
-                  <h3 className="text-xs font-bold text-[#0C1629] uppercase tracking-wider mb-4">Current Mood</h3>
+                <div className="p-5 border-b border-[#f2f4f4]">
+                  <h3 className="text-xs font-bold text-[#1F3649] uppercase tracking-wider mb-4">Current Mood</h3>
                   <div className="grid grid-cols-5 gap-2">
                     {([1,2,3,4,5] as const).map(score => {
                       const meta = MOOD_META[score]
@@ -1189,7 +1189,7 @@ export default function WheelOfLife() {
                           style={active ? { backgroundColor: meta.bg, borderColor: meta.color + '60' } : {}}
                           className={cn(
                             'aspect-square flex items-center justify-center rounded-xl transition-all cursor-pointer border',
-                            active ? 'scale-110 shadow-sm border' : 'border-transparent hover:bg-[#F0F3F3]'
+                            active ? 'scale-110 shadow-sm border' : 'border-transparent hover:bg-[#f2f4f4]'
                           )}
                         >
                           <Icon size={22} color={meta.color} strokeWidth={2.2} />
@@ -1206,27 +1206,27 @@ export default function WheelOfLife() {
                 </div>
 
                 {/* Quick Context */}
-                <div className="p-5 border-b border-[#F0F3F3]">
-                  <h3 className="text-xs font-bold text-[#0C1629] uppercase tracking-wider mb-4">Quick Context</h3>
+                <div className="p-5 border-b border-[#f2f4f4]">
+                  <h3 className="text-xs font-bold text-[#1F3649] uppercase tracking-wider mb-4">Quick Context</h3>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-widest block mb-1.5">Location</label>
-                      <div className="flex items-center gap-2.5 rounded-[15px] border border-[#D6DCE0] bg-white px-3 py-2.5 shadow-sm transition-shadow focus-within:border-[#0C1629]/30 focus-within:ring-[3px] focus-within:ring-[#0C1629]/10">
-                        <MapPin size={14} className="text-[#B5C1C8] shrink-0"/>
+                      <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest block mb-1.5">Location</label>
+                      <div className="flex items-center gap-2.5 rounded-[15px] border border-[#ebeeef] bg-white px-3 py-2.5 shadow-sm transition-shadow focus-within:border-[#1F3649]/30 focus-within:ring-[3px] focus-within:ring-[#1F3649]/10">
+                        <MapPin size={14} className="text-[#adb3b4] shrink-0"/>
                         <input value={location} onChange={e => setLocation(e.target.value)}
                           placeholder="e.g. Home, Coffee shop…"
-                          className="flex-1 bg-transparent text-sm text-[#0C1629] placeholder:text-[#B5C1C8] focus:outline-none min-w-0"/>
-                        {location && <button type="button" onClick={() => setLocation('')} className="text-[#B5C1C8] hover:text-[#727A84] cursor-pointer"><X size={12}/></button>}
+                          className="flex-1 bg-transparent text-sm text-[#1F3649] placeholder:text-[#adb3b4] focus:outline-none min-w-0"/>
+                        {location && <button type="button" onClick={() => setLocation('')} className="text-[#adb3b4] hover:text-[#5a6061] cursor-pointer"><X size={12}/></button>}
                       </div>
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-widest block mb-1.5">Weather</label>
-                      <div className="flex items-center gap-2.5 rounded-[15px] border border-[#D6DCE0] bg-white px-3 py-2.5 shadow-sm transition-shadow focus-within:border-[#0C1629]/30 focus-within:ring-[3px] focus-within:ring-[#0C1629]/10">
-                        <Cloud size={14} className="text-[#B5C1C8] shrink-0"/>
+                      <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest block mb-1.5">Weather</label>
+                      <div className="flex items-center gap-2.5 rounded-[15px] border border-[#ebeeef] bg-white px-3 py-2.5 shadow-sm transition-shadow focus-within:border-[#1F3649]/30 focus-within:ring-[3px] focus-within:ring-[#1F3649]/10">
+                        <Cloud size={14} className="text-[#adb3b4] shrink-0"/>
                         <input value={weather} onChange={e => setWeather(e.target.value)}
                           placeholder="e.g. Sunny, 22°C…"
-                          className="flex-1 bg-transparent text-sm text-[#0C1629] placeholder:text-[#B5C1C8] focus:outline-none min-w-0"/>
-                        {weather && <button type="button" onClick={() => setWeather('')} className="text-[#B5C1C8] hover:text-[#727A84] cursor-pointer"><X size={12}/></button>}
+                          className="flex-1 bg-transparent text-sm text-[#1F3649] placeholder:text-[#adb3b4] focus:outline-none min-w-0"/>
+                        {weather && <button type="button" onClick={() => setWeather('')} className="text-[#adb3b4] hover:text-[#5a6061] cursor-pointer"><X size={12}/></button>}
                       </div>
                     </div>
                   </div>
@@ -1234,12 +1234,12 @@ export default function WheelOfLife() {
 
                 {/* Wellness */}
                 <div className="p-5">
-                  <h3 className="text-xs font-bold text-[#0C1629] uppercase tracking-wider mb-4">Wellness</h3>
+                  <h3 className="text-xs font-bold text-[#1F3649] uppercase tracking-wider mb-4">Wellness</h3>
                   <div className="space-y-4">
 
                     {/* Sleep */}
                     <div>
-                      <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-widest flex items-center gap-1.5 mb-2">
+                      <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest flex items-center gap-1.5 mb-2">
                         <Moon size={11}/> Sleep Quality
                       </label>
                       <div className="flex gap-1.5">
@@ -1248,20 +1248,20 @@ export default function WheelOfLife() {
                             onClick={() => setSleepQuality(sleepQuality === v ? null : v)}
                             className={cn('flex-1 h-7 rounded-lg text-xs font-bold transition-all cursor-pointer border',
                               sleepQuality === v
-                                ? 'bg-[#0C1629] text-white border-[#0C1629]'
-                                : 'bg-[#F0F3F3] text-[#727A84] border-transparent hover:bg-[#E4E9EC]')}>
+                                ? 'bg-[#1F3649] text-white border-[#1F3649]'
+                                : 'bg-[#f2f4f4] text-[#5a6061] border-transparent hover:bg-[#E4E9EC]')}>
                             {v}
                           </button>
                         ))}
                       </div>
                       {sleepQuality && (
-                        <p className="text-[10px] text-[#B5C1C8] mt-1">{['','Very Poor','Poor','Okay','Good','Excellent'][sleepQuality]}</p>
+                        <p className="text-[10px] text-[#adb3b4] mt-1">{['','Very Poor','Poor','Okay','Good','Excellent'][sleepQuality]}</p>
                       )}
                     </div>
 
                     {/* Energy */}
                     <div>
-                      <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-widest flex items-center gap-1.5 mb-2">
+                      <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest flex items-center gap-1.5 mb-2">
                         <Zap size={11}/> Energy Level
                       </label>
                       <div className="flex gap-1">
@@ -1270,8 +1270,8 @@ export default function WheelOfLife() {
                             onClick={() => setEnergyLevel(energyLevel === lvl ? null : lvl)}
                             className={cn('flex-1 h-7 rounded-lg text-[10px] font-semibold capitalize transition-all cursor-pointer border',
                               energyLevel === lvl
-                                ? 'bg-[#0C1629] text-white border-[#0C1629]'
-                                : 'bg-[#F0F3F3] text-[#727A84] border-transparent hover:bg-[#E4E9EC]')}>
+                                ? 'bg-[#1F3649] text-white border-[#1F3649]'
+                                : 'bg-[#f2f4f4] text-[#5a6061] border-transparent hover:bg-[#E4E9EC]')}>
                             {lvl}
                           </button>
                         ))}
@@ -1280,7 +1280,7 @@ export default function WheelOfLife() {
 
                     {/* Stress */}
                     <div>
-                      <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-widest flex items-center gap-1.5 mb-2">
+                      <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-widest flex items-center gap-1.5 mb-2">
                         <Brain size={11}/> Stress / Load
                       </label>
                       <div className="flex gap-1">
@@ -1292,8 +1292,8 @@ export default function WheelOfLife() {
                               onClick={() => setStressLevel(stressLevel === lvl ? null : lvl)}
                               className={cn('flex-1 h-7 rounded-lg text-[10px] font-semibold transition-all cursor-pointer border',
                                 stressLevel === lvl
-                                  ? isHigh ? 'bg-red-600 text-white border-red-600' : 'bg-[#0C1629] text-white border-[#0C1629]'
-                                  : 'bg-[#F0F3F3] text-[#727A84] border-transparent hover:bg-[#E4E9EC]')}>
+                                  ? isHigh ? 'bg-red-600 text-white border-red-600' : 'bg-[#1F3649] text-white border-[#1F3649]'
+                                  : 'bg-[#f2f4f4] text-[#5a6061] border-transparent hover:bg-[#E4E9EC]')}>
                               {labels[lvl]}
                             </button>
                           )
@@ -1305,26 +1305,26 @@ export default function WheelOfLife() {
                     <div className="grid grid-cols-2 gap-2">
                       <button type="button" onClick={() => setExercised(exercised === true ? null : true)}
                         className={cn('flex flex-col items-center gap-1 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border',
-                          exercised === true ? 'bg-green-50 text-green-700 border-green-200' : 'bg-[#F0F3F3] text-[#727A84] border-transparent hover:bg-[#E4E9EC]')}>
-                        <Dumbbell size={15} className={exercised === true ? 'text-green-500' : 'text-[#B5C1C8]'}/>
+                          exercised === true ? 'bg-green-50 text-green-700 border-green-200' : 'bg-[#f2f4f4] text-[#5a6061] border-transparent hover:bg-[#E4E9EC]')}>
+                        <Dumbbell size={15} className={exercised === true ? 'text-green-500' : 'text-[#adb3b4]'}/>
                         <span>Exercised</span>
                       </button>
                       <button type="button" onClick={() => setHadAlcohol(hadAlcohol === true ? null : true)}
                         className={cn('flex flex-col items-center gap-1 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border',
-                          hadAlcohol === true ? 'bg-orange-50 text-orange-700 border-orange-200' : 'bg-[#F0F3F3] text-[#727A84] border-transparent hover:bg-[#E4E9EC]')}>
-                        <Wine size={15} className={hadAlcohol === true ? 'text-orange-500' : 'text-[#B5C1C8]'}/>
+                          hadAlcohol === true ? 'bg-orange-50 text-orange-700 border-orange-200' : 'bg-[#f2f4f4] text-[#5a6061] border-transparent hover:bg-[#E4E9EC]')}>
+                        <Wine size={15} className={hadAlcohol === true ? 'text-orange-500' : 'text-[#adb3b4]'}/>
                         <span>Drank last night</span>
                       </button>
                       <button type="button" onClick={() => setPoorSleep(poorSleep === true ? null : true)}
                         className={cn('flex flex-col items-center gap-1 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border',
-                          poorSleep === true ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-[#F0F3F3] text-[#727A84] border-transparent hover:bg-[#E4E9EC]')}>
-                        <Moon size={15} className={poorSleep === true ? 'text-blue-500' : 'text-[#B5C1C8]'}/>
+                          poorSleep === true ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-[#f2f4f4] text-[#5a6061] border-transparent hover:bg-[#E4E9EC]')}>
+                        <Moon size={15} className={poorSleep === true ? 'text-blue-500' : 'text-[#adb3b4]'}/>
                         <span>Poor sleep (&lt;6h)</span>
                       </button>
                       <button type="button" onClick={() => setHighScreenTime(highScreenTime === true ? null : true)}
                         className={cn('flex flex-col items-center gap-1 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border',
-                          highScreenTime === true ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-[#F0F3F3] text-[#727A84] border-transparent hover:bg-[#E4E9EC]')}>
-                        <Monitor size={15} className={highScreenTime === true ? 'text-purple-500' : 'text-[#B5C1C8]'}/>
+                          highScreenTime === true ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-[#f2f4f4] text-[#5a6061] border-transparent hover:bg-[#E4E9EC]')}>
+                        <Monitor size={15} className={highScreenTime === true ? 'text-purple-500' : 'text-[#adb3b4]'}/>
                         <span>High screen time</span>
                       </button>
                     </div>
@@ -1336,7 +1336,7 @@ export default function WheelOfLife() {
 
               {/* Overall */}
               <div className="bg-white card p-6 flex flex-col items-center gap-3">
-                <p className="text-xs font-semibold text-[#727A84] uppercase tracking-wide">
+                <p className="text-xs font-semibold text-[#5a6061] uppercase tracking-wide">
                   Overall Score
                 </p>
                 <ScoreDonut score={overallAverage} size={100} />
@@ -1369,7 +1369,7 @@ export default function WheelOfLife() {
 
               {/* All areas */}
               <div className="bg-white card p-5">
-                <p className="text-xs font-semibold text-[#727A84] uppercase tracking-wide mb-4">
+                <p className="text-xs font-semibold text-[#5a6061] uppercase tracking-wide mb-4">
                   All Areas
                 </p>
                 <div className="space-y-2.5">
@@ -1383,12 +1383,12 @@ export default function WheelOfLife() {
                         onClick={() => setActiveDomainId(domain.id)}
                         className={cn(
                           'w-full flex items-center gap-2 cursor-pointer rounded-lg px-1.5 py-1 -mx-1.5 transition-colors text-left',
-                          isActive ? 'bg-[#F0F3F3]' : 'hover:bg-[#F8F9FA]'
+                          isActive ? 'bg-[#f2f4f4]' : 'hover:bg-[#F8F9FA]'
                         )}
                       >
                         <domain.icon size={11} style={{ color: domain.color }} className="shrink-0" />
-                        <span className="text-[11px] text-[#727A84] flex-1 truncate">{domain.name}</span>
-                        <div className="w-14 h-1 bg-[#F0F3F3] rounded-full overflow-hidden shrink-0">
+                        <span className="text-[11px] text-[#5a6061] flex-1 truncate">{domain.name}</span>
+                        <div className="w-14 h-1 bg-[#f2f4f4] rounded-full overflow-hidden shrink-0">
                           <div
                             className="h-full rounded-full transition-all"
                             style={{ width: domain.subAreas.some(sa => subScores[`${domain.id}.${sa.key}`] != null) ? `${(score / 10) * 100}%` : '0%', backgroundColor: domain.color }}
@@ -1416,15 +1416,15 @@ export default function WheelOfLife() {
         <div className="space-y-8">
           {/* Add goal form */}
           <div className="bg-white card p-8">
-            <h3 className="font-semibold text-[#0C1629] mb-4 flex items-center gap-2">
-              <Target size={16} className="text-[#0C1629]" />
+            <h3 className="font-semibold text-[#1F3649] mb-4 flex items-center gap-2">
+              <Target size={16} className="text-[#1F3649]" />
               Add New Goal
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <select
                 value={newGoal.categoryId}
                 onChange={(e) => setNewGoal((p) => ({ ...p, categoryId: e.target.value }))}
-                className="rounded-[15px] border border-[#D6DCE0] bg-white px-4 py-3 text-sm text-[#0C1629] shadow-sm shadow-black/5 transition-shadow focus-visible:border-[#0C1629]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0C1629]/10 cursor-pointer"
+                className="rounded-[15px] border border-[#ebeeef] bg-white px-4 py-3 text-sm text-[#1F3649] shadow-sm shadow-black/5 transition-shadow focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10 cursor-pointer"
               >
                 <option value="">Select category...</option>
                 {categories.filter((c) => c.is_active).map((c) => (
@@ -1435,13 +1435,13 @@ export default function WheelOfLife() {
                 value={newGoal.title}
                 onChange={(e) => setNewGoal((p) => ({ ...p, title: e.target.value }))}
                 placeholder="Goal title..."
-                className="rounded-[15px] border border-[#D6DCE0] bg-white px-4 py-3 text-sm text-[#0C1629] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#727A84]/50 focus-visible:border-[#0C1629]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0C1629]/10"
+                className="rounded-[15px] border border-[#ebeeef] bg-white px-4 py-3 text-sm text-[#1F3649] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#5a6061]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10"
               />
               <input
                 value={newGoal.description}
                 onChange={(e) => setNewGoal((p) => ({ ...p, description: e.target.value }))}
                 placeholder="Description (optional)..."
-                className="rounded-[15px] border border-[#D6DCE0] bg-white px-4 py-3 text-sm text-[#0C1629] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#727A84]/50 focus-visible:border-[#0C1629]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0C1629]/10"
+                className="rounded-[15px] border border-[#ebeeef] bg-white px-4 py-3 text-sm text-[#1F3649] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#5a6061]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10"
               />
               <LogbirdDatePicker
                 value={newGoal.targetDate || null}
@@ -1451,7 +1451,7 @@ export default function WheelOfLife() {
             <button
               onClick={handleAddGoal}
               disabled={!newGoal.title || !newGoal.categoryId}
-              className="mt-4 bg-[#0C1629] hover:opacity-90 disabled:opacity-50 text-white px-5 py-2.5 text-sm font-semibold rounded-[10px] transition-all cursor-pointer"
+              className="mt-4 bg-[#1F3649] hover:opacity-90 disabled:opacity-50 text-white px-5 py-2.5 text-sm font-semibold rounded-[10px] transition-all cursor-pointer"
             >
               Add Goal
             </button>
@@ -1460,7 +1460,7 @@ export default function WheelOfLife() {
           {/* Goals list */}
           <div className="space-y-3">
             {goals.length === 0 ? (
-              <div className="bg-white card p-12 text-center text-[#727A84] opacity-60 text-sm">
+              <div className="bg-white card p-12 text-center text-[#5a6061] opacity-60 text-sm">
                 No goals yet. Add one above to get started.
               </div>
             ) : goals.map((goal) => {
@@ -1474,10 +1474,10 @@ export default function WheelOfLife() {
               return (
                 <div key={goal.id} className="bg-white card overflow-hidden">
                   <div
-                    className="flex items-center gap-4 p-5 cursor-pointer hover:bg-[#F0F3F3] transition-all"
+                    className="flex items-center gap-4 p-5 cursor-pointer hover:bg-[#f2f4f4] transition-all"
                     onClick={() => setExpandedGoal(isExpanded ? null : goal.id)}
                   >
-                    {isExpanded ? <ChevronDown size={14} className="text-[#727A84] shrink-0" /> : <ChevronRight size={14} className="text-[#727A84] shrink-0" />}
+                    {isExpanded ? <ChevronDown size={14} className="text-[#5a6061] shrink-0" /> : <ChevronRight size={14} className="text-[#5a6061] shrink-0" />}
                     <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: `${color}15` }}>
                       <Target size={16} style={{ color }} />
                     </div>
@@ -1493,31 +1493,31 @@ export default function WheelOfLife() {
                           {goal.status}
                         </span>
                       </div>
-                      <h4 className="font-semibold text-[#0C1629] truncate">{goal.title}</h4>
-                      {goal.description && <p className="text-xs text-[#727A84] opacity-60 mt-0.5 truncate">{goal.description}</p>}
+                      <h4 className="font-semibold text-[#1F3649] truncate">{goal.title}</h4>
+                      {goal.description && <p className="text-xs text-[#5a6061] opacity-60 mt-0.5 truncate">{goal.description}</p>}
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
                       <div className="w-16 hidden sm:block">
-                        <div className="h-1.5 bg-[#F0F3F3] rounded-full overflow-hidden">
+                        <div className="h-1.5 bg-[#f2f4f4] rounded-full overflow-hidden">
                           <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, backgroundColor: color }} />
                         </div>
-                        <span className="text-[10px] text-[#727A84] opacity-60">{completedCount}/{goalTasks.length}</span>
+                        <span className="text-[10px] text-[#5a6061] opacity-60">{completedCount}/{goalTasks.length}</span>
                       </div>
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedGoal(goal) }}
-                        className="text-xs text-[#0C1629] hover:underline cursor-pointer font-medium"
+                        className="text-xs text-[#1F3649] hover:underline cursor-pointer font-medium"
                       >
                         Details
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); updateGoal(goal.id, { status: goal.status === 'completed' ? 'active' : 'completed' }) }}
-                        className="text-xs text-[#727A84] hover:text-[#22c55e] transition-colors cursor-pointer px-2 py-1 rounded-lg hover:bg-[#22c55e]/10"
+                        className="text-xs text-[#5a6061] hover:text-[#22c55e] transition-colors cursor-pointer px-2 py-1 rounded-lg hover:bg-[#22c55e]/10"
                       >
                         {goal.status === 'completed' ? 'Reopen' : 'Complete'}
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); deleteGoal(goal.id) }}
-                        className="p-1.5 hover:bg-[#9f403d]/10 text-[#727A84] hover:text-[#9f403d] rounded-lg transition-all cursor-pointer"
+                        className="p-1.5 hover:bg-[#9f403d]/10 text-[#5a6061] hover:text-[#9f403d] rounded-lg transition-all cursor-pointer"
                       >
                         <Trash2 size={13} />
                       </button>
@@ -1525,9 +1525,9 @@ export default function WheelOfLife() {
                   </div>
 
                   {isExpanded && (
-                    <div className="p-5 bg-[#F0F3F3] animate-fade-in">
+                    <div className="p-5 bg-[#f2f4f4] animate-fade-in">
                       {goalTasks.length === 0 ? (
-                        <p className="text-sm text-[#727A84] opacity-60 mb-3">No tasks yet.</p>
+                        <p className="text-sm text-[#5a6061] opacity-60 mb-3">No tasks yet.</p>
                       ) : (
                         <div className="space-y-1 mb-3">
                           {goalTasks.map((task) => (
@@ -1535,15 +1535,15 @@ export default function WheelOfLife() {
                               <button onClick={() => toggleTask(task.id, !task.completed)} className="cursor-pointer shrink-0">
                                 {task.completed
                                   ? <CheckCircle2 size={16} className="text-[#22c55e]" />
-                                  : <Circle size={16} className="text-[#727A84] opacity-60" />
+                                  : <Circle size={16} className="text-[#5a6061] opacity-60" />
                                 }
                               </button>
-                              <span className={cn('text-sm flex-1', task.completed ? 'line-through text-[#727A84] opacity-60' : 'text-[#0C1629]')}>
+                              <span className={cn('text-sm flex-1', task.completed ? 'line-through text-[#5a6061] opacity-60' : 'text-[#1F3649]')}>
                                 {task.title}
                               </span>
                               <button
                                 onClick={() => deleteTask(task.id)}
-                                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-[#9f403d]/10 text-[#727A84] hover:text-[#9f403d] rounded transition-all cursor-pointer"
+                                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-[#9f403d]/10 text-[#5a6061] hover:text-[#9f403d] rounded transition-all cursor-pointer"
                               >
                                 <Trash2 size={12} />
                               </button>
@@ -1557,12 +1557,12 @@ export default function WheelOfLife() {
                           onChange={(e) => setNewTask({ goalId: goal.id, categoryId: goal.category_id, title: e.target.value })}
                           onKeyDown={(e) => { if (e.key === 'Enter') handleAddTask(goal.id, goal.category_id) }}
                           placeholder="Add task..."
-                          className="flex-1 rounded-[15px] border border-[#D6DCE0] bg-white px-4 py-3 text-sm text-[#0C1629] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#727A84]/50 focus-visible:border-[#0C1629]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0C1629]/10"
+                          className="flex-1 rounded-[15px] border border-[#ebeeef] bg-white px-4 py-3 text-sm text-[#1F3649] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#5a6061]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10"
                         />
                         <button
                           onClick={() => handleAddTask(goal.id, goal.category_id)}
                           disabled={!newTask.title || newTask.goalId !== goal.id}
-                          className="p-2.5 bg-[#0C1629]/10 hover:bg-[#0C1629]/20 disabled:opacity-50 text-[#0C1629] rounded-xl transition-all cursor-pointer"
+                          className="p-2.5 bg-[#1F3649]/10 hover:bg-[#1F3649]/20 disabled:opacity-50 text-[#1F3649] rounded-xl transition-all cursor-pointer"
                         >
                           <Plus size={14} />
                         </button>
@@ -1581,10 +1581,10 @@ export default function WheelOfLife() {
         <div className="space-y-6 md:space-y-8">
           {checkins.length === 0 && (
             <div className="bg-white card p-12 text-center">
-              <Target size={32} className="text-[#0C1629] mx-auto opacity-30 mb-4" />
-              <p className="text-sm font-semibold text-[#0C1629] mb-1">No check-in data yet</p>
-              <p className="text-sm text-[#727A84] mb-4">Complete a check-in to see your life system insights</p>
-              <button type="button" onClick={() => navigate('/wheel?tab=checkin')} className="px-5 py-2.5 rounded-[10px] bg-[#0C1629] text-white text-sm font-semibold">
+              <Target size={32} className="text-[#1F3649] mx-auto opacity-30 mb-4" />
+              <p className="text-sm font-semibold text-[#1F3649] mb-1">No check-in data yet</p>
+              <p className="text-sm text-[#5a6061] mb-4">Complete a check-in to see your life system insights</p>
+              <button type="button" onClick={() => navigate('/wheel?tab=checkin')} className="px-5 py-2.5 rounded-[10px] bg-[#1F3649] text-white text-sm font-semibold">
                 Start Check-in
               </button>
             </div>
@@ -1609,12 +1609,12 @@ export default function WheelOfLife() {
                 <header className="flex flex-col gap-4 pt-4">
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
-                      <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-[#0C1629]">Wheel of Life Insights</h1>
-                      <p className="text-[#727A84] max-w-lg mt-2">What your scores mean, how your dimensions connect, and where to focus next.</p>
+                      <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-[#1F3649]">Wheel of Life Insights</h1>
+                      <p className="text-[#5a6061] max-w-lg mt-2">What your scores mean, how your dimensions connect, and where to focus next.</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-3 shrink-0">
-                      <p className="text-sm text-[#727A84]">Based on <span className="font-semibold text-[#0C1629]">{format(new Date(checkins[0].date + 'T00:00:00'), 'MMMM d, yyyy')}</span></p>
-                      <button type="button" onClick={() => navigate('/wheel?tab=checkin')} className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-4 py-2 rounded-[10px] text-sm font-semibold transition-colors">
+                      <p className="text-sm text-[#5a6061]">Based on <span className="font-semibold text-[#1F3649]">{format(new Date(checkins[0].date + 'T00:00:00'), 'MMMM d, yyyy')}</span></p>
+                      <button type="button" onClick={() => navigate('/wheel?tab=checkin')} className="bg-[#f2f4f4] hover:bg-[#ebeeef] text-[#1F3649] px-4 py-2 rounded-[10px] text-sm font-semibold transition-colors">
                         New Check-in
                       </button>
                     </div>
@@ -1622,14 +1622,14 @@ export default function WheelOfLife() {
                 </header>
 
                 {/* Sub-tab nav */}
-                <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[12px] w-fit overflow-x-auto scrollbar-hide">
+                <div className="flex gap-1 bg-[#f2f4f4] p-1 rounded-[12px] w-fit overflow-x-auto scrollbar-hide">
                   {(['keyinsights', 'dimensions', 'ai', 'breakdown'] as const).map((st) => (
                     <button
                       key={st}
                       type="button"
                       onClick={() => setInsightSubTab(st)}
                       className={`px-4 py-2 rounded-[10px] text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
-                        insightSubTab === st ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
+                        insightSubTab === st ? 'bg-white text-[#1F3649] shadow-sm' : 'text-[#5a6061] hover:text-[#1F3649]'
                       }`}
                     >
                       {st === 'keyinsights' ? 'Key Insights' : st === 'dimensions' ? 'Life Dimensions' : st === 'ai' ? 'AI Insights' : 'Full Breakdown'}
@@ -1686,34 +1686,34 @@ export default function WheelOfLife() {
                 {/* Stats row */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                   <div className="bg-white card p-5 text-center">
-                    <div className="w-10 h-10 bg-[#0C1629]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <Target size={18} className="text-[#0C1629]" />
+                    <div className="w-10 h-10 bg-[#1F3649]/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Target size={18} className="text-[#1F3649]" />
                     </div>
-                    <span className="block text-2xl font-bold text-[#0C1629]">{overallScore}</span>
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#727A84]">Overall Score</span>
+                    <span className="block text-2xl font-bold text-[#1F3649]">{overallScore}</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-[#5a6061]">Overall Score</span>
                   </div>
                   <div className="bg-white card p-5 text-center">
                     <div className="w-10 h-10 bg-[#22c55e]/10 rounded-full flex items-center justify-center mx-auto mb-3">
                       <TrendingUp size={18} className="text-[#22c55e]" />
                     </div>
-                    <span className="block text-base font-bold text-[#0C1629]">{strongestDim.label}</span>
+                    <span className="block text-base font-bold text-[#1F3649]">{strongestDim.label}</span>
                     <span className="block text-xl font-black" style={{ color: strongestDim.color }}>{strongestDim.score}</span>
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#727A84]">Strongest</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-[#5a6061]">Strongest</span>
                   </div>
                   <div className="bg-white card p-5 text-center">
                     <div className="w-10 h-10 bg-[#9f403d]/10 rounded-full flex items-center justify-center mx-auto mb-3">
                       <AlertTriangle size={18} className="text-[#9f403d]" />
                     </div>
-                    <span className="block text-base font-bold text-[#0C1629]">{weakestDim.label}</span>
+                    <span className="block text-base font-bold text-[#1F3649]">{weakestDim.label}</span>
                     <span className="block text-xl font-black" style={{ color: weakestDim.color }}>{weakestDim.score}</span>
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#727A84]">Needs Attention</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-[#5a6061]">Needs Attention</span>
                   </div>
                   <div className="bg-white card p-5 text-center">
-                    <div className="w-10 h-10 bg-[#0C1629]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <CheckCircle2 size={18} className="text-[#0C1629]" />
+                    <div className="w-10 h-10 bg-[#1F3649]/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <CheckCircle2 size={18} className="text-[#1F3649]" />
                     </div>
-                    <span className="block text-2xl font-bold text-[#0C1629]">{checkins.length}</span>
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#727A84]">Check-ins</span>
+                    <span className="block text-2xl font-bold text-[#1F3649]">{checkins.length}</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-[#5a6061]">Check-ins</span>
                   </div>
                 </div>
 
@@ -1724,16 +1724,16 @@ export default function WheelOfLife() {
                       <Target size={18} className="text-[#9f403d]" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-xs font-bold uppercase tracking-widest text-[#727A84] mb-1">Your Focus Right Now</p>
-                      <h3 className="text-xl font-extrabold text-[#0C1629] mb-2">
+                      <p className="text-xs font-bold uppercase tracking-widest text-[#5a6061] mb-1">Your Focus Right Now</p>
+                      <h3 className="text-xl font-extrabold text-[#1F3649] mb-2">
                         {focusInsight ? focusInsight.title : `Your ${weakestDim.label} needs attention`}
                       </h3>
-                      <p className="text-[#727A84] mb-6">
+                      <p className="text-[#5a6061] mb-6">
                         {focusInsight ? focusInsight.consequence : DIM_FOCUS[weakestDim.key].why}
                       </p>
-                      <div className="bg-[#F0F3F3] rounded-xl p-5">
-                        <p className="text-xs font-bold uppercase tracking-widest text-[#727A84] mb-2">Action this week</p>
-                        <p className="text-[#0C1629] font-semibold">
+                      <div className="bg-[#f2f4f4] rounded-xl p-5">
+                        <p className="text-xs font-bold uppercase tracking-widest text-[#5a6061] mb-2">Action this week</p>
+                        <p className="text-[#1F3649] font-semibold">
                           {focusInsight ? focusInsight.action : DIM_FOCUS[weakestDim.key].action}
                         </p>
                       </div>
@@ -1743,8 +1743,8 @@ export default function WheelOfLife() {
 
                 {/* ── KEY INSIGHTS ── */}
                 <div>
-                  <h3 className="text-lg font-bold text-[#0C1629] mb-1">Key Insights</h3>
-                  <p className="text-sm text-[#727A84] mb-6">Patterns detected in your system — what is happening, why it matters, and what to do.</p>
+                  <h3 className="text-lg font-bold text-[#1F3649] mb-1">Key Insights</h3>
+                  <p className="text-sm text-[#5a6061] mb-6">Patterns detected in your system — what is happening, why it matters, and what to do.</p>
                   {domainInsights.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                       {domainInsights.map((insight, i) => (
@@ -1754,14 +1754,14 @@ export default function WheelOfLife() {
                               <AlertTriangle size={16} className={insight.level === 'critical' ? 'text-red-400' : 'text-amber-400'} />
                             </div>
                             <div>
-                              <p className="text-base font-bold text-[#0C1629] mb-2">{insight.title}</p>
-                              <p className="text-[#727A84]">{insight.body}</p>
+                              <p className="text-base font-bold text-[#1F3649] mb-2">{insight.title}</p>
+                              <p className="text-[#5a6061]">{insight.body}</p>
                             </div>
                           </div>
-                          <div className="space-y-3 pt-4 border-t border-[#F0F3F3]">
+                          <div className="space-y-3 pt-4 border-t border-[#f2f4f4]">
                             <div>
-                              <p className="text-xs font-bold uppercase tracking-widest text-[#B5C1C8] mb-1">If unaddressed</p>
-                              <p className="text-[#727A84]">{insight.consequence}</p>
+                              <p className="text-xs font-bold uppercase tracking-widest text-[#adb3b4] mb-1">If unaddressed</p>
+                              <p className="text-[#5a6061]">{insight.consequence}</p>
                             </div>
                             <div className={cn('px-4 py-3 rounded-xl', insight.level === 'critical' ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700')}>
                               <span className="font-bold">Action: </span>{insight.action}
@@ -1776,8 +1776,8 @@ export default function WheelOfLife() {
                         <CheckCircle2 size={20} className="text-[#22c55e]" />
                       </div>
                       <div>
-                        <p className="text-base font-bold text-[#0C1629]">No critical patterns detected</p>
-                        <p className="text-[#727A84] mt-1">Your scores are balanced. The system found no major contradictions. Keep it up — consistency compounds.</p>
+                        <p className="text-base font-bold text-[#1F3649]">No critical patterns detected</p>
+                        <p className="text-[#5a6061] mt-1">Your scores are balanced. The system found no major contradictions. Keep it up — consistency compounds.</p>
                       </div>
                     </div>
                   )}
@@ -1786,19 +1786,19 @@ export default function WheelOfLife() {
                 {/* ── SYSTEM TENSION ── */}
                 {systemTensions.length > 0 && (
                   <div>
-                    <h3 className="text-lg font-bold text-[#0C1629] mb-1">System Tension</h3>
-                    <p className="text-sm text-[#727A84] mb-6">Where your life is pulling against itself. These gaps create drag even when individual scores look fine.</p>
+                    <h3 className="text-lg font-bold text-[#1F3649] mb-1">System Tension</h3>
+                    <p className="text-sm text-[#5a6061] mb-6">Where your life is pulling against itself. These gaps create drag even when individual scores look fine.</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                       {systemTensions.map((t, i) => (
                         <div key={i} className="bg-white card p-5 md:p-8">
                           <div className="flex items-center gap-3 flex-wrap mb-3">
-                            <span className="text-base font-bold text-[#0C1629]">{t.high}</span>
+                            <span className="text-base font-bold text-[#1F3649]">{t.high}</span>
                             <span className="text-sm font-bold px-3 py-1 rounded-full bg-[#22c55e]/10 text-[#16a34a]">{t.highScore} ↑</span>
-                            <span className="text-[#B5C1C8] font-bold">vs</span>
-                            <span className="text-base font-bold text-[#0C1629]">{t.low}</span>
+                            <span className="text-[#adb3b4] font-bold">vs</span>
+                            <span className="text-base font-bold text-[#1F3649]">{t.low}</span>
                             <span className="text-sm font-bold px-3 py-1 rounded-full bg-[#9f403d]/10 text-[#9f403d]">{t.lowScore} ↓</span>
                           </div>
-                          <p className="text-[#727A84]">→ {t.desc}</p>
+                          <p className="text-[#5a6061]">→ {t.desc}</p>
                         </div>
                       ))}
                     </div>
@@ -1807,20 +1807,20 @@ export default function WheelOfLife() {
 
                 {/* ── PRIORITY ORDER ── */}
                 <div>
-                  <h3 className="text-lg font-bold text-[#0C1629] mb-1">Priority Order</h3>
-                  <p className="text-sm text-[#727A84] mb-6">What to work on first. One constraint always matters more than the rest right now.</p>
-                  <div className="bg-white card divide-y divide-[#F0F3F3]">
+                  <h3 className="text-lg font-bold text-[#1F3649] mb-1">Priority Order</h3>
+                  <p className="text-sm text-[#5a6061] mb-6">What to work on first. One constraint always matters more than the rest right now.</p>
+                  <div className="bg-white card divide-y divide-[#f2f4f4]">
                     {[...dimScores].sort((a, b) => a.score - b.score).map((dim, i) => {
                       const priority = dim.score < 5 ? { label: 'Fix now', cls: 'bg-[#9f403d]/10 text-[#9f403d]' } : dim.score < 7 ? { label: 'Develop', cls: 'bg-[#f59e0b]/10 text-[#d97706]' } : { label: 'Maintain', cls: 'bg-[#22c55e]/10 text-[#16a34a]' }
                       return (
                         <div key={dim.key} className="flex items-start gap-4 p-5 md:p-6">
-                          <span className="text-3xl font-black text-[#F0F3F3] w-8 shrink-0 leading-none mt-1">{i + 1}</span>
+                          <span className="text-3xl font-black text-[#f2f4f4] w-8 shrink-0 leading-none mt-1">{i + 1}</span>
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                              <span className="text-base font-bold text-[#0C1629]">{dim.label}</span>
+                              <span className="text-base font-bold text-[#1F3649]">{dim.label}</span>
                               <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${priority.cls}`}>{priority.label}</span>
                             </div>
-                            <p className="text-[#727A84]">{DIM_FOCUS[dim.key].action}</p>
+                            <p className="text-[#5a6061]">{DIM_FOCUS[dim.key].action}</p>
                           </div>
                           <span className="text-2xl font-black shrink-0" style={{ color: dim.color }}>{dim.score}</span>
                         </div>
@@ -1836,8 +1836,8 @@ export default function WheelOfLife() {
                 {insightSubTab === 'dimensions' && (
                 <div className="space-y-6 md:space-y-8">
                   <div>
-                    <h3 className="text-lg font-bold text-[#0C1629] mb-1">Life Dimensions</h3>
-                    <p className="text-sm text-[#727A84] mb-6">Four composite views built from your 9 areas. Each captures a different layer of how your life is functioning right now.</p>
+                    <h3 className="text-lg font-bold text-[#1F3649] mb-1">Life Dimensions</h3>
+                    <p className="text-sm text-[#5a6061] mb-6">Four composite views built from your 9 areas. Each captures a different layer of how your life is functioning right now.</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                       {dimScores.map(dim => {
                         const status = dim.score >= 7 ? 'Strong' : dim.score >= 5 ? 'Moderate' : 'Needs Work'
@@ -1848,19 +1848,19 @@ export default function WheelOfLife() {
                             <div className="flex items-start justify-between mb-4">
                               <div>
                                 <div className="flex items-center gap-2 mb-1">
-                                  <p className="text-lg font-bold text-[#0C1629]">{dim.label}</p>
+                                  <p className="text-lg font-bold text-[#1F3649]">{dim.label}</p>
                                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${statusCls}`}>{status}</span>
                                 </div>
-                                <p className="text-sm text-[#727A84]">{dim.description}</p>
+                                <p className="text-sm text-[#5a6061]">{dim.description}</p>
                               </div>
                               <span className="text-3xl font-black ml-4 shrink-0" style={{ color: dim.color }}>{dim.score}</span>
                             </div>
-                            <div className="h-2 bg-[#F0F3F3] rounded-full overflow-hidden mb-4">
+                            <div className="h-2 bg-[#f2f4f4] rounded-full overflow-hidden mb-4">
                               <div className="h-full rounded-full transition-all" style={{ width: `${(dim.score / 10) * 100}%`, backgroundColor: dim.color }} />
                             </div>
-                            <p className="text-[#727A84] mb-6">{dimInterp(dim.key, dim.score)}</p>
-                            <div className="space-y-3 pt-4 border-t border-[#F0F3F3]">
-                              <p className="text-xs font-bold uppercase tracking-widest text-[#B5C1C8]">Contributing Areas</p>
+                            <p className="text-[#5a6061] mb-6">{dimInterp(dim.key, dim.score)}</p>
+                            <div className="space-y-3 pt-4 border-t border-[#f2f4f4]">
+                              <p className="text-xs font-bold uppercase tracking-widest text-[#adb3b4]">Contributing Areas</p>
                               {dimDomains.map(domain => {
                                 const s = latestCheckinScores[domain.name] ?? 5
                                 return (
@@ -1868,12 +1868,12 @@ export default function WheelOfLife() {
                                     <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: domain.color + '18' }}>
                                       <domain.icon size={13} style={{ color: domain.color }} />
                                     </div>
-                                    <span className="text-sm text-[#727A84] flex-1">{domain.name}</span>
+                                    <span className="text-sm text-[#5a6061] flex-1">{domain.name}</span>
                                     <div className="flex items-center gap-2 shrink-0">
-                                      <div className="w-24 h-2 bg-[#F0F3F3] rounded-full overflow-hidden">
+                                      <div className="w-24 h-2 bg-[#f2f4f4] rounded-full overflow-hidden">
                                         <div className="h-full rounded-full" style={{ width: `${(s / 10) * 100}%`, backgroundColor: dim.color + 'cc' }} />
                                       </div>
-                                      <span className="text-sm font-bold text-[#0C1629] w-5 text-right">{s}</span>
+                                      <span className="text-sm font-bold text-[#1F3649] w-5 text-right">{s}</span>
                                     </div>
                                   </div>
                                 )
@@ -1891,14 +1891,14 @@ export default function WheelOfLife() {
                 {insightSubTab === 'ai' && (
                   <div className="space-y-6">
                     <div className="flex flex-wrap items-center gap-3">
-                      <div className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[12px]">
+                      <div className="flex gap-1 bg-[#f2f4f4] p-1 rounded-[12px]">
                         {(['quick', 'deep'] as const).map((m) => (
                           <button
                             key={m}
                             type="button"
                             onClick={() => setAiMode(m)}
                             className={`px-4 py-1.5 rounded-[10px] text-sm font-semibold transition-all cursor-pointer ${
-                              aiMode === m ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
+                              aiMode === m ? 'bg-white text-[#1F3649] shadow-sm' : 'text-[#5a6061] hover:text-[#1F3649]'
                             }`}
                           >
                             {m === 'quick' ? 'Quick Insight' : 'Deep Strategy'}
@@ -1909,7 +1909,7 @@ export default function WheelOfLife() {
                         type="button"
                         onClick={runWheelInsights}
                         disabled={aiLoading}
-                        className="bg-[#0C1629] hover:opacity-90 text-white px-5 py-2.5 rounded-[10px] text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 shadow-lg shadow-[#0C1629]/20 disabled:opacity-50"
+                        className="bg-[#1F3649] hover:opacity-90 text-white px-5 py-2.5 rounded-[10px] text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 shadow-lg shadow-[#1F3649]/20 disabled:opacity-50"
                       >
                         <RefreshCw size={14} className={aiLoading ? 'animate-spin' : ''} />
                         {aiLoading ? 'Generating...' : wheelInsights ? 'Refresh' : 'Generate AI Insights'}
@@ -1918,9 +1918,9 @@ export default function WheelOfLife() {
                     {aiError && (
                       <div className="bg-[#9f403d]/10 border border-[#9f403d]/20 rounded-[15px] p-4 flex items-center gap-3">
                         <AlertCircle size={18} className="text-[#9f403d] shrink-0" />
-                        <p className="text-sm text-[#0C1629] flex-1">{aiError}</p>
+                        <p className="text-sm text-[#1F3649] flex-1">{aiError}</p>
                         {aiError.includes('Settings') && (
-                          <button type="button" onClick={() => navigate('/settings')} className="text-sm text-[#0C1629] font-semibold hover:underline cursor-pointer shrink-0">
+                          <button type="button" onClick={() => navigate('/settings')} className="text-sm text-[#1F3649] font-semibold hover:underline cursor-pointer shrink-0">
                             Go to Settings
                           </button>
                         )}
@@ -1928,30 +1928,30 @@ export default function WheelOfLife() {
                     )}
                     {wheelInsights ? (
                       <>
-                        <p className="text-sm text-[#727A84]">
+                        <p className="text-sm text-[#5a6061]">
                           {wheelInsights.mode === 'quick' ? 'Quick Insight' : 'Deep Strategy'} · Generated {format(new Date(wheelInsights.generatedAt), 'MMM d, yyyy')}
                         </p>
                         <div className="space-y-4">
                           {wheelInsights.sections.map((section, i) => (
                             <div key={i} className="bg-white card p-5 md:p-8">
                               <div className="flex items-center gap-3 mb-3">
-                                <div className="w-8 h-8 bg-[#0C1629]/10 rounded-xl flex items-center justify-center shrink-0">
-                                  <Brain size={14} className="text-[#0C1629]" />
+                                <div className="w-8 h-8 bg-[#1F3649]/10 rounded-xl flex items-center justify-center shrink-0">
+                                  <Brain size={14} className="text-[#1F3649]" />
                                 </div>
-                                <h4 className="text-base font-bold text-[#0C1629]">{section.title}</h4>
+                                <h4 className="text-base font-bold text-[#1F3649]">{section.title}</h4>
                               </div>
-                              <p className="text-sm text-[#727A84] leading-relaxed whitespace-pre-wrap">{section.content}</p>
+                              <p className="text-sm text-[#5a6061] leading-relaxed whitespace-pre-wrap">{section.content}</p>
                             </div>
                           ))}
                         </div>
                       </>
                     ) : (
                       <div className="bg-white card p-12 text-center">
-                        <div className="w-14 h-14 bg-[#0C1629]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <Brain size={24} className="text-[#0C1629] opacity-40" />
+                        <div className="w-14 h-14 bg-[#1F3649]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <Brain size={24} className="text-[#1F3649] opacity-40" />
                         </div>
-                        <p className="text-sm font-semibold text-[#0C1629] mb-1">No AI insights yet</p>
-                        <p className="text-sm text-[#727A84]">Select Quick Insight or Deep Strategy above and click Generate AI Insights.</p>
+                        <p className="text-sm font-semibold text-[#1F3649] mb-1">No AI insights yet</p>
+                        <p className="text-sm text-[#5a6061]">Select Quick Insight or Deep Strategy above and click Generate AI Insights.</p>
                       </div>
                     )}
                   </div>
@@ -1962,12 +1962,12 @@ export default function WheelOfLife() {
                   <div className="space-y-4">
                     {checkins[0].notes && (
                       <div className="bg-white card p-5 md:p-8">
-                        <p className="text-xs font-bold uppercase tracking-widest text-[#727A84] mb-2">Check-in Notes</p>
-                        <p className="text-[#0C1629] leading-relaxed">{checkins[0].notes}</p>
+                        <p className="text-xs font-bold uppercase tracking-widest text-[#5a6061] mb-2">Check-in Notes</p>
+                        <p className="text-[#1F3649] leading-relaxed">{checkins[0].notes}</p>
                       </div>
                     )}
-                    <p className="text-sm text-[#727A84]">All 9 areas from your latest check-in. Click any area to expand sub-dimensions.</p>
-                    <div className="bg-white card divide-y divide-[#F0F3F3] overflow-hidden">
+                    <p className="text-sm text-[#5a6061]">All 9 areas from your latest check-in. Click any area to expand sub-dimensions.</p>
+                    <div className="bg-white card divide-y divide-[#f2f4f4] overflow-hidden">
                       {CHECK_IN_DOMAINS.map(domain => {
                         const s = latestCheckinScores[domain.name] ?? 5
                         const isOpen = expandedBreakdown === domain.id
@@ -1978,29 +1978,29 @@ export default function WheelOfLife() {
                             <button
                               type="button"
                               onClick={() => setExpandedBreakdown(isOpen ? null : domain.id)}
-                              className="w-full flex items-center gap-3 p-5 text-left hover:bg-[#F0F3F3]/50 transition-colors"
+                              className="w-full flex items-center gap-3 p-5 text-left hover:bg-[#f2f4f4]/50 transition-colors"
                             >
                               <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: domain.color + '18' }}>
                                 <domain.icon size={16} style={{ color: domain.color }} />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between gap-3">
-                                  <span className="text-base font-semibold text-[#0C1629]">{domain.name}</span>
+                                  <span className="text-base font-semibold text-[#1F3649]">{domain.name}</span>
                                   <div className="flex items-center gap-2 shrink-0">
                                     <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${statusCls}`}>{status}</span>
                                     <span className="text-base font-bold" style={{ color: domain.color }}>{s}</span>
-                                    <ChevronDown size={16} className={`text-[#727A84] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                                    <ChevronDown size={16} className={`text-[#5a6061] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
                                   </div>
                                 </div>
-                                <p className="text-sm text-[#727A84]">{domain.description}</p>
+                                <p className="text-sm text-[#5a6061]">{domain.description}</p>
                               </div>
                             </button>
                             {isOpen && (
-                              <div className="pb-5 px-5 ml-12 space-y-4 border-t border-[#F0F3F3] pt-4">
-                                <div className="h-2 bg-[#F0F3F3] rounded-full overflow-hidden">
+                              <div className="pb-5 px-5 ml-12 space-y-4 border-t border-[#f2f4f4] pt-4">
+                                <div className="h-2 bg-[#f2f4f4] rounded-full overflow-hidden">
                                   <div className="h-full rounded-full" style={{ width: `${(s / 10) * 100}%`, backgroundColor: domain.color }} />
                                 </div>
-                                <p className="text-xs font-bold uppercase tracking-widest text-[#B5C1C8]">Sub-area Ratings</p>
+                                <p className="text-xs font-bold uppercase tracking-widest text-[#adb3b4]">Sub-area Ratings</p>
                                 <div className="space-y-3">
                                   {domain.subAreas.map(area => {
                                     const subScore = checkins[0].sub_scores?.[`${domain.id}.${area.key}`]
@@ -2009,14 +2009,14 @@ export default function WheelOfLife() {
                                         <div className="w-2 h-2 rounded-full shrink-0 mt-2" style={{ backgroundColor: domain.color }} />
                                         <div className="flex-1">
                                           <div className="flex items-center justify-between gap-2">
-                                            <p className="text-sm font-semibold text-[#0C1629]">{area.title}</p>
+                                            <p className="text-sm font-semibold text-[#1F3649]">{area.title}</p>
                                             {subScore != null ? (
                                               <span className="text-sm font-bold shrink-0" style={{ color: domain.color }}>{subScore}/10</span>
                                             ) : (
-                                              <span className="text-xs text-[#B5C1C8] shrink-0">—</span>
+                                              <span className="text-xs text-[#adb3b4] shrink-0">—</span>
                                             )}
                                           </div>
-                                          <p className="text-xs text-[#727A84]">{area.description}</p>
+                                          <p className="text-xs text-[#5a6061]">{area.description}</p>
                                         </div>
                                       </div>
                                     )
@@ -2026,16 +2026,16 @@ export default function WheelOfLife() {
                                   const answers = checkins[0].reflection_answers?.[domain.id]
                                   if (!answers?.some(a => a.trim())) return null
                                   return (
-                                    <div className="pt-4 border-t border-[#F0F3F3]">
-                                      <p className="text-xs font-bold uppercase tracking-widest text-[#B5C1C8] mb-3">Your Reflections</p>
+                                    <div className="pt-4 border-t border-[#f2f4f4]">
+                                      <p className="text-xs font-bold uppercase tracking-widest text-[#adb3b4] mb-3">Your Reflections</p>
                                       <div className="space-y-3">
                                         {domain.questions.map((q, qi) => {
                                           const answer = answers[qi]
                                           if (!answer?.trim()) return null
                                           return (
                                             <div key={qi}>
-                                              <p className="text-xs font-semibold text-[#727A84] mb-1">· {q}</p>
-                                              <p className="text-sm text-[#0C1629] leading-relaxed pl-3">{answer}</p>
+                                              <p className="text-xs font-semibold text-[#5a6061] mb-1">· {q}</p>
+                                              <p className="text-sm text-[#1F3649] leading-relaxed pl-3">{answer}</p>
                                             </div>
                                           )
                                         })}
@@ -2061,7 +2061,7 @@ export default function WheelOfLife() {
       {tab === 'history' && (
         <div className="space-y-5">
           {checkins.length === 0 ? (
-            <div className="bg-white card p-12 text-center text-[#727A84] opacity-60 text-sm">
+            <div className="bg-white card p-12 text-center text-[#5a6061] opacity-60 text-sm">
               No check-ins yet. Complete your first check-in!
             </div>
           ) : (
@@ -2078,16 +2078,16 @@ export default function WheelOfLife() {
                   return (
                     <>
                       <div className="bg-white card p-4 text-center">
-                        <p className="text-2xl font-black text-[#0C1629]">{checkins.length}</p>
-                        <p className="text-[11px] text-[#727A84] mt-0.5 font-medium">Total Check-ins</p>
+                        <p className="text-2xl font-black text-[#1F3649]">{checkins.length}</p>
+                        <p className="text-[11px] text-[#5a6061] mt-0.5 font-medium">Total Check-ins</p>
                       </div>
                       <div className="bg-white card p-4 text-center">
-                        <p className="text-2xl font-black text-[#0C1629]">{overallAvg}</p>
-                        <p className="text-[11px] text-[#727A84] mt-0.5 font-medium">Avg Score</p>
+                        <p className="text-2xl font-black text-[#1F3649]">{overallAvg}</p>
+                        <p className="text-[11px] text-[#5a6061] mt-0.5 font-medium">Avg Score</p>
                       </div>
                       <div className="bg-white card p-4 text-center">
-                        <p className="text-2xl font-black text-[#0C1629]">{best}</p>
-                        <p className="text-[11px] text-[#727A84] mt-0.5 font-medium">Best Session</p>
+                        <p className="text-2xl font-black text-[#1F3649]">{best}</p>
+                        <p className="text-[11px] text-[#5a6061] mt-0.5 font-medium">Best Session</p>
                       </div>
                     </>
                   )
@@ -2116,37 +2116,37 @@ export default function WheelOfLife() {
                 return (
                   <div key={checkin.id} className="bg-white card overflow-hidden">
                     {/* Card header */}
-                    <div className="flex items-center justify-between px-6 py-4 border-b border-[#F0F3F3]">
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-[#f2f4f4]">
                       <div className="flex items-center gap-3">
                         <div>
-                          <p className="text-sm font-bold text-[#0C1629]">
+                          <p className="text-sm font-bold text-[#1F3649]">
                             {format(new Date(checkin.date + 'T00:00:00'), 'MMMM d, yyyy')}
                           </p>
-                          <p className="text-[11px] text-[#727A84] mt-0.5">
+                          <p className="text-[11px] text-[#5a6061] mt-0.5">
                             {format(new Date(checkin.date + 'T00:00:00'), 'EEEE')}
                           </p>
                         </div>
                         {isFirst && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#0C1629] text-white uppercase tracking-wide">Latest</span>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#1F3649] text-white uppercase tracking-wide">Latest</span>
                         )}
                       </div>
                       <div className="text-right">
-                        <p className="text-xl font-black text-[#0C1629]">{avg}<span className="text-xs font-normal text-[#727A84]">/10</span></p>
-                        <p className="text-[10px] text-[#727A84]">Overall</p>
+                        <p className="text-xl font-black text-[#1F3649]">{avg}<span className="text-xs font-normal text-[#5a6061]">/10</span></p>
+                        <p className="text-[10px] text-[#5a6061]">Overall</p>
                       </div>
                     </div>
 
                     {/* Card body */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y md:divide-y-0 md:divide-x divide-[#F0F3F3]">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y md:divide-y-0 md:divide-x divide-[#f2f4f4]">
                       {/* Left: radar + scores */}
                       <div className="p-5 flex flex-col gap-4">
                         {/* Mini radar */}
                         <div className="h-44">
                           <ResponsiveContainer width="100%" height="100%">
                             <RadarChart data={historyRadarData} cx="50%" cy="50%" outerRadius="65%">
-                              <PolarGrid stroke="#F0F3F3" />
-                              <PolarAngleAxis dataKey="subject" tick={{ fill: '#727A84', fontSize: 10 }} />
-                              <Radar dataKey="value" stroke="#0C1629" fill="#0C1629" fillOpacity={0.12} strokeWidth={1.5} />
+                              <PolarGrid stroke="#f2f4f4" />
+                              <PolarAngleAxis dataKey="subject" tick={{ fill: '#5a6061', fontSize: 10 }} />
+                              <Radar dataKey="value" stroke="#1F3649" fill="#1F3649" fillOpacity={0.12} strokeWidth={1.5} />
                             </RadarChart>
                           </ResponsiveContainer>
                         </div>
@@ -2159,10 +2159,10 @@ export default function WheelOfLife() {
                             return (
                               <div key={cat}>
                                 <div className="flex items-center justify-between mb-1">
-                                  <span className="text-[10px] text-[#727A84] font-medium truncate">{shortName}</span>
+                                  <span className="text-[10px] text-[#5a6061] font-medium truncate">{shortName}</span>
                                   <span className="text-[10px] font-bold ml-1 shrink-0" style={{ color }}>{score}</span>
                                 </div>
-                                <div className="h-1 bg-[#F0F3F3] rounded-full overflow-hidden">
+                                <div className="h-1 bg-[#f2f4f4] rounded-full overflow-hidden">
                                   <div className="h-full rounded-full transition-all" style={{ width: `${(score / 10) * 100}%`, backgroundColor: color }} />
                                 </div>
                               </div>
@@ -2175,7 +2175,7 @@ export default function WheelOfLife() {
                       <div className="p-5 flex flex-col gap-4">
                         {/* Strongest */}
                         <div>
-                          <p className="text-[10px] font-bold text-[#727A84] uppercase tracking-wider mb-2">Strongest Areas</p>
+                          <p className="text-[10px] font-bold text-[#5a6061] uppercase tracking-wider mb-2">Strongest Areas</p>
                           <div className="space-y-2">
                             {strongest.map(([cat, score]) => {
                               const color = getCategoryColor(cat)
@@ -2188,7 +2188,7 @@ export default function WheelOfLife() {
                                       <Icon size={13} style={{ color }} />
                                     </div>
                                   )}
-                                  <span className="text-xs font-semibold text-[#0C1629] flex-1 truncate">{cat}</span>
+                                  <span className="text-xs font-semibold text-[#1F3649] flex-1 truncate">{cat}</span>
                                   <span className="text-xs font-black shrink-0" style={{ color }}>{score}</span>
                                 </div>
                               )
@@ -2198,7 +2198,7 @@ export default function WheelOfLife() {
 
                         {/* Opportunities */}
                         <div>
-                          <p className="text-[10px] font-bold text-[#727A84] uppercase tracking-wider mb-2">Opportunities</p>
+                          <p className="text-[10px] font-bold text-[#5a6061] uppercase tracking-wider mb-2">Opportunities</p>
                           <div className="space-y-2">
                             {weakest.map(([cat, score]) => {
                               const color = getCategoryColor(cat)
@@ -2211,7 +2211,7 @@ export default function WheelOfLife() {
                                       <Icon size={13} style={{ color }} />
                                     </div>
                                   )}
-                                  <span className="text-xs font-semibold text-[#0C1629] flex-1 truncate">{cat}</span>
+                                  <span className="text-xs font-semibold text-[#1F3649] flex-1 truncate">{cat}</span>
                                   <span className="text-xs font-black shrink-0" style={{ color }}>{score}</span>
                                 </div>
                               )
@@ -2221,8 +2221,8 @@ export default function WheelOfLife() {
 
                         {/* Notes */}
                         {checkin.notes && (
-                          <div className="mt-auto pt-3 border-t border-[#F0F3F3]">
-                            <p className="text-[11px] text-[#727A84] italic leading-relaxed">"{checkin.notes}"</p>
+                          <div className="mt-auto pt-3 border-t border-[#f2f4f4]">
+                            <p className="text-[11px] text-[#5a6061] italic leading-relaxed">"{checkin.notes}"</p>
                           </div>
                         )}
                       </div>

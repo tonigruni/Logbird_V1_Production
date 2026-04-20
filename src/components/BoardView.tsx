@@ -60,8 +60,8 @@ interface BoardViewProps {
 const PRIORITY_STYLES: Record<string, { label: string; bg: string; text: string }> = {
   urgent: { label: 'URGENT', bg: 'bg-[#dc2626]/10', text: 'text-[#dc2626]' },
   high:   { label: 'HIGH',   bg: 'bg-[#f59e0b]/10', text: 'text-[#f59e0b]' },
-  medium: { label: 'MEDIUM', bg: 'bg-[#0C1629]/10', text: 'text-[#0C1629]' },
-  low:    { label: 'LOW',    bg: 'bg-[#B5C1C8]/10', text: 'text-[#B5C1C8]' },
+  medium: { label: 'MEDIUM', bg: 'bg-[#1F3649]/10', text: 'text-[#1F3649]' },
+  low:    { label: 'LOW',    bg: 'bg-[#adb3b4]/10', text: 'text-[#adb3b4]' },
 }
 
 // ---------------------------------------------------------------------------
@@ -69,17 +69,17 @@ const PRIORITY_STYLES: Record<string, { label: string; bg: string; text: string 
 // ---------------------------------------------------------------------------
 
 const COLUMN_COLORS: Record<string, string> = {
-  'To Do': '#B5C1C8',
+  'To Do': '#adb3b4',
   'In Progress': '#f59e0b',
-  'In Review': '#0C1629',
+  'In Review': '#1F3649',
   'Done': '#22c55e',
-  'Active': '#0C1629',
+  'Active': '#1F3649',
   'Paused': '#f59e0b',
   'Completed': '#22c55e',
-  'Backlog': '#B5C1C8',
+  'Backlog': '#adb3b4',
 }
 
-const PRESET_COLORS = ['#B5C1C8', '#0C1629', '#f59e0b', '#22c55e', '#dc2626', '#8b5cf6', '#3b82f6', '#ec4899']
+const PRESET_COLORS = ['#adb3b4', '#1F3649', '#f59e0b', '#22c55e', '#dc2626', '#8b5cf6', '#3b82f6', '#ec4899']
 
 // ---------------------------------------------------------------------------
 // Card content (shared between sortable card and drag overlay)
@@ -103,7 +103,7 @@ function CardContent({ card, isDragging, isClickable }: { card: BoardCard; isDra
             {priority.label}
           </span>
         ) : card.tag ? (
-          <span className="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-[#0C1629]/10 text-[#0C1629]">
+          <span className="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-[#1F3649]/10 text-[#1F3649]">
             {card.tag}
           </span>
         ) : (
@@ -117,24 +117,24 @@ function CardContent({ card, isDragging, isClickable }: { card: BoardCard; isDra
       )}
 
       {/* Title */}
-      <h4 className="text-sm font-bold text-[#0C1629] leading-snug">{card.title}</h4>
+      <h4 className="text-sm font-bold text-[#1F3649] leading-snug">{card.title}</h4>
 
       {/* Description */}
       {card.description && (
-        <p className="text-xs text-[#727A84] leading-relaxed line-clamp-2">{card.description}</p>
+        <p className="text-xs text-[#5a6061] leading-relaxed line-clamp-2">{card.description}</p>
       )}
 
       {/* Footer */}
       <div className="flex items-center justify-between pt-1">
         <div className="flex items-center gap-3">
           {card.dueDate && (
-            <span className="flex items-center gap-1 text-[10px] font-semibold text-[#B5C1C8]">
+            <span className="flex items-center gap-1 text-[10px] font-semibold text-[#adb3b4]">
               <Clock size={10} />
               {card.dueDate}
             </span>
           )}
           {card.comments !== undefined && card.comments > 0 && (
-            <span className="flex items-center gap-1 text-[10px] font-semibold text-[#B5C1C8]">
+            <span className="flex items-center gap-1 text-[10px] font-semibold text-[#adb3b4]">
               <ChatCircle size={10} />
               {card.comments}
             </span>
@@ -148,7 +148,7 @@ function CardContent({ card, isDragging, isClickable }: { card: BoardCard; isDra
                 key={i}
                 size={9}
                 weight="fill"
-                className={i <= card.energy! ? 'text-[#f59e0b]' : 'text-[#D6DCE0]'}
+                className={i <= card.energy! ? 'text-[#f59e0b]' : 'text-[#ebeeef]'}
               />
             ))}
           </div>
@@ -211,7 +211,7 @@ function DroppableColumn({ column, onAddCard, onRenameColumn, onChangeColumnColo
   children: React.ReactNode
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: column.id })
-  const color = column.color || COLUMN_COLORS[column.title] || '#B5C1C8'
+  const color = column.color || COLUMN_COLORS[column.title] || '#adb3b4'
 
   const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(column.title)
@@ -241,25 +241,25 @@ function DroppableColumn({ column, onAddCard, onRenameColumn, onChangeColumnColo
               onBlur={handleTitleSave}
               onKeyDown={e => { if (e.key === 'Enter') handleTitleSave(); if (e.key === 'Escape') setIsEditing(false) }}
               autoFocus
-              className="text-xs font-bold text-[#0C1629] uppercase tracking-wider bg-[#F0F3F3] rounded-[6px] px-2 py-0.5 outline-none focus:ring-2 focus:ring-[#0C1629]/10 w-28"
+              className="text-xs font-bold text-[#1F3649] uppercase tracking-wider bg-[#f2f4f4] rounded-[6px] px-2 py-0.5 outline-none focus:ring-2 focus:ring-[#1F3649]/10 w-28"
             />
           ) : (
             <h3
               onDoubleClick={() => { if (onRenameColumn) { setEditTitle(column.title); setIsEditing(true) } }}
-              className={cn('text-xs font-bold text-[#0C1629] uppercase tracking-wider', onRenameColumn && 'cursor-pointer hover:text-[#0C1629]')}
+              className={cn('text-xs font-bold text-[#1F3649] uppercase tracking-wider', onRenameColumn && 'cursor-pointer hover:text-[#1F3649]')}
             >
               {column.title}
             </h3>
           )}
-          <span className="text-[10px] font-bold text-[#B5C1C8] bg-[#F0F3F3] px-1.5 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold text-[#adb3b4] bg-[#f2f4f4] px-1.5 py-0.5 rounded-full">
             {String(column.cards.length).padStart(2, '0')}
           </span>
           {onRenameColumn && !isEditing && (
             <button
               onClick={() => { setEditTitle(column.title); setIsEditing(true) }}
-              className="opacity-0 group-hover/header:opacity-100 p-0.5 hover:bg-[#F0F3F3] rounded transition-all cursor-pointer"
+              className="opacity-0 group-hover/header:opacity-100 p-0.5 hover:bg-[#f2f4f4] rounded transition-all cursor-pointer"
             >
-              <PencilSimpleLine size={10} className="text-[#B5C1C8]" />
+              <PencilSimpleLine size={10} className="text-[#adb3b4]" />
             </button>
           )}
         </div>
@@ -268,7 +268,7 @@ function DroppableColumn({ column, onAddCard, onRenameColumn, onChangeColumnColo
             onClick={() => onDeleteColumn(column.id)}
             className="opacity-0 group-hover/header:opacity-100 p-0.5 hover:bg-[#dc2626]/10 rounded transition-all cursor-pointer"
           >
-            <X size={10} className="text-[#B5C1C8] hover:text-[#dc2626]" />
+            <X size={10} className="text-[#adb3b4] hover:text-[#dc2626]" />
           </button>
         )}
       </div>
@@ -282,7 +282,7 @@ function DroppableColumn({ column, onAddCard, onRenameColumn, onChangeColumnColo
               onClick={() => { onChangeColumnColor?.(column.id, c); setShowColorPicker(false) }}
               className={cn(
                 'w-4 h-4 rounded-full cursor-pointer hover:scale-125 transition-transform ring-offset-1',
-                color === c && 'ring-2 ring-[#0C1629]'
+                color === c && 'ring-2 ring-[#1F3649]'
               )}
               style={{ backgroundColor: c }}
             />
@@ -295,7 +295,7 @@ function DroppableColumn({ column, onAddCard, onRenameColumn, onChangeColumnColo
         ref={setNodeRef}
         className={cn(
           'space-y-3 min-h-[80px] rounded-[15px] transition-colors duration-200 p-1.5 -m-1.5',
-          isOver && 'bg-[#0C1629]/[0.04] ring-2 ring-[#0C1629]/10 ring-inset'
+          isOver && 'bg-[#1F3649]/[0.04] ring-2 ring-[#1F3649]/10 ring-inset'
         )}
       >
         {children}
@@ -310,7 +310,7 @@ function DroppableColumn({ column, onAddCard, onRenameColumn, onChangeColumnColo
         {onAddCard && (
           <button
             onClick={() => onAddCard(column.id)}
-            className="w-full flex items-center justify-center gap-1.5 py-3 card !border-2 !border-dashed !border-[#D6DCE0] text-xs font-semibold text-[#B5C1C8] hover:border-[#0C1629]/30 hover:text-[#0C1629] hover:bg-[#0C1629]/[0.02] transition-all cursor-pointer"
+            className="w-full flex items-center justify-center gap-1.5 py-3 card !border-2 !border-dashed !border-[#ebeeef] text-xs font-semibold text-[#adb3b4] hover:border-[#1F3649]/30 hover:text-[#1F3649] hover:bg-[#1F3649]/[0.02] transition-all cursor-pointer"
           >
             <Plus size={12} weight="bold" />
             Add Task
@@ -330,7 +330,7 @@ function AddColumnCard({ onAdd }: { onAdd: (title: string, color: string) => voi
     <div className="shrink-0 w-[160px] pt-8">
       <button
         onClick={() => onAdd('New Section', PRESET_COLORS[0])}
-        className="w-full flex items-center justify-center gap-1.5 py-3 card !border-2 !border-dashed !border-[#D6DCE0] text-xs font-semibold text-[#B5C1C8] hover:border-[#0C1629]/30 hover:text-[#0C1629] hover:bg-[#0C1629]/[0.02] transition-all cursor-pointer"
+        className="w-full flex items-center justify-center gap-1.5 py-3 card !border-2 !border-dashed !border-[#ebeeef] text-xs font-semibold text-[#adb3b4] hover:border-[#1F3649]/30 hover:text-[#1F3649] hover:bg-[#1F3649]/[0.02] transition-all cursor-pointer"
       >
         <Plus size={12} weight="bold" />
         Add Section
@@ -482,11 +482,11 @@ export default function BoardView({ columns, onAddCard, onMoveCard, onCardClick,
           <button
             onClick={() => scrollRef.current?.scrollBy({ left: -340, behavior: 'smooth' })}
             className={cn(
-              'pointer-events-auto absolute left-0.5 top-[30%] -translate-y-1/2 w-7 h-7 rounded-full bg-white shadow-[0_2px_12px_rgba(0,0,0,0.1)] border border-[#D6DCE0] flex items-center justify-center hover:bg-[#F0F3F3] hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition-all cursor-pointer',
+              'pointer-events-auto absolute left-0.5 top-[30%] -translate-y-1/2 w-7 h-7 rounded-full bg-white shadow-[0_2px_12px_rgba(0,0,0,0.1)] border border-[#ebeeef] flex items-center justify-center hover:bg-[#f2f4f4] hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition-all cursor-pointer',
               !canScrollLeft && 'pointer-events-none'
             )}
           >
-            <CaretLeft size={13} weight="bold" className="text-[#727A84]" />
+            <CaretLeft size={13} weight="bold" className="text-[#5a6061]" />
           </button>
         </div>
 
@@ -514,11 +514,11 @@ export default function BoardView({ columns, onAddCard, onMoveCard, onCardClick,
           <button
             onClick={() => scrollRef.current?.scrollBy({ left: 340, behavior: 'smooth' })}
             className={cn(
-              'pointer-events-auto absolute right-0.5 top-[30%] -translate-y-1/2 w-7 h-7 rounded-full bg-white shadow-[0_2px_12px_rgba(0,0,0,0.1)] border border-[#D6DCE0] flex items-center justify-center hover:bg-[#F0F3F3] hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition-all cursor-pointer',
+              'pointer-events-auto absolute right-0.5 top-[30%] -translate-y-1/2 w-7 h-7 rounded-full bg-white shadow-[0_2px_12px_rgba(0,0,0,0.1)] border border-[#ebeeef] flex items-center justify-center hover:bg-[#f2f4f4] hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition-all cursor-pointer',
               !canScrollRight && 'pointer-events-none'
             )}
           >
-            <CaretRight size={13} weight="bold" className="text-[#727A84]" />
+            <CaretRight size={13} weight="bold" className="text-[#5a6061]" />
           </button>
         </div>
       </div>

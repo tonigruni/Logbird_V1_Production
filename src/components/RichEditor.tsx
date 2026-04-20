@@ -95,8 +95,8 @@ function ToolbarBtn({
       className={cn(
         'flex items-center justify-center w-11 h-11 rounded-xl text-sm font-medium transition-all cursor-pointer',
         active
-          ? 'bg-[#0C1629] text-white'
-          : 'text-[#727A84] hover:bg-[#F0F3F3] hover:text-[#0C1629]',
+          ? 'bg-[#1F3649] text-white'
+          : 'text-[#5a6061] hover:bg-[#f2f4f4] hover:text-[#1F3649]',
       )}
     >
       {children}
@@ -119,8 +119,8 @@ function BubbleBtn({
       className={cn(
         'flex items-center justify-center w-7 h-7 rounded-lg text-sm transition-all cursor-pointer',
         active
-          ? 'bg-[#0C1629] text-white'
-          : 'text-[#727A84] hover:bg-[#F0F3F3] hover:text-[#0C1629]',
+          ? 'bg-[#1F3649] text-white'
+          : 'text-[#5a6061] hover:bg-[#f2f4f4] hover:text-[#1F3649]',
       )}
     >
       {children}
@@ -129,11 +129,11 @@ function BubbleBtn({
 }
 
 function Divider() {
-  return <div className="w-px h-5 bg-[#F0F3F3] mx-0.5 shrink-0" />
+  return <div className="w-px h-5 bg-[#f2f4f4] mx-0.5 shrink-0" />
 }
 
 function BubbleDivider() {
-  return <div className="w-px h-4 bg-[#F0F3F3] mx-0.5 shrink-0" />
+  return <div className="w-px h-4 bg-[#f2f4f4] mx-0.5 shrink-0" />
 }
 
 // ─── Block insert dropdown (shared between "+" gutter & slash menu) ────────────
@@ -182,32 +182,32 @@ function BlockInsertMenu({ editor, triggerClassName, side = 'top', align = 'star
           align={align}
           sideOffset={8}
           onCloseAutoFocus={e => e.preventDefault()}
-          className="z-50 w-56 overflow-hidden rounded-[15px] border border-[#D6DCE0] bg-white p-1 shadow-[0_8px_24px_rgba(12,22,41,0.12)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+          className="z-50 w-56 overflow-hidden rounded-[15px] border border-[#ebeeef] bg-white p-1 shadow-[0_8px_24px_rgba(12,22,41,0.12)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
         >
           {groups.map((group, gi) => (
             <div key={gi}>
               {gi === 0 && (
                 <>
-                  <div className="px-2 py-1.5 text-xs font-semibold text-[#727A84]">Insert block</div>
-                  <div className="-mx-1 my-1 h-px bg-[#F0F3F3]" />
+                  <div className="px-2 py-1.5 text-xs font-semibold text-[#5a6061]">Insert block</div>
+                  <div className="-mx-1 my-1 h-px bg-[#f2f4f4]" />
                 </>
               )}
               {group.map(({ icon: Icon, label, desc, action }) => (
                 <DropdownMenuPrimitive.Item
                   key={label}
                   onSelect={action}
-                  className="flex items-center gap-2 rounded-[10px] px-2 py-1.5 outline-none cursor-pointer hover:bg-[#F0F3F3] focus:bg-[#F0F3F3]"
+                  className="flex items-center gap-2 rounded-[10px] px-2 py-1.5 outline-none cursor-pointer hover:bg-[#f2f4f4] focus:bg-[#f2f4f4]"
                 >
-                  <div className="flex size-8 items-center justify-center rounded-[8px] border border-[#D6DCE0] bg-[#F0F3F3] shrink-0">
-                    <Icon size={14} className="text-[#727A84]" />
+                  <div className="flex size-8 items-center justify-center rounded-[8px] border border-[#ebeeef] bg-[#f2f4f4] shrink-0">
+                    <Icon size={14} className="text-[#5a6061]" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-[#0C1629]">{label}</div>
-                    <div className="text-xs text-[#727A84]">{desc}</div>
+                    <div className="text-sm font-medium text-[#1F3649]">{label}</div>
+                    <div className="text-xs text-[#5a6061]">{desc}</div>
                   </div>
                 </DropdownMenuPrimitive.Item>
               ))}
-              {gi < groups.length - 1 && <div className="-mx-1 my-1 h-px bg-[#F0F3F3]" />}
+              {gi < groups.length - 1 && <div className="-mx-1 my-1 h-px bg-[#f2f4f4]" />}
             </div>
           ))}
         </DropdownMenuPrimitive.Content>
@@ -253,12 +253,12 @@ function SlashMenu({ state, editor, onClose }: {
 
   return createPortal(
     <div
-      className="fixed z-[9999] w-64 rounded-[15px] border border-[#D6DCE0] bg-white p-1 shadow-[0_8px_24px_rgba(12,22,41,0.14)] overflow-y-auto"
+      className="fixed z-[9999] w-64 rounded-[15px] border border-[#ebeeef] bg-white p-1 shadow-[0_8px_24px_rgba(12,22,41,0.14)] overflow-y-auto"
       style={{ top, left: state.x, maxHeight: Math.min(MENU_HEIGHT, window.innerHeight - 120) }}
       onMouseDown={e => e.preventDefault()}
     >
-      <div className="px-2 py-1.5 text-xs font-semibold text-[#727A84]">Blocks</div>
-      <div className="-mx-1 mb-1 h-px bg-[#F0F3F3]" />
+      <div className="px-2 py-1.5 text-xs font-semibold text-[#5a6061]">Blocks</div>
+      <div className="-mx-1 mb-1 h-px bg-[#f2f4f4]" />
       {filtered.map((cmd, i) => {
         const Icon = cmd.icon
         return (
@@ -267,15 +267,15 @@ function SlashMenu({ state, editor, onClose }: {
             onMouseDown={() => execute(cmd)}
             className={cn(
               'w-full flex items-center gap-2 rounded-[10px] px-2 py-1.5 text-left outline-none cursor-pointer transition-colors',
-              i === state.selectedIdx ? 'bg-[#F0F3F3]' : 'hover:bg-[#F0F3F3]',
+              i === state.selectedIdx ? 'bg-[#f2f4f4]' : 'hover:bg-[#f2f4f4]',
             )}
           >
-            <div className="flex size-8 items-center justify-center rounded-[8px] border border-[#D6DCE0] bg-[#F0F3F3] shrink-0">
-              <Icon size={14} className="text-[#727A84]" />
+            <div className="flex size-8 items-center justify-center rounded-[8px] border border-[#ebeeef] bg-[#f2f4f4] shrink-0">
+              <Icon size={14} className="text-[#5a6061]" />
             </div>
             <div>
-              <div className="text-sm font-medium text-[#0C1629]">{cmd.label}</div>
-              <div className="text-xs text-[#727A84]">{cmd.desc}</div>
+              <div className="text-sm font-medium text-[#1F3649]">{cmd.label}</div>
+              <div className="text-xs text-[#5a6061]">{cmd.desc}</div>
             </div>
           </button>
         )
@@ -312,7 +312,7 @@ export default function RichEditor({ content, onChange, editable, placeholder, c
       Placeholder.configure({
         placeholder: placeholder ?? 'Start writing from the heart… or type / for commands',
       }),
-      Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-[#0C1629] underline' } }),
+      Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-[#1F3649] underline' } }),
       Markdown.configure({ html: false, transformCopiedText: true }),
     ],
     content,
@@ -489,7 +489,7 @@ export default function RichEditor({ content, onChange, editable, placeholder, c
       {/* ── Bubble menu (shows on text selection) ── */}
       {bubblePos && createPortal(
         <div
-          className="fixed z-[9998] flex items-center gap-0.5 bg-white border border-[#D6DCE0] rounded-xl shadow-[0_4px_16px_rgba(12,22,41,0.12)] px-2 py-1.5 -translate-x-1/2 -translate-y-full -mt-2"
+          className="fixed z-[9998] flex items-center gap-0.5 bg-white border border-[#ebeeef] rounded-xl shadow-[0_4px_16px_rgba(12,22,41,0.12)] px-2 py-1.5 -translate-x-1/2 -translate-y-full -mt-2"
           style={{ left: bubblePos.x, top: bubblePos.y - 8 }}
           onMouseDown={e => e.preventDefault()}
         >
@@ -537,7 +537,7 @@ export default function RichEditor({ content, onChange, editable, placeholder, c
                   side="right"
                   align="start"
                   onOpenChange={open => { isDropdownOpen.current = open }}
-                  triggerClassName="flex items-center justify-center w-7 h-7 rounded-md text-[#b0b8b9] hover:bg-[#F0F3F3] hover:text-[#727A84] transition-all cursor-pointer"
+                  triggerClassName="flex items-center justify-center w-7 h-7 rounded-md text-[#b0b8b9] hover:bg-[#f2f4f4] hover:text-[#5a6061] transition-all cursor-pointer"
                 />
               </div>
             )}
@@ -555,17 +555,17 @@ export default function RichEditor({ content, onChange, editable, placeholder, c
         const btnCls = compact
           ? 'flex items-center justify-center w-7 h-7 rounded-lg text-xs font-medium transition-all cursor-pointer'
           : 'flex items-center justify-center w-11 h-11 rounded-xl text-sm font-medium transition-all cursor-pointer'
-        const activeCls = 'bg-[#0C1629] text-white'
-        const idleCls = 'text-[#727A84] hover:bg-[#F0F3F3] hover:text-[#0C1629]'
+        const activeCls = 'bg-[#1F3649] text-white'
+        const idleCls = 'text-[#5a6061] hover:bg-[#f2f4f4] hover:text-[#1F3649]'
         const Btn = ({ onClick, active = false, title: t, children }: { onClick: () => void; active?: boolean; title?: string; children: React.ReactNode }) => (
           <button onMouseDown={e => { e.preventDefault(); onClick() }} title={t} className={cn(btnCls, active ? activeCls : idleCls)}>{children}</button>
         )
         const wrapperCls = compact
-          ? 'pointer-events-auto inline-flex items-center gap-0 bg-white border border-[#F0F3F3] rounded-xl shadow-[0_4px_16px_rgba(12,22,41,0.10)] px-1.5 py-1'
-          : 'pointer-events-auto inline-flex items-center gap-0.5 bg-white border border-[#F0F3F3] rounded-2xl shadow-[0_8px_32px_rgba(12,22,41,0.12)] px-3 py-2'
+          ? 'pointer-events-auto inline-flex items-center gap-0 bg-white border border-[#f2f4f4] rounded-xl shadow-[0_4px_16px_rgba(12,22,41,0.10)] px-1.5 py-1'
+          : 'pointer-events-auto inline-flex items-center gap-0.5 bg-white border border-[#f2f4f4] rounded-2xl shadow-[0_8px_32px_rgba(12,22,41,0.12)] px-3 py-2'
         const dividerEl = compact
-          ? <div className="w-px h-3.5 bg-[#F0F3F3] mx-0.5 shrink-0" />
-          : <div className="w-px h-5 bg-[#F0F3F3] mx-0.5 shrink-0" />
+          ? <div className="w-px h-3.5 bg-[#f2f4f4] mx-0.5 shrink-0" />
+          : <div className="w-px h-5 bg-[#f2f4f4] mx-0.5 shrink-0" />
 
         return (
           <div className={compact

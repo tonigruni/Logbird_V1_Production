@@ -175,8 +175,8 @@ export default function AppLayout() {
     cn(
       'inline-flex items-center gap-1.5 text-sm font-semibold transition-colors cursor-pointer whitespace-nowrap leading-none pb-[3px] shrink-0 !rounded-none bg-transparent',
       active
-        ? 'text-[#0C1629] border-b-2 border-[#0C1629]'
-        : 'text-[#727A84] hover:text-[#0C1629]'
+        ? 'text-[#1F3649] border-b-2 border-[#1F3649]'
+        : 'text-[#5a6061] hover:text-[#1F3649]'
     )
 
   return (
@@ -195,25 +195,25 @@ export default function AppLayout() {
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Top App Bar */}
-        <header className="w-full bg-background/80 backdrop-blur-xl sticky top-0 z-40 shrink-0 border-b border-[#F0F3F3]">
+        <header className="w-full bg-background/80 backdrop-blur-xl sticky top-0 z-40 shrink-0 border-b border-[#f2f4f4]">
           <div className="max-w-[1400px] mx-auto px-4 md:px-12 py-4 md:py-5 flex justify-between items-center gap-3">
 
             <div className="flex items-center gap-4 md:gap-10 min-w-0 flex-1">
               {/* Section title */}
-              <span className="text-lg md:text-xl font-black tracking-tight shrink-0 text-[#0C1629]">
+              <span className="text-lg md:text-xl font-black tracking-tight shrink-0 text-[#1F3649]">
                 {title}
               </span>
 
               {/* Pill-style tabs (e.g. Wheel of Life) */}
               {pillTabs && (
-                <nav className="flex gap-1 bg-[#F0F3F3] p-1 rounded-[10px] overflow-x-auto scrollbar-hide shrink-0">
+                <nav className="flex gap-1 bg-[#f2f4f4] p-1 rounded-[10px] overflow-x-auto scrollbar-hide shrink-0">
                   {pillTabs.map(({ label, active, path }) => (
                     <button
                       key={label}
                       onClick={() => path && navigate(path)}
                       className={cn(
                         'px-4 py-1.5 text-xs font-semibold rounded-[7px] transition-all cursor-pointer whitespace-nowrap',
-                        active ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84] hover:text-[#0C1629]'
+                        active ? 'bg-white text-[#1F3649] shadow-sm' : 'text-[#5a6061] hover:text-[#1F3649]'
                       )}
                     >
                       {label}
@@ -230,7 +230,7 @@ export default function AppLayout() {
                       <button
                         key={label}
                         onClick={onClick}
-                        className="inline-flex items-center gap-1.5 bg-[#F0F3F3] hover:bg-[#E4E9EC] text-[#0C1629] text-sm font-semibold px-4 py-2 rounded-[10px] transition-all cursor-pointer whitespace-nowrap shrink-0"
+                        className="inline-flex items-center gap-1.5 bg-[#f2f4f4] hover:bg-[#E4E9EC] text-[#1F3649] text-sm font-semibold px-4 py-2 rounded-[10px] transition-all cursor-pointer whitespace-nowrap shrink-0"
                       >
                         {Icon ? <Icon size={14} className="shrink-0" /> : <Plus size={14} className="shrink-0" />}
                         {label}
@@ -250,81 +250,6 @@ export default function AppLayout() {
               )}
             </div>
 
-            <div className="flex items-center gap-2 md:gap-3 shrink-0">
-              {/* Search */}
-              <div className="relative hidden lg:block">
-                <input
-                  className="h-9 w-52 rounded-[15px] border border-[#D6DCE0] bg-white px-4 pr-10 text-sm text-[#0C1629] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#727A84]/50 focus-visible:border-[#0C1629]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0C1629]/10"
-                  placeholder={isJournalContext ? 'Search entries…' : 'Search…'}
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={handleSearchKeyDown}
-                />
-                <Search size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#727A84] opacity-40 pointer-events-none" />
-              </div>
-
-              {/* Avatar + profile popover */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button
-                    className="w-8 h-8 md:w-9 md:h-9 !rounded-full bg-[#F0F3F3] cursor-pointer active:scale-95 transition-transform flex items-center justify-center shrink-0 hover:bg-[#c8d1d2] overflow-hidden border border-[#F0F3F3]"
-                    aria-label="Account"
-                  >
-                    <User size={15} className="text-[#727A84]" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent align="end" className="w-60">
-                  <PopoverHeader>
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-9 w-9 shrink-0">
-                        <AvatarFallback className="bg-[#F0F3F3]">
-                          <User size={16} className="text-[#727A84]" />
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="min-w-0">
-                        <PopoverTitle className="truncate">
-                          {(user?.user_metadata?.full_name as string) || 'My Account'}
-                        </PopoverTitle>
-                        <PopoverDescription className="truncate">{user?.email}</PopoverDescription>
-                      </div>
-                    </div>
-                  </PopoverHeader>
-                  <PopoverBody className="space-y-0.5">
-                    <button
-                      onClick={() => navigate('/account')}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
-                      style={{ borderRadius: 10 }}
-                    >
-                      <User size={14} className="text-[#727A84]" /> View Profile
-                    </button>
-                    <button
-                      onClick={() => navigate('/settings')}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
-                      style={{ borderRadius: 10 }}
-                    >
-                      <Settings size={14} className="text-[#727A84]" /> Settings
-                    </button>
-                    <button
-                      onClick={() => navigate('/docs')}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer"
-                      style={{ borderRadius: 10 }}
-                    >
-                      <FileText size={14} className="text-[#727A84]" /> Docs
-                    </button>
-                  </PopoverBody>
-                  <PopoverFooter>
-                    <button
-                      onClick={() => useAuthStore.getState().signOut()}
-                      className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-[#727A84] hover:text-[#0C1629] hover:bg-[#F0F3F3] border border-[#F0F3F3] transition-colors cursor-pointer"
-                      style={{ borderRadius: 10 }}
-                    >
-                      <LogOut size={13} /> Sign Out
-                    </button>
-                  </PopoverFooter>
-                </PopoverContent>
-              </Popover>
-            </div>
 
           </div>
         </header>
@@ -345,7 +270,7 @@ export default function AppLayout() {
       </div>
 
       {/* Mobile bottom navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-[#F0F3F3] flex items-center justify-around px-2 py-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-[#f2f4f4] flex items-center justify-around px-2 py-2">
         {mobileNavPrimary.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
@@ -354,7 +279,7 @@ export default function AppLayout() {
             className={({ isActive }) =>
               cn(
                 'flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all',
-                isActive ? 'text-[#0C1629]' : 'text-[#B5C1C8]'
+                isActive ? 'text-[#1F3649]' : 'text-[#adb3b4]'
               )
             }
           >
@@ -367,8 +292,8 @@ export default function AppLayout() {
           className={cn(
             'flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all',
             mobileNavMore.some(({ to }) => location.pathname === to || location.pathname.startsWith(to + '/'))
-              ? 'text-[#0C1629]'
-              : 'text-[#B5C1C8]'
+              ? 'text-[#1F3649]'
+              : 'text-[#adb3b4]'
           )}
         >
           <MoreHorizontal size={20} strokeWidth={1.5} />
@@ -383,12 +308,12 @@ export default function AppLayout() {
             className="md:hidden fixed inset-0 z-50 bg-black/20 backdrop-blur-sm"
             onClick={() => setMoreOpen(false)}
           />
-          <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl border-t border-[#F0F3F3] pb-safe">
+          <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl border-t border-[#f2f4f4] pb-safe">
             <div className="flex items-center justify-between px-5 pt-4 pb-2">
-              <span className="text-sm font-bold text-[#0C1629]">More</span>
+              <span className="text-sm font-bold text-[#1F3649]">More</span>
               <button
                 onClick={() => setMoreOpen(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-[#F0F3F3] text-[#727A84]"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-[#f2f4f4] text-[#5a6061]"
               >
                 <X size={16} />
               </button>
@@ -402,7 +327,7 @@ export default function AppLayout() {
                     onClick={() => { navigate(to); setMoreOpen(false) }}
                     className={cn(
                       'flex flex-col items-center gap-1.5 px-2 py-3 rounded-xl transition-all',
-                      isActive ? 'bg-[#F0F3F3] text-[#0C1629]' : 'text-[#727A84]'
+                      isActive ? 'bg-[#f2f4f4] text-[#1F3649]' : 'text-[#5a6061]'
                     )}
                   >
                     <Icon size={22} strokeWidth={1.5} />

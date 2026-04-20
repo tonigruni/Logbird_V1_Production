@@ -122,14 +122,14 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
       <div className="p-5 space-y-3">
         {/* Icon row + status */}
         <div className="flex items-start justify-between">
-          <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 bg-[#0C1629]/10">
-            <CardIcon size={16} weight="bold" className="text-[#0C1629]" />
+          <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 bg-[#1F3649]/10">
+            <CardIcon size={16} weight="bold" className="text-[#1F3649]" />
           </div>
           <span className={cn(
             'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider',
-            project.status === 'active' || project.status === 'in_progress' ? 'bg-[#0C1629]/10 text-[#0C1629]' :
+            project.status === 'active' || project.status === 'in_progress' ? 'bg-[#1F3649]/10 text-[#1F3649]' :
             project.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' :
-            'bg-[#B5C1C8]/10 text-[#B5C1C8]'
+            'bg-[#adb3b4]/10 text-[#adb3b4]'
           )}>
             {STATUS_LABEL[project.status]}
           </span>
@@ -137,30 +137,30 @@ function ProjectCard({ project, progress, goalTitle, onClick }: {
 
         {/* Title + meta */}
         <div>
-          <h3 className="font-bold text-[#0C1629] text-sm leading-snug mb-0.5">{project.title}</h3>
+          <h3 className="font-bold text-[#1F3649] text-sm leading-snug mb-0.5">{project.title}</h3>
           {goalTitle && (
-            <p className="text-[10px] text-[#B5C1C8] flex items-center gap-1">
+            <p className="text-[10px] text-[#adb3b4] flex items-center gap-1">
               <Target size={9} /> {goalTitle}
             </p>
           )}
           {project.description && (
-            <p className="text-xs text-[#727A84] leading-relaxed line-clamp-2 mt-1">{project.description}</p>
+            <p className="text-xs text-[#5a6061] leading-relaxed line-clamp-2 mt-1">{project.description}</p>
           )}
         </div>
 
         {/* Progress */}
         <div>
           <div className="flex justify-between text-[10px] font-bold mb-1.5">
-            <span className="text-[#B5C1C8] uppercase tracking-wider">Progress</span>
-            <span className="text-[#0C1629]">{progress}%</span>
+            <span className="text-[#adb3b4] uppercase tracking-wider">Progress</span>
+            <span className="text-[#1F3649]">{progress}%</span>
           </div>
-          <div className="w-full h-1.5 rounded-full overflow-hidden bg-[#0C1629]/10">
-            <div className="h-full rounded-full transition-all duration-500 bg-[#0C1629]" style={{ width: `${progress}%` }} />
+          <div className="w-full h-1.5 rounded-full overflow-hidden bg-[#1F3649]/10">
+            <div className="h-full rounded-full transition-all duration-500 bg-[#1F3649]" style={{ width: `${progress}%` }} />
           </div>
         </div>
 
         {project.target_date && (
-          <p className="text-[10px] text-[#B5C1C8] flex items-center gap-1">
+          <p className="text-[10px] text-[#adb3b4] flex items-center gap-1">
             <Calendar size={9} />
             Due {new Date(project.target_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
           </p>
@@ -176,42 +176,42 @@ function ProjectRow({ project, progress, goalTitle, onClick }: {
   goalTitle: string | null
   onClick: () => void
 }) {
-  const color = project.color || '#0C1629'
+  const color = project.color || '#1F3649'
   return (
     <div onClick={onClick} className="flex items-center gap-4 px-5 py-4 bg-white card group hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 cursor-pointer">
       <div className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0" style={{ backgroundColor: color + '15' }}>
         <Kanban size={18} weight="bold" style={{ color }} />
       </div>
       <div className="flex-1 min-w-0">
-        <h4 className="text-sm font-bold text-[#0C1629] leading-snug">{project.title}</h4>
+        <h4 className="text-sm font-bold text-[#1F3649] leading-snug">{project.title}</h4>
         <div className="flex items-center gap-2 mt-0.5 flex-wrap">
           {goalTitle && (
-            <span className="text-[10px] font-bold text-[#727A84] uppercase tracking-wider flex items-center gap-1">
+            <span className="text-[10px] font-bold text-[#5a6061] uppercase tracking-wider flex items-center gap-1">
               <Target size={9} />{goalTitle}
             </span>
           )}
           {project.description && (
-            <span className="text-[10px] text-[#B5C1C8] truncate max-w-[200px]">{project.description}</span>
+            <span className="text-[10px] text-[#adb3b4] truncate max-w-[200px]">{project.description}</span>
           )}
         </div>
       </div>
       <div className="hidden sm:flex items-center gap-2 shrink-0 w-32">
-        <div className="flex-1 h-1.5 bg-[#F0F3F3] rounded-full overflow-hidden">
+        <div className="flex-1 h-1.5 bg-[#f2f4f4] rounded-full overflow-hidden">
           <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, backgroundColor: color }} />
         </div>
-        <span className="text-[10px] font-bold text-[#B5C1C8] w-8 text-right">{progress}%</span>
+        <span className="text-[10px] font-bold text-[#adb3b4] w-8 text-right">{progress}%</span>
       </div>
       {project.target_date && (
-        <span className="hidden lg:flex items-center gap-1 text-[10px] font-semibold text-[#B5C1C8] shrink-0">
+        <span className="hidden lg:flex items-center gap-1 text-[10px] font-semibold text-[#adb3b4] shrink-0">
           <Calendar size={10} />
           {new Date(project.target_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
         </span>
       )}
       <span className={cn(
         'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shrink-0',
-        project.status === 'active' || project.status === 'in_progress' ? 'bg-[#0C1629]/10 text-[#0C1629]' :
+        project.status === 'active' || project.status === 'in_progress' ? 'bg-[#1F3649]/10 text-[#1F3649]' :
         project.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' :
-        'bg-[#B5C1C8]/10 text-[#B5C1C8]'
+        'bg-[#adb3b4]/10 text-[#adb3b4]'
       )}>
         {STATUS_LABEL[project.status]}
       </span>
@@ -223,15 +223,15 @@ function NewInitiativeCard({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="group flex flex-col items-center justify-center bg-white/60 card min-h-[220px] !border-2 !border-dashed !border-[#B5C1C8]/30 hover:bg-white hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 cursor-pointer"
+      className="group flex flex-col items-center justify-center bg-white/60 card min-h-[220px] !border-2 !border-dashed !border-[#adb3b4]/30 hover:bg-white hover:shadow-[0_20px_40px_rgba(7,33,51,0.05)] transition-all duration-300 cursor-pointer"
     >
-      <div className="w-12 h-12 rounded-full bg-[#F0F3F3] flex items-center justify-center group-hover:bg-[#0C1629]/10 transition-colors mb-3">
-        <Plus size={22} weight="bold" className="text-[#727A84] group-hover:text-[#0C1629] transition-colors" />
+      <div className="w-12 h-12 rounded-full bg-[#f2f4f4] flex items-center justify-center group-hover:bg-[#1F3649]/10 transition-colors mb-3">
+        <Plus size={22} weight="bold" className="text-[#5a6061] group-hover:text-[#1F3649] transition-colors" />
       </div>
-      <span className="text-sm font-bold text-[#0C1629] group-hover:text-[#0C1629] transition-colors">
+      <span className="text-sm font-bold text-[#1F3649] group-hover:text-[#1F3649] transition-colors">
         Launch New Initiative
       </span>
-      <p className="text-xs text-[#B5C1C8] mt-1 max-w-[200px] text-center">
+      <p className="text-xs text-[#adb3b4] mt-1 max-w-[200px] text-center">
         Create a structured space for your next breakthrough idea.
       </p>
     </button>
@@ -283,7 +283,7 @@ export default function ProjectsOverview() {
           title: p.title,
           description: p.description ?? undefined,
           tag: goalMap[p.goal_id ?? '']?.title,
-          accentColor: p.color || '#0C1629',
+          accentColor: p.color || '#1F3649',
           priority: 'medium' as const,
         })),
     },
@@ -297,7 +297,7 @@ export default function ProjectsOverview() {
           title: p.title,
           description: p.description ?? undefined,
           tag: goalMap[p.goal_id ?? '']?.title,
-          accentColor: p.color || '#0C1629',
+          accentColor: p.color || '#1F3649',
           priority: 'low' as const,
         })),
     },
@@ -310,7 +310,7 @@ export default function ProjectsOverview() {
           id: p.id,
           title: p.title,
           description: p.description ?? undefined,
-          accentColor: p.color || '#0C1629',
+          accentColor: p.color || '#1F3649',
           priority: 'low' as const,
         })),
     },
@@ -366,11 +366,11 @@ export default function ProjectsOverview() {
       {/* Sort bar — grid + list */}
       {view !== 'board' && (
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-[#0C1629]">
+          <h2 className="text-sm font-bold text-[#1F3649]">
             All Projects
-            <span className="ml-2 text-xs font-semibold text-[#B5C1C8]">{projects.length}</span>
+            <span className="ml-2 text-xs font-semibold text-[#adb3b4]">{projects.length}</span>
           </h2>
-          <div className="flex items-center gap-1 text-[10px] font-bold text-[#B5C1C8]">
+          <div className="flex items-center gap-1 text-[10px] font-bold text-[#adb3b4]">
             <SortAscending size={13} />
             {(['recent', 'name', 'progress'] as const).map((s) => (
               <button
@@ -378,7 +378,7 @@ export default function ProjectsOverview() {
                 onClick={() => setSortBy(s)}
                 className={cn(
                   'px-2 py-1 rounded-md uppercase tracking-wider transition-colors cursor-pointer',
-                  sortBy === s ? 'text-[#0C1629] bg-[#0C1629]/10' : 'hover:text-[#0C1629]'
+                  sortBy === s ? 'text-[#1F3649] bg-[#1F3649]/10' : 'hover:text-[#1F3649]'
                 )}
               >
                 {s}
@@ -403,7 +403,7 @@ export default function ProjectsOverview() {
             <NewInitiativeCard onClick={() => navigate('/projects/new')} />
           </div>
           {projects.length === 0 && (
-            <div className="text-center py-16 text-sm text-[#B5C1C8]">
+            <div className="text-center py-16 text-sm text-[#adb3b4]">
               No projects yet — launch your first initiative above.
             </div>
           )}
@@ -422,7 +422,7 @@ export default function ProjectsOverview() {
             />
           ))}
           {projects.length === 0 && (
-            <div className="text-center py-16 text-sm text-[#B5C1C8]">
+            <div className="text-center py-16 text-sm text-[#adb3b4]">
               No projects yet — launch your first initiative above.
             </div>
           )}

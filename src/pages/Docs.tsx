@@ -45,12 +45,12 @@ function SectionHeader({ icon: Icon, title, description }: {
 }) {
   return (
     <div className="flex items-start gap-4 mb-8">
-      <div className="w-10 h-10 rounded-[12px] bg-[#0C1629]/8 flex items-center justify-center shrink-0 mt-0.5">
-        <Icon size={18} weight="bold" className="text-[#0C1629]" />
+      <div className="w-10 h-10 rounded-[12px] bg-[#1F3649]/8 flex items-center justify-center shrink-0 mt-0.5">
+        <Icon size={18} weight="bold" className="text-[#1F3649]" />
       </div>
       <div>
-        <h2 className="text-lg font-extrabold text-[#0C1629] tracking-tight">{title}</h2>
-        <p className="text-sm text-[#727A84] mt-0.5">{description}</p>
+        <h2 className="text-lg font-extrabold text-[#1F3649] tracking-tight">{title}</h2>
+        <p className="text-sm text-[#5a6061] mt-0.5">{description}</p>
       </div>
     </div>
   )
@@ -58,7 +58,7 @@ function SectionHeader({ icon: Icon, title, description }: {
 
 function DocSection({ children, id }: { children: React.ReactNode; id?: string }) {
   return (
-    <section id={id} className="bg-white rounded-[15px] border border-[#D6DCE0] p-8 space-y-6">
+    <section id={id} className="bg-white rounded-[15px] border border-[#ebeeef] p-8 space-y-6">
       {children}
     </section>
   )
@@ -66,21 +66,21 @@ function DocSection({ children, id }: { children: React.ReactNode; id?: string }
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-[10px] font-black uppercase tracking-widest text-[#B5C1C8]">{children}</span>
+    <span className="text-[10px] font-black uppercase tracking-widest text-[#adb3b4]">{children}</span>
   )
 }
 
 function UsageNote({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs text-[#727A84] bg-[#F0F3F3] rounded-[10px] px-4 py-3 leading-relaxed">
-      <span className="font-bold text-[#0C1629]">Used in: </span>{children}
+    <p className="text-xs text-[#5a6061] bg-[#f2f4f4] rounded-[10px] px-4 py-3 leading-relaxed">
+      <span className="font-bold text-[#1F3649]">Used in: </span>{children}
     </p>
   )
 }
 
 function Demo({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('rounded-[12px] border border-[#D6DCE0] bg-[#f8fafa] p-6 flex flex-wrap items-center gap-4', className)}>
+    <div className={cn('rounded-[12px] border border-[#ebeeef] bg-[#f8fafa] p-6 flex flex-wrap items-center gap-4', className)}>
       {children}
     </div>
   )
@@ -94,13 +94,13 @@ function ColourSwatch({ hex, name, role }: { hex: string; name: string; role: st
   return (
     <div className="space-y-2">
       <div
-        className="h-14 w-full rounded-[10px] border border-[#D6DCE0]"
+        className="h-14 w-full rounded-[10px] border border-[#ebeeef]"
         style={{ backgroundColor: hex }}
       />
       <div>
-        <p className="text-xs font-bold text-[#0C1629]">{name}</p>
-        <p className="text-[10px] font-mono text-[#B5C1C8]">{hex}</p>
-        <p className="text-[10px] text-[#727A84]">{role}</p>
+        <p className="text-xs font-bold text-[#1F3649]">{name}</p>
+        <p className="text-[10px] font-mono text-[#adb3b4]">{hex}</p>
+        <p className="text-[10px] text-[#5a6061]">{role}</p>
       </div>
     </div>
   )
@@ -119,30 +119,30 @@ function DesignSystemTab() {
             <Label>Named Palette — 6 Core Swatches</Label>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 mt-3">
               <ColourSwatch hex="#FEFEFE" name="White as Heaven" role="Page & card backgrounds" />
-              <ColourSwatch hex="#F0F3F3" name="Zappy Zebra" role="Inputs, muted surfaces" />
-              <ColourSwatch hex="#D6DCE0" name="Hidden Creek" role="Borders, dividers" />
-              <ColourSwatch hex="#B5C1C8" name="Kinder" role="Faint text, placeholders" />
-              <ColourSwatch hex="#727A84" name="Deep Shale" role="Secondary & muted text" />
-              <ColourSwatch hex="#0C1629" name="Liberty Blue" role="Primary brand, headings" />
+              <ColourSwatch hex="#f2f4f4" name="Zappy Zebra" role="Inputs, muted surfaces" />
+              <ColourSwatch hex="#ebeeef" name="Hidden Creek" role="Borders, dividers" />
+              <ColourSwatch hex="#adb3b4" name="Kinder" role="Faint text, placeholders" />
+              <ColourSwatch hex="#5a6061" name="Deep Shale" role="Secondary & muted text" />
+              <ColourSwatch hex="#1F3649" name="Liberty Blue" role="Primary brand, headings" />
             </div>
           </div>
           <div>
             <Label>Semantic Tokens</Label>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 mt-3">
-              <ColourSwatch hex="#0C1629" name="Primary" role="Buttons, links, active states" />
+              <ColourSwatch hex="#1F3649" name="Primary" role="Buttons, links, active states" />
               <ColourSwatch hex="#1E2A3A" name="Primary Hover" role="Hover state of primary" />
               <ColourSwatch hex="#FEFEFE" name="Background" role="Page background" />
               <ColourSwatch hex="#FEFEFE" name="Surface" role="Card backgrounds" />
-              <ColourSwatch hex="#F0F3F3" name="Muted" role="Inputs, secondary BG" />
+              <ColourSwatch hex="#f2f4f4" name="Muted" role="Inputs, secondary BG" />
             </div>
           </div>
           <div>
             <Label>Text Scale</Label>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 mt-3">
-              <ColourSwatch hex="#0C1629" name="On Surface" role="Headings, body text" />
-              <ColourSwatch hex="#727A84" name="Secondary" role="Supporting text" />
-              <ColourSwatch hex="#B5C1C8" name="Faint" role="Placeholders, disabled" />
-              <ColourSwatch hex="#727A84" name="Variant" role="Nav labels, metadata" />
+              <ColourSwatch hex="#1F3649" name="On Surface" role="Headings, body text" />
+              <ColourSwatch hex="#5a6061" name="Secondary" role="Supporting text" />
+              <ColourSwatch hex="#adb3b4" name="Faint" role="Placeholders, disabled" />
+              <ColourSwatch hex="#5a6061" name="Variant" role="Nav labels, metadata" />
             </div>
           </div>
           <div>
@@ -158,20 +158,20 @@ function DesignSystemTab() {
           <div>
             <Label>Borders & Containers</Label>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 mt-3">
-              <ColourSwatch hex="#D6DCE0" name="Card Border" role="Default card border" />
-              <ColourSwatch hex="#D6DCE0" name="Border Light" role="Dividers, subtle" />
-              <ColourSwatch hex="#D6DCE0" name="Container High" role="Hover borders" />
-              <ColourSwatch hex="#F0F3F3" name="Container Low" role="Section fills" />
+              <ColourSwatch hex="#ebeeef" name="Card Border" role="Default card border" />
+              <ColourSwatch hex="#ebeeef" name="Border Light" role="Dividers, subtle" />
+              <ColourSwatch hex="#ebeeef" name="Container High" role="Hover borders" />
+              <ColourSwatch hex="#f2f4f4" name="Container Low" role="Section fills" />
             </div>
           </div>
         </div>
 
         <Demo>
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-[#0C1629]" />
-            <span className="text-xs font-bold text-[#0C1629]">Primary</span>
+            <div className="w-5 h-5 rounded-full bg-[#1F3649]" />
+            <span className="text-xs font-bold text-[#1F3649]">Primary</span>
           </div>
-          <div className="w-px h-8 bg-[#D6DCE0]" />
+          <div className="w-px h-8 bg-[#ebeeef]" />
           <span className="text-xs text-[#22c55e] font-bold bg-[#22c55e]/10 px-3 py-1 rounded-full">Completed</span>
           <span className="text-xs text-[#f59e0b] font-bold bg-[#f59e0b]/10 px-3 py-1 rounded-full">In Progress</span>
           <span className="text-xs text-[#9f403d] font-bold bg-[#9f403d]/10 px-3 py-1 rounded-full">Destructive</span>
@@ -188,10 +188,10 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Satoshi — Headings</Label>
             <Demo className="flex-col items-start gap-3">
-              <p className="text-3xl font-extrabold text-[#0C1629]" style={{ fontFamily: 'Satoshi, system-ui' }}>Life Goals</p>
-              <p className="text-2xl font-extrabold text-[#0C1629]" style={{ fontFamily: 'Satoshi, system-ui' }}>Project Overview</p>
-              <p className="text-xl font-bold text-[#0C1629]" style={{ fontFamily: 'Satoshi, system-ui' }}>Weekly Journal Entry</p>
-              <p className="text-base font-bold text-[#0C1629]" style={{ fontFamily: 'Satoshi, system-ui' }}>Section heading</p>
+              <p className="text-3xl font-extrabold text-[#1F3649]" style={{ fontFamily: 'Satoshi, system-ui' }}>Life Goals</p>
+              <p className="text-2xl font-extrabold text-[#1F3649]" style={{ fontFamily: 'Satoshi, system-ui' }}>Project Overview</p>
+              <p className="text-xl font-bold text-[#1F3649]" style={{ fontFamily: 'Satoshi, system-ui' }}>Weekly Journal Entry</p>
+              <p className="text-base font-bold text-[#1F3649]" style={{ fontFamily: 'Satoshi, system-ui' }}>Section heading</p>
             </Demo>
             <UsageNote>Page titles (Goals, Dashboard, Projects hero), section headings, goal titles in GoalDetailView header</UsageNote>
           </div>
@@ -199,10 +199,10 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>DM Sans — Body & UI</Label>
             <Demo className="flex-col items-start gap-2">
-              <p className="text-sm text-[#0C1629]">Standard body text — task titles, descriptions, card content.</p>
-              <p className="text-xs text-[#727A84]">Secondary text — metadata, supporting labels, timestamps.</p>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#B5C1C8]">Section Label</p>
-              <p className="text-[10px] font-bold text-[#B5C1C8]">Sidebar section header — REFLECTION, PRODUCTIVITY, SYSTEM</p>
+              <p className="text-sm text-[#1F3649]">Standard body text — task titles, descriptions, card content.</p>
+              <p className="text-xs text-[#5a6061]">Secondary text — metadata, supporting labels, timestamps.</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#adb3b4]">Section Label</p>
+              <p className="text-[10px] font-bold text-[#adb3b4]">Sidebar section header — REFLECTION, PRODUCTIVITY, SYSTEM</p>
             </Demo>
             <UsageNote>Every label, input, button, dropdown, nav item, and body paragraph across the entire app</UsageNote>
           </div>
@@ -210,10 +210,10 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>JetBrains Mono — Code & Data</Label>
             <Demo>
-              <span className="font-mono text-2xl font-bold text-[#0C1629]">00:42:17</span>
-              <span className="font-mono text-sm text-[#727A84]">00:00</span>
-              <span className="font-mono text-xs text-[#B5C1C8]">ID: LOG-042</span>
-              <span className="font-mono text-xs bg-[#0C1629]/8 text-[#0C1629] px-2 py-1 rounded-md">#0C1629</span>
+              <span className="font-mono text-2xl font-bold text-[#1F3649]">00:42:17</span>
+              <span className="font-mono text-sm text-[#5a6061]">00:00</span>
+              <span className="font-mono text-xs text-[#adb3b4]">ID: LOG-042</span>
+              <span className="font-mono text-xs bg-[#1F3649]/8 text-[#1F3649] px-2 py-1 rounded-md">#1F3649</span>
             </Demo>
             <UsageNote>Time tracker display (GoalDetailView), task IDs, hex colour codes, timer values</UsageNote>
           </div>
@@ -228,14 +228,14 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Primary</Label>
             <Demo>
-              <button className="bg-[#0C1629] text-white text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:opacity-90 transition-all cursor-pointer">
+              <button className="bg-[#1F3649] text-white text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:opacity-90 transition-all cursor-pointer">
                 Mark Complete
               </button>
-              <button className="bg-[#0C1629] text-white text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:opacity-90 transition-all cursor-pointer flex items-center gap-2">
+              <button className="bg-[#1F3649] text-white text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:opacity-90 transition-all cursor-pointer flex items-center gap-2">
                 <Target size={14} />
                 Set a New Goal
               </button>
-              <button className="bg-[#0C1629] text-white text-sm font-semibold px-5 py-2.5 rounded-[15px] opacity-40 cursor-not-allowed">
+              <button className="bg-[#1F3649] text-white text-sm font-semibold px-5 py-2.5 rounded-[15px] opacity-40 cursor-not-allowed">
                 Disabled
               </button>
             </Demo>
@@ -245,10 +245,10 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Secondary (Muted)</Label>
             <Demo>
-              <button className="bg-[#F0F3F3] text-[#0C1629] text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:bg-[#F0F3F3] transition-colors cursor-pointer">
+              <button className="bg-[#f2f4f4] text-[#1F3649] text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:bg-[#f2f4f4] transition-colors cursor-pointer">
                 Cancel
               </button>
-              <button className="bg-[#F0F3F3] text-[#727A84] text-sm font-semibold px-4 py-2 rounded-[12px] hover:bg-[#D6DCE0] transition-colors cursor-pointer flex items-center gap-1.5">
+              <button className="bg-[#f2f4f4] text-[#5a6061] text-sm font-semibold px-4 py-2 rounded-[12px] hover:bg-[#ebeeef] transition-colors cursor-pointer flex items-center gap-1.5">
                 <BookOpen size={13} />
                 Send to Journal
               </button>
@@ -259,7 +259,7 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Destructive</Label>
             <Demo>
-              <button className="bg-[#F0F3F3] text-[#9f403d] text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:bg-[#fce8e8] transition-colors cursor-pointer">
+              <button className="bg-[#f2f4f4] text-[#9f403d] text-sm font-semibold px-5 py-2.5 rounded-[15px] hover:bg-[#fce8e8] transition-colors cursor-pointer">
                 Delete Goal
               </button>
               <button className="text-[#9f403d]/60 text-sm font-semibold hover:text-[#9f403d] transition-colors cursor-pointer flex items-center gap-1.5">
@@ -272,13 +272,13 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Ghost / Text</Label>
             <Demo>
-              <button className="text-[#727A84] text-sm font-semibold hover:text-[#0C1629] transition-colors cursor-pointer">
+              <button className="text-[#5a6061] text-sm font-semibold hover:text-[#1F3649] transition-colors cursor-pointer">
                 Back to Projects
               </button>
-              <button className="text-xs font-semibold text-[#0C1629] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
+              <button className="text-xs font-semibold text-[#1F3649] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
                 View Goal →
               </button>
-              <button className="text-xs text-[#0C1629] font-semibold hover:underline cursor-pointer">+ Add</button>
+              <button className="text-xs text-[#1F3649] font-semibold hover:underline cursor-pointer">+ Add</button>
             </Demo>
             <UsageNote>Back navigation buttons, "View Goal / View Project" links in TaskEdit sidebar, attachment "+ Add" links</UsageNote>
           </div>
@@ -293,15 +293,15 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Default Card</Label>
             <Demo className="items-start">
-              <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-5 w-64">
-                <p className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider mb-1">CAREER</p>
-                <h4 className="text-sm font-bold text-[#0C1629] mb-1">Launch Logbird to first 100 paying users</h4>
-                <p className="text-xs text-[#727A84] line-clamp-2">Turn Logbird from a personal tool into a real SaaS.</p>
+              <div className="bg-white rounded-[15px] border border-[#ebeeef] p-5 w-64">
+                <p className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider mb-1">CAREER</p>
+                <h4 className="text-sm font-bold text-[#1F3649] mb-1">Launch Logbird to first 100 paying users</h4>
+                <p className="text-xs text-[#5a6061] line-clamp-2">Turn Logbird from a personal tool into a real SaaS.</p>
                 <div className="mt-3 flex items-center gap-2">
-                  <div className="flex-1 h-1.5 bg-[#F0F3F3] rounded-full">
-                    <div className="h-full w-2/5 rounded-full bg-[#0C1629]" />
+                  <div className="flex-1 h-1.5 bg-[#f2f4f4] rounded-full">
+                    <div className="h-full w-2/5 rounded-full bg-[#1F3649]" />
                   </div>
-                  <span className="text-[10px] font-bold text-[#0C1629]">40%</span>
+                  <span className="text-[10px] font-bold text-[#1F3649]">40%</span>
                 </div>
               </div>
             </Demo>
@@ -311,9 +311,9 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Card Hover State</Label>
             <Demo>
-              <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-5 w-64 shadow-[0_20px_40px_rgba(7,33,51,0.05)] cursor-pointer">
-                <p className="text-xs font-bold text-[#0C1629]">Hovered card</p>
-                <p className="text-xs text-[#727A84]">shadow-[0_20px_40px_rgba(7,33,51,0.05)]</p>
+              <div className="bg-white rounded-[15px] border border-[#ebeeef] p-5 w-64 shadow-[0_20px_40px_rgba(7,33,51,0.05)] cursor-pointer">
+                <p className="text-xs font-bold text-[#1F3649]">Hovered card</p>
+                <p className="text-xs text-[#5a6061]">shadow-[0_20px_40px_rgba(7,33,51,0.05)]</p>
               </div>
             </Demo>
             <UsageNote>Applied on hover via Tailwind group-hover — goal cards, project cards, task rows</UsageNote>
@@ -322,7 +322,7 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Hero / Banner Card</Label>
             <Demo className="p-0 overflow-hidden">
-              <div className="relative bg-[#0C1629] rounded-[12px] overflow-hidden px-8 py-6 w-full">
+              <div className="relative bg-[#1F3649] rounded-[12px] overflow-hidden px-8 py-6 w-full">
                 <div className="absolute inset-0 opacity-[0.07]">
                   <svg className="absolute inset-0 w-full h-full"><defs><pattern id="ds-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" /></pattern></defs><rect width="100%" height="100%" fill="url(#ds-grid)" /></svg>
                 </div>
@@ -347,8 +347,8 @@ function DesignSystemTab() {
             <Demo>
               <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#22c55e]/10 text-[#16a34a]">Completed</span>
               <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#f59e0b]/10 text-[#b45309]">In Progress</span>
-              <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#B5C1C8]/10 text-[#727A84]">Archived</span>
-              <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#0C1629]/10 text-[#0C1629]">Active</span>
+              <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#adb3b4]/10 text-[#5a6061]">Archived</span>
+              <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#1F3649]/10 text-[#1F3649]">Active</span>
             </Demo>
             <UsageNote>Goal status (GoalDetailView header), project status (ProjectDetail hero), task status in TaskEdit sidebar</UsageNote>
           </div>
@@ -358,8 +358,8 @@ function DesignSystemTab() {
             <Demo>
               <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#dc2626]/10 text-[#dc2626]">Urgent</span>
               <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#f59e0b]/10 text-[#f59e0b]">High</span>
-              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#0C1629]/10 text-[#0C1629]">Normal</span>
-              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#B5C1C8]/10 text-[#727A84]">Low</span>
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#1F3649]/10 text-[#1F3649]">Normal</span>
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#adb3b4]/10 text-[#5a6061]">Low</span>
             </Demo>
             <UsageNote>Task rows in ProjectDetail, TaskEdit sidebar summary, Tasks list page</UsageNote>
           </div>
@@ -369,7 +369,7 @@ function DesignSystemTab() {
             <Demo>
               {[
                 { name: 'Health', color: '#22c55e' },
-                { name: 'Career', color: '#0C1629' },
+                { name: 'Career', color: '#1F3649' },
                 { name: 'Finance', color: '#f59e0b' },
                 { name: 'Relationships', color: '#ec4899' },
                 { name: 'Personal Growth', color: '#8b5cf6' },
@@ -394,7 +394,7 @@ function DesignSystemTab() {
             <Label>Text Input</Label>
             <Demo>
               <input
-                className="w-64 bg-white rounded-[15px] border border-[#D6DCE0] px-4 py-2.5 text-sm text-[#0C1629] placeholder-[#B5C1C8] outline-none focus:ring-2 focus:ring-[#0C1629]/10 focus:border-[#0C1629]/20 transition-shadow"
+                className="w-64 bg-white rounded-[15px] border border-[#ebeeef] px-4 py-2.5 text-sm text-[#1F3649] placeholder-[#adb3b4] outline-none focus:ring-2 focus:ring-[#1F3649]/10 focus:border-[#1F3649]/20 transition-shadow"
                 placeholder="Add a new task and press Enter..."
               />
             </Demo>
@@ -405,7 +405,7 @@ function DesignSystemTab() {
             <Label>Textarea</Label>
             <Demo>
               <textarea
-                className="w-full bg-white rounded-[15px] border border-[#D6DCE0] px-4 py-3 text-sm text-[#0C1629] placeholder-[#B5C1C8] outline-none focus:ring-2 focus:ring-[#0C1629]/10 resize-none h-24 transition-shadow"
+                className="w-full bg-white rounded-[15px] border border-[#ebeeef] px-4 py-3 text-sm text-[#1F3649] placeholder-[#adb3b4] outline-none focus:ring-2 focus:ring-[#1F3649]/10 resize-none h-24 transition-shadow"
                 placeholder="Add a comment, note, or reflection..."
               />
             </Demo>
@@ -415,7 +415,7 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Select / Dropdown</Label>
             <Demo>
-              <select className="bg-white rounded-[15px] border border-[#D6DCE0] px-4 py-2.5 text-sm text-[#0C1629] outline-none focus:ring-2 focus:ring-[#0C1629]/10 cursor-pointer">
+              <select className="bg-white rounded-[15px] border border-[#ebeeef] px-4 py-2.5 text-sm text-[#1F3649] outline-none focus:ring-2 focus:ring-[#1F3649]/10 cursor-pointer">
                 <option>No goal linked</option>
                 <option>Get shredded for summer</option>
                 <option>Launch Logbird</option>
@@ -433,19 +433,19 @@ function DesignSystemTab() {
         <div className="space-y-5">
           <div className="space-y-2">
             <Label>Page Container</Label>
-            <div className="bg-[#f8fafa] rounded-[10px] border border-[#D6DCE0] p-4 font-mono text-xs text-[#727A84] space-y-1">
-              <p><span className="text-[#0C1629] font-bold">max-w</span>: 1400px (–– sidebar-width)</p>
-              <p><span className="text-[#0C1629] font-bold">px</span>: 16px mobile → 48px desktop</p>
-              <p><span className="text-[#0C1629] font-bold">pb</span>: 96px (space for bottom mobile nav)</p>
+            <div className="bg-[#f8fafa] rounded-[10px] border border-[#ebeeef] p-4 font-mono text-xs text-[#5a6061] space-y-1">
+              <p><span className="text-[#1F3649] font-bold">max-w</span>: 1400px (–– sidebar-width)</p>
+              <p><span className="text-[#1F3649] font-bold">px</span>: 16px mobile → 48px desktop</p>
+              <p><span className="text-[#1F3649] font-bold">pb</span>: 96px (space for bottom mobile nav)</p>
             </div>
           </div>
 
           <div className="space-y-2">
             <Label>Sidebar</Label>
-            <div className="bg-[#f8fafa] rounded-[10px] border border-[#D6DCE0] p-4 font-mono text-xs text-[#727A84] space-y-1">
-              <p><span className="text-[#0C1629] font-bold">width</span>: 288px (–– sidebar-width)</p>
-              <p><span className="text-[#0C1629] font-bold">bg</span>: white · border-right: 1px solid #D6DCE0</p>
-              <p><span className="text-[#0C1629] font-bold">py</span>: 32px · px: 16px · sticky top-0</p>
+            <div className="bg-[#f8fafa] rounded-[10px] border border-[#ebeeef] p-4 font-mono text-xs text-[#5a6061] space-y-1">
+              <p><span className="text-[#1F3649] font-bold">width</span>: 288px (–– sidebar-width)</p>
+              <p><span className="text-[#1F3649] font-bold">bg</span>: white · border-right: 1px solid #ebeeef</p>
+              <p><span className="text-[#1F3649] font-bold">py</span>: 32px · px: 16px · sticky top-0</p>
             </div>
           </div>
 
@@ -456,7 +456,7 @@ function DesignSystemTab() {
               backgroundSize: '20px 20px',
               backgroundPosition: '10px 10px',
             }}>
-              <p className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">
+              <p className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">
                 Dot grid — main content area background
               </p>
             </Demo>
@@ -467,13 +467,13 @@ function DesignSystemTab() {
             <Label>Two-Column Detail Layout</Label>
             <Demo className="items-start p-3">
               <div className="flex gap-3 w-full">
-                <div className="flex-1 bg-white border border-[#D6DCE0] rounded-[10px] p-3 text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">
+                <div className="flex-1 bg-white border border-[#ebeeef] rounded-[10px] p-3 text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">
                   Left pane — col-span-8<br />
-                  <span className="font-normal normal-case text-[#727A84]">Description, tasks, activity</span>
+                  <span className="font-normal normal-case text-[#5a6061]">Description, tasks, activity</span>
                 </div>
-                <div className="w-1/3 bg-white border border-[#D6DCE0] rounded-[10px] p-3 text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">
+                <div className="w-1/3 bg-white border border-[#ebeeef] rounded-[10px] p-3 text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">
                   Right pane — col-span-4<br />
-                  <span className="font-normal normal-case text-[#727A84]">Timer, project link, metadata</span>
+                  <span className="font-normal normal-case text-[#5a6061]">Timer, project link, metadata</span>
                 </div>
               </div>
             </Demo>
@@ -491,31 +491,31 @@ function DesignSystemTab() {
             <Label>Sidebar Nav Item</Label>
             <Demo className="flex-col items-start gap-2">
               {/* Active */}
-              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] bg-[#F0F3F3] text-[#0C1629] font-bold w-56 cursor-pointer">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] bg-[#f2f4f4] text-[#1F3649] font-bold w-56 cursor-pointer">
                 <Target size={20} weight="bold" className="shrink-0" />
                 <span className="text-base tracking-tight">Goals</span>
               </div>
               {/* Inactive */}
-              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] text-[#727A84] font-semibold hover:bg-[#0C1629]/[0.03] w-56 cursor-pointer">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] text-[#5a6061] font-semibold hover:bg-[#1F3649]/[0.03] w-56 cursor-pointer">
                 <BookOpen size={20} weight="regular" className="shrink-0" />
                 <span className="text-base tracking-tight">Journal</span>
               </div>
-              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] text-[#727A84] font-semibold hover:bg-[#0C1629]/[0.03] w-56 cursor-pointer">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-[15px] text-[#5a6061] font-semibold hover:bg-[#1F3649]/[0.03] w-56 cursor-pointer">
                 <Kanban size={20} weight="regular" className="shrink-0" />
                 <span className="text-base tracking-tight">Projects</span>
               </div>
             </Demo>
-            <UsageNote>Left sidebar — active: bg-[#F0F3F3] + bold weight. Inactive: text-[#727A84] + regular weight + hover:bg-[#0C1629]/3</UsageNote>
+            <UsageNote>Left sidebar — active: bg-[#f2f4f4] + bold weight. Inactive: text-[#5a6061] + regular weight + hover:bg-[#1F3649]/3</UsageNote>
           </div>
 
           <div className="space-y-3">
             <Label>Page Tab Bar (header)</Label>
             <Demo>
-              <div className="flex items-center gap-1 bg-[#F0F3F3] rounded-[10px] p-1">
+              <div className="flex items-center gap-1 bg-[#f2f4f4] rounded-[10px] p-1">
                 {['Overview', 'All Entries', 'Calendar', 'Templates'].map((tab, i) => (
                   <button key={tab} className={cn(
                     'text-xs font-bold px-3 py-1.5 rounded-[8px] transition-all cursor-pointer',
-                    i === 0 ? 'bg-white text-[#0C1629] shadow-sm' : 'text-[#727A84]'
+                    i === 0 ? 'bg-white text-[#1F3649] shadow-sm' : 'text-[#5a6061]'
                   )}>
                     {tab}
                   </button>
@@ -528,12 +528,12 @@ function DesignSystemTab() {
           <div className="space-y-3">
             <Label>Breadcrumb</Label>
             <Demo>
-              <div className="flex items-center gap-1.5 text-sm text-[#727A84]">
-                <button className="hover:text-[#0C1629] cursor-pointer flex items-center gap-1 font-medium">
+              <div className="flex items-center gap-1.5 text-sm text-[#5a6061]">
+                <button className="hover:text-[#1F3649] cursor-pointer flex items-center gap-1 font-medium">
                   ‹ Goals
                 </button>
                 <span className="opacity-40">›</span>
-                <span className="text-[#0C1629] font-semibold">Launch Logbird to first 100 paying users</span>
+                <span className="text-[#1F3649] font-semibold">Launch Logbird to first 100 paying users</span>
               </div>
             </Demo>
             <UsageNote>GoalDetailView header — "‹ Goals › [goal title]". Same pattern in ProjectDetail "← Back to Projects"</UsageNote>
@@ -558,8 +558,8 @@ function DesignSystemTab() {
                 { size: 22, label: '22 — task toggle' },
               ].map(({ size, label }) => (
                 <div key={size} className="flex flex-col items-center gap-1">
-                  <Target size={size} weight="bold" className="text-[#0C1629]" />
-                  <span className="text-[9px] font-mono text-[#B5C1C8] whitespace-nowrap">{label}</span>
+                  <Target size={size} weight="bold" className="text-[#1F3649]" />
+                  <span className="text-[9px] font-mono text-[#adb3b4] whitespace-nowrap">{label}</span>
                 </div>
               ))}
             </Demo>
@@ -569,16 +569,16 @@ function DesignSystemTab() {
             <Label>Weight Convention</Label>
             <Demo>
               <div className="flex flex-col items-center gap-1">
-                <Target size={20} weight="regular" className="text-[#727A84]" />
-                <span className="text-[9px] font-mono text-[#B5C1C8]">regular — inactive</span>
+                <Target size={20} weight="regular" className="text-[#5a6061]" />
+                <span className="text-[9px] font-mono text-[#adb3b4]">regular — inactive</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <Target size={20} weight="bold" className="text-[#0C1629]" />
-                <span className="text-[9px] font-mono text-[#B5C1C8]">bold — active</span>
+                <Target size={20} weight="bold" className="text-[#1F3649]" />
+                <span className="text-[9px] font-mono text-[#adb3b4]">bold — active</span>
               </div>
               <div className="flex flex-col items-center gap-1">
                 <CheckSquare size={20} weight="fill" className="text-[#22c55e]" />
-                <span className="text-[9px] font-mono text-[#B5C1C8]">fill — completed state</span>
+                <span className="text-[9px] font-mono text-[#adb3b4]">fill — completed state</span>
               </div>
             </Demo>
             <UsageNote>Sidebar uses regular/bold toggle based on active state. Task checkboxes use fill when done. Badges use fill for status icons.</UsageNote>
@@ -596,13 +596,13 @@ function DesignSystemTab() {
 
 function AboutFeatureCard({ icon: Icon, title, desc }: { icon: React.ElementType; title: string; desc: string }) {
   return (
-    <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-5 flex gap-4">
-      <div className="w-9 h-9 rounded-[10px] bg-[#0C1629]/8 flex items-center justify-center shrink-0 mt-0.5">
-        <Icon size={17} weight="bold" className="text-[#0C1629]" />
+    <div className="bg-white rounded-[15px] border border-[#ebeeef] p-5 flex gap-4">
+      <div className="w-9 h-9 rounded-[10px] bg-[#1F3649]/8 flex items-center justify-center shrink-0 mt-0.5">
+        <Icon size={17} weight="bold" className="text-[#1F3649]" />
       </div>
       <div>
-        <p className="text-sm font-bold text-[#0C1629]">{title}</p>
-        <p className="text-sm text-[#727A84] mt-1 leading-relaxed">{desc}</p>
+        <p className="text-sm font-bold text-[#1F3649]">{title}</p>
+        <p className="text-sm text-[#5a6061] mt-1 leading-relaxed">{desc}</p>
       </div>
     </div>
   )
@@ -611,12 +611,12 @@ function AboutFeatureCard({ icon: Icon, title, desc }: { icon: React.ElementType
 function AboutPrinciple({ number, title, desc }: { number: string; title: string; desc: string }) {
   return (
     <div className="flex gap-5">
-      <div className="w-9 h-9 rounded-full border-2 border-[#D6DCE0] flex items-center justify-center shrink-0 mt-0.5">
-        <span className="text-xs font-black text-[#B5C1C8]">{number}</span>
+      <div className="w-9 h-9 rounded-full border-2 border-[#ebeeef] flex items-center justify-center shrink-0 mt-0.5">
+        <span className="text-xs font-black text-[#adb3b4]">{number}</span>
       </div>
-      <div className="pb-8 border-b border-[#D6DCE0] flex-1 last:border-0 last:pb-0">
-        <p className="text-sm font-bold text-[#0C1629]">{title}</p>
-        <p className="text-sm text-[#727A84] mt-1.5 leading-relaxed">{desc}</p>
+      <div className="pb-8 border-b border-[#ebeeef] flex-1 last:border-0 last:pb-0">
+        <p className="text-sm font-bold text-[#1F3649]">{title}</p>
+        <p className="text-sm text-[#5a6061] mt-1.5 leading-relaxed">{desc}</p>
       </div>
     </div>
   )
@@ -627,7 +627,7 @@ function WhatIsLogbirdTab() {
     <div className="space-y-6 max-w-4xl">
 
       {/* Hero */}
-      <div className="bg-[#0C1629] rounded-[15px] p-8 md:p-10">
+      <div className="bg-[#1F3649] rounded-[15px] p-8 md:p-10">
         <p className="text-xs font-black uppercase tracking-widest text-white/40 mb-4">The idea</p>
         <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-snug tracking-tight mb-5">
           A closed-loop personal<br />operating system.
@@ -647,27 +647,27 @@ function WhatIsLogbirdTab() {
       </div>
 
       {/* The problem */}
-      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+      <div className="bg-white rounded-[15px] border border-[#ebeeef] p-8">
         <SectionHeader
           icon={Lightbulb}
           title="The problem it solves"
           description="Why Logbird exists and what gap it fills."
         />
-        <div className="space-y-4 text-sm text-[#727A84] leading-relaxed">
+        <div className="space-y-4 text-sm text-[#5a6061] leading-relaxed">
           <p>
             People use a dozen different apps — a notes app for journalling, a task manager for to-dos, a spreadsheet for goals, a habit tracker for routines. None of them talk to each other. You have data everywhere and clarity nowhere.
           </p>
           <p>
             The deeper problem: even with the right tools, there's no feedback loop. You journal but never connect it to your goals. You complete tasks but never know if they moved the needle. You set goals but never review whether your days are actually serving them.
           </p>
-          <p className="font-semibold text-[#0C1629]">
+          <p className="font-semibold text-[#1F3649]">
             Logbird closes the loop. Everything connects. Every feature feeds the next.
           </p>
         </div>
       </div>
 
       {/* 3 Sections */}
-      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+      <div className="bg-white rounded-[15px] border border-[#ebeeef] p-8">
         <SectionHeader
           icon={SquaresFour}
           title="Three sections. One system."
@@ -694,18 +694,18 @@ function WhatIsLogbirdTab() {
               features: ['Tasks', 'Projects', 'Timeboxing', 'Weekly Planning (coming)'],
             },
           ].map(({ dot, label, desc, features }) => (
-            <div key={label} className="flex gap-4 p-5 rounded-[12px] border border-[#D6DCE0]">
+            <div key={label} className="flex gap-4 p-5 rounded-[12px] border border-[#ebeeef]">
               <div className="w-1.5 rounded-full shrink-0 self-stretch" style={{ backgroundColor: dot }} />
               <div className="flex-1">
-                <p className="text-sm font-extrabold text-[#0C1629] mb-1">{label}</p>
-                <p className="text-sm text-[#727A84] leading-relaxed mb-3">{desc}</p>
+                <p className="text-sm font-extrabold text-[#1F3649] mb-1">{label}</p>
+                <p className="text-sm text-[#5a6061] leading-relaxed mb-3">{desc}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {features.map(f => (
                     <span
                       key={f}
                       className={cn(
                         'text-[10px] font-bold px-2.5 py-1 rounded-full',
-                        f.includes('coming') ? 'bg-[#F0F3F3] text-[#B5C1C8]' : 'text-white'
+                        f.includes('coming') ? 'bg-[#f2f4f4] text-[#adb3b4]' : 'text-white'
                       )}
                       style={f.includes('coming') ? {} : { backgroundColor: dot }}
                     >
@@ -720,7 +720,7 @@ function WhatIsLogbirdTab() {
       </div>
 
       {/* Connection rule */}
-      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+      <div className="bg-white rounded-[15px] border border-[#ebeeef] p-8">
         <SectionHeader
           icon={Rocket}
           title="The connection rule"
@@ -733,10 +733,10 @@ function WhatIsLogbirdTab() {
             ['Tasks', 'Time'],
             ['Habits', 'Goals'],
           ].map(([a, b], i) => (
-            <div key={i} className="bg-[#F0F3F3] rounded-[12px] p-3 text-center">
-              <p className="text-xs font-bold text-[#0C1629]">{a}</p>
-              <p className="text-base text-[#B5C1C8] my-0.5">↔</p>
-              <p className="text-xs font-bold text-[#0C1629]">{b}</p>
+            <div key={i} className="bg-[#f2f4f4] rounded-[12px] p-3 text-center">
+              <p className="text-xs font-bold text-[#1F3649]">{a}</p>
+              <p className="text-base text-[#adb3b4] my-0.5">↔</p>
+              <p className="text-xs font-bold text-[#1F3649]">{b}</p>
             </div>
           ))}
         </div>
@@ -748,12 +748,12 @@ function WhatIsLogbirdTab() {
             { number: '04', title: 'Built for one person first', desc: 'Started as a tool for one founder who couldn\'t find what they needed anywhere else. Every feature was needed before it was built. No bloat, no feature theatre.' },
           ].map(({ number, title, desc }) => (
             <div key={number} className="flex gap-5">
-              <div className="w-9 h-9 rounded-full border-2 border-[#D6DCE0] flex items-center justify-center shrink-0 mt-0.5">
-                <span className="text-xs font-black text-[#B5C1C8]">{number}</span>
+              <div className="w-9 h-9 rounded-full border-2 border-[#ebeeef] flex items-center justify-center shrink-0 mt-0.5">
+                <span className="text-xs font-black text-[#adb3b4]">{number}</span>
               </div>
-              <div className="pb-6 border-b border-[#D6DCE0] flex-1 last:border-0 last:pb-0">
-                <p className="text-sm font-bold text-[#0C1629]">{title}</p>
-                <p className="text-sm text-[#727A84] mt-1 leading-relaxed">{desc}</p>
+              <div className="pb-6 border-b border-[#ebeeef] flex-1 last:border-0 last:pb-0">
+                <p className="text-sm font-bold text-[#1F3649]">{title}</p>
+                <p className="text-sm text-[#5a6061] mt-1 leading-relaxed">{desc}</p>
               </div>
             </div>
           ))}
@@ -761,9 +761,9 @@ function WhatIsLogbirdTab() {
       </div>
 
       {/* Who it's for */}
-      <div className="bg-[#F0F3F3] rounded-[15px] p-8">
-        <p className="text-xs font-black uppercase tracking-widest text-[#B5C1C8] mb-3">Who it's for</p>
-        <p className="text-sm text-[#727A84] leading-relaxed max-w-2xl">
+      <div className="bg-[#f2f4f4] rounded-[15px] p-8">
+        <p className="text-xs font-black uppercase tracking-widest text-[#adb3b4] mb-3">Who it's for</p>
+        <p className="text-sm text-[#5a6061] leading-relaxed max-w-2xl">
           Logbird is for people who think seriously about how they spend their time — founders, creators, anyone in a self-directed role who needs to align daily execution with long-term direction. If you've ever felt busy but not making real progress, Logbird is the missing feedback loop.
         </p>
       </div>
@@ -801,16 +801,16 @@ const CHANGELOG_ENTRIES = [
 function ChangelogCard({ item }: { item: { title: string; desc: string; icon?: React.ElementType } }) {
   const Icon = item.icon
   return (
-    <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-5 flex items-start gap-4 hover:shadow-[0_10px_40px_rgba(12,22,41,0.06)] transition-shadow">
+    <div className="bg-white rounded-[15px] border border-[#ebeeef] p-5 flex items-start gap-4 hover:shadow-[0_10px_40px_rgba(12,22,41,0.06)] transition-shadow">
       <div className="w-9 h-9 rounded-[10px] bg-[#22c55e]/8 flex items-center justify-center shrink-0">
         {Icon && <Icon size={16} weight="bold" className="text-[#22c55e]" />}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <h4 className="text-sm font-bold text-[#0C1629]">{item.title}</h4>
+          <h4 className="text-sm font-bold text-[#1F3649]">{item.title}</h4>
           <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#22c55e]/8 text-[#22c55e]">Live</span>
         </div>
-        <p className="text-xs text-[#727A84] leading-relaxed">{item.desc}</p>
+        <p className="text-xs text-[#5a6061] leading-relaxed">{item.desc}</p>
       </div>
     </div>
   )
@@ -824,8 +824,8 @@ function ChangelogTab() {
           <div className="flex items-center gap-4 mb-6">
             <CheckCircle size={20} weight="fill" className="text-[#22c55e]" />
             <div className="flex-1">
-              <h2 className="text-base font-extrabold text-[#0C1629]">{group.label}</h2>
-              <p className="text-xs text-[#727A84]">{group.version}</p>
+              <h2 className="text-base font-extrabold text-[#1F3649]">{group.label}</h2>
+              <p className="text-xs text-[#5a6061]">{group.version}</p>
             </div>
             <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-[#22c55e]/10 text-[#22c55e]">
               {group.items.length} features
@@ -851,7 +851,7 @@ const PHASES = [
     number: '01',
     label: 'Phase 1 — Foundation',
     sub: 'Build this first. No phase 2 until this is solid.',
-    color: '#0C1629',
+    color: '#1F3649',
     items: [
       {
         title: 'Workspaces',
@@ -946,25 +946,25 @@ function RoadmapTab() {
               <span className="text-xs font-black" style={{ color: phase.color }}>{phase.number}</span>
             </div>
             <div>
-              <h2 className="text-base font-extrabold text-[#0C1629]">{phase.label}</h2>
-              <p className="text-xs text-[#727A84]">{phase.sub}</p>
+              <h2 className="text-base font-extrabold text-[#1F3649]">{phase.label}</h2>
+              <p className="text-xs text-[#5a6061]">{phase.sub}</p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {phase.items.map(item => (
-              <div key={item.title} className="bg-white rounded-[15px] border border-[#D6DCE0] p-5 hover:shadow-[0_10px_40px_rgba(12,22,41,0.06)] transition-shadow">
+              <div key={item.title} className="bg-white rounded-[15px] border border-[#ebeeef] p-5 hover:shadow-[0_10px_40px_rgba(12,22,41,0.06)] transition-shadow">
                 <div className="flex items-center gap-2 mb-2">
-                  <h4 className="text-sm font-bold text-[#0C1629] flex-1">{item.title}</h4>
+                  <h4 className="text-sm font-bold text-[#1F3649] flex-1">{item.title}</h4>
                   <span className={cn(
                     'text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0',
                     item.priority === 'Critical' ? 'bg-[#9f403d]/10 text-[#9f403d]' :
                     item.priority === 'High' ? 'bg-[#f59e0b]/10 text-[#f59e0b]' :
-                    'bg-[#F0F3F3] text-[#727A84]'
+                    'bg-[#f2f4f4] text-[#5a6061]'
                   )}>
                     {item.priority}
                   </span>
                 </div>
-                <p className="text-xs text-[#727A84] leading-relaxed">{item.desc}</p>
+                <p className="text-xs text-[#5a6061] leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -976,17 +976,17 @@ function RoadmapTab() {
         <div className="flex items-center gap-3 mb-5">
           <Prohibit size={20} weight="bold" className="text-[#9f403d]" />
           <div>
-            <h2 className="text-base font-extrabold text-[#0C1629]">What we don't build (for now)</h2>
-            <p className="text-xs text-[#727A84]">Discipline is a feature. These are explicit non-priorities.</p>
+            <h2 className="text-base font-extrabold text-[#1F3649]">What we don't build (for now)</h2>
+            <p className="text-xs text-[#5a6061]">Discipline is a feature. These are explicit non-priorities.</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {NOT_BUILDING.map(item => (
-            <div key={item.title} className="bg-[#F0F3F3] rounded-[15px] p-5 flex items-start gap-3">
+            <div key={item.title} className="bg-[#f2f4f4] rounded-[15px] p-5 flex items-start gap-3">
               <span className="text-[#9f403d] font-black text-sm mt-0.5">✕</span>
               <div>
-                <p className="text-sm font-bold text-[#0C1629]">{item.title}</p>
-                <p className="text-xs text-[#727A84] mt-0.5 leading-relaxed">{item.desc}</p>
+                <p className="text-sm font-bold text-[#1F3649]">{item.title}</p>
+                <p className="text-xs text-[#5a6061] mt-0.5 leading-relaxed">{item.desc}</p>
               </div>
             </div>
           ))}
@@ -1002,17 +1002,17 @@ function RoadmapTab() {
 // Visual Tab
 // ---------------------------------------------------------------------------
 
-const PRIMARY_SCALE   = ['#020508','#050c12','#08121b','#0C1629','#1E2A3A','#2e4260','#5a7499','#96b0c8','#c8d5e1','#edf1f5']
-const NEUTRAL_SCALE   = ['#13181a','#222829','#363d3e','#4a5253','#727A84','#8e9499','#adb3b8','#c9cdd0','#e2e5e7','#f4f5f6']
-const SURFACE_SCALE   = ['#8fa0aa','#a3b0b8','#b8c2c8','#c8d1d7','#D6DCE0','#dfe5e9','#e8edf0','#eff3f5','#f5f8f9','#fafbfc']
+const PRIMARY_SCALE   = ['#020508','#050c12','#08121b','#1F3649','#1E2A3A','#2e4260','#5a7499','#96b0c8','#c8d5e1','#edf1f5']
+const NEUTRAL_SCALE   = ['#13181a','#222829','#363d3e','#4a5253','#5a6061','#8e9499','#adb3b8','#c9cdd0','#e2e5e7','#f4f5f6']
+const SURFACE_SCALE   = ['#8fa0aa','#a3b0b8','#b8c2c8','#c8d1d7','#ebeeef','#dfe5e9','#ebeeef','#eff3f5','#f5f8f9','#fafbfc']
 const STATUS_SCALE    = ['#7a302e','#9f403d','#c05754','#f59e0b','#fbbf24','#fde68a','#22c55e','#4ade80','#86efac','#dcfce7']
 
 function VisualColorCard({ name, hex, scale, light = false, gradient }: {
   name: string; hex: string; scale: string[]; light?: boolean; gradient?: string
 }) {
-  const fg = light ? '#0C1629' : 'white'
+  const fg = light ? '#1F3649' : 'white'
   return (
-    <div className="rounded-[15px] border border-[#D6DCE0] overflow-hidden flex flex-col flex-1 bg-white">
+    <div className="rounded-[15px] border border-[#ebeeef] overflow-hidden flex flex-col flex-1 bg-white">
       <div className="px-4 py-3 flex justify-between items-center" style={{ background: gradient ?? hex }}>
         <span className="text-xs font-bold" style={{ color: fg }}>{name}</span>
         <span className="text-[10px] font-mono opacity-80" style={{ color: fg }}>{hex}</span>
@@ -1029,10 +1029,10 @@ function VisualCompCard({ label, sub, children, span2 }: {
   label: string; sub?: string; children: React.ReactNode; span2?: boolean
 }) {
   return (
-    <div className={`bg-white rounded-[15px] border border-[#D6DCE0] p-5 flex flex-col gap-4 ${span2 ? 'col-span-2' : ''}`}>
+    <div className={`bg-white rounded-[15px] border border-[#ebeeef] p-5 flex flex-col gap-4 ${span2 ? 'col-span-2' : ''}`}>
       <div className="flex justify-between items-center">
-        <span className="text-[10px] font-black uppercase tracking-widest text-[#B5C1C8]">{label}</span>
-        {sub && <span className="text-[10px] font-mono text-[#B5C1C8]">{sub}</span>}
+        <span className="text-[10px] font-black uppercase tracking-widest text-[#adb3b4]">{label}</span>
+        {sub && <span className="text-[10px] font-mono text-[#adb3b4]">{sub}</span>}
       </div>
       <div className="flex items-center justify-center flex-1">
         {children}
@@ -1047,9 +1047,9 @@ function VisualTab() {
 
       {/* ── Color column ── */}
       <div className="flex flex-col gap-3.5 w-[190px] shrink-0">
-        <VisualColorCard name="Primary" hex="#0C1629" scale={PRIMARY_SCALE} />
-        <VisualColorCard name="Neutral" hex="#727A84" scale={NEUTRAL_SCALE} />
-        <VisualColorCard name="Surface" hex="#D6DCE0" scale={SURFACE_SCALE} light />
+        <VisualColorCard name="Primary" hex="#1F3649" scale={PRIMARY_SCALE} />
+        <VisualColorCard name="Neutral" hex="#5a6061" scale={NEUTRAL_SCALE} />
+        <VisualColorCard name="Surface" hex="#ebeeef" scale={SURFACE_SCALE} light />
         <VisualColorCard
           name="Status"
           hex="Error · Warn · OK"
@@ -1063,40 +1063,40 @@ function VisualTab() {
 
         {/* Row 1 */}
         <VisualCompCard label="Headline" sub="Satoshi">
-          <span className="text-7xl font-bold text-[#0C1629] leading-none" style={{ fontFamily: 'Satoshi, system-ui' }}>Aa</span>
+          <span className="text-7xl font-bold text-[#1F3649] leading-none" style={{ fontFamily: 'Satoshi, system-ui' }}>Aa</span>
         </VisualCompCard>
 
         <VisualCompCard label="Buttons">
           <div className="grid grid-cols-2 gap-2 w-full">
-            <button className="text-xs font-bold px-3 py-2 rounded-[12px] bg-[#0C1629] text-white cursor-default">Primary</button>
-            <button className="text-xs font-bold px-3 py-2 rounded-[12px] bg-[#F0F3F3] text-[#0C1629] cursor-default">Secondary</button>
-            <button className="text-xs font-bold px-3 py-2 rounded-[12px] bg-[#0C1629]/90 text-white cursor-default">Inverted</button>
-            <button className="text-xs font-bold px-3 py-2 rounded-[12px] border border-[#D6DCE0] bg-white text-[#0C1629] cursor-default">Outlined</button>
+            <button className="text-xs font-bold px-3 py-2 rounded-[12px] bg-[#1F3649] text-white cursor-default">Primary</button>
+            <button className="text-xs font-bold px-3 py-2 rounded-[12px] bg-[#f2f4f4] text-[#1F3649] cursor-default">Secondary</button>
+            <button className="text-xs font-bold px-3 py-2 rounded-[12px] bg-[#1F3649]/90 text-white cursor-default">Inverted</button>
+            <button className="text-xs font-bold px-3 py-2 rounded-[12px] border border-[#ebeeef] bg-white text-[#1F3649] cursor-default">Outlined</button>
           </div>
         </VisualCompCard>
 
         <VisualCompCard label="Search Input">
-          <div className="flex items-center gap-2 w-full bg-[#F0F3F3] border border-[#D6DCE0] rounded-[12px] px-4 py-2.5">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B5C1C8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <div className="flex items-center gap-2 w-full bg-[#f2f4f4] border border-[#ebeeef] rounded-[12px] px-4 py-2.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#adb3b4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
-            <span className="text-sm text-[#B5C1C8]">Search</span>
+            <span className="text-sm text-[#adb3b4]">Search</span>
           </div>
         </VisualCompCard>
 
         {/* Row 2 */}
         <VisualCompCard label="Body" sub="DM Sans">
-          <span className="text-7xl font-normal text-[#0C1629] leading-none">Aa</span>
+          <span className="text-7xl font-normal text-[#1F3649] leading-none">Aa</span>
         </VisualCompCard>
 
         <VisualCompCard label="Progress">
           <div className="flex flex-col gap-2.5 w-full">
             {[
-              { w: '72%', bg: '#0C1629' },
-              { w: '48%', bg: '#727A84' },
+              { w: '72%', bg: '#1F3649' },
+              { w: '48%', bg: '#5a6061' },
               { w: '30%', bg: '#f59e0b' },
             ].map((bar, i) => (
-              <div key={i} className="h-1.5 rounded-full bg-[#F0F3F3] overflow-hidden">
+              <div key={i} className="h-1.5 rounded-full bg-[#f2f4f4] overflow-hidden">
                 <div className="h-full rounded-full" style={{ width: bar.w, background: bar.bg }} />
               </div>
             ))}
@@ -1105,18 +1105,18 @@ function VisualTab() {
 
         <VisualCompCard label="Navigation">
           <div className="flex items-center justify-evenly w-full">
-            <div className="w-10 h-10 rounded-[12px] bg-[#0C1629] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-[12px] bg-[#1F3649] flex items-center justify-center">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
               </svg>
             </div>
             <div className="w-10 h-10 flex items-center justify-center">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B5C1C8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#adb3b4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
               </svg>
             </div>
             <div className="w-10 h-10 flex items-center justify-center">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B5C1C8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#adb3b4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
               </svg>
             </div>
@@ -1125,14 +1125,14 @@ function VisualTab() {
 
         {/* Row 3 */}
         <VisualCompCard label="Label" sub="DM Sans">
-          <span className="text-6xl font-medium text-[#727A84] leading-none">Aa</span>
+          <span className="text-6xl font-medium text-[#5a6061] leading-none">Aa</span>
         </VisualCompCard>
 
         <VisualCompCard label="Icon Buttons" span2>
           <div className="flex gap-3">
             {[
-              { bg: '#0C1629', icon: <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>, icon2: <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/> },
-              { bg: '#727A84', icon: <><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></> },
+              { bg: '#1F3649', icon: <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>, icon2: <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/> },
+              { bg: '#5a6061', icon: <><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></> },
               { bg: '#2e4260', icon: <polyline points="20 6 9 17 4 12"/> },
               { bg: '#9f403d', icon: <><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></> },
             ].map((btn, i) => (
@@ -1156,11 +1156,11 @@ function VisualTab() {
 
 const LOOP_STEPS = [
   { label: 'Reflect', color: '#8b5cf6', desc: 'Understand your current state' },
-  { label: 'Decide', color: '#0C1629', desc: 'Choose your next direction' },
+  { label: 'Decide', color: '#1F3649', desc: 'Choose your next direction' },
   { label: 'Execute', color: '#22c55e', desc: 'Do the actual work' },
   { label: 'Review', color: '#f59e0b', desc: 'Measure what happened' },
   { label: 'Adjust', color: '#ec4899', desc: 'Correct course if needed' },
-  { label: 'Repeat', color: '#727A84', desc: 'The loop never ends' },
+  { label: 'Repeat', color: '#5a6061', desc: 'The loop never ends' },
 ]
 
 const BACKBONE = [
@@ -1181,29 +1181,29 @@ function PillarSection({ color, dot, number, title, purpose, items }: {
   items: { title: string; desc: string; key?: boolean }[]
 }) {
   return (
-    <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+    <div className="bg-white rounded-[15px] border border-[#ebeeef] p-8">
       <div className="flex items-start gap-5 mb-8">
         <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ backgroundColor: dot + '18' }}>
           <span className="text-xs font-black" style={{ color: dot }}>{number}</span>
         </div>
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <h3 className="text-lg font-extrabold text-[#0C1629] tracking-tight">{title}</h3>
+            <h3 className="text-lg font-extrabold text-[#1F3649] tracking-tight">{title}</h3>
             <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full" style={{ backgroundColor: dot + '15', color: dot }}>{color}</span>
           </div>
-          <p className="text-sm text-[#727A84]">{purpose}</p>
+          <p className="text-sm text-[#5a6061]">{purpose}</p>
         </div>
       </div>
       <div className="space-y-3">
         {items.map((item, i) => (
           <div key={i} className={cn(
             'rounded-[12px] border p-4 flex items-start gap-3',
-            item.key ? 'border-[#0C1629]/15 bg-[#0C1629]/[0.03]' : 'border-[#D6DCE0] bg-[#F0F3F3]/40'
+            item.key ? 'border-[#1F3649]/15 bg-[#1F3649]/[0.03]' : 'border-[#ebeeef] bg-[#f2f4f4]/40'
           )}>
-            <div className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5" style={{ backgroundColor: item.key ? dot : '#D6DCE0' }} />
+            <div className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5" style={{ backgroundColor: item.key ? dot : '#ebeeef' }} />
             <div>
-              <p className={cn('text-sm font-bold', item.key ? 'text-[#0C1629]' : 'text-[#727A84]')}>{item.title}</p>
-              <p className="text-xs text-[#727A84] mt-0.5 leading-relaxed">{item.desc}</p>
+              <p className={cn('text-sm font-bold', item.key ? 'text-[#1F3649]' : 'text-[#5a6061]')}>{item.title}</p>
+              <p className="text-xs text-[#5a6061] mt-0.5 leading-relaxed">{item.desc}</p>
             </div>
           </div>
         ))}
@@ -1217,7 +1217,7 @@ function StrategicOutlookTab() {
     <div className="space-y-6 max-w-4xl">
 
       {/* ── The Loop ──────────────────────────────────────────────────── */}
-      <div className="bg-[#0C1629] rounded-[15px] p-8 md:p-10">
+      <div className="bg-[#1F3649] rounded-[15px] p-8 md:p-10">
         <div className="flex items-center gap-3 mb-6">
           <ArrowsClockwise size={18} weight="bold" className="text-white/40" />
           <p className="text-xs font-black uppercase tracking-widest text-white/40">First Principle</p>
@@ -1246,7 +1246,7 @@ function StrategicOutlookTab() {
       </div>
 
       {/* ── Core Backbone ──────────────────────────────────────────────── */}
-      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+      <div className="bg-white rounded-[15px] border border-[#ebeeef] p-8">
         <SectionHeader
           icon={Database}
           title="Core Data Backbone"
@@ -1257,24 +1257,24 @@ function StrategicOutlookTab() {
             const Icon = obj.icon
             const isLast = i === BACKBONE.length - 1
             return (
-              <div key={obj.label} className="flex items-center gap-3 bg-[#F0F3F3] rounded-[12px] p-4">
-                <div className="w-8 h-8 rounded-[8px] bg-white border border-[#D6DCE0] flex items-center justify-center shrink-0">
-                  <Icon size={14} weight="bold" className="text-[#0C1629]" />
+              <div key={obj.label} className="flex items-center gap-3 bg-[#f2f4f4] rounded-[12px] p-4">
+                <div className="w-8 h-8 rounded-[8px] bg-white border border-[#ebeeef] flex items-center justify-center shrink-0">
+                  <Icon size={14} weight="bold" className="text-[#1F3649]" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#0C1629]">{obj.label}</p>
-                  <p className="text-[10px] text-[#727A84]">{obj.sub}</p>
+                  <p className="text-sm font-bold text-[#1F3649]">{obj.label}</p>
+                  <p className="text-[10px] text-[#5a6061]">{obj.sub}</p>
                 </div>
                 {!isLast && i !== 2 && (
-                  <ArrowRight size={12} className="text-[#B5C1C8] ml-auto hidden md:block" />
+                  <ArrowRight size={12} className="text-[#adb3b4] ml-auto hidden md:block" />
                 )}
               </div>
             )
           })}
         </div>
-        <div className="mt-4 bg-[#0C1629]/[0.03] border border-[#0C1629]/10 rounded-[12px] px-5 py-3">
-          <p className="text-xs text-[#727A84] leading-relaxed">
-            <span className="font-bold text-[#0C1629]">Rule: </span>Goals exist once and are referenced everywhere. They don't live "in" a tab — they belong to the backbone. Tabs are just views into the same data.
+        <div className="mt-4 bg-[#1F3649]/[0.03] border border-[#1F3649]/10 rounded-[12px] px-5 py-3">
+          <p className="text-xs text-[#5a6061] leading-relaxed">
+            <span className="font-bold text-[#1F3649]">Rule: </span>Goals exist once and are referenced everywhere. They don't live "in" a tab — they belong to the backbone. Tabs are just views into the same data.
           </p>
         </div>
       </div>
@@ -1325,7 +1325,7 @@ function StrategicOutlookTab() {
       />
 
       {/* ── The Real Problem ──────────────────────────────────────────── */}
-      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+      <div className="bg-white rounded-[15px] border border-[#ebeeef] p-8">
         <SectionHeader
           icon={Brain}
           title="The design error to avoid"
@@ -1334,15 +1334,15 @@ function StrategicOutlookTab() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-[#9f403d]/[0.06] border border-[#9f403d]/15 rounded-[12px] p-5">
             <p className="text-[10px] font-black uppercase tracking-widest text-[#9f403d] mb-3">Wrong</p>
-            <p className="text-sm font-bold text-[#0C1629] mb-2">"Goals go in all sections"</p>
-            <p className="text-sm text-[#727A84] leading-relaxed">
+            <p className="text-sm font-bold text-[#1F3649] mb-2">"Goals go in all sections"</p>
+            <p className="text-sm text-[#5a6061] leading-relaxed">
               Mixing where things <em>live</em> with how they <em>flow</em> creates duplicate state, inconsistency, and a broken mental model.
             </p>
           </div>
           <div className="bg-[#22c55e]/[0.06] border border-[#22c55e]/15 rounded-[12px] p-5">
             <p className="text-[10px] font-black uppercase tracking-widest text-[#22c55e] mb-3">Right</p>
-            <p className="text-sm font-bold text-[#0C1629] mb-2">Goals exist once, referenced everywhere</p>
-            <p className="text-sm text-[#727A84] leading-relaxed">
+            <p className="text-sm font-bold text-[#1F3649] mb-2">Goals exist once, referenced everywhere</p>
+            <p className="text-sm text-[#5a6061] leading-relaxed">
               One source of truth in the backbone. Tabs are views — they display and interact with the same object, they don't own it.
             </p>
           </div>
@@ -1350,7 +1350,7 @@ function StrategicOutlookTab() {
       </div>
 
       {/* ── Connection Rules ──────────────────────────────────────────── */}
-      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+      <div className="bg-white rounded-[15px] border border-[#ebeeef] p-8">
         <SectionHeader
           icon={Lightning}
           title="Connection rules"
@@ -1363,20 +1363,20 @@ function StrategicOutlookTab() {
             ['Tasks', 'Time'],
             ['Habits', 'Goals'],
           ].map(([a, b], i) => (
-            <div key={i} className="bg-[#F0F3F3] rounded-[12px] p-4 text-center">
-              <p className="text-xs font-bold text-[#0C1629]">{a}</p>
-              <p className="text-xl text-[#B5C1C8] my-1">↔</p>
-              <p className="text-xs font-bold text-[#0C1629]">{b}</p>
+            <div key={i} className="bg-[#f2f4f4] rounded-[12px] p-4 text-center">
+              <p className="text-xs font-bold text-[#1F3649]">{a}</p>
+              <p className="text-xl text-[#adb3b4] my-1">↔</p>
+              <p className="text-xs font-bold text-[#1F3649]">{b}</p>
             </div>
           ))}
         </div>
-        <p className="text-xs text-[#727A84] bg-[#0C1629]/[0.03] border border-[#0C1629]/10 rounded-[12px] px-5 py-3 leading-relaxed">
-          <span className="font-bold text-[#0C1629]">Rule: </span>Every feature must strengthen one of these connections. If it doesn't — don't build it.
+        <p className="text-xs text-[#5a6061] bg-[#1F3649]/[0.03] border border-[#1F3649]/10 rounded-[12px] px-5 py-3 leading-relaxed">
+          <span className="font-bold text-[#1F3649]">Rule: </span>Every feature must strengthen one of these connections. If it doesn't — don't build it.
         </p>
       </div>
 
       {/* ── Daily User Flow ───────────────────────────────────────────── */}
-      <div className="bg-white rounded-[15px] border border-[#D6DCE0] p-8">
+      <div className="bg-white rounded-[15px] border border-[#ebeeef] p-8">
         <SectionHeader
           icon={Star}
           title="The north star: daily user flow"
@@ -1406,40 +1406,40 @@ function StrategicOutlookTab() {
               steps: ['Write a journal entry', 'Link it to a goal', 'Quick reflection on the day'],
             },
           ].map(({ icon: Icon, label, time, dot, steps }) => (
-            <div key={label} className="rounded-[12px] border border-[#D6DCE0] p-5">
+            <div key={label} className="rounded-[12px] border border-[#ebeeef] p-5">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-[8px] flex items-center justify-center shrink-0" style={{ backgroundColor: dot + '18' }}>
                   <Icon size={15} weight="bold" style={{ color: dot }} />
                 </div>
                 <div>
-                  <p className="text-sm font-extrabold text-[#0C1629]">{label}</p>
-                  <p className="text-[10px] text-[#B5C1C8]">{time}</p>
+                  <p className="text-sm font-extrabold text-[#1F3649]">{label}</p>
+                  <p className="text-[10px] text-[#adb3b4]">{time}</p>
                 </div>
               </div>
               <ol className="space-y-2">
                 {steps.map((step, i) => (
                   <li key={i} className="flex items-start gap-2.5">
-                    <span className="text-[10px] font-black text-[#B5C1C8] mt-0.5 shrink-0">{i + 1}.</span>
-                    <span className="text-xs text-[#727A84] leading-relaxed">{step}</span>
+                    <span className="text-[10px] font-black text-[#adb3b4] mt-0.5 shrink-0">{i + 1}.</span>
+                    <span className="text-xs text-[#5a6061] leading-relaxed">{step}</span>
                   </li>
                 ))}
               </ol>
             </div>
           ))}
         </div>
-        <p className="text-xs text-[#727A84] mt-5 leading-relaxed">
-          <span className="font-bold text-[#0C1629]">Result: </span>User always knows what matters, what they did, and where they stand.
+        <p className="text-xs text-[#5a6061] mt-5 leading-relaxed">
+          <span className="font-bold text-[#1F3649]">Result: </span>User always knows what matters, what they did, and where they stand.
         </p>
       </div>
 
       {/* ── Ideal UI Vision ───────────────────────────────────────────── */}
-      <div className="bg-[#F0F3F3] rounded-[15px] p-8">
+      <div className="bg-[#f2f4f4] rounded-[15px] p-8">
         <div className="flex items-center gap-3 mb-6">
-          <House size={16} weight="bold" className="text-[#727A84]" />
-          <p className="text-xs font-black uppercase tracking-widest text-[#B5C1C8]">The ideal home screen</p>
+          <House size={16} weight="bold" className="text-[#5a6061]" />
+          <p className="text-xs font-black uppercase tracking-widest text-[#adb3b4]">The ideal home screen</p>
         </div>
-        <p className="text-sm font-bold text-[#0C1629] mb-2">Not: "Now I go to Reflection. Now I go to Productivity."</p>
-        <p className="text-sm text-[#727A84] leading-relaxed mb-6">
+        <p className="text-sm font-bold text-[#1F3649] mb-2">Not: "Now I go to Reflection. Now I go to Productivity."</p>
+        <p className="text-sm text-[#5a6061] leading-relaxed mb-6">
           Instead: you open your system and see your life.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -1448,18 +1448,18 @@ function StrategicOutlookTab() {
             { icon: Lightning, label: 'Today\'s Plan', sub: 'From Productivity', dot: '#22c55e' },
             { icon: ShieldCheck, label: 'Goal Progress', sub: 'From Accountability', dot: '#f59e0b' },
           ].map(({ icon: Icon, label, sub, dot }) => (
-            <div key={label} className="bg-white rounded-[12px] border border-[#D6DCE0] p-4 flex items-center gap-3">
+            <div key={label} className="bg-white rounded-[12px] border border-[#ebeeef] p-4 flex items-center gap-3">
               <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0" style={{ backgroundColor: dot + '15' }}>
                 <Icon size={16} weight="bold" style={{ color: dot }} />
               </div>
               <div>
-                <p className="text-sm font-bold text-[#0C1629]">{label}</p>
-                <p className="text-[10px] text-[#B5C1C8]">{sub}</p>
+                <p className="text-sm font-bold text-[#1F3649]">{label}</p>
+                <p className="text-[10px] text-[#adb3b4]">{sub}</p>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-xs text-[#B5C1C8] mt-5 leading-relaxed">
+        <p className="text-xs text-[#adb3b4] mt-5 leading-relaxed">
           Dashboard OS view — not a navigation choice, but a unified daily starting point where all three layers surface at once.
         </p>
       </div>
@@ -1500,12 +1500,12 @@ export default function Docs() {
       {/* Header */}
       <div className="flex items-start justify-between gap-6 flex-wrap">
         <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-[#0C1629] tracking-tight">Docs</h1>
-          <p className="text-sm text-[#727A84] mt-1">{TAB_SUBTITLES[tab]}</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-[#1F3649] tracking-tight">Docs</h1>
+          <p className="text-sm text-[#5a6061] mt-1">{TAB_SUBTITLES[tab]}</p>
         </div>
 
         {/* Tab switcher */}
-        <div className="flex items-center bg-[#F0F3F3] rounded-[12px] p-1 shrink-0 flex-wrap gap-1">
+        <div className="flex items-center bg-[#f2f4f4] rounded-[12px] p-1 shrink-0 flex-wrap gap-1">
           {TABS.map(t => (
             <button
               key={t.id}
@@ -1513,8 +1513,8 @@ export default function Docs() {
               className={cn(
                 'px-4 py-2 text-sm font-bold rounded-[10px] transition-all cursor-pointer',
                 tab === t.id
-                  ? 'bg-white text-[#0C1629] shadow-sm'
-                  : 'text-[#727A84] hover:text-[#0C1629]'
+                  ? 'bg-white text-[#1F3649] shadow-sm'
+                  : 'text-[#5a6061] hover:text-[#1F3649]'
               )}
             >
               {t.label}

@@ -34,15 +34,15 @@ const PRIORITIES: { value: TaskPriority; label: string }[] = [
 ]
 
 const PRIORITY_STYLES: Record<TaskPriority, string> = {
-  low: 'bg-[#B5C1C8]/10 text-[#B5C1C8]',
-  normal: 'bg-[#0C1629]/10 text-[#0C1629]',
+  low: 'bg-[#adb3b4]/10 text-[#adb3b4]',
+  normal: 'bg-[#1F3649]/10 text-[#1F3649]',
   high: 'bg-[#f59e0b]/10 text-[#f59e0b]',
   urgent: 'bg-[#dc2626]/10 text-[#dc2626]',
 }
 
 const PRIORITY_ACTIVE: Record<TaskPriority, string> = {
-  low: 'bg-[#B5C1C8] text-white',
-  normal: 'bg-[#0C1629] text-white',
+  low: 'bg-[#adb3b4] text-white',
+  normal: 'bg-[#1F3649] text-white',
   high: 'bg-[#f59e0b] text-white',
   urgent: 'bg-[#dc2626] text-white',
 }
@@ -131,15 +131,15 @@ export default function TaskCreateModal({ open, onClose, defaultProjectId, defau
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-[20px] w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl border border-[#D6DCE0]">
+      <div className="relative bg-white rounded-[20px] w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl border border-[#ebeeef]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#F0F3F3]">
-          <h2 className="text-base font-black text-[#0C1629] tracking-tight">New Task</h2>
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#f2f4f4]">
+          <h2 className="text-base font-black text-[#1F3649] tracking-tight">New Task</h2>
           <button
             onClick={onClose}
-            className="p-1.5 hover:bg-[#F0F3F3] rounded-full transition-colors cursor-pointer"
+            className="p-1.5 hover:bg-[#f2f4f4] rounded-full transition-colors cursor-pointer"
           >
-            <X size={18} className="text-[#727A84]" />
+            <X size={18} className="text-[#5a6061]" />
           </button>
         </div>
 
@@ -147,7 +147,7 @@ export default function TaskCreateModal({ open, onClose, defaultProjectId, defau
         <div className="p-6 space-y-5">
           {/* Title */}
           <div className="space-y-2">
-            <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+            <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
               Task Title
             </label>
             <input
@@ -156,20 +156,20 @@ export default function TaskCreateModal({ open, onClose, defaultProjectId, defau
               onChange={e => setTitle(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleCreate()}
               placeholder="What needs to be done?"
-              className="w-full text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow"
+              className="w-full text-sm text-[#1F3649] placeholder-[#adb3b4] bg-[#f2f4f4] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#1F3649]/10 transition-shadow"
             />
           </div>
 
           {/* Project + Goal row */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+              <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
                 Project
               </label>
               <select
                 value={projectId}
                 onChange={e => setProjectId(e.target.value)}
-                className="w-full text-xs font-semibold text-[#0C1629] bg-[#F0F3F3] rounded-[10px] px-3 py-3 border-none outline-none cursor-pointer focus:ring-2 focus:ring-[#0C1629]/10"
+                className="w-full text-xs font-semibold text-[#1F3649] bg-[#f2f4f4] rounded-[10px] px-3 py-3 border-none outline-none cursor-pointer focus:ring-2 focus:ring-[#1F3649]/10"
               >
                 <option value="">No project</option>
                 {PROJECT_OPTIONS.map(p => (
@@ -178,13 +178,13 @@ export default function TaskCreateModal({ open, onClose, defaultProjectId, defau
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+              <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
                 Goal Alignment
               </label>
               <select
                 value={goalId}
                 onChange={e => setGoalId(e.target.value)}
-                className="w-full text-xs font-semibold text-[#0C1629] bg-[#F0F3F3] rounded-[10px] px-3 py-3 border-none outline-none cursor-pointer focus:ring-2 focus:ring-[#0C1629]/10"
+                className="w-full text-xs font-semibold text-[#1F3649] bg-[#f2f4f4] rounded-[10px] px-3 py-3 border-none outline-none cursor-pointer focus:ring-2 focus:ring-[#1F3649]/10"
               >
                 <option value="">No goal</option>
                 {goals.map(g => (
@@ -196,7 +196,7 @@ export default function TaskCreateModal({ open, onClose, defaultProjectId, defau
 
           {/* Priority */}
           <div className="space-y-2">
-            <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+            <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
               Priority Matrix
             </label>
             <div className="flex items-center gap-2">
@@ -219,10 +219,10 @@ export default function TaskCreateModal({ open, onClose, defaultProjectId, defau
           <div className="grid grid-cols-2 gap-3">
             {/* Energy */}
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+              <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
                 Energy Cost
               </label>
-              <div className="flex items-center gap-2 bg-[#F0F3F3] rounded-[10px] px-4 py-3">
+              <div className="flex items-center gap-2 bg-[#f2f4f4] rounded-[10px] px-4 py-3">
                 {([1, 2, 3] as TaskEnergy[]).map(level => (
                   <button
                     key={level}
@@ -234,18 +234,18 @@ export default function TaskCreateModal({ open, onClose, defaultProjectId, defau
                       weight="fill"
                       className={cn(
                         'transition-colors',
-                        level <= energy ? 'text-[#f59e0b]' : 'text-[#D6DCE0]'
+                        level <= energy ? 'text-[#f59e0b]' : 'text-[#ebeeef]'
                       )}
                     />
                   </button>
                 ))}
-                <span className="ml-auto text-xs font-bold text-[#B5C1C8]">{energy}/3</span>
+                <span className="ml-auto text-xs font-bold text-[#adb3b4]">{energy}/3</span>
               </div>
             </div>
 
             {/* Time */}
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+              <label className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
                 Time Allocation
               </label>
               <div className="flex items-center gap-1">
@@ -256,8 +256,8 @@ export default function TaskCreateModal({ open, onClose, defaultProjectId, defau
                     className={cn(
                       'flex-1 py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-[10px] transition-all cursor-pointer',
                       estimatedMinutes === opt.minutes
-                        ? 'bg-[#0C1629] text-white'
-                        : 'bg-[#F0F3F3] text-[#727A84]'
+                        ? 'bg-[#1F3649] text-white'
+                        : 'bg-[#f2f4f4] text-[#5a6061]'
                     )}
                   >
                     {opt.label}
@@ -278,18 +278,18 @@ export default function TaskCreateModal({ open, onClose, defaultProjectId, defau
         </div>
 
         {/* Footer */}
-        <div className="flex items-center gap-3 px-6 py-5 border-t border-[#F0F3F3]">
+        <div className="flex items-center gap-3 px-6 py-5 border-t border-[#f2f4f4]">
           <button
             onClick={handleCreate}
             disabled={!title.trim()}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-[#0C1629] px-5 py-2.5 rounded-[10px] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-[#1F3649] px-5 py-2.5 rounded-[10px] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <RocketLaunch size={14} weight="fill" />
             Create Task
           </button>
           <button
             onClick={onClose}
-            className="text-sm font-semibold text-[#727A84] hover:text-[#0C1629] px-4 py-2.5 transition-colors cursor-pointer"
+            className="text-sm font-semibold text-[#5a6061] hover:text-[#1F3649] px-4 py-2.5 transition-colors cursor-pointer"
           >
             Cancel
           </button>

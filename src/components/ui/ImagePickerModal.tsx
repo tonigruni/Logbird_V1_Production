@@ -59,28 +59,28 @@ export default function ImagePickerModal({ open, onClose, onSelect, initialQuery
       <div className="relative bg-white rounded-[15px] shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden mx-4">
 
         {/* Header */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-[#F0F3F3]">
-          <Image size={18} className="text-[#727A84] shrink-0" />
-          <h2 className="text-sm font-bold text-[#0C1629] flex-1">Choose Cover Image</h2>
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-[#f2f4f4]">
+          <Image size={18} className="text-[#5a6061] shrink-0" />
+          <h2 className="text-sm font-bold text-[#1F3649] flex-1">Choose Cover Image</h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-[#F0F3F3] rounded-[8px] transition-colors cursor-pointer"
+            className="p-1 hover:bg-[#f2f4f4] rounded-[8px] transition-colors cursor-pointer"
           >
-            <X size={16} className="text-[#727A84]" />
+            <X size={16} className="text-[#5a6061]" />
           </button>
         </div>
 
         {/* Search bar */}
-        <div className="px-5 py-3 border-b border-[#F0F3F3] space-y-2.5">
+        <div className="px-5 py-3 border-b border-[#f2f4f4] space-y-2.5">
           <div className="flex items-center gap-2 bg-[#F7F8F9] rounded-[10px] px-3 py-2.5">
-            <MagnifyingGlass size={15} className="text-[#B5C1C8] shrink-0" />
+            <MagnifyingGlass size={15} className="text-[#adb3b4] shrink-0" />
             <input
               ref={inputRef}
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && search()}
               placeholder="Search free photos..."
-              className="flex-1 text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-transparent outline-none"
+              className="flex-1 text-sm text-[#1F3649] placeholder-[#adb3b4] bg-transparent outline-none"
             />
           </div>
           <div className="flex items-center gap-1.5 flex-wrap">
@@ -88,7 +88,7 @@ export default function ImagePickerModal({ open, onClose, onSelect, initialQuery
               <button
                 key={s}
                 onClick={() => { setQuery(s); search(s) }}
-                className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-[#F0F3F3] text-[#727A84] hover:bg-[#0C1629]/10 hover:text-[#0C1629] transition-colors cursor-pointer"
+                className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-[#f2f4f4] text-[#5a6061] hover:bg-[#1F3649]/10 hover:text-[#1F3649] transition-colors cursor-pointer"
               >
                 {s}
               </button>
@@ -100,15 +100,15 @@ export default function ImagePickerModal({ open, onClose, onSelect, initialQuery
         <div className="flex-1 overflow-y-auto p-4">
           {!PEXELS_API_KEY ? (
             <div className="text-center py-12 space-y-1">
-              <p className="text-sm font-semibold text-[#0C1629]">Pexels API key not configured</p>
-              <p className="text-xs text-[#B5C1C8]">Add VITE_PEXELS_API_KEY to your .env file</p>
+              <p className="text-sm font-semibold text-[#1F3649]">Pexels API key not configured</p>
+              <p className="text-xs text-[#adb3b4]">Add VITE_PEXELS_API_KEY to your .env file</p>
             </div>
           ) : loading ? (
             <div className="flex items-center justify-center h-40">
-              <div className="w-6 h-6 border-2 border-[#0C1629] border-t-transparent rounded-full animate-spin" />
+              <div className="w-6 h-6 border-2 border-[#1F3649] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : photos.length === 0 && searched ? (
-            <div className="text-center py-12 text-sm text-[#B5C1C8]">
+            <div className="text-center py-12 text-sm text-[#adb3b4]">
               No photos found for "{query}"
             </div>
           ) : (
@@ -117,7 +117,7 @@ export default function ImagePickerModal({ open, onClose, onSelect, initialQuery
                 <button
                   key={photo.id}
                   onClick={() => { onSelect(photo.src.large); onClose() }}
-                  className="relative group rounded-[10px] overflow-hidden aspect-video cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#0C1629]"
+                  className="relative group rounded-[10px] overflow-hidden aspect-video cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F3649]"
                 >
                   <img
                     src={photo.src.medium}
@@ -137,8 +137,8 @@ export default function ImagePickerModal({ open, onClose, onSelect, initialQuery
         </div>
 
         {/* Pexels attribution (required) */}
-        <div className="px-5 py-2.5 border-t border-[#F0F3F3] flex items-center gap-1.5">
-          <span className="text-[10px] text-[#B5C1C8]">Photos provided by</span>
+        <div className="px-5 py-2.5 border-t border-[#f2f4f4] flex items-center gap-1.5">
+          <span className="text-[10px] text-[#adb3b4]">Photos provided by</span>
           <a
             href="https://www.pexels.com"
             target="_blank"

@@ -9,7 +9,7 @@ import { ArrowRight } from '../icons';
 // Tone colors keep it warm and readable on the Logbird palette.
 export const EMOTION_WHEEL = [
   {
-    core: 'Happy', color: '#E8A83A', angle: 0,
+    core: 'Happy', color: '#B5A47A', angle: 0,
     branches: [
       { nuance: 'Content',  specifics: ['Peaceful', 'Grateful', 'Fulfilled'] },
       { nuance: 'Playful',  specifics: ['Cheeky', 'Amused', 'Silly'] },
@@ -17,7 +17,7 @@ export const EMOTION_WHEEL = [
     ],
   },
   {
-    core: 'Tender', color: '#C98AAB', angle: 60,
+    core: 'Tender', color: '#9E8A98', angle: 60,
     branches: [
       { nuance: 'Loving',    specifics: ['Affectionate', 'Warm', 'Attracted'] },
       { nuance: 'Connected', specifics: ['Accepted', 'Included', 'Seen'] },
@@ -25,7 +25,7 @@ export const EMOTION_WHEEL = [
     ],
   },
   {
-    core: 'Calm', color: '#6FA3A9', angle: 120,
+    core: 'Calm', color: '#6A9298', angle: 120,
     branches: [
       { nuance: 'Hopeful',  specifics: ['Optimistic', 'Inspired', 'Open'] },
       { nuance: 'Steady',   specifics: ['Centered', 'Grounded', 'Relaxed'] },
@@ -33,7 +33,7 @@ export const EMOTION_WHEEL = [
     ],
   },
   {
-    core: 'Sad', color: '#6B7FA3', angle: 180,
+    core: 'Sad', color: '#6A7A94', angle: 180,
     branches: [
       { nuance: 'Lonely',     specifics: ['Isolated', 'Abandoned', 'Missing'] },
       { nuance: 'Hurt',       specifics: ['Disappointed', 'Rejected', 'Betrayed'] },
@@ -41,7 +41,7 @@ export const EMOTION_WHEEL = [
     ],
   },
   {
-    core: 'Tense', color: '#9F403D', angle: 240,
+    core: 'Tense', color: '#7E5E5E', angle: 240,
     branches: [
       { nuance: 'Anxious',    specifics: ['Worried', 'Overwhelmed', 'Restless'] },
       { nuance: 'Fearful',    specifics: ['Scared', 'Insecure', 'Threatened'] },
@@ -49,7 +49,7 @@ export const EMOTION_WHEEL = [
     ],
   },
   {
-    core: 'Angry', color: '#B5574A', angle: 300,
+    core: 'Angry', color: '#8A6A60', angle: 300,
     branches: [
       { nuance: 'Mad',        specifics: ['Furious', 'Resentful', 'Provoked'] },
       { nuance: 'Judgmental', specifics: ['Critical', 'Suspicious', 'Dismissive'] },

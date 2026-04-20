@@ -22,7 +22,7 @@ function PopoverContent({
         align={align}
         sideOffset={sideOffset}
         className={cn(
-          'z-50 w-72 origin-[--radix-popover-content-transform-origin] rounded-[15px] border border-[#F0F3F3] bg-white shadow-[0_8px_32px_rgba(12,22,41,0.12)] outline-none',
+          'z-50 w-72 origin-[--radix-popover-content-transform-origin] rounded-[15px] border border-[#f2f4f4] bg-white shadow-[0_8px_32px_rgba(12,22,41,0.12)] outline-none',
           'data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
           'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
@@ -37,16 +37,16 @@ function PopoverContent({
 
 function PopoverHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
-    <div className={cn('flex w-full flex-col gap-1 rounded-t-[15px] border-b border-[#F0F3F3] px-4 py-3', className)} {...props} />
+    <div className={cn('flex w-full flex-col gap-1 rounded-t-[15px] border-b border-[#f2f4f4] px-4 py-3', className)} {...props} />
   );
 }
 
 function PopoverTitle({ className, ...props }: React.ComponentProps<'p'>) {
-  return <p className={cn('text-sm font-semibold text-[#0C1629]', className)} {...props} />;
+  return <p className={cn('text-sm font-semibold text-[#1F3649]', className)} {...props} />;
 }
 
 function PopoverDescription({ className, ...props }: React.ComponentProps<'p'>) {
-  return <p className={cn('text-xs text-[#727A84]', className)} {...props} />;
+  return <p className={cn('text-xs text-[#5a6061]', className)} {...props} />;
 }
 
 function PopoverBody({ children, className, ...props }: React.ComponentProps<'div'>) {
@@ -55,7 +55,7 @@ function PopoverBody({ children, className, ...props }: React.ComponentProps<'di
 
 function PopoverFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
-    <div className={cn('grid w-full gap-2 rounded-b-[15px] border-t border-[#F0F3F3] px-3 py-2.5', className)} {...props} />
+    <div className={cn('grid w-full gap-2 rounded-b-[15px] border-t border-[#f2f4f4] px-3 py-2.5', className)} {...props} />
   );
 }
 

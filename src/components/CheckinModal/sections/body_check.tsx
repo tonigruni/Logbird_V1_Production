@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import React from 'react';
+import { Moon, Drop, ForkKnife, PersonSimpleRun, Wine, DeviceMobile } from '@phosphor-icons/react';
 
 /* Small segmented control */
 function BodySeg({ options, value, onChange, color = '#1F3649' }: any) {
@@ -41,25 +42,6 @@ function BodySeg({ options, value, onChange, color = '#1F3649' }: any) {
   );
 }
 
-/* Simple icon helper (CSS-only glyphs) */
-function SleepIcon({ color = 'currentColor' }: any) {
-  return (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>);
-}
-function DropIcon({ color = 'currentColor' }: any) {
-  return (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>);
-}
-function ForkIcon({ color = 'currentColor' }: any) {
-  return (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 3v8a3 3 0 0 0 6 0V3"/><path d="M10 11v10"/><path d="M17 3v18"/><path d="M17 14c-2 0-4-1-4-4s2-7 4-7"/></svg>);
-}
-function MoveIcon({ color = 'currentColor' }: any) {
-  return (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 22l4-7M8 15l3-3M11 12l-2-3M9 9l3-2M12 7l3 2M15 9l4-6"/><circle cx="16" cy="5" r="1.2" fill={color}/></svg>);
-}
-function GlassIcon({ color = 'currentColor' }: any) {
-  return (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 3h10l-1 8a4 4 0 0 1-8 0L7 3z"/><path d="M12 15v6"/><path d="M9 21h6"/></svg>);
-}
-function PhoneIcon({ color = 'currentColor' }: any) {
-  return (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>);
-}
 
 /* -------- Stat row primitive -------- */
 function Row({ icon, label, hint, children, emphasis, error }: any) {
@@ -178,13 +160,13 @@ function DualTimeSlider({ bed, wake, setBed, setWake }: any) {
         position: 'absolute', left: `${pct}%`, top: '50%',
         transform: 'translate(-50%, -50%)',
         width: 22, height: 22, borderRadius: 9999,
-        background: unset ? '#f6f4ff' : '#fff',
-        border: unset ? '2px dashed #a8a1d9' : '2px solid #6b5bd2',
+        background: unset ? '#f2f4f4' : '#fff',
+        border: unset ? '2px dashed #cdd4d7' : '2px solid #1F3649',
         opacity: unset ? 0.7 : 1,
-        boxShadow: drag === which ? '0 0 0 6px rgba(107,91,210,0.18), 0 2px 6px rgba(12,22,41,0.15)' : (unset ? 'none' : '0 2px 6px rgba(12,22,41,0.12)'),
+        boxShadow: drag === which ? '0 0 0 6px rgba(31,54,73,0.12), 0 2px 6px rgba(12,22,41,0.15)' : (unset ? 'none' : '0 2px 6px rgba(12,22,41,0.12)'),
         cursor: 'grab', zIndex: 3,
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        color: unset ? '#a8a1d9' : '#6b5bd2',
+        color: unset ? '#cdd4d7' : '#1F3649',
         transition: drag ? 'none' : 'box-shadow 160ms ease, opacity 160ms ease',
         touchAction: 'none',
       }}
@@ -197,15 +179,15 @@ function DualTimeSlider({ bed, wake, setBed, setWake }: any) {
     <div style={{ padding: '6px 10px 16px' }}>
       <div ref={trackRef} style={{
         position: 'relative', height: 8, borderRadius: 9999,
-        background: '#e5e8f7',
+        background: '#ECEFF2',
       }}>
         {/* filled segment = time asleep (faded when unset) */}
         <div style={{
           position: 'absolute', left: `${bedPct}%`, width: `${wakePct - bedPct}%`,
           top: 0, bottom: 0,
           background: (bedUnset || wakeUnset)
-            ? 'repeating-linear-gradient(90deg, #c7c7d6 0 6px, transparent 6px 12px)'
-            : 'linear-gradient(90deg, #6b5bd2, #8b7ce0)',
+            ? 'repeating-linear-gradient(90deg, #cdd4d7 0 6px, transparent 6px 12px)'
+            : 'linear-gradient(90deg, #4a7a9b, #1F3649)',
           opacity: (bedUnset || wakeUnset) ? 0.5 : 1,
           borderRadius: 9999,
         }}/>
@@ -272,11 +254,11 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
   const hourDisplay = !hasTimes ? '—h' : (sleepM === 0 ? `${sleepH}h` : `${sleepH}h ${sleepM}m`);
 
   const sleepColor = !sleepQual ? '#adb3b4' : (({
-    awful:   '#7a2d2b',
-    rough:   '#9f403d',
-    ok:      '#1F3649',
-    good:    '#3f8a57',
-    restful: '#22c55e',
+    awful:   '#7E5E5E',
+    rough:   '#8A7868',
+    ok:      '#5a6061',
+    good:    '#4A7070',
+    restful: '#1F3649',
   } as any)[sleepQual] || '#1F3649');
 
   return (
@@ -290,8 +272,8 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
       <div style={{
         padding: 14,
         borderRadius: 12,
-        background: 'linear-gradient(155deg, #f6f4ff 0%, #eef2ff 100%)',
-        border: '1px solid ' + (showErrors && (missing.sleepTimes || missing.sleepQual) ? '#fca5a5' : '#e5e8f7'),
+        background: '#f7f9fa',
+        border: '1px solid ' + (showErrors && (missing.sleepTimes || missing.sleepQual) ? '#fca5a5' : '#ECEFF2'),
         marginBottom: 8,
         animation: showErrors && (missing.sleepTimes || missing.sleepQual) ? 'shake 420ms ease' : 'none',
       }}>
@@ -300,11 +282,11 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
             <span style={{
               width: 28, height: 28, borderRadius: 8, background: '#fff',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              color: '#6b5bd2',
-            }}><SleepIcon/></span>
+              color: '#5a6061',
+            }}><Moon size={13}/></span>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: '#6b5bd2', textTransform: 'uppercase' }}>Sleep</span>
+                <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: '#1F3649', textTransform: 'uppercase' }}>Sleep</span>
                 {showErrors && (missing.sleepTimes || missing.sleepQual) && (
                   <span style={{
                     display: 'inline-flex', alignItems: 'center', gap: 3,
@@ -332,7 +314,7 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
 
         <div style={{ marginTop: 10 }}>
           <BodySeg
-            color="#6b5bd2"
+            color="#1F3649"
             value={sleepQual}
             onChange={setSleepQual}
             options={[
@@ -347,9 +329,9 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
       </div>
 
       {/* Drinks / Food */}
-      <Row icon={<GlassIcon color="#9f403d"/>} label="Alcohol" hint="last night" error={showErrors && missing.alcohol}>
+      <Row icon={<Wine size={13}/>} label="Alcohol" hint="last night" error={showErrors && missing.alcohol}>
         <BodySeg
-          color="#9f403d"
+          color="#1F3649"
           value={alcohol} onChange={setAlcohol}
           options={[
             { v: 'none', l: 'None' },
@@ -359,9 +341,9 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
         />
       </Row>
 
-      <Row icon={<ForkIcon color="#22c55e"/>} label="Ate well" hint="yesterday" error={showErrors && missing.food}>
+      <Row icon={<ForkKnife size={13}/>} label="Ate well" hint="yesterday" error={showErrors && missing.food}>
         <BodySeg
-          color="#22c55e"
+          color="#1F3649"
           value={food} onChange={setFood}
           options={[
             { v: 'poorly', l: 'Poorly' },
@@ -373,9 +355,9 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
         />
       </Row>
 
-      <Row icon={<DropIcon color="#2A6FB5"/>} label="Hydration" hint="yesterday" error={showErrors && missing.water}>
+      <Row icon={<Drop size={13}/>} label="Hydration" hint="yesterday" error={showErrors && missing.water}>
         <BodySeg
-          color="#2A6FB5"
+          color="#1F3649"
           value={water} onChange={setWater}
           options={[
             { v: 'none',   l: 'None' },
@@ -387,15 +369,15 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
         />
       </Row>
 
-      <Row icon={<MoveIcon color="#E8A83A"/>} label="Movement" hint="yesterday" error={showErrors && missing.steps}>
+      <Row icon={<PersonSimpleRun size={13}/>} label="Movement" hint="yesterday" error={showErrors && missing.steps}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 10 }}>
           {/* Steps row */}
           <div style={{
             display: 'flex', alignItems: 'center', gap: 10,
             padding: '10px 12px', borderRadius: 10,
-            background: '#fff8ec', border: '1px solid #fde4b4',
+            background: '#f7f9fa', border: '1px solid #ECEFF2',
           }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8A83A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a6061" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4 20c1-4 3-6 5-7 1-.5 2-2 2-4 0-2-2-3-3-3s-2 1-2 3c0 3 2 4 3 5"/>
               <path d="M14 18c1-3 3-5 5-6 1-.4 1.5-1.5 1.5-3 0-1.5-1.5-2.5-2.5-2.5s-2 1-2 2.5c0 2.5 1.5 3.5 2.5 4"/>
             </svg>
@@ -411,12 +393,12 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
                   }}
                   style={{
                     width: 76, padding: '2px 6px',
-                    border: '1px solid #fde4b4', borderRadius: 6, background: '#fff',
+                    border: '1px solid #ECEFF2', borderRadius: 6, background: '#fff',
                     fontFamily: 'var(--font-mono)', fontSize: 14, fontWeight: 700,
-                    color: '#9a6b17', outline: 'none',
+                    color: '#2d3435', outline: 'none',
                   }}
                 />
-                <span style={{ fontSize: 11.5, color: '#9a6b17', fontWeight: 600 }}>steps</span>
+                <span style={{ fontSize: 11.5, color: '#5a6061', fontWeight: 600 }}>steps</span>
                 <span style={{ marginLeft: 'auto', fontSize: 10.5, color: '#adb3b4', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                   {steps == null ? 'not set' : steps < 3000 ? 'low' : steps < 7000 ? 'moderate' : steps < 11000 ? 'active' : 'very active'}
                 </span>
@@ -425,7 +407,7 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
                 type="range" min="0" max="20000" step="500"
                 value={steps ?? 0}
                 onChange={e => setSteps(parseInt(e.target.value, 10))}
-                style={{ width: '100%', accentColor: '#E8A83A', opacity: steps == null ? 0.5 : 1 }}
+                style={{ width: '100%', accentColor: '#1F3649', opacity: steps == null ? 0.5 : 1 }}
               />
             </div>
           </div>
@@ -461,9 +443,9 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
                     style={{
                       display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                       padding: '8px 10px', borderRadius: 10,
-                      border: '1px solid ' + (on ? '#E8A83A' : '#ECEFF2'),
-                      background: on ? '#fff8ec' : '#fff',
-                      color: on ? '#9a6b17' : '#5a6061',
+                      border: '1px solid ' + (on ? '#1F3649' : '#ECEFF2'),
+                      background: on ? '#f0f3f5' : '#fff',
+                      color: on ? '#1F3649' : '#5a6061',
                       fontSize: 12, fontWeight: 700, letterSpacing: '0.01em',
                       cursor: 'pointer', transition: 'all 140ms ease',
                     }}
@@ -480,13 +462,13 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
       {/* Toggles row */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 10, paddingTop: 10, borderTop: '1px solid #ECEFF2' }}>
         <ToggleCard label="Dreams" icon={<span style={{ fontSize: 14 }}>💭</span>} on={dreams} onChange={setDreams}/>
-        <ToggleCard label="Screen before bed" icon={<PhoneIcon/>} on={screens} onChange={setScreens}/>
+        <ToggleCard label="Screen before bed" icon={<DeviceMobile size={13}/>} on={screens} onChange={setScreens}/>
       </div>
 
       {/* Dream note — only when dreams toggled on */}
       {dreams && (
         <div style={{ marginTop: 10 }}>
-          <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.12em', color: '#7b63c7', textTransform: 'uppercase', marginBottom: 5 }}>
+          <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.12em', color: '#adb3b4', textTransform: 'uppercase', marginBottom: 5 }}>
             Dream note
           </div>
           <textarea
@@ -496,7 +478,7 @@ export function BodyCheck({ showErrors = false, onValidChange }: any) {
             style={{
               width: '100%', resize: 'vertical',
               padding: 10, borderRadius: 10,
-              border: '1px solid #e5e8f7', background: '#faf9ff',
+              border: '1px solid #ECEFF2', background: '#fafbfb',
               fontFamily: 'var(--font-sans)', fontSize: 12.5, color: '#2d3435',
               outline: 'none', fontStyle: 'italic',
             }}

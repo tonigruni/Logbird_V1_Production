@@ -48,44 +48,44 @@ function CountryPicker({ value, onChange, className }: { value: string; onChange
         onClick={() => setOpen(o => !o)}
         className={cn(
           'w-full flex items-center justify-between gap-2 text-left',
-          value ? 'text-[#0C1629]' : 'text-[#727A84]/50',
+          value ? 'text-[#1F3649]' : 'text-[#5a6061]/50',
           className,
         )}
         style={{ borderRadius: 15 }}
       >
         <span className="truncate">{value || 'Select country…'}</span>
-        <ChevronsUpDown size={14} className="shrink-0 text-[#B5C1C8]" />
+        <ChevronsUpDown size={14} className="shrink-0 text-[#adb3b4]" />
       </button>
 
       {open && (
         <div
-          className="absolute z-50 mt-1 w-full bg-white border border-[#D6DCE0] shadow-[0_8px_24px_rgba(12,22,41,0.10)] overflow-hidden"
+          className="absolute z-50 mt-1 w-full bg-white border border-[#ebeeef] shadow-[0_8px_24px_rgba(12,22,41,0.10)] overflow-hidden"
           style={{ borderRadius: 15 }}
         >
           {/* Search */}
-          <div className="flex items-center gap-2 px-3 py-2.5 border-b border-[#F0F3F3]">
-            <Search size={13} className="text-[#B5C1C8] shrink-0" />
+          <div className="flex items-center gap-2 px-3 py-2.5 border-b border-[#f2f4f4]">
+            <Search size={13} className="text-[#adb3b4] shrink-0" />
             <input
               autoFocus
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search country…"
-              className="flex-1 text-sm text-[#0C1629] placeholder:text-[#B5C1C8] outline-none bg-transparent"
+              className="flex-1 text-sm text-[#1F3649] placeholder:text-[#adb3b4] outline-none bg-transparent"
             />
           </div>
           {/* List */}
           <div className="max-h-52 overflow-y-auto [scrollbar-width:none]">
             {filtered.length === 0 ? (
-              <p className="px-4 py-3 text-xs text-[#B5C1C8]">No results</p>
+              <p className="px-4 py-3 text-xs text-[#adb3b4]">No results</p>
             ) : filtered.map(c => (
               <button
                 key={c}
                 type="button"
                 onClick={() => { onChange(c); setOpen(false); setSearch('') }}
-                className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#0C1629] hover:bg-[#F0F3F3] transition-colors cursor-pointer text-left"
+                className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#1F3649] hover:bg-[#f2f4f4] transition-colors cursor-pointer text-left"
               >
                 {c}
-                {value === c && <Check size={13} className="text-[#0C1629] shrink-0" />}
+                {value === c && <Check size={13} className="text-[#1F3649] shrink-0" />}
               </button>
             ))}
           </div>
@@ -112,7 +112,7 @@ function Toggle({
       aria-checked={checked}
       onClick={() => onChange(!checked)}
       className={`relative inline-flex h-6 w-12 shrink-0 cursor-pointer !rounded-full transition-colors duration-200 focus:outline-none ${
-        checked ? 'bg-[#0C1629]' : 'bg-[#D6DCE0]'
+        checked ? 'bg-[#1F3649]' : 'bg-[#ebeeef]'
       }`}
     >
       <span
@@ -273,16 +273,16 @@ export default function Account() {
 
   /* shared input classes — using explicit hex for reliability */
   const inputCls =
-    'w-full rounded-[15px] border border-[#D6DCE0] bg-white px-4 py-3 text-sm text-[#0C1629] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#727A84]/50 focus-visible:border-[#0C1629]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0C1629]/10'
+    'w-full rounded-[15px] border border-[#ebeeef] bg-white px-4 py-3 text-sm text-[#1F3649] shadow-sm shadow-black/5 transition-shadow placeholder:text-[#5a6061]/50 focus-visible:border-[#1F3649]/30 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#1F3649]/10'
 
   return (
     <div className="pb-24">
       {/* Header */}
       <div className="pb-8">
-        <h2 className="text-4xl font-extrabold tracking-tight text-[#0C1629] mb-2">
+        <h2 className="text-4xl font-extrabold tracking-tight text-[#1F3649] mb-2">
           Account &amp; Settings
         </h2>
-        <p className="text-[#727A84] max-w-2xl">
+        <p className="text-[#5a6061] max-w-2xl">
           Manage your profile information, security settings, and account
           preferences.
         </p>
@@ -295,27 +295,27 @@ export default function Account() {
         {/* ============================================================ */}
         <section className="col-span-12 lg:col-span-8 bg-white card p-10 flex flex-col">
           <div className="flex items-center gap-2.5 mb-2">
-            <User size={18} className="text-[#0C1629]" />
-            <h3 className="text-2xl font-bold text-[#0C1629]">Profile Info</h3>
+            <User size={18} className="text-[#1F3649]" />
+            <h3 className="text-2xl font-bold text-[#1F3649]">Profile Info</h3>
           </div>
-          <p className="text-sm text-[#727A84]">Your personal identity across the platform.</p>
+          <p className="text-sm text-[#5a6061]">Your personal identity across the platform.</p>
 
           <form onSubmit={updateProfile}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-[#727A84] ml-1">Full Name</label>
+                <label className="block text-sm font-bold text-[#5a6061] ml-1">Full Name</label>
                 <input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Your full name" className={inputCls} />
               </div>
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-[#727A84] ml-1">Email Address</label>
+                <label className="block text-sm font-bold text-[#5a6061] ml-1">Email Address</label>
                 <input value={email} disabled className={`${inputCls} cursor-not-allowed opacity-60`} />
               </div>
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-[#727A84] ml-1">Country</label>
+                <label className="block text-sm font-bold text-[#5a6061] ml-1">Country</label>
                 <CountryPicker value={location} onChange={setLocation} className={inputCls} />
               </div>
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-[#727A84] ml-1">City</label>
+                <label className="block text-sm font-bold text-[#5a6061] ml-1">City</label>
                 <input value={timezone} onChange={(e) => setTimezone(e.target.value)} placeholder="e.g. New York" className={inputCls} />
               </div>
             </div>
@@ -330,7 +330,7 @@ export default function Account() {
               <button
                 type="submit"
                 disabled={profileLoading}
-                className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer"
+                className="bg-[#f2f4f4] hover:bg-[#ebeeef] text-[#1F3649] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer"
               >
                 {profileLoading ? 'Updating...' : 'Update Profile'}
               </button>
@@ -343,10 +343,10 @@ export default function Account() {
         {/* ============================================================ */}
         <section className="col-span-12 lg:col-span-4 bg-white card p-10 flex flex-col">
           <div className="flex items-center gap-2.5 mb-2">
-            <PenLine size={18} className="text-[#0C1629]" />
-            <h3 className="text-2xl font-bold text-[#0C1629]">Tell us about yourself</h3>
+            <PenLine size={18} className="text-[#1F3649]" />
+            <h3 className="text-2xl font-bold text-[#1F3649]">Tell us about yourself</h3>
           </div>
-          <p className="text-sm text-[#727A84]">A short bio visible on your profile.</p>
+          <p className="text-sm text-[#5a6061]">A short bio visible on your profile.</p>
           <form onSubmit={saveBio} className="mt-8 flex flex-col flex-1">
             <textarea
               value={bio}
@@ -363,7 +363,7 @@ export default function Account() {
               <button
                 type="submit"
                 disabled={bioLoading}
-                className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer"
+                className="bg-[#f2f4f4] hover:bg-[#ebeeef] text-[#1F3649] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer"
               >
                 {bioLoading ? 'Saving...' : 'Save Bio'}
               </button>
@@ -376,15 +376,15 @@ export default function Account() {
         {/* ============================================================ */}
         <section className="col-span-12 lg:col-span-8 bg-white card p-10 flex flex-col">
           <div className="flex items-center gap-2.5 mb-2">
-            <Lock size={18} className="text-[#0C1629]" />
-            <h3 className="text-2xl font-bold text-[#0C1629]">Security</h3>
+            <Lock size={18} className="text-[#1F3649]" />
+            <h3 className="text-2xl font-bold text-[#1F3649]">Security</h3>
           </div>
-          <p className="text-sm text-[#727A84]">Update your password to keep your account secure.</p>
+          <p className="text-sm text-[#5a6061]">Update your password to keep your account secure.</p>
 
           <form onSubmit={changePassword} className="mt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-[#727A84] ml-1">Current Password</label>
+                <label className="block text-sm font-bold text-[#5a6061] ml-1">Current Password</label>
                 <input
                   type="password"
                   value={currentPassword}
@@ -394,7 +394,7 @@ export default function Account() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-[#727A84] ml-1">New Password</label>
+                <label className="block text-sm font-bold text-[#5a6061] ml-1">New Password</label>
                 <input
                   type="password"
                   value={newPassword}
@@ -420,7 +420,7 @@ export default function Account() {
               <button
                 type="submit"
                 disabled={passwordLoading}
-                className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-2"
+                className="bg-[#f2f4f4] hover:bg-[#ebeeef] text-[#1F3649] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-2"
               >
                 <Lock size={13} />
                 {passwordLoading ? 'Saving...' : 'Save Changes'}
@@ -436,9 +436,9 @@ export default function Account() {
           <div className="bg-[#fff3f3] border-2 border-[#fe8983]/20 card p-10 h-full flex flex-col">
             <div className="flex items-center gap-2.5 mb-2">
               <AlertTriangle size={18} className="text-[#9f403d]" />
-              <h3 className="text-2xl font-bold text-[#0C1629]">Danger Zone</h3>
+              <h3 className="text-2xl font-bold text-[#1F3649]">Danger Zone</h3>
             </div>
-            <p className="text-sm text-[#727A84] mb-8">
+            <p className="text-sm text-[#5a6061] mb-8">
               Deleting your account is a permanent action. All your journal
               entries, calendar events, and growth metrics will be wiped from
               our servers. This cannot be undone. You will be asked to confirm
@@ -459,7 +459,7 @@ export default function Account() {
               <div className="space-y-3">
                 <p className="text-sm text-[#752121]">
                   Type your email{' '}
-                  <strong className="text-[#0C1629]">{user?.email}</strong> to
+                  <strong className="text-[#1F3649]">{user?.email}</strong> to
                   confirm:
                 </p>
                 <input
@@ -480,7 +480,7 @@ export default function Account() {
                       setDeleteConfirm('')
                       setDeleteError('')
                     }}
-                    className="bg-[#F0F3F3] hover:bg-[#D6DCE0] text-[#0C1629] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer"
+                    className="bg-[#f2f4f4] hover:bg-[#ebeeef] text-[#1F3649] px-6 py-2.5 rounded-[10px] text-sm font-semibold transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>

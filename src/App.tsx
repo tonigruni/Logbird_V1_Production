@@ -32,6 +32,7 @@ import Goals from './pages/Goals'
 import GoalDetailPage from './pages/GoalDetailPage'
 import GoalCreate from './pages/GoalCreate'
 import Timeboxing from './pages/Timeboxing'
+import Habits from './pages/Habits'
 import Docs from './pages/Docs'
 import LandingPage from './pages/Landing/LandingPage'
 
@@ -90,6 +91,7 @@ export default function App() {
           <Route path="goals/new" element={<GoalCreate />} />
           <Route path="goals/:id" element={<GoalDetailPage />} />
           <Route path="goals/:id/edit" element={<GoalCreate />} />
+          <Route path="habits" element={<Habits />} />
           <Route path="timeboxing" element={<Timeboxing />} />
           <Route path="projects" element={<ProjectsOverview />} />
           <Route path="projects/new" element={<ProjectCreate />} />

@@ -38,11 +38,11 @@ function MoodWords({ selected, onToggle }: any) {
 /* ------- 2. 5 emoji faces ------- */
 function MoodEmoji({ value, onChange }: any) {
   const faces = [
-    { v: 1, label: 'very low',  color: '#dc2626', d: 'M8 15c1.5-1.5 6.5-1.5 8 0' },
-    { v: 2, label: 'low',       color: '#f59e0b', d: 'M8 14.5c1-0.5 6-0.5 8 0' },
-    { v: 3, label: 'neutral',   color: '#727A84', d: 'M8 14h8' },
-    { v: 4, label: 'good',      color: '#22c55e', d: 'M8 13c1.5 1.5 6.5 1.5 8 0' },
-    { v: 5, label: 'excellent', color: '#16a34a', d: 'M7 12c2 3 8 3 10 0' },
+    { v: 1, label: 'very low',  color: '#7E5E5E', d: 'M8 15c1.5-1.5 6.5-1.5 8 0' },
+    { v: 2, label: 'low',       color: '#8A7868', d: 'M8 14.5c1-0.5 6-0.5 8 0' },
+    { v: 3, label: 'neutral',   color: '#5a6061', d: 'M8 14h8' },
+    { v: 4, label: 'good',      color: '#5A8490', d: 'M8 13c1.5 1.5 6.5 1.5 8 0' },
+    { v: 5, label: 'excellent', color: '#1F3649', d: 'M7 12c2 3 8 3 10 0' },
   ];
   return (
     <div style={{ display: 'flex', gap: 12 }}>
@@ -67,11 +67,11 @@ function MoodEmoji({ value, onChange }: any) {
             aria-pressed={on}
           >
             <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
-                 stroke={on ? f.color : '#727A84'} strokeWidth="1.8"
+                 stroke={on ? f.color : '#5a6061'} strokeWidth="1.8"
                  strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="9.5"/>
-              <circle cx="9" cy="10" r="0.8" fill={on ? f.color : '#727A84'}/>
-              <circle cx="15" cy="10" r="0.8" fill={on ? f.color : '#727A84'}/>
+              <circle cx="9" cy="10" r="0.8" fill={on ? f.color : '#5a6061'}/>
+              <circle cx="15" cy="10" r="0.8" fill={on ? f.color : '#5a6061'}/>
               <path d={f.d}/>
             </svg>
             <span style={{ fontSize: 11, fontWeight: 600, color: on ? f.color : '#adb3b4', textTransform: 'capitalize' }}>
@@ -94,7 +94,7 @@ function MoodSlider({ value, onChange }: any) {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16 }}>
-        <span style={{ fontFamily: 'var(--font-heading)', fontSize: 48, fontWeight: 700, letterSpacing: '-0.02em', color: unset ? '#adb3b4' : `hsl(${hue}, 55%, 40%)` }}>
+        <span style={{ fontFamily: 'var(--font-heading)', fontSize: 48, fontWeight: 700, letterSpacing: '-0.02em', color: unset ? '#adb3b4' : '#1F3649' }}>
           {unset ? '—' : display}<span style={{ fontSize: 22, color: '#adb3b4' }}>/10</span>
         </span>
         <span style={{ fontSize: 14, fontWeight: 600, color: '#5a6061', textTransform: 'capitalize' }}>{label}</span>

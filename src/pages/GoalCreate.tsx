@@ -54,10 +54,10 @@ const TASK_PRIORITY_COLORS: Record<string, string> = {
   urgent: 'bg-red-50 text-red-600',
   high:   'bg-orange-50 text-orange-600',
   normal: 'bg-blue-50 text-blue-600',
-  low:    'bg-[#F0F3F3] text-[#727A84]',
+  low:    'bg-[#f2f4f4] text-[#5a6061]',
 }
 
-const PROJECT_COLORS = ['#3b82f6','#22c55e','#f59e0b','#8b5cf6','#ec4899','#0C1629']
+const PROJECT_COLORS = ['#3b82f6','#22c55e','#f59e0b','#8b5cf6','#ec4899','#1F3649']
 
 const VALUE_TAGS = [
   'Growth Mindset','Discipline','Creativity','Health First',
@@ -81,7 +81,7 @@ interface Milestone {
 // ---------------------------------------------------------------------------
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider block">
+    <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider block">
       {children}
     </span>
   )
@@ -307,20 +307,20 @@ export default function GoalCreate() {
       <div className="flex items-center gap-2 text-sm">
         <button
           onClick={() => navigate(isEditing ? `/goals/${editId}` : '/goals')}
-          className="inline-flex items-center gap-2 font-semibold text-[#727A84] hover:text-[#0C1629] transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 font-semibold text-[#5a6061] hover:text-[#1F3649] transition-colors cursor-pointer"
         >
           <ArrowLeft size={16} />
           {isEditing ? 'Back to Goal' : 'Goals'}
         </button>
-        <span className="text-[#D6DCE0]">/</span>
-        <span className="font-semibold text-[#0C1629]">New Goal</span>
+        <span className="text-[#ebeeef]">/</span>
+        <span className="font-semibold text-[#1F3649]">New Goal</span>
       </div>
 
       {/* Page header — title + actions inline */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-black text-[#0C1629] tracking-tight">{isEditing ? 'Edit Goal Blueprint' : 'Create Goal Blueprint'}</h1>
-          <p className="text-sm text-[#727A84] mt-1">{isEditing ? 'Update your goal details and save.' : "Define what you want to achieve and how you'll get there."}</p>
+          <h1 className="text-xl font-black text-[#1F3649] tracking-tight">{isEditing ? 'Edit Goal Blueprint' : 'Create Goal Blueprint'}</h1>
+          <p className="text-sm text-[#5a6061] mt-1">{isEditing ? 'Update your goal details and save.' : "Define what you want to achieve and how you'll get there."}</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {saveError && (
@@ -328,14 +328,14 @@ export default function GoalCreate() {
           )}
           <button
             onClick={() => navigate('/goals')}
-            className="text-sm font-semibold text-[#727A84] bg-white card px-4 py-2.5 hover:bg-[#F0F3F3] transition-colors cursor-pointer"
+            className="text-sm font-semibold text-[#5a6061] bg-white card px-4 py-2.5 hover:bg-[#f2f4f4] transition-colors cursor-pointer"
           >
             Discard
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-[#0C1629] px-5 py-2.5 rounded-[10px] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-[#1F3649] px-5 py-2.5 rounded-[10px] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
           >
             <RocketLaunch size={15} weight="fill" />
             {saving ? 'Saving…' : isEditing ? 'Save Changes' : 'Activate Blueprint'}
@@ -354,7 +354,7 @@ export default function GoalCreate() {
         <div className="relative rounded-[15px] overflow-hidden h-40 group">
           <img src={coverUrl} alt="" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
-            <button onClick={() => setShowImagePicker(true)} className="flex items-center gap-1.5 px-3 py-2 bg-white/90 rounded-[8px] text-xs font-semibold text-[#0C1629] cursor-pointer">
+            <button onClick={() => setShowImagePicker(true)} className="flex items-center gap-1.5 px-3 py-2 bg-white/90 rounded-[8px] text-xs font-semibold text-[#1F3649] cursor-pointer">
               <Image size={13} /> Change
             </button>
             <button onClick={() => setCoverUrl(null)} className="flex items-center gap-1.5 px-3 py-2 bg-white/90 rounded-[8px] text-xs font-semibold text-[#dc2626] cursor-pointer">
@@ -365,10 +365,10 @@ export default function GoalCreate() {
       ) : (
         <button
           onClick={() => setShowImagePicker(true)}
-          className="w-full h-14 flex items-center justify-center gap-2 bg-white/60 card !border-dashed !border-[#B5C1C8]/30 hover:bg-white hover:!border-[#0C1629]/20 transition-all rounded-[15px] cursor-pointer group"
+          className="w-full h-14 flex items-center justify-center gap-2 bg-white/60 card !border-dashed !border-[#adb3b4]/30 hover:bg-white hover:!border-[#1F3649]/20 transition-all rounded-[15px] cursor-pointer group"
         >
-          <Image size={14} className="text-[#B5C1C8] group-hover:text-[#727A84] transition-colors" />
-          <span className="text-xs font-semibold text-[#B5C1C8] group-hover:text-[#727A84] transition-colors">Add cover image · auto-selected from title if skipped</span>
+          <Image size={14} className="text-[#adb3b4] group-hover:text-[#5a6061] transition-colors" />
+          <span className="text-xs font-semibold text-[#adb3b4] group-hover:text-[#5a6061] transition-colors">Add cover image · auto-selected from title if skipped</span>
         </button>
       )}
 
@@ -386,25 +386,25 @@ export default function GoalCreate() {
               onChange={e => { setTitle(e.target.value); setErrors(prev => ({ ...prev, title: undefined })) }}
               placeholder="What do you want to achieve?"
               className={cn(
-                'w-full text-base font-semibold text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-4 py-3.5 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow',
+                'w-full text-base font-semibold text-[#1F3649] placeholder-[#adb3b4] bg-[#f2f4f4] rounded-[10px] px-4 py-3.5 outline-none focus:ring-2 focus:ring-[#1F3649]/10 transition-shadow',
                 errors.title && 'ring-2 ring-red-300'
               )}
             />
             {errors.title && <p className="text-xs text-red-500">{errors.title}</p>}
           </div>
 
-          <div className="border-t border-[#F0F3F3]" />
+          <div className="border-t border-[#f2f4f4]" />
 
           {/* Category — multi-select */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Label>Category</Label>
-              <span className="text-[10px] text-[#B5C1C8] font-medium">Select all that apply</span>
+              <span className="text-[10px] text-[#adb3b4] font-medium">Select all that apply</span>
             </div>
             {errors.category && <p className="text-xs text-red-500">{errors.category}</p>}
             <div className="flex flex-wrap gap-2">
               {activeCategories.map(cat => {
-                const color = CATEGORY_COLORS[cat.name] ?? '#727A84'
+                const color = CATEGORY_COLORS[cat.name] ?? '#5a6061'
                 const active = categoryIds.includes(cat.id)
                 return (
                   <button
@@ -412,7 +412,7 @@ export default function GoalCreate() {
                     onClick={() => toggleCategory(cat.id)}
                     className={cn(
                       'px-3.5 py-2 text-xs font-semibold rounded-[10px] transition-all cursor-pointer border',
-                      active ? 'text-white border-transparent' : 'bg-white text-[#727A84] border-[#D6DCE0] hover:bg-[#F0F3F3]'
+                      active ? 'text-white border-transparent' : 'bg-white text-[#5a6061] border-[#ebeeef] hover:bg-[#f2f4f4]'
                     )}
                     style={active ? { backgroundColor: color, borderColor: color } : {}}
                   >
@@ -423,7 +423,7 @@ export default function GoalCreate() {
             </div>
           </div>
 
-          <div className="border-t border-[#F0F3F3]" />
+          <div className="border-t border-[#f2f4f4]" />
 
           {/* Timeline */}
           <div className="space-y-3">
@@ -436,18 +436,18 @@ export default function GoalCreate() {
                   className={cn(
                     'flex flex-col items-center py-3 px-2 rounded-[10px] border text-center transition-all cursor-pointer',
                     timeline === opt.value
-                      ? 'bg-[#0C1629] border-[#0C1629] text-white'
-                      : 'bg-white border-[#D6DCE0] text-[#727A84] hover:bg-[#F0F3F3]'
+                      ? 'bg-[#1F3649] border-[#1F3649] text-white'
+                      : 'bg-white border-[#ebeeef] text-[#5a6061] hover:bg-[#f2f4f4]'
                   )}
                 >
-                  <span className={cn('text-xs font-bold', timeline === opt.value ? 'text-white' : 'text-[#0C1629]')}>{opt.label}</span>
-                  <span className={cn('text-[10px] mt-0.5', timeline === opt.value ? 'text-white/70' : 'text-[#B5C1C8]')}>{opt.sub}</span>
+                  <span className={cn('text-xs font-bold', timeline === opt.value ? 'text-white' : 'text-[#1F3649]')}>{opt.label}</span>
+                  <span className={cn('text-[10px] mt-0.5', timeline === opt.value ? 'text-white/70' : 'text-[#adb3b4]')}>{opt.sub}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="border-t border-[#F0F3F3]" />
+          <div className="border-t border-[#f2f4f4]" />
 
           {/* Why Statement */}
           <div className="space-y-2">
@@ -457,38 +457,38 @@ export default function GoalCreate() {
               onChange={e => setWhy(e.target.value)}
               placeholder="What's the deeper reason behind this goal?"
               rows={3}
-              className="w-full text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow resize-none"
+              className="w-full text-sm text-[#1F3649] placeholder-[#adb3b4] bg-[#f2f4f4] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#1F3649]/10 transition-shadow resize-none"
             />
           </div>
 
-          <div className="border-t border-[#F0F3F3]" />
+          <div className="border-t border-[#f2f4f4]" />
 
           {/* SMART — Outcome Metrics & Success Criteria */}
           <div className="space-y-4">
             <div>
               <Label>Outcome Metric</Label>
-              <p className="text-[10px] text-[#B5C1C8] mt-0.5 mb-2">What will you measure to know you're on track?</p>
+              <p className="text-[10px] text-[#adb3b4] mt-0.5 mb-2">What will you measure to know you're on track?</p>
               <input
                 value={outcomeMetric}
                 onChange={e => setOutcomeMetric(e.target.value)}
                 placeholder="e.g. Run 5 km without stopping, Save €500/month, Read 12 books"
-                className="w-full text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow"
+                className="w-full text-sm text-[#1F3649] placeholder-[#adb3b4] bg-[#f2f4f4] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#1F3649]/10 transition-shadow"
               />
             </div>
             <div>
               <Label>Success Criteria</Label>
-              <p className="text-[10px] text-[#B5C1C8] mt-0.5 mb-2">What does "done" look like? Be specific.</p>
+              <p className="text-[10px] text-[#adb3b4] mt-0.5 mb-2">What does "done" look like? Be specific.</p>
               <textarea
                 value={successCriteria}
                 onChange={e => setSuccessCriteria(e.target.value)}
                 placeholder="e.g. I will have completed a 5K race, accumulated €6,000 in savings, and read all 12 books by year-end"
                 rows={3}
-                className="w-full text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow resize-none"
+                className="w-full text-sm text-[#1F3649] placeholder-[#adb3b4] bg-[#f2f4f4] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#1F3649]/10 transition-shadow resize-none"
               />
             </div>
           </div>
 
-          <div className="border-t border-[#F0F3F3]" />
+          <div className="border-t border-[#f2f4f4]" />
 
           {/* Effort Expectations */}
           <div className="space-y-3">
@@ -501,33 +501,33 @@ export default function GoalCreate() {
                 value={effortHoursPerWeek}
                 onChange={e => setEffortHoursPerWeek(e.target.value === '' ? '' : Number(e.target.value))}
                 placeholder="e.g. 5"
-                className="w-24 text-sm font-semibold text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow"
+                className="w-24 text-sm font-semibold text-[#1F3649] placeholder-[#adb3b4] bg-[#f2f4f4] rounded-[10px] px-4 py-3 outline-none focus:ring-2 focus:ring-[#1F3649]/10 transition-shadow"
               />
-              <span className="text-sm text-[#727A84]">hours per week</span>
+              <span className="text-sm text-[#5a6061]">hours per week</span>
             </div>
           </div>
 
-          <div className="border-t border-[#F0F3F3]" />
+          <div className="border-t border-[#f2f4f4]" />
 
           {/* Milestones */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <Label>Milestones &amp; Phases</Label>
-              <button onClick={addMilestone} className="inline-flex items-center gap-1 text-[10px] font-bold text-[#727A84] hover:text-[#0C1629] transition-colors cursor-pointer uppercase tracking-wider">
+              <button onClick={addMilestone} className="inline-flex items-center gap-1 text-[10px] font-bold text-[#5a6061] hover:text-[#1F3649] transition-colors cursor-pointer uppercase tracking-wider">
                 <Plus size={11} weight="bold" /> Add Phase
               </button>
             </div>
             <div className="space-y-3">
               {milestones.map((m, i) => (
                 <div key={i} className="grid grid-cols-[auto_1fr_1fr_auto] gap-2 items-start">
-                  <div className="w-6 h-6 rounded-full bg-[#F0F3F3] flex items-center justify-center mt-2.5 shrink-0">
-                    <span className="text-[9px] font-black text-[#727A84]">{String(i + 1).padStart(2, '0')}</span>
+                  <div className="w-6 h-6 rounded-full bg-[#f2f4f4] flex items-center justify-center mt-2.5 shrink-0">
+                    <span className="text-[9px] font-black text-[#5a6061]">{String(i + 1).padStart(2, '0')}</span>
                   </div>
                   <input
                     value={m.title}
                     onChange={e => updateMilestone(i, 'title', e.target.value)}
                     placeholder="Phase title"
-                    className="text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-3 py-2.5 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow"
+                    className="text-sm text-[#1F3649] placeholder-[#adb3b4] bg-[#f2f4f4] rounded-[10px] px-3 py-2.5 outline-none focus:ring-2 focus:ring-[#1F3649]/10 transition-shadow"
                   />
                   <LogbirdDatePicker
                     value={m.date || null}
@@ -536,35 +536,35 @@ export default function GoalCreate() {
                   <button
                     onClick={() => removeMilestone(i)}
                     disabled={milestones.length <= 1}
-                    className="p-1.5 mt-1.5 hover:bg-[#F0F3F3] rounded-full transition-colors cursor-pointer disabled:opacity-30"
+                    className="p-1.5 mt-1.5 hover:bg-[#f2f4f4] rounded-full transition-colors cursor-pointer disabled:opacity-30"
                   >
-                    <X size={13} className="text-[#B5C1C8]" />
+                    <X size={13} className="text-[#adb3b4]" />
                   </button>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="border-t border-[#F0F3F3]" />
+          <div className="border-t border-[#f2f4f4]" />
 
           {/* Tasks */}
           <div className="space-y-3">
             <Label>Tasks</Label>
-            <p className="text-xs text-[#B5C1C8] -mt-1">Add tasks now — they'll be linked to this goal on save.</p>
+            <p className="text-xs text-[#adb3b4] -mt-1">Add tasks now — they'll be linked to this goal on save.</p>
 
             {/* Staged tasks */}
             {tasks.length > 0 && (
               <div className="space-y-2">
                 {tasks.map((t, i) => (
-                  <div key={i} className="flex items-center gap-3 bg-[#F0F3F3] rounded-[10px] px-4 py-2.5">
-                    <CheckSquare size={14} className="text-[#B5C1C8] shrink-0" />
-                    <span className="flex-1 text-sm font-medium text-[#0C1629]">{t.title}</span>
+                  <div key={i} className="flex items-center gap-3 bg-[#f2f4f4] rounded-[10px] px-4 py-2.5">
+                    <CheckSquare size={14} className="text-[#adb3b4] shrink-0" />
+                    <span className="flex-1 text-sm font-medium text-[#1F3649]">{t.title}</span>
                     <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full', TASK_PRIORITY_COLORS[t.priority])}>{t.priority}</span>
                     {t.estimated_minutes && (
-                      <span className="text-[10px] text-[#B5C1C8]">{t.estimated_minutes}m</span>
+                      <span className="text-[10px] text-[#adb3b4]">{t.estimated_minutes}m</span>
                     )}
                     <button onClick={() => setTasks(prev => prev.filter((_, idx) => idx !== i))} className="p-1 hover:bg-white rounded-full transition-colors cursor-pointer">
-                      <X size={12} className="text-[#B5C1C8]" />
+                      <X size={12} className="text-[#adb3b4]" />
                     </button>
                   </div>
                 ))}
@@ -578,12 +578,12 @@ export default function GoalCreate() {
                 onChange={e => setTaskTitle(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && addTask()}
                 placeholder="Add a task…"
-                className="flex-1 text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-4 py-2.5 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow"
+                className="flex-1 text-sm text-[#1F3649] placeholder-[#adb3b4] bg-[#f2f4f4] rounded-[10px] px-4 py-2.5 outline-none focus:ring-2 focus:ring-[#1F3649]/10 transition-shadow"
               />
               <select
                 value={taskPriority}
                 onChange={e => setTaskPriority(e.target.value)}
-                className="text-xs font-semibold text-[#727A84] bg-[#F0F3F3] border border-[#D6DCE0] rounded-[10px] px-3 py-2.5 outline-none cursor-pointer"
+                className="text-xs font-semibold text-[#5a6061] bg-[#f2f4f4] border border-[#ebeeef] rounded-[10px] px-3 py-2.5 outline-none cursor-pointer"
               >
                 <option value="urgent">Urgent</option>
                 <option value="high">High</option>
@@ -593,7 +593,7 @@ export default function GoalCreate() {
               <select
                 value={taskTime ?? ''}
                 onChange={e => setTaskTime(e.target.value ? Number(e.target.value) : null)}
-                className="text-xs font-semibold text-[#727A84] bg-[#F0F3F3] border border-[#D6DCE0] rounded-[10px] px-3 py-2.5 outline-none cursor-pointer"
+                className="text-xs font-semibold text-[#5a6061] bg-[#f2f4f4] border border-[#ebeeef] rounded-[10px] px-3 py-2.5 outline-none cursor-pointer"
               >
                 <option value="">No est.</option>
                 <option value="15">15m</option>
@@ -605,7 +605,7 @@ export default function GoalCreate() {
               <button
                 onClick={addTask}
                 disabled={!taskTitle.trim()}
-                className="p-2.5 bg-[#0C1629] text-white rounded-[10px] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-30"
+                className="p-2.5 bg-[#1F3649] text-white rounded-[10px] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-30"
               >
                 <Plus size={15} weight="bold" />
               </button>
@@ -628,7 +628,7 @@ export default function GoalCreate() {
                     onClick={() => setPriority(active ? '' : opt.label)}
                     className={cn(
                       'py-2.5 px-3 text-xs font-semibold rounded-[10px] border transition-all cursor-pointer text-left',
-                      active ? 'text-white border-transparent' : 'bg-white border-[#D6DCE0] text-[#727A84] hover:bg-[#F0F3F3]'
+                      active ? 'text-white border-transparent' : 'bg-white border-[#ebeeef] text-[#5a6061] hover:bg-[#f2f4f4]'
                     )}
                     style={active ? { backgroundColor: opt.color, borderColor: opt.color } : {}}
                   >
@@ -646,7 +646,7 @@ export default function GoalCreate() {
               {!showNewProject && (
                 <button
                   onClick={() => setShowNewProject(true)}
-                  className="inline-flex items-center gap-1 text-[10px] font-bold text-[#727A84] hover:text-[#0C1629] transition-colors cursor-pointer uppercase tracking-wider"
+                  className="inline-flex items-center gap-1 text-[10px] font-bold text-[#5a6061] hover:text-[#1F3649] transition-colors cursor-pointer uppercase tracking-wider"
                 >
                   <Plus size={10} weight="bold" /> New
                 </button>
@@ -655,18 +655,18 @@ export default function GoalCreate() {
 
             {/* Linked project chip */}
             {linkedProject ? (
-              <div className="flex items-center gap-2 bg-[#F0F3F3] rounded-[10px] px-3 py-2.5">
-                <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: linkedProject.color || '#0C1629' }} />
-                <span className="flex-1 text-sm font-semibold text-[#0C1629] truncate">{linkedProject.title}</span>
-                <button onClick={() => setLinkedProjectId(null)} className="p-0.5 hover:bg-[#D6DCE0] rounded-full transition-colors cursor-pointer">
-                  <X size={12} className="text-[#727A84]" />
+              <div className="flex items-center gap-2 bg-[#f2f4f4] rounded-[10px] px-3 py-2.5">
+                <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: linkedProject.color || '#1F3649' }} />
+                <span className="flex-1 text-sm font-semibold text-[#1F3649] truncate">{linkedProject.title}</span>
+                <button onClick={() => setLinkedProjectId(null)} className="p-0.5 hover:bg-[#ebeeef] rounded-full transition-colors cursor-pointer">
+                  <X size={12} className="text-[#5a6061]" />
                 </button>
               </div>
             ) : (
               <select
                 value={linkedProjectId ?? ''}
                 onChange={e => setLinkedProjectId(e.target.value || null)}
-                className="w-full text-sm text-[#727A84] bg-[#F0F3F3] rounded-[10px] px-3 py-2.5 outline-none cursor-pointer border border-[#D6DCE0]"
+                className="w-full text-sm text-[#5a6061] bg-[#f2f4f4] rounded-[10px] px-3 py-2.5 outline-none cursor-pointer border border-[#ebeeef]"
               >
                 <option value="">No project linked</option>
                 {projects.map(p => (
@@ -677,23 +677,23 @@ export default function GoalCreate() {
 
             {/* Inline project creation */}
             {showNewProject && (
-              <div className="space-y-3 pt-1 border-t border-[#F0F3F3]">
+              <div className="space-y-3 pt-1 border-t border-[#f2f4f4]">
                 <input
                   value={newProjectName}
                   onChange={e => setNewProjectName(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleCreateProject()}
                   placeholder="Project name…"
-                  className="w-full text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-3 py-2.5 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow"
+                  className="w-full text-sm text-[#1F3649] placeholder-[#adb3b4] bg-[#f2f4f4] rounded-[10px] px-3 py-2.5 outline-none focus:ring-2 focus:ring-[#1F3649]/10 transition-shadow"
                   autoFocus
                 />
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider shrink-0">Colour</span>
+                  <span className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider shrink-0">Colour</span>
                   <div className="flex items-center gap-1.5">
                     {PROJECT_COLORS.map(c => (
                       <button
                         key={c}
                         onClick={() => setNewProjectColor(c)}
-                        className={cn('w-5 h-5 rounded-full transition-transform cursor-pointer', newProjectColor === c && 'ring-2 ring-offset-1 ring-[#0C1629] scale-110')}
+                        className={cn('w-5 h-5 rounded-full transition-transform cursor-pointer', newProjectColor === c && 'ring-2 ring-offset-1 ring-[#1F3649] scale-110')}
                         style={{ backgroundColor: c }}
                       />
                     ))}
@@ -703,13 +703,13 @@ export default function GoalCreate() {
                   <button
                     onClick={handleCreateProject}
                     disabled={!newProjectName.trim() || creatingProject}
-                    className="flex-1 text-xs font-semibold text-white bg-[#0C1629] py-2 rounded-[8px] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-40"
+                    className="flex-1 text-xs font-semibold text-white bg-[#1F3649] py-2 rounded-[8px] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-40"
                   >
                     {creatingProject ? 'Creating…' : 'Create & Link'}
                   </button>
                   <button
                     onClick={() => { setShowNewProject(false); setNewProjectName('') }}
-                    className="px-3 text-xs font-semibold text-[#727A84] bg-[#F0F3F3] rounded-[8px] hover:bg-[#D6DCE0] transition-colors cursor-pointer"
+                    className="px-3 text-xs font-semibold text-[#5a6061] bg-[#f2f4f4] rounded-[8px] hover:bg-[#ebeeef] transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -721,17 +721,17 @@ export default function GoalCreate() {
           {/* Milestones icon reference card */}
           <div className="bg-white card p-5 space-y-3">
             <Label>Target Date Preview</Label>
-            <div className="flex items-center gap-3 bg-[#F0F3F3] rounded-[10px] px-4 py-3">
-              <CalendarBlank size={16} className="text-[#727A84] shrink-0" />
+            <div className="flex items-center gap-3 bg-[#f2f4f4] rounded-[10px] px-4 py-3">
+              <CalendarBlank size={16} className="text-[#5a6061] shrink-0" />
               <div>
-                <p className="text-sm font-bold text-[#0C1629]">
+                <p className="text-sm font-bold text-[#1F3649]">
                   {(() => {
                     const days = TIMELINE_OPTIONS.find(t => t.value === timeline)?.days ?? 90
                     const d = new Date(Date.now() + days * 86400000)
                     return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
                   })()}
                 </p>
-                <p className="text-[10px] text-[#B5C1C8] mt-0.5 capitalize">{timeline.replace('_', ' ')} goal</p>
+                <p className="text-[10px] text-[#adb3b4] mt-0.5 capitalize">{timeline.replace('_', ' ')} goal</p>
               </div>
             </div>
           </div>
@@ -748,7 +748,7 @@ export default function GoalCreate() {
                     onClick={() => setValues(prev => active ? prev.filter(v => v !== tag) : [...prev, tag])}
                     className={cn(
                       'text-xs font-semibold px-3 py-1.5 rounded-full transition-all cursor-pointer',
-                      active ? 'bg-[#0C1629] text-white' : 'bg-[#F0F3F3] text-[#727A84] hover:bg-[#D6DCE0]'
+                      active ? 'bg-[#1F3649] text-white' : 'bg-[#f2f4f4] text-[#5a6061] hover:bg-[#ebeeef]'
                     )}
                   >
                     {tag}
@@ -761,7 +761,7 @@ export default function GoalCreate() {
               onChange={e => setNotes(e.target.value)}
               placeholder="Any extra context or notes…"
               rows={2}
-              className="w-full text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-[#F0F3F3] rounded-[10px] px-3 py-2.5 outline-none focus:ring-2 focus:ring-[#0C1629]/10 transition-shadow resize-none"
+              className="w-full text-sm text-[#1F3649] placeholder-[#adb3b4] bg-[#f2f4f4] rounded-[10px] px-3 py-2.5 outline-none focus:ring-2 focus:ring-[#1F3649]/10 transition-shadow resize-none"
             />
           </div>
 

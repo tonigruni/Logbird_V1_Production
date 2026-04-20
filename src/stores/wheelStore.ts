@@ -51,6 +51,8 @@ export interface GoalMilestone {
 export interface Goal {
   id: string
   user_id: string
+  parent_id: string | null
+  timeframe: 'life' | 'year' | 'quarter' | 'month' | 'week' | null
   category_id: string | null
   category_ids: string[] | null
   project_id: string | null
@@ -64,6 +66,8 @@ export interface Goal {
   effort_frequency: string | null
   effort_minutes_per_session: number | null
   milestones: GoalMilestone[] | null
+  reviewed: boolean
+  achieved: boolean
   created_at: string
 }
 

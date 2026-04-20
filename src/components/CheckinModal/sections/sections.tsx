@@ -8,7 +8,7 @@ import {
   Sun, Heart, Target, Book, ArrowRight, Lightning, PlusIcon,
   GripDots, CheckIcon, CaretRight, Flame
 } from '../icons';
-import { Pill, PRIORITY_PILL, Checkbox, Btn } from '../atoms';
+import { Pill, PRIORITY_PILL, PRIORITY_DOT, Checkbox, Btn } from '../atoms';
 import { MOOD_WORDS, TIMEBOX, YESTERDAY, HABITS, WHEEL, QUOTE, INITIAL_PRIORITIES } from '../data';
 import { CommonEmotions } from './common_emotions';
 import { MoodCheckIn } from './moods';
@@ -249,14 +249,14 @@ export function MoodSection({ moodStyle, moodState, setMoodState, energy, setEne
                 onClick={() => setEnergy(i)}
                 style={{
                   flex: 1, height: 36, borderRadius: 10,
-                  border: '2px solid ' + (on ? '#f59e0b' : (showErrors && energyMissing ? '#fca5a5' : '#ECEFF2')),
-                  background: on ? 'rgba(245,158,11,0.08)' : '#fff',
+                  border: '2px solid ' + (on ? '#1F3649' : (showErrors && energyMissing ? '#fca5a5' : '#ECEFF2')),
+                  background: on ? 'rgba(31,54,73,0.07)' : '#fff',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   transition: 'all 160ms ease',
                   cursor: 'pointer',
                 }}
               >
-                <Lightning size={15} color={on ? '#f59e0b' : '#D6DCE0'}/>
+                <Lightning size={15} color={on ? '#1F3649' : '#ebeeef'}/>
               </button>
             );
           })}
@@ -403,7 +403,10 @@ export function TasksGrouped({ tasks, setTasks, done, toggleDone }: any) {
           <div key={g.key} style={{ marginBottom: 18 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, padding: '0 2px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <Pill bg={p.bg} color={p.color}>{p.label}</Pill>
+                <Pill bg={p.bg} color={p.color} style={{ border: '1px solid #ECEFF2', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: 9999, background: PRIORITY_DOT[g.key], flexShrink: 0 }}/>
+                  {p.label}
+                </Pill>
                 <span style={{ fontSize: 12, color: '#adb3b4' }}>{g.hint}</span>
                 <span style={{ fontSize: 11, color: '#adb3b4' }}>· {list.length}</span>
               </div>
@@ -480,13 +483,13 @@ export function TasksGrouped({ tasks, setTasks, done, toggleDone }: any) {
 /* ------------- TIMEBOX ------------- */
 export function Timebox() {
   const kinds: any = {
-    deep:    { bg: '#1F3649', text: '#fff', dot: '#6b63f5', label: 'Deep' },
-    shallow: { bg: '#f2f4f4', text: '#2d3435', dot: '#adb3b4', label: 'Shallow' },
-    meeting: { bg: '#fff', text: '#2d3435', dot: '#f59e0b', label: 'Meeting', border: '#ECEFF2' },
-    break:   { bg: '#ecfdf5', text: '#166534', dot: '#22c55e', label: 'Break' },
-    social:  { bg: '#fef3f2', text: '#9f403d', dot: '#ef4444', label: 'Social' },
-    body:    { bg: '#fef3c7', text: '#92400e', dot: '#f59e0b', label: 'Body' },
-    ritual:  { bg: '#f0f4ff', text: '#1e3a8a', dot: '#3b82f6', label: 'Ritual' },
+    deep:    { bg: '#f2f4f4', text: '#2d3435', dot: '#1F3649', label: 'Deep',    border: '#1F3649', borderLeft: true },
+    shallow: { bg: '#f2f4f4', text: '#2d3435', dot: '#adb3b4', label: 'Shallow', border: '#ECEFF2' },
+    meeting: { bg: '#f2f4f4', text: '#2d3435', dot: '#1F3649', label: 'Meeting', border: '#ECEFF2' },
+    break:   { bg: '#f2f4f4', text: '#2d3435', dot: '#1F3649', label: 'Break',   border: '#ECEFF2' },
+    social:  { bg: '#f2f4f4', text: '#2d3435', dot: '#1F3649', label: 'Social',  border: '#ECEFF2' },
+    body:    { bg: '#f2f4f4', text: '#2d3435', dot: '#1F3649', label: 'Body',    border: '#ECEFF2' },
+    ritual:  { bg: '#f2f4f4', text: '#2d3435', dot: '#1F3649', label: 'Ritual',  border: '#ECEFF2' },
   };
   const hours = Array.from({ length: 14 }, (_, i) => 7 + i); // 7am..8pm
 
@@ -507,7 +510,7 @@ export function Timebox() {
         <div style={{ display: 'flex', gap: 8 }}>
           {Object.entries({ deep: 'Deep', meeting: 'Meeting', break: 'Break' }).map(([k,l]) => (
             <span key={k} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#5a6061' }}>
-              <span style={{ width: 8, height: 8, borderRadius: 2, background: kinds[k].dot }}/>{l}
+              <span style={{ width: 8, height: 8, borderRadius: 2, background: '#1F3649' }}/>{l}
             </span>
           ))}
         </div>
@@ -541,11 +544,12 @@ export function Timebox() {
                 height: Math.max(26, hFor(b.start, b.end) - 4),
                 background: k.bg,
                 color: k.text,
-                border: k.border ? `1px solid ${k.border}` : 'none',
+                border: `1px solid ${k.border || '#ECEFF2'}`,
+                borderLeft: k.borderLeft ? `3px solid #1F3649` : `1px solid ${k.border || '#ECEFF2'}`,
                 borderRadius: 10,
                 padding: '6px 12px',
                 display: 'flex', alignItems: 'center', gap: 10,
-                boxShadow: b.kind === 'deep' ? '0 4px 14px rgba(31,54,73,0.18)' : 'none',
+                boxShadow: 'none',
                 overflow: 'hidden',
               }}>
                 <span style={{ width: 6, height: 6, borderRadius: 2, background: k.dot, flexShrink: 0 }}/>
@@ -597,26 +601,33 @@ export function WheelNudge() {
   const weakest = [...WHEEL].sort((a, b) => a.score - b.score)[0];
   return (
     <div className="card-soft" style={{ padding: 20, display: 'flex', gap: 16, alignItems: 'center' }}>
-      {/* mini donut */}
+      {/* mini donut — two-tone: navy arc for weakest score, gray for remainder */}
       <svg width="90" height="90" viewBox="0 0 100 100">
         {(() => {
-          const total = WHEEL.reduce((s, c) => s + c.score, 0);
-          let a = -90;
-          return WHEEL.map((c, i) => {
-            const sweep = (c.score / total) * 360;
-            const x1 = 50 + 36 * Math.cos((a * Math.PI) / 180);
-            const y1 = 50 + 36 * Math.sin((a * Math.PI) / 180);
-            const a2 = a + sweep;
-            const x2 = 50 + 36 * Math.cos((a2 * Math.PI) / 180);
-            const y2 = 50 + 36 * Math.sin((a2 * Math.PI) / 180);
-            const large = sweep > 180 ? 1 : 0;
-            a = a2;
-            return <path key={i} d={`M 50 50 L ${x1} ${y1} A 36 36 0 ${large} 1 ${x2} ${y2} Z`}
-              fill={c.color} opacity={c.cat === weakest.cat ? 1 : 0.22}/>;
-          });
+          const r = 36;
+          const cx = 50, cy = 50;
+          const circ = 2 * Math.PI * r;
+          const filled = (weakest.score / 10) * circ;
+          const startAngle = -90 * (Math.PI / 180);
+          const x1 = cx + r * Math.cos(startAngle);
+          const y1 = cy + r * Math.sin(startAngle);
+          const endAngle = startAngle + (weakest.score / 10) * 2 * Math.PI;
+          const x2 = cx + r * Math.cos(endAngle);
+          const y2 = cy + r * Math.sin(endAngle);
+          const large = weakest.score / 10 > 0.5 ? 1 : 0;
+          // remainder arc
+          const rx1 = x2, ry1 = y2;
+          const rx2 = x1, ry2 = y1;
+          const rlarge = (1 - weakest.score / 10) > 0.5 ? 1 : 0;
+          return (
+            <>
+              <path d={`M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`} fill="#1F3649"/>
+              <path d={`M ${cx} ${cy} L ${rx1} ${ry1} A ${r} ${r} 0 ${rlarge} 1 ${rx2} ${ry2} Z`} fill="#ECEFF2"/>
+            </>
+          );
         })()}
         <circle cx="50" cy="50" r="22" fill="#fff"/>
-        <text x="50" y="48" textAnchor="middle" fontFamily="Satoshi" fontWeight="800" fontSize="14" fill="#2d3435">
+        <text x="50" y="48" textAnchor="middle" fontFamily="Satoshi" fontWeight="800" fontSize="14" fill="#1F3649">
           {weakest.score.toFixed(1)}
         </text>
         <text x="50" y="60" textAnchor="middle" fontFamily="DM Sans" fontSize="7" fill="#adb3b4">/10</text>
@@ -708,7 +719,7 @@ export function Habits() {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 12.5, fontWeight: 600, color: '#2d3435', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{h.name}</div>
                 <div style={{ fontSize: 10.5, color: '#adb3b4', fontWeight: 600, letterSpacing: '0.04em' }}>
-                  <Flame size={10} color="#f59e0b" style={{ marginRight: 3 }}/>{h.streak} days
+                  <Flame size={10} color="#adb3b4" style={{ marginRight: 3 }}/>{h.streak} days
                 </div>
               </div>
             </button>

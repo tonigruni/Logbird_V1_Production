@@ -18,11 +18,19 @@ export function Pill({ children, bg, color, style }: PillProps) {
   return <span className="pill" style={{ background: bg, color, ...style }}>{children}</span>;
 }
 
+// dot colors shown alongside pill (6px colored dot per spec)
+export const PRIORITY_DOT: Record<string, string> = {
+  urgent: '#9f403d',
+  high:   '#f59e0b',
+  normal: '#5a6061',
+  low:    '#adb3b4',
+};
+
 export const PRIORITY_PILL: Record<string, { bg: string; color: string; label: string }> = {
-  urgent: { bg: 'rgba(220,38,38,0.10)',  color: '#dc2626', label: 'Urgent' },
-  high:   { bg: 'rgba(245,158,11,0.12)', color: '#b45309', label: 'High'   },
-  normal: { bg: 'rgba(31,54,73,0.10)',   color: '#1F3649', label: 'Normal' },
-  low:    { bg: 'rgba(181,193,200,0.18)',color: '#727A84', label: 'Low'    },
+  urgent: { bg: '#f2f4f4', color: '#5a6061', label: 'Urgent' },
+  high:   { bg: '#f2f4f4', color: '#5a6061', label: 'High'   },
+  normal: { bg: '#f2f4f4', color: '#5a6061', label: 'Normal' },
+  low:    { bg: '#f2f4f4', color: '#5a6061', label: 'Low'    },
 };
 
 // Checkbox

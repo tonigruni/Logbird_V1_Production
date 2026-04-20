@@ -7,7 +7,7 @@ export function UpdateCard() {
   if (!available) return null
 
   return (
-    <div className="mx-2 mb-3 rounded-xl bg-[#0C1629] p-3 text-white">
+    <div className="mx-2 mb-3 rounded-xl bg-[#1F3649] p-3 text-white">
       <div className="flex items-start gap-2.5">
         <div className="mt-0.5 shrink-0 w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
           <Download size={12} className="text-white" />
@@ -24,7 +24,7 @@ export function UpdateCard() {
       <button
         onClick={installUpdate}
         disabled={downloading}
-        className="mt-2.5 w-full flex items-center justify-center gap-1.5 bg-white text-[#0C1629] text-xs font-semibold py-1.5 rounded-lg transition-opacity hover:opacity-90 disabled:opacity-60 cursor-pointer"
+        className="mt-2.5 w-full flex items-center justify-center gap-1.5 bg-white text-[#1F3649] text-xs font-semibold py-1.5 rounded-lg transition-opacity hover:opacity-90 disabled:opacity-60 cursor-pointer"
       >
         {downloading ? (
           <>

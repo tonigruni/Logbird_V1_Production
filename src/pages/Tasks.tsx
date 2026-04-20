@@ -43,9 +43,9 @@ import type { Task, TaskPriority } from '../stores/wheelStore'
 // ---------------------------------------------------------------------------
 
 const PROJECT_MAP: Record<string, { title: string; slug: string; color: string; completion: number }> = {
-  'proj-identity-redesign': { title: 'Identity Redesign', slug: 'identity-redesign', color: '#0C1629', completion: 75 },
+  'proj-identity-redesign': { title: 'Identity Redesign', slug: 'identity-redesign', color: '#1F3649', completion: 75 },
   'proj-focus-mastery': { title: 'Focus Mastery', slug: 'focus-mastery', color: '#22c55e', completion: 30 },
-  'proj-senior-track': { title: 'Senior Track Prep', slug: 'senior-track-prep', color: '#0C1629', completion: 90 },
+  'proj-senior-track': { title: 'Senior Track Prep', slug: 'senior-track-prep', color: '#1F3649', completion: 90 },
 }
 
 // ---------------------------------------------------------------------------
@@ -57,8 +57,8 @@ const PRIORITY_ORDER: Record<TaskPriority, number> = { urgent: 0, high: 1, norma
 const PRIORITY_STYLES: Record<TaskPriority, { label: string; bg: string; text: string }> = {
   urgent: { label: 'Urgent', bg: 'bg-[#dc2626]/10', text: 'text-[#dc2626]' },
   high:   { label: 'High',   bg: 'bg-[#f59e0b]/10', text: 'text-[#f59e0b]' },
-  normal: { label: 'Normal', bg: 'bg-[#0C1629]/10', text: 'text-[#0C1629]' },
-  low:    { label: 'Low',    bg: 'bg-[#B5C1C8]/10', text: 'text-[#B5C1C8]' },
+  normal: { label: 'Normal', bg: 'bg-[#1F3649]/10', text: 'text-[#1F3649]' },
+  low:    { label: 'Low',    bg: 'bg-[#adb3b4]/10', text: 'text-[#adb3b4]' },
 }
 
 function formatTime(minutes: number | null): string {
@@ -77,7 +77,7 @@ function EnergyDots({ level }: { level: 1 | 2 | 3 }) {
           key={i}
           size={10}
           weight="fill"
-          className={i <= level ? 'text-[#f59e0b]' : 'text-[#D6DCE0]'}
+          className={i <= level ? 'text-[#f59e0b]' : 'text-[#ebeeef]'}
         />
       ))}
     </div>
@@ -119,26 +119,26 @@ function TaskRow({
       <button onClick={e => { e.stopPropagation(); onToggle() }} className="shrink-0 cursor-pointer">
         {task.completed
           ? <CheckCircle size={22} weight="fill" className="text-[#22c55e]" />
-          : <Circle size={22} weight="regular" className="text-[#c3c7cd] hover:text-[#0C1629] transition-colors" />
+          : <Circle size={22} weight="regular" className="text-[#c3c7cd] hover:text-[#1F3649] transition-colors" />
         }
       </button>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
         <h4 className={cn(
-          'text-sm font-bold leading-snug group-hover:text-[#0C1629] transition-colors',
-          task.completed ? 'line-through text-[#B5C1C8]' : 'text-[#0C1629]'
+          'text-sm font-bold leading-snug group-hover:text-[#1F3649] transition-colors',
+          task.completed ? 'line-through text-[#adb3b4]' : 'text-[#1F3649]'
         )}>
           {task.title}
         </h4>
         <div className="flex items-center gap-2 mt-0.5 flex-wrap">
           {categoryName && (
-            <span className="text-[10px] font-bold text-[#727A84] uppercase tracking-wider">{categoryName}</span>
+            <span className="text-[10px] font-bold text-[#5a6061] uppercase tracking-wider">{categoryName}</span>
           )}
           {goalTitle && (
             <button
               onClick={e => { e.stopPropagation(); navigate('/goals') }}
-              className="flex items-center gap-1 text-[10px] font-semibold text-[#B5C1C8] hover:text-[#0C1629] transition-colors cursor-pointer"
+              className="flex items-center gap-1 text-[10px] font-semibold text-[#adb3b4] hover:text-[#1F3649] transition-colors cursor-pointer"
             >
               <Target size={10} />
               {goalTitle}
@@ -149,7 +149,7 @@ function TaskRow({
 
       {/* Energy */}
       <div className="hidden sm:flex items-center gap-1.5 shrink-0">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-[#B5C1C8]">Energy</span>
+        <span className="text-[10px] font-bold uppercase tracking-wider text-[#adb3b4]">Energy</span>
         <EnergyDots level={task.energy} />
       </div>
 
@@ -163,7 +163,7 @@ function TaskRow({
 
       {/* Time */}
       {task.estimated_minutes && (
-        <span className="hidden lg:inline text-[10px] font-bold text-[#B5C1C8] shrink-0">
+        <span className="hidden lg:inline text-[10px] font-bold text-[#adb3b4] shrink-0">
           {formatTime(task.estimated_minutes)}
         </span>
       )}
@@ -182,7 +182,7 @@ function TaskRow({
       )}
 
       {/* Edit arrow */}
-      <ArrowRight size={14} className="text-[#c3c7cd] group-hover:text-[#0C1629] transition-colors shrink-0" />
+      <ArrowRight size={14} className="text-[#c3c7cd] group-hover:text-[#1F3649] transition-colors shrink-0" />
     </div>
   )
 }
@@ -199,22 +199,22 @@ function GoalLinkedPanel({ goalTitle, project }: {
 
   return (
     <div className="bg-white card p-5 space-y-3">
-      <h3 className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Focus Goal Linked</h3>
+      <h3 className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Focus Goal Linked</h3>
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-[10px] flex items-center justify-center"
-          style={{ backgroundColor: (project?.color || '#0C1629') + '15' }}
+          style={{ backgroundColor: (project?.color || '#1F3649') + '15' }}
         >
-          <Target size={14} style={{ color: project?.color || '#0C1629' }} />
+          <Target size={14} style={{ color: project?.color || '#1F3649' }} />
         </div>
         <div className="min-w-0">
-          <p className="text-sm font-bold text-[#0C1629]">{goalTitle}</p>
-          {project && <p className="text-[10px] text-[#B5C1C8]">Active Project • {project.completion}% Complete</p>}
+          <p className="text-sm font-bold text-[#1F3649]">{goalTitle}</p>
+          {project && <p className="text-[10px] text-[#adb3b4]">Active Project • {project.completion}% Complete</p>}
         </div>
       </div>
       <div className="flex items-center gap-3">
         <button
           onClick={() => navigate('/goals')}
-          className="text-xs font-semibold flex items-center gap-1 hover:gap-2 transition-all cursor-pointer text-[#0C1629]"
+          className="text-xs font-semibold flex items-center gap-1 hover:gap-2 transition-all cursor-pointer text-[#1F3649]"
         >
           <Target size={12} />
           View Goal
@@ -241,12 +241,12 @@ function EnergyInsightPanel({ tasks }: { tasks: Task[] }) {
   return (
     <div className="bg-white card p-5 space-y-3">
       <div className="flex items-center gap-2">
-        <ChartBar size={14} className="text-[#0C1629]" />
-        <h3 className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Energy Insight</h3>
+        <ChartBar size={14} className="text-[#1F3649]" />
+        <h3 className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Energy Insight</h3>
       </div>
-      <p className="text-xs text-[#727A84] leading-relaxed">
-        You have <strong className="text-[#0C1629]">{highEnergyRemaining} high-energy tasks</strong> remaining.
-        Your historical peak energy is between <strong className="text-[#0C1629]">9:00 AM – 11:30 AM</strong>.
+      <p className="text-xs text-[#5a6061] leading-relaxed">
+        You have <strong className="text-[#1F3649]">{highEnergyRemaining} high-energy tasks</strong> remaining.
+        Your historical peak energy is between <strong className="text-[#1F3649]">9:00 AM – 11:30 AM</strong>.
       </p>
     </div>
   )
@@ -263,23 +263,23 @@ function QuickCapturePanel({ onAdd }: { onAdd: (title: string) => void }) {
 
   return (
     <div className="bg-white card p-5 space-y-3">
-      <h3 className="text-[10px] font-bold text-[#B5C1C8] uppercase tracking-wider">Quick Capture</h3>
+      <h3 className="text-[10px] font-bold text-[#adb3b4] uppercase tracking-wider">Quick Capture</h3>
       <div className="flex items-center gap-2">
         <input
           value={value}
           onChange={e => setValue(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSubmit()}
           placeholder="Add a task..."
-          className="flex-1 text-sm text-[#0C1629] placeholder-[#B5C1C8] bg-transparent outline-none"
+          className="flex-1 text-sm text-[#1F3649] placeholder-[#adb3b4] bg-transparent outline-none"
         />
         <button
           onClick={handleSubmit}
-          className="w-8 h-8 rounded-full bg-[#0C1629] flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shrink-0"
+          className="w-8 h-8 rounded-full bg-[#1F3649] flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shrink-0"
         >
           <PaperPlaneTilt size={14} weight="fill" className="text-white" />
         </button>
       </div>
-      <p className="text-[10px] text-[#B5C1C8]">Press Enter or click to add</p>
+      <p className="text-[10px] text-[#adb3b4]">Press Enter or click to add</p>
     </div>
   )
 }
@@ -295,9 +295,9 @@ function UndoToast({ message, onClose }: { message: string; onClose: () => void 
   }, [onClose])
 
   return (
-    <div className="fixed bottom-20 md:bottom-8 left-1/2 -translate-x-1/2 z-50 bg-[#0C1629] text-white px-5 py-3 rounded-[15px] shadow-lg flex items-center gap-3 text-sm font-semibold animate-in fade-in slide-in-from-bottom-4">
+    <div className="fixed bottom-20 md:bottom-8 left-1/2 -translate-x-1/2 z-50 bg-[#1F3649] text-white px-5 py-3 rounded-[15px] shadow-lg flex items-center gap-3 text-sm font-semibold animate-in fade-in slide-in-from-bottom-4">
       <span>{message}</span>
-      <span className="text-[#B5C1C8] text-xs">⌘Z to undo</span>
+      <span className="text-[#adb3b4] text-xs">⌘Z to undo</span>
     </div>
   )
 }
@@ -314,15 +314,15 @@ const SIDE_PRIORITIES: { value: TaskPriority; label: string }[] = [
 ]
 
 const SIDE_PRIORITY_STYLES: Record<TaskPriority, string> = {
-  low: 'bg-[#B5C1C8]/10 text-[#B5C1C8]',
-  normal: 'bg-[#0C1629]/10 text-[#0C1629]',
+  low: 'bg-[#adb3b4]/10 text-[#adb3b4]',
+  normal: 'bg-[#1F3649]/10 text-[#1F3649]',
   high: 'bg-[#f59e0b]/10 text-[#f59e0b]',
   urgent: 'bg-[#dc2626]/10 text-[#dc2626]',
 }
 
 const SIDE_PRIORITY_ACTIVE: Record<TaskPriority, string> = {
-  low: 'bg-[#B5C1C8] text-white',
-  normal: 'bg-[#0C1629] text-white',
+  low: 'bg-[#adb3b4] text-white',
+  normal: 'bg-[#1F3649] text-white',
   high: 'bg-[#f59e0b] text-white',
   urgent: 'bg-[#dc2626] text-white',
 }
@@ -348,7 +348,7 @@ interface ColumnConfig {
 }
 
 const DEFAULT_COLUMN_CONFIGS: ColumnConfig[] = [
-  { id: 'todo', title: 'To Do', color: '#B5C1C8' },
+  { id: 'todo', title: 'To Do', color: '#adb3b4' },
   { id: 'in-progress', title: 'In Progress', color: '#f59e0b' },
   { id: 'done', title: 'Done', color: '#22c55e' },
 ]
@@ -439,28 +439,28 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#F0F3F3] shrink-0">
-          <h3 className="text-xs font-bold text-[#B5C1C8] uppercase tracking-wider">Task Details</h3>
-          <button onClick={onClose} className="p-1 hover:bg-[#F0F3F3] rounded-[8px] transition-colors cursor-pointer">
-            <X size={14} className="text-[#B5C1C8]" />
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#f2f4f4] shrink-0">
+          <h3 className="text-xs font-bold text-[#adb3b4] uppercase tracking-wider">Task Details</h3>
+          <button onClick={onClose} className="p-1 hover:bg-[#f2f4f4] rounded-[8px] transition-colors cursor-pointer">
+            <X size={14} className="text-[#adb3b4]" />
           </button>
         </div>
 
         {task ? (
           <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
             {/* Complete toggle */}
-            <div className="px-6 py-5 border-b border-[#F0F3F3]">
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
               <button
                 onClick={() => toggleTask(task.id, !task.completed)}
                 className="flex items-center gap-2 cursor-pointer group w-full"
               >
                 {task.completed
                   ? <CheckCircle size={22} weight="fill" className="text-[#22c55e]" />
-                  : <Circle size={22} weight="regular" className="text-[#c3c7cd] group-hover:text-[#0C1629] transition-colors" />
+                  : <Circle size={22} weight="regular" className="text-[#c3c7cd] group-hover:text-[#1F3649] transition-colors" />
                 }
                 <span className={cn(
                   'text-sm font-bold',
-                  task.completed ? 'line-through text-[#B5C1C8]' : 'text-[#0C1629]'
+                  task.completed ? 'line-through text-[#adb3b4]' : 'text-[#1F3649]'
                 )}>
                   {task.completed ? 'Completed' : 'Mark Complete'}
                 </span>
@@ -468,7 +468,7 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
             </div>
 
             {/* Title + Description */}
-            <div className="px-6 py-5 border-b border-[#F0F3F3] space-y-4">
+            <div className="px-6 py-5 border-b border-[#f2f4f4] space-y-4">
               <div>
                 <SidebarFieldLabel>Title</SidebarFieldLabel>
                 <SidebarInput
@@ -489,7 +489,7 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
             </div>
 
             {/* Category */}
-            <div className="px-6 py-5 border-b border-[#F0F3F3]">
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
               <SidebarFieldLabel>Category</SidebarFieldLabel>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -510,7 +510,7 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
             </div>
 
             {/* Project */}
-            <div className="px-6 py-5 border-b border-[#F0F3F3]">
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
               <SidebarFieldLabel>Project</SidebarFieldLabel>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -531,7 +531,7 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
             </div>
 
             {/* Goal */}
-            <div className="px-6 py-5 border-b border-[#F0F3F3]">
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
               <SidebarFieldLabel>Goal</SidebarFieldLabel>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -552,7 +552,7 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
             </div>
 
             {/* Priority */}
-            <div className="px-6 py-5 border-b border-[#F0F3F3]">
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
               <SidebarFieldLabel>Priority</SidebarFieldLabel>
               <div className="flex items-center gap-1">
                 {SIDE_PRIORITIES.map(p => (
@@ -571,20 +571,20 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
             </div>
 
             {/* Energy */}
-            <div className="px-6 py-5 border-b border-[#F0F3F3]">
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
               <SidebarFieldLabel>Energy</SidebarFieldLabel>
-              <div className="flex items-center gap-2 bg-[#F0F3F3] rounded-[10px] px-3 py-2.5">
+              <div className="flex items-center gap-2 bg-[#f2f4f4] rounded-[10px] px-3 py-2.5">
                 {([1, 2, 3] as const).map(level => (
                   <button key={level} onClick={() => setEnergy(level)} className="cursor-pointer">
-                    <Lightning size={16} weight="fill" className={cn('transition-colors', level <= energy ? 'text-[#f59e0b]' : 'text-[#D6DCE0]')} />
+                    <Lightning size={16} weight="fill" className={cn('transition-colors', level <= energy ? 'text-[#f59e0b]' : 'text-[#ebeeef]')} />
                   </button>
                 ))}
-                <span className="ml-auto text-[10px] font-bold text-[#B5C1C8]">{energy}/3</span>
+                <span className="ml-auto text-[10px] font-bold text-[#adb3b4]">{energy}/3</span>
               </div>
             </div>
 
             {/* Time */}
-            <div className="px-6 py-5 border-b border-[#F0F3F3]">
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
               <SidebarFieldLabel>Time</SidebarFieldLabel>
               <div className="flex items-center gap-1">
                 {TIME_OPTIONS.map(opt => (
@@ -593,7 +593,7 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
                     onClick={() => setEstimatedMinutes(opt.minutes)}
                     className={cn(
                       'flex-1 py-2 text-[9px] font-bold uppercase tracking-wider rounded-[8px] transition-all cursor-pointer',
-                      estimatedMinutes === opt.minutes ? 'bg-[#0C1629] text-white' : 'bg-[#F0F3F3] text-[#727A84]'
+                      estimatedMinutes === opt.minutes ? 'bg-[#1F3649] text-white' : 'bg-[#f2f4f4] text-[#5a6061]'
                     )}
                   >
                     {opt.label}
@@ -603,7 +603,7 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
             </div>
 
             {/* Due date */}
-            <div className="px-6 py-5 border-b border-[#F0F3F3]">
+            <div className="px-6 py-5 border-b border-[#f2f4f4]">
               <LogbirdDatePicker
                 label="Due Date"
                 value={dueDate || null}
@@ -618,7 +618,7 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
                 disabled={!title.trim()}
                 className={cn(
                   'flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-white py-2.5 rounded-[10px] transition-all cursor-pointer disabled:opacity-40',
-                  saved ? 'bg-[#22c55e]' : 'bg-[#0C1629] hover:opacity-90'
+                  saved ? 'bg-[#22c55e]' : 'bg-[#1F3649] hover:opacity-90'
                 )}
               >
                 <FloppyDisk size={12} />
@@ -626,7 +626,7 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
               </button>
               <button
                 onClick={handleDelete}
-                className="p-2.5 text-[#B5C1C8] hover:text-[#dc2626] hover:bg-[#dc2626]/10 rounded-[10px] transition-colors cursor-pointer"
+                className="p-2.5 text-[#adb3b4] hover:text-[#dc2626] hover:bg-[#dc2626]/10 rounded-[10px] transition-colors cursor-pointer"
               >
                 <Trash size={14} />
               </button>
@@ -634,7 +634,7 @@ function TaskSidePanel({ taskId, open, onClose, goals, categories, updateTask, t
           </div>
         ) : (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-sm text-[#B5C1C8]">Select a task to view details</p>
+            <p className="text-sm text-[#adb3b4]">Select a task to view details</p>
           </div>
         )}
       </div>
@@ -905,28 +905,28 @@ export default function Tasks() {
         {/* Project filter dropdown */}
         <RadixDropdown.Root>
           <RadixDropdown.Trigger asChild>
-            <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#F0F3F3] text-xs text-[#727A84] font-semibold hover:bg-[#F0F3F3] transition-colors cursor-pointer">
+            <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#f2f4f4] text-xs text-[#5a6061] font-semibold hover:bg-[#f2f4f4] transition-colors cursor-pointer">
               <FunnelSimple size={11} />
               {filterProject === 'all' ? 'All Projects' : PROJECT_MAP[filterProject]?.title ?? 'Project'}
-              <CaretDown size={10} className="text-[#B5C1C8]" />
+              <CaretDown size={10} className="text-[#adb3b4]" />
             </button>
           </RadixDropdown.Trigger>
           <RadixDropdown.Portal>
             <RadixDropdown.Content
               align="start" sideOffset={6}
-              className="z-50 min-w-[160px] rounded-[12px] border border-[#D6DCE0] bg-white shadow-[0_12px_44px_rgba(12,22,41,0.08)] p-1 outline-none"
+              className="z-50 min-w-[160px] rounded-[12px] border border-[#ebeeef] bg-white shadow-[0_12px_44px_rgba(12,22,41,0.08)] p-1 outline-none"
             >
               <RadixDropdown.Item
                 onClick={() => setFilterProject('all')}
                 className={cn('flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-[8px] cursor-pointer outline-none transition-colors',
-                  filterProject === 'all' ? 'bg-[#0C1629]/8 text-[#0C1629] font-semibold' : 'text-[#727A84] hover:bg-[#F0F3F3]')}
+                  filterProject === 'all' ? 'bg-[#1F3649]/8 text-[#1F3649] font-semibold' : 'text-[#5a6061] hover:bg-[#f2f4f4]')}
               >All Projects</RadixDropdown.Item>
               {taskProjects.map(p => (
                 <RadixDropdown.Item
                   key={p.id}
                   onClick={() => setFilterProject(p.id)}
                   className={cn('flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-[8px] cursor-pointer outline-none transition-colors',
-                    filterProject === p.id ? 'bg-[#0C1629]/8 text-[#0C1629] font-semibold' : 'text-[#727A84] hover:bg-[#F0F3F3]')}
+                    filterProject === p.id ? 'bg-[#1F3649]/8 text-[#1F3649] font-semibold' : 'text-[#5a6061] hover:bg-[#f2f4f4]')}
                 >
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
                   {p.title}
@@ -939,22 +939,22 @@ export default function Tasks() {
         {/* Priority filter dropdown */}
         <RadixDropdown.Root>
           <RadixDropdown.Trigger asChild>
-            <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#F0F3F3] text-xs text-[#727A84] font-semibold hover:bg-[#F0F3F3] transition-colors cursor-pointer">
+            <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#f2f4f4] text-xs text-[#5a6061] font-semibold hover:bg-[#f2f4f4] transition-colors cursor-pointer">
               {filterPriority === 'all' ? 'All Priorities' : PRIORITY_STYLES[filterPriority].label}
-              <CaretDown size={10} className="text-[#B5C1C8]" />
+              <CaretDown size={10} className="text-[#adb3b4]" />
             </button>
           </RadixDropdown.Trigger>
           <RadixDropdown.Portal>
             <RadixDropdown.Content
               align="start" sideOffset={6}
-              className="z-50 min-w-[140px] rounded-[12px] border border-[#D6DCE0] bg-white shadow-[0_12px_44px_rgba(12,22,41,0.08)] p-1 outline-none"
+              className="z-50 min-w-[140px] rounded-[12px] border border-[#ebeeef] bg-white shadow-[0_12px_44px_rgba(12,22,41,0.08)] p-1 outline-none"
             >
               {([['all', 'All Priorities'], ['urgent', 'Urgent'], ['high', 'High'], ['normal', 'Normal'], ['low', 'Low']] as const).map(([val, label]) => (
                 <RadixDropdown.Item
                   key={val}
                   onClick={() => setFilterPriority(val)}
                   className={cn('flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-[8px] cursor-pointer outline-none transition-colors',
-                    filterPriority === val ? 'bg-[#0C1629]/8 text-[#0C1629] font-semibold' : 'text-[#727A84] hover:bg-[#F0F3F3]')}
+                    filterPriority === val ? 'bg-[#1F3649]/8 text-[#1F3649] font-semibold' : 'text-[#5a6061] hover:bg-[#f2f4f4]')}
                 >{label}</RadixDropdown.Item>
               ))}
             </RadixDropdown.Content>
@@ -964,23 +964,23 @@ export default function Tasks() {
         {/* Energy filter dropdown */}
         <RadixDropdown.Root>
           <RadixDropdown.Trigger asChild>
-            <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#F0F3F3] text-xs text-[#727A84] font-semibold hover:bg-[#F0F3F3] transition-colors cursor-pointer">
+            <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#f2f4f4] text-xs text-[#5a6061] font-semibold hover:bg-[#f2f4f4] transition-colors cursor-pointer">
               <Lightning size={11} weight="fill" className="text-[#f59e0b]" />
               {filterEnergy === 'all' ? 'All Energy' : `Energy ${filterEnergy}/3`}
-              <CaretDown size={10} className="text-[#B5C1C8]" />
+              <CaretDown size={10} className="text-[#adb3b4]" />
             </button>
           </RadixDropdown.Trigger>
           <RadixDropdown.Portal>
             <RadixDropdown.Content
               align="start" sideOffset={6}
-              className="z-50 min-w-[130px] rounded-[12px] border border-[#D6DCE0] bg-white shadow-[0_12px_44px_rgba(12,22,41,0.08)] p-1 outline-none"
+              className="z-50 min-w-[130px] rounded-[12px] border border-[#ebeeef] bg-white shadow-[0_12px_44px_rgba(12,22,41,0.08)] p-1 outline-none"
             >
               {([['all', 'All Energy'], [3, 'High (3/3)'], [2, 'Medium (2/3)'], [1, 'Low (1/3)']] as const).map(([val, label]) => (
                 <RadixDropdown.Item
                   key={String(val)}
                   onClick={() => setFilterEnergy(val as any)}
                   className={cn('flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-[8px] cursor-pointer outline-none transition-colors',
-                    filterEnergy === val ? 'bg-[#0C1629]/8 text-[#0C1629] font-semibold' : 'text-[#727A84] hover:bg-[#F0F3F3]')}
+                    filterEnergy === val ? 'bg-[#1F3649]/8 text-[#1F3649] font-semibold' : 'text-[#5a6061] hover:bg-[#f2f4f4]')}
                 >{label}</RadixDropdown.Item>
               ))}
             </RadixDropdown.Content>
@@ -990,23 +990,23 @@ export default function Tasks() {
         {/* Sort dropdown */}
         <RadixDropdown.Root>
           <RadixDropdown.Trigger asChild>
-            <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#F0F3F3] text-xs text-[#727A84] font-semibold hover:bg-[#F0F3F3] transition-colors cursor-pointer">
+            <button className="flex items-center gap-1.5 h-7 px-2.5 rounded-[8px] bg-[#f2f4f4] text-xs text-[#5a6061] font-semibold hover:bg-[#f2f4f4] transition-colors cursor-pointer">
               <SortAscending size={11} />
               {sortBy === 'priority' ? 'Priority' : sortBy === 'energy' ? 'Energy' : 'Due date'}
-              <CaretDown size={10} className="text-[#B5C1C8]" />
+              <CaretDown size={10} className="text-[#adb3b4]" />
             </button>
           </RadixDropdown.Trigger>
           <RadixDropdown.Portal>
             <RadixDropdown.Content
               align="start" sideOffset={6}
-              className="z-50 min-w-[140px] rounded-[12px] border border-[#D6DCE0] bg-white shadow-[0_12px_44px_rgba(12,22,41,0.08)] p-1 outline-none"
+              className="z-50 min-w-[140px] rounded-[12px] border border-[#ebeeef] bg-white shadow-[0_12px_44px_rgba(12,22,41,0.08)] p-1 outline-none"
             >
               {([['priority', 'Priority'], ['energy', 'Energy level'], ['date', 'Due date']] as const).map(([val, label]) => (
                 <RadixDropdown.Item
                   key={val}
                   onClick={() => setSortBy(val)}
                   className={cn('flex items-center gap-2 px-2.5 py-1.5 text-xs rounded-[8px] cursor-pointer outline-none transition-colors',
-                    sortBy === val ? 'bg-[#0C1629]/8 text-[#0C1629] font-semibold' : 'text-[#727A84] hover:bg-[#F0F3F3]')}
+                    sortBy === val ? 'bg-[#1F3649]/8 text-[#1F3649] font-semibold' : 'text-[#5a6061] hover:bg-[#f2f4f4]')}
                 >{label}</RadixDropdown.Item>
               ))}
             </RadixDropdown.Content>
@@ -1048,7 +1048,7 @@ export default function Tasks() {
 
             {displayTasks.length === 0 && (
               <div className="text-center py-16">
-                <p className="text-sm text-[#B5C1C8]">No tasks found</p>
+                <p className="text-sm text-[#adb3b4]">No tasks found</p>
               </div>
             )}
           </div>
